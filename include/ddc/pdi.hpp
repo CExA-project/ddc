@@ -81,13 +81,13 @@ public:
     /// API with access argument
 
     template <
-            PDI_inout_t access,
+            PDI_inout_t Access,
             class BorrowedChunk,
             std::enable_if_t<is_borrowed_chunk_v<BorrowedChunk>, int> = 0>
     PdiEvent& with(std::string const& name, BorrowedChunk&& data)
     {
         static_assert(
-                !(access & PDI_IN) || (chunk_default_access_v<BorrowedChunk> & PDI_IN),
+                !(Access & PDI_IN) || (chunk_default_access_v<BorrowedChunk> & PDI_IN),
                 "Invalid access for constant data");
         std::array const extents = detail::array(data.domain().extents());
         PDI_share(store_name(name + "_rank"), store_scalar(extents.size()), PDI_OUT);
@@ -98,26 +98,26 @@ public:
         PDI_share(
                 store_name(name),
                 const_cast<chunk_value_t<BorrowedChunk>*>(data.data_handle()),
-                access);
+                Access);
         return *this;
     }
 
     template <
-            PDI_inout_t access,
+            PDI_inout_t Access,
             class Arithmetic,
             std::enable_if_t<std::is_arithmetic_v<std::remove_reference_t<Arithmetic>>, int> = 0>
     PdiEvent& with(std::string const& name, Arithmetic&& data)
     {
         static_assert(
-                !(access & PDI_IN) || (default_access_v<Arithmetic> & PDI_IN),
+                !(Access & PDI_IN) || (default_access_v<Arithmetic> & PDI_IN),
                 "Invalid access for constant data");
         using value_type = std::remove_cv_t<std::remove_reference_t<Arithmetic>>;
         value_type* data_ptr = const_cast<value_type*>(&data);
         // for read-only data, we share a copy instead of the data itself in case we received a ref on a temporary,
-        if constexpr (!(access & PDI_IN)) {
+        if constexpr (!(Access & PDI_IN)) {
             data_ptr = store_scalar(data);
         }
-        PDI_share(store_name(name), data_ptr, access);
+        PDI_share(store_name(name), data_ptr, Access);
         return *this;
     }
 
@@ -144,10 +144,10 @@ public:
     /// @}
 };
 
-template <PDI_inout_t access, class DataType>
+template <PDI_inout_t Access, class DataType>
 void expose_to_pdi(std::string const& name, DataType&& data)
 {
-    PdiEvent(name).with<access>(name, std::forward<DataType>(data));
+    PdiEvent(name).with<Access>(name, std::forward<DataType>(data));
 }
 
 template <class DataType>

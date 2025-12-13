@@ -78,7 +78,7 @@ KOKKOS_FUNCTION Coord<X> x0()
 
 // Templated function giving last coordinate of the mesh in given dimension.
 template <typename X>
-KOKKOS_FUNCTION Coord<X> xN()
+KOKKOS_FUNCTION Coord<X> xn()
 {
     return Coord<X>(1.);
 }
@@ -87,7 +87,7 @@ KOKKOS_FUNCTION Coord<X> xN()
 template <typename X>
 double dx(std::size_t ncells)
 {
-    return (xN<X>() - x0<X>()) / ncells;
+    return (xn<X>() - x0<X>()) / ncells;
 }
 
 // Templated function giving break points of mesh in given dimension for non-uniform case.
@@ -102,11 +102,11 @@ std::vector<Coord<X>> breaks(std::size_t ncells)
 }
 
 template <class DDim>
-void InterestDimInitializer(std::size_t const ncells)
+void interest_dim_initializer(std::size_t const ncells)
 {
     using CDim = typename DDim::continuous_dimension_type;
 #if defined(BSPLINES_TYPE_UNIFORM)
-    ddc::init_discrete_space<BSplines<CDim>>(x0<CDim>(), xN<CDim>(), ncells);
+    ddc::init_discrete_space<BSplines<CDim>>(x0<CDim>(), xn<CDim>(), ncells);
 #elif defined(BSPLINES_TYPE_NON_UNIFORM)
     ddc::init_discrete_space<BSplines<CDim>>(breaks<CDim>(ncells));
 #endif
@@ -165,18 +165,18 @@ void test_deriv(
                         1e-11 * max_norm_diff));
 }
 
-template <typename I, std::size_t order>
+template <typename I, std::size_t Order>
 auto make_deriv_order_delem()
 {
-    if constexpr (order == 0) {
+    if constexpr (Order == 0) {
         return ddc::DiscreteElement<>();
     } else {
-        return ddc::DiscreteElement<ddc::Deriv<I>>(order);
+        return ddc::DiscreteElement<ddc::Deriv<I>>(Order);
     }
 }
 
 template <
-        std::size_t order = 0,
+        std::size_t Order = 0,
         class DDimI,
         class ExecSpace,
         class SplineEvaluator,
@@ -193,7 +193,7 @@ void launch_deriv_tests(
         std::size_t const ncells)
 {
     using I = typename DDimI::continuous_dimension_type;
-    if constexpr (order > BSplines<I>::degree()) {
+    if constexpr (Order > BSplines<I>::degree()) {
         return;
     } else {
         test_deriv(
@@ -203,10 +203,10 @@ void launch_deriv_tests(
                 coef,
                 spline_eval_deriv,
                 evaluator,
-                make_deriv_order_delem<I, order>(),
+                make_deriv_order_delem<I, Order>(),
                 ncells);
 
-        launch_deriv_tests<order + 1>(
+        launch_deriv_tests<Order + 1>(
                 exec_space,
                 spline_evaluator,
                 coords_eval,
@@ -220,7 +220,7 @@ void launch_deriv_tests(
 // Checks that when evaluating the spline at interpolation points one
 // recovers values that were used to build the spline
 template <typename ExecSpace, typename MemorySpace, typename DDimI, typename... DDims>
-void SplineEvaluator1dDerivativesTest()
+void TestSplineEvaluator1dDerivatives()
 {
     using I = typename DDimI::continuous_dimension_type;
 
@@ -228,7 +228,7 @@ void SplineEvaluator1dDerivativesTest()
     ExecSpace const exec_space;
 
     std::size_t const ncells = 10;
-    InterestDimInitializer<DDimI>(ncells);
+    interest_dim_initializer<DDimI>(ncells);
 
     // Create the values domain (mesh)
     ddc::DiscreteDomain<DDimI> const interpolation_domain
@@ -322,7 +322,7 @@ void SplineEvaluator1dDerivativesTest()
 
 TEST(SUFFIX(SplineEvaluator1dDerivativesHost), 1DX)
 {
-    SplineEvaluator1dDerivativesTest<
+    TestSplineEvaluator1dDerivatives<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DDimGPS<DimX>,
@@ -331,7 +331,7 @@ TEST(SUFFIX(SplineEvaluator1dDerivativesHost), 1DX)
 
 TEST(SUFFIX(SplineEvaluator1dDerivativesDevice), 1DX)
 {
-    SplineEvaluator1dDerivativesTest<
+    TestSplineEvaluator1dDerivatives<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             DDimGPS<DimX>,
@@ -340,7 +340,7 @@ TEST(SUFFIX(SplineEvaluator1dDerivativesDevice), 1DX)
 
 TEST(SUFFIX(SplineEvaluator1dDerivativesHost), 2DXB1)
 {
-    SplineEvaluator1dDerivativesTest<
+    TestSplineEvaluator1dDerivatives<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DDimGPS<DimX>,
@@ -350,7 +350,7 @@ TEST(SUFFIX(SplineEvaluator1dDerivativesHost), 2DXB1)
 
 TEST(SUFFIX(SplineEvaluator1dDerivativesHost), 2DB1X)
 {
-    SplineEvaluator1dDerivativesTest<
+    TestSplineEvaluator1dDerivatives<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DDimGPS<DimX>,
@@ -360,7 +360,7 @@ TEST(SUFFIX(SplineEvaluator1dDerivativesHost), 2DB1X)
 
 TEST(SUFFIX(SplineEvaluator1dDerivativesDevice), 2DXB1)
 {
-    SplineEvaluator1dDerivativesTest<
+    TestSplineEvaluator1dDerivatives<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             DDimGPS<DimX>,
@@ -370,7 +370,7 @@ TEST(SUFFIX(SplineEvaluator1dDerivativesDevice), 2DXB1)
 
 TEST(SUFFIX(SplineEvaluator1dDerivativesDevice), 2DB1X)
 {
-    SplineEvaluator1dDerivativesTest<
+    TestSplineEvaluator1dDerivatives<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             DDimGPS<DimX>,
@@ -380,7 +380,7 @@ TEST(SUFFIX(SplineEvaluator1dDerivativesDevice), 2DB1X)
 
 TEST(SUFFIX(SplineEvaluator1dDerivativesHost), 3DXB1B2)
 {
-    SplineEvaluator1dDerivativesTest<
+    TestSplineEvaluator1dDerivatives<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DDimGPS<DimX>,
@@ -391,7 +391,7 @@ TEST(SUFFIX(SplineEvaluator1dDerivativesHost), 3DXB1B2)
 
 TEST(SUFFIX(SplineEvaluator1dDerivativesHost), 3DB1XB2)
 {
-    SplineEvaluator1dDerivativesTest<
+    TestSplineEvaluator1dDerivatives<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DDimGPS<DimX>,
@@ -402,7 +402,7 @@ TEST(SUFFIX(SplineEvaluator1dDerivativesHost), 3DB1XB2)
 
 TEST(SUFFIX(SplineEvaluator1dDerivativesHost), 3DB1B2X)
 {
-    SplineEvaluator1dDerivativesTest<
+    TestSplineEvaluator1dDerivatives<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DDimGPS<DimX>,
@@ -413,7 +413,7 @@ TEST(SUFFIX(SplineEvaluator1dDerivativesHost), 3DB1B2X)
 
 TEST(SUFFIX(SplineEvaluator1dDerivativesDevice), 3DXB1B2)
 {
-    SplineEvaluator1dDerivativesTest<
+    TestSplineEvaluator1dDerivatives<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             DDimGPS<DimX>,
@@ -424,7 +424,7 @@ TEST(SUFFIX(SplineEvaluator1dDerivativesDevice), 3DXB1B2)
 
 TEST(SUFFIX(SplineEvaluator1dDerivativesDevice), 3DB1XB2)
 {
-    SplineEvaluator1dDerivativesTest<
+    TestSplineEvaluator1dDerivatives<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             DDimGPS<DimX>,
@@ -435,7 +435,7 @@ TEST(SUFFIX(SplineEvaluator1dDerivativesDevice), 3DB1XB2)
 
 TEST(SUFFIX(SplineEvaluator1dDerivativesDevice), 3DB1B2X)
 {
-    SplineEvaluator1dDerivativesTest<
+    TestSplineEvaluator1dDerivatives<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             DDimGPS<DimX>,

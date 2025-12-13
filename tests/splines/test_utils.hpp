@@ -15,25 +15,25 @@
 /// - a std::pair<T, U> to a std::tuple<T, U>
 /// - identity otherwise (std::tuple)
 template <class S>
-struct to_tuple
+struct ToTuple
 {
     using type = S;
 };
 
 template <class T, T... Ints>
-struct to_tuple<std::integer_sequence<T, Ints...>>
+struct ToTuple<std::integer_sequence<T, Ints...>>
 {
     using type = std::tuple<std::integral_constant<T, Ints>...>;
 };
 
 template <class T, class U>
-struct to_tuple<std::pair<T, U>>
+struct ToTuple<std::pair<T, U>>
 {
     using type = std::tuple<T, U>;
 };
 
 template <class S>
-using to_tuple_t = typename to_tuple<S>::type;
+using to_tuple_t = typename ToTuple<S>::type;
 
 template <class TupleOfTuples, class Tuple>
 struct for_each_tuple_cat;
@@ -91,16 +91,16 @@ static_assert(std::is_same_v<
 
 /// Transform a std::tuple<Args...> to a testing::Types<Args...>, identity otherwise
 template <class T>
-struct tuple_to_types
+struct TupleToTypes
 {
     using type = T;
 };
 
 template <class... Args>
-struct tuple_to_types<std::tuple<Args...>>
+struct TupleToTypes<std::tuple<Args...>>
 {
     using type = testing::Types<Args...>;
 };
 
 template <class T>
-using tuple_to_types_t = typename tuple_to_types<T>::type;
+using tuple_to_types_t = typename TupleToTypes<T>::type;

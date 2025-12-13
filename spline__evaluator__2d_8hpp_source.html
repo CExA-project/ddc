@@ -1198,371 +1198,368 @@ $(document).ready(function(){initNavTree('spline__evaluator__2d_8hpp_source.html
 <div class="line"><span class="lineno"> 1069</span><span class="comment">     * obtained via various methods, such as using a SplineBuilder2D.</span></div>
 <div class="line"><span class="lineno"> 1070</span><span class="comment">     *</span></div>
 <div class="line"><span class="lineno"> 1071</span><span class="comment">     * @param deriv_order A DiscreteElement containing the orders of derivation for each of the dimensions of interest.</span></div>
-<div class="line"><span class="lineno"> 1072</span><span class="comment">     * If one of the dimensions is not present, its corresponding order of derivation is considered to be 0. The highest</span></div>
-<div class="line"><span class="lineno"> 1073</span><span class="comment">     * valid order is 2.</span></div>
-<div class="line"><span class="lineno"> 1074</span><span class="comment">     * @param coord_eval The coordinate where the spline is differentiated. Note that only the components along the dimensions of interest are used.</span></div>
-<div class="line"><span class="lineno"> 1075</span><span class="comment">     * @param spline_coef A ChunkSpan storing the 2D spline coefficients.</span></div>
-<div class="line"><span class="lineno"> 1076</span><span class="comment">     *</span></div>
-<div class="line"><span class="lineno"> 1077</span><span class="comment">     * @return The derivative of the spline function at the desired coordinate.</span></div>
-<div class="line"><span class="lineno"> 1078</span><span class="comment">     */</span></div>
-<div class="line"><a id="l01079" name="l01079"></a><span class="lineno"> 1079</span>    <span class="keyword">template</span> &lt;<span class="keyword">class</span> DElem, <span class="keyword">class</span> Layout, <span class="keyword">class</span>... CoordsDims&gt;</div>
-<div class="line"><a id="l01080" name="l01080"></a><span class="lineno"> 1080</span>    <a class="code hl_function" href="classddc_1_1SplineEvaluator2D.html#a5a9924012f1a29c5449cb66f74e67ed9">KOKKOS_FUNCTION</a> <span class="keywordtype">double</span> <a class="code hl_function" href="classddc_1_1SplineEvaluator2D.html#a5a9924012f1a29c5449cb66f74e67ed9">deriv</a>(</div>
-<div class="line"><a id="l01081" name="l01081"></a><span class="lineno"> 1081</span>            DElem <span class="keyword">const</span>&amp; deriv_order,</div>
-<div class="line"><a id="l01082" name="l01082"></a><span class="lineno"> 1082</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;CoordsDims...&gt; <span class="keyword">const</span>&amp; coord_eval,</div>
-<div class="line"><a id="l01083" name="l01083"></a><span class="lineno"> 1083</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1ChunkCommon.html#a0214c802aca8ce0770988bb2784f104a">ChunkSpan</a>&lt;<span class="keywordtype">double</span> <span class="keyword">const</span>, spline_domain_type, Layout, memory_space&gt; <span class="keyword">const</span></div>
-<div class="line"><a id="l01084" name="l01084"></a><span class="lineno"> 1084</span>                    spline_coef) <span class="keyword">const</span></div>
-<div class="line"><a id="l01085" name="l01085"></a><span class="lineno"> 1085</span>    {</div>
-<div class="line"><a id="l01086" name="l01086"></a><span class="lineno"> 1086</span>        <span class="keywordflow">return</span> eval_no_bc(deriv_order, coord_eval, spline_coef);</div>
-<div class="line"><a id="l01087" name="l01087"></a><span class="lineno"> 1087</span>    }</div>
-<div class="line"><a id="l01088" name="l01088"></a><span class="lineno"> 1088</span> </div>
-<div class="line"><a id="l01089" name="l01089"></a><span class="lineno"> 1089</span>    <span class="comment">/**</span></div>
-<div class="line"><span class="lineno"> 1090</span><span class="comment">     * @brief Differentiate 2D spline function (described by its spline coefficients) on a mesh along the dimensions of interest.</span></div>
-<div class="line"><span class="lineno"> 1091</span><span class="comment">     *</span></div>
-<div class="line"><span class="lineno"> 1092</span><span class="comment">     * The spline coefficients represent a 2D spline function defined on a cartesian product of batch_domain and B-splines</span></div>
-<div class="line"><span class="lineno"> 1093</span><span class="comment">     * (basis splines). They can be obtained via various methods, such as using a SplineBuilder2D.</span></div>
-<div class="line"><span class="lineno"> 1094</span><span class="comment">     *</span></div>
-<div class="line"><span class="lineno"> 1095</span><span class="comment">     * This is not a nD differentiation. This is a batched 2D differentiation.</span></div>
-<div class="line"><span class="lineno"> 1096</span><span class="comment">     * This means that for each slice of coordinates identified by a batch_domain_type::discrete_element_type,</span></div>
-<div class="line"><span class="lineno"> 1097</span><span class="comment">     * the differentiation is performed with the 2D set of spline coefficients identified by the same batch_domain_type::discrete_element_type.</span></div>
-<div class="line"><span class="lineno"> 1098</span><span class="comment">     *</span></div>
-<div class="line"><span class="lineno"> 1099</span><span class="comment">     * @param[in] deriv_order A DiscreteElement containing the orders of derivation for each of the dimensions of interest.</span></div>
-<div class="line"><span class="lineno"> 1100</span><span class="comment">     * If one of the dimensions is not present, its corresponding order of derivation is considered to be 0. The highest</span></div>
-<div class="line"><span class="lineno"> 1101</span><span class="comment">     * valid order is 2.</span></div>
-<div class="line"><span class="lineno"> 1102</span><span class="comment">     * @param[out] spline_eval The derivatives of the 2D spline function at the desired coordinates. For practical reasons those are</span></div>
-<div class="line"><span class="lineno"> 1103</span><span class="comment">     * stored in a ChunkSpan defined on a batched_evaluation_domain_type. Note that the coordinates of the</span></div>
-<div class="line"><span class="lineno"> 1104</span><span class="comment">     * points represented by this domain are unused and irrelevant (but the points themselves (DiscreteElement) are used to select</span></div>
-<div class="line"><span class="lineno"> 1105</span><span class="comment">     * the set of 2D spline coefficients retained to perform the evaluation).</span></div>
-<div class="line"><span class="lineno"> 1106</span><span class="comment">     * @param[in] coords_eval The coordinates where the spline is differentiated. Those are</span></div>
-<div class="line"><span class="lineno"> 1107</span><span class="comment">     * stored in a ChunkSpan defined on a batched_evaluation_domain_type. Note that the coordinates of the</span></div>
-<div class="line"><span class="lineno"> 1108</span><span class="comment">     * points represented by this domain are unused and irrelevant (but the points themselves (DiscreteElement) are used to select</span></div>
-<div class="line"><span class="lineno"> 1109</span><span class="comment">     * the set of 2D spline coefficients retained to perform the evaluation).</span></div>
-<div class="line"><span class="lineno"> 1110</span><span class="comment">     * @param[in] spline_coef A ChunkSpan storing the 2D spline coefficients.</span></div>
-<div class="line"><span class="lineno"> 1111</span><span class="comment">     */</span></div>
-<div class="line"><a id="l01112" name="l01112"></a><span class="lineno"> 1112</span>    <span class="keyword">template</span> &lt;</div>
-<div class="line"><a id="l01113" name="l01113"></a><span class="lineno"> 1113</span>            <span class="keyword">class</span> DElem,</div>
-<div class="line"><a id="l01114" name="l01114"></a><span class="lineno"> 1114</span>            <span class="keyword">class</span> Layout1,</div>
-<div class="line"><a id="l01115" name="l01115"></a><span class="lineno"> 1115</span>            <span class="keyword">class</span> Layout2,</div>
-<div class="line"><a id="l01116" name="l01116"></a><span class="lineno"> 1116</span>            <span class="keyword">class</span> Layout3,</div>
-<div class="line"><a id="l01117" name="l01117"></a><span class="lineno"> 1117</span>            <span class="keyword">class</span> BatchedInterpolationDDom,</div>
-<div class="line"><a id="l01118" name="l01118"></a><span class="lineno"> 1118</span>            <span class="keyword">class</span>... CoordsDims&gt;</div>
-<div class="line"><a id="l01119" name="l01119"></a><span class="lineno"> 1119</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classddc_1_1SplineEvaluator2D.html#a4ef7f169f7e2ab3e68b6b4d5fd8134a3">deriv</a>(</div>
-<div class="line"><a id="l01120" name="l01120"></a><span class="lineno"> 1120</span>            DElem <span class="keyword">const</span>&amp; deriv_order,</div>
-<div class="line"><a id="l01121" name="l01121"></a><span class="lineno"> 1121</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1ChunkCommon.html#a0214c802aca8ce0770988bb2784f104a">ChunkSpan</a>&lt;<span class="keywordtype">double</span>, BatchedInterpolationDDom, Layout1, memory_space&gt; <span class="keyword">const</span></div>
-<div class="line"><a id="l01122" name="l01122"></a><span class="lineno"> 1122</span>                    spline_eval,</div>
-<div class="line"><a id="l01123" name="l01123"></a><span class="lineno"> 1123</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1ChunkCommon.html#a0214c802aca8ce0770988bb2784f104a">ChunkSpan</a>&lt;</div>
-<div class="line"><a id="l01124" name="l01124"></a><span class="lineno"> 1124</span>                    <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;CoordsDims...&gt; <span class="keyword">const</span>,</div>
-<div class="line"><a id="l01125" name="l01125"></a><span class="lineno"> 1125</span>                    BatchedInterpolationDDom,</div>
-<div class="line"><a id="l01126" name="l01126"></a><span class="lineno"> 1126</span>                    Layout2,</div>
-<div class="line"><a id="l01127" name="l01127"></a><span class="lineno"> 1127</span>                    memory_space&gt; <span class="keyword">const</span> coords_eval,</div>
-<div class="line"><a id="l01128" name="l01128"></a><span class="lineno"> 1128</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1ChunkCommon.html#a0214c802aca8ce0770988bb2784f104a">ChunkSpan</a>&lt;</div>
-<div class="line"><a id="l01129" name="l01129"></a><span class="lineno"> 1129</span>                    <span class="keywordtype">double</span> <span class="keyword">const</span>,</div>
-<div class="line"><a id="l01130" name="l01130"></a><span class="lineno"> 1130</span>                    batched_spline_domain_type&lt;BatchedInterpolationDDom&gt;,</div>
-<div class="line"><a id="l01131" name="l01131"></a><span class="lineno"> 1131</span>                    Layout3,</div>
-<div class="line"><a id="l01132" name="l01132"></a><span class="lineno"> 1132</span>                    memory_space&gt; <span class="keyword">const</span> spline_coef) <span class="keyword">const</span></div>
-<div class="line"><a id="l01133" name="l01133"></a><span class="lineno"> 1133</span>    {</div>
-<div class="line"><a id="l01134" name="l01134"></a><span class="lineno"> 1134</span>        <span class="keyword">static_assert</span>(is_discrete_element_v&lt;DElem&gt;);</div>
-<div class="line"><a id="l01135" name="l01135"></a><span class="lineno"> 1135</span> </div>
-<div class="line"><a id="l01136" name="l01136"></a><span class="lineno"> 1136</span>        batch_domain_type&lt;BatchedInterpolationDDom&gt; <span class="keyword">const</span> batch_domain(coords_eval.domain());</div>
-<div class="line"><a id="l01137" name="l01137"></a><span class="lineno"> 1137</span>        evaluation_domain_type1 <span class="keyword">const</span> evaluation_domain1(spline_eval.domain());</div>
-<div class="line"><a id="l01138" name="l01138"></a><span class="lineno"> 1138</span>        evaluation_domain_type2 <span class="keyword">const</span> evaluation_domain2(spline_eval.domain());</div>
-<div class="line"><a id="l01139" name="l01139"></a><span class="lineno"> 1139</span>        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::parallel_for_each(</div>
-<div class="line"><a id="l01140" name="l01140"></a><span class="lineno"> 1140</span>                <span class="stringliteral">&quot;ddc_splines_differentiate_2d&quot;</span>,</div>
-<div class="line"><a id="l01141" name="l01141"></a><span class="lineno"> 1141</span>                exec_space(),</div>
-<div class="line"><a id="l01142" name="l01142"></a><span class="lineno"> 1142</span>                batch_domain,</div>
-<div class="line"><a id="l01143" name="l01143"></a><span class="lineno"> 1143</span>                KOKKOS_CLASS_LAMBDA(</div>
-<div class="line"><a id="l01144" name="l01144"></a><span class="lineno"> 1144</span>                        <span class="keyword">typename</span> batch_domain_type&lt;</div>
-<div class="line"><a id="l01145" name="l01145"></a><span class="lineno"> 1145</span>                                BatchedInterpolationDDom&gt;::discrete_element_type <span class="keyword">const</span> j) {</div>
-<div class="line"><a id="l01146" name="l01146"></a><span class="lineno"> 1146</span>                    <span class="keyword">auto</span> <span class="keyword">const</span> spline_eval_2D = spline_eval[j];</div>
-<div class="line"><a id="l01147" name="l01147"></a><span class="lineno"> 1147</span>                    <span class="keyword">auto</span> <span class="keyword">const</span> coords_eval_2D = coords_eval[j];</div>
-<div class="line"><a id="l01148" name="l01148"></a><span class="lineno"> 1148</span>                    <span class="keyword">auto</span> <span class="keyword">const</span> spline_coef_2D = spline_coef[j];</div>
-<div class="line"><a id="l01149" name="l01149"></a><span class="lineno"> 1149</span>                    <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span> i1 : evaluation_domain1) {</div>
-<div class="line"><a id="l01150" name="l01150"></a><span class="lineno"> 1150</span>                        <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span> i2 : evaluation_domain2) {</div>
-<div class="line"><a id="l01151" name="l01151"></a><span class="lineno"> 1151</span>                            spline_eval_2D(i1, i2) = eval_no_bc(</div>
-<div class="line"><a id="l01152" name="l01152"></a><span class="lineno"> 1152</span>                                    deriv_order,</div>
-<div class="line"><a id="l01153" name="l01153"></a><span class="lineno"> 1153</span>                                    coords_eval_2D(i1, i2),</div>
-<div class="line"><a id="l01154" name="l01154"></a><span class="lineno"> 1154</span>                                    spline_coef_2D);</div>
-<div class="line"><a id="l01155" name="l01155"></a><span class="lineno"> 1155</span>                        }</div>
-<div class="line"><a id="l01156" name="l01156"></a><span class="lineno"> 1156</span>                    }</div>
-<div class="line"><a id="l01157" name="l01157"></a><span class="lineno"> 1157</span>                });</div>
-<div class="line"><a id="l01158" name="l01158"></a><span class="lineno"> 1158</span>    }</div>
-<div class="line"><a id="l01159" name="l01159"></a><span class="lineno"> 1159</span> </div>
-<div class="line"><a id="l01160" name="l01160"></a><span class="lineno"> 1160</span>    <span class="comment">/**</span></div>
-<div class="line"><span class="lineno"> 1161</span><span class="comment">     * @brief Differentiate 2D spline function (described by its spline coefficients) on a mesh along the dimensions of interest.</span></div>
-<div class="line"><span class="lineno"> 1162</span><span class="comment">     *</span></div>
-<div class="line"><span class="lineno"> 1163</span><span class="comment">     * The spline coefficients represent a 2D spline function defined on a cartesian product of batch_domain and B-splines</span></div>
-<div class="line"><span class="lineno"> 1164</span><span class="comment">     * (basis splines). They can be obtained via various methods, such as using a SplineBuilder2D.</span></div>
-<div class="line"><span class="lineno"> 1165</span><span class="comment">     *</span></div>
-<div class="line"><span class="lineno"> 1166</span><span class="comment">     * This is not a multidimensional differentiation. This is a batched 2D differentiation.</span></div>
-<div class="line"><span class="lineno"> 1167</span><span class="comment">     * This means that for each slice of spline_eval the differentiation is performed with</span></div>
-<div class="line"><span class="lineno"> 1168</span><span class="comment">     * the 2D set of spline coefficients identified by the same batch_domain_type::discrete_element_type.</span></div>
-<div class="line"><span class="lineno"> 1169</span><span class="comment">     *</span></div>
-<div class="line"><span class="lineno"> 1170</span><span class="comment">     * @param[in] deriv_order A DiscreteElement containing the orders of derivation for each of the dimensions of interest.</span></div>
-<div class="line"><span class="lineno"> 1171</span><span class="comment">     * If one of the dimensions is not present, its corresponding order of derivation is considered to be 0. The highest</span></div>
-<div class="line"><span class="lineno"> 1172</span><span class="comment">     * valid order is 2.</span></div>
-<div class="line"><span class="lineno"> 1173</span><span class="comment">     * @param[out] spline_eval The derivatives of the 2D spline function at the desired coordinates.</span></div>
-<div class="line"><span class="lineno"> 1174</span><span class="comment">     * @param[in] spline_coef A ChunkSpan storing the 2D spline coefficients.</span></div>
-<div class="line"><span class="lineno"> 1175</span><span class="comment">     */</span></div>
-<div class="line"><a id="l01176" name="l01176"></a><span class="lineno"> 1176</span>    <span class="keyword">template</span> &lt;<span class="keyword">class</span> DElem, <span class="keyword">class</span> Layout1, <span class="keyword">class</span> Layout2, <span class="keyword">class</span> BatchedInterpolationDDom&gt;</div>
-<div class="line"><a id="l01177" name="l01177"></a><span class="lineno"> 1177</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classddc_1_1SplineEvaluator2D.html#a8f9c9e1c00cdc5c9b340817943ddb3e3">deriv</a>(</div>
-<div class="line"><a id="l01178" name="l01178"></a><span class="lineno"> 1178</span>            DElem <span class="keyword">const</span>&amp; deriv_order,</div>
-<div class="line"><a id="l01179" name="l01179"></a><span class="lineno"> 1179</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1ChunkCommon.html#a0214c802aca8ce0770988bb2784f104a">ChunkSpan</a>&lt;<span class="keywordtype">double</span>, BatchedInterpolationDDom, Layout1, memory_space&gt; <span class="keyword">const</span></div>
-<div class="line"><a id="l01180" name="l01180"></a><span class="lineno"> 1180</span>                    spline_eval,</div>
-<div class="line"><a id="l01181" name="l01181"></a><span class="lineno"> 1181</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1ChunkCommon.html#a0214c802aca8ce0770988bb2784f104a">ChunkSpan</a>&lt;</div>
-<div class="line"><a id="l01182" name="l01182"></a><span class="lineno"> 1182</span>                    <span class="keywordtype">double</span> <span class="keyword">const</span>,</div>
-<div class="line"><a id="l01183" name="l01183"></a><span class="lineno"> 1183</span>                    batched_spline_domain_type&lt;BatchedInterpolationDDom&gt;,</div>
-<div class="line"><a id="l01184" name="l01184"></a><span class="lineno"> 1184</span>                    Layout2,</div>
-<div class="line"><a id="l01185" name="l01185"></a><span class="lineno"> 1185</span>                    memory_space&gt; <span class="keyword">const</span> spline_coef) <span class="keyword">const</span></div>
-<div class="line"><a id="l01186" name="l01186"></a><span class="lineno"> 1186</span>    {</div>
-<div class="line"><a id="l01187" name="l01187"></a><span class="lineno"> 1187</span>        <span class="keyword">static_assert</span>(is_discrete_element_v&lt;DElem&gt;);</div>
-<div class="line"><a id="l01188" name="l01188"></a><span class="lineno"> 1188</span> </div>
-<div class="line"><a id="l01189" name="l01189"></a><span class="lineno"> 1189</span>        batch_domain_type&lt;BatchedInterpolationDDom&gt; <span class="keyword">const</span> batch_domain(spline_eval.domain());</div>
-<div class="line"><a id="l01190" name="l01190"></a><span class="lineno"> 1190</span>        evaluation_domain_type1 <span class="keyword">const</span> evaluation_domain1(spline_eval.domain());</div>
-<div class="line"><a id="l01191" name="l01191"></a><span class="lineno"> 1191</span>        evaluation_domain_type2 <span class="keyword">const</span> evaluation_domain2(spline_eval.domain());</div>
-<div class="line"><a id="l01192" name="l01192"></a><span class="lineno"> 1192</span>        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::parallel_for_each(</div>
-<div class="line"><a id="l01193" name="l01193"></a><span class="lineno"> 1193</span>                <span class="stringliteral">&quot;ddc_splines_differentiate_2d&quot;</span>,</div>
-<div class="line"><a id="l01194" name="l01194"></a><span class="lineno"> 1194</span>                exec_space(),</div>
-<div class="line"><a id="l01195" name="l01195"></a><span class="lineno"> 1195</span>                batch_domain,</div>
-<div class="line"><a id="l01196" name="l01196"></a><span class="lineno"> 1196</span>                KOKKOS_CLASS_LAMBDA(</div>
-<div class="line"><a id="l01197" name="l01197"></a><span class="lineno"> 1197</span>                        <span class="keyword">typename</span> batch_domain_type&lt;</div>
-<div class="line"><a id="l01198" name="l01198"></a><span class="lineno"> 1198</span>                                BatchedInterpolationDDom&gt;::discrete_element_type <span class="keyword">const</span> j) {</div>
-<div class="line"><a id="l01199" name="l01199"></a><span class="lineno"> 1199</span>                    <span class="keyword">auto</span> <span class="keyword">const</span> spline_eval_2D = spline_eval[j];</div>
-<div class="line"><a id="l01200" name="l01200"></a><span class="lineno"> 1200</span>                    <span class="keyword">auto</span> <span class="keyword">const</span> spline_coef_2D = spline_coef[j];</div>
-<div class="line"><a id="l01201" name="l01201"></a><span class="lineno"> 1201</span>                    <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span> i1 : evaluation_domain1) {</div>
-<div class="line"><a id="l01202" name="l01202"></a><span class="lineno"> 1202</span>                        <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span> i2 : evaluation_domain2) {</div>
-<div class="line"><a id="l01203" name="l01203"></a><span class="lineno"> 1203</span>                            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;continuous_dimension_type1, continuous_dimension_type2&gt;</div>
-<div class="line"><a id="l01204" name="l01204"></a><span class="lineno"> 1204</span>                                    coord_eval_2D(<a class="code hl_namespace" href="namespaceddc.html">ddc</a>::coordinate(i1), <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::coordinate(i2));</div>
-<div class="line"><a id="l01205" name="l01205"></a><span class="lineno"> 1205</span>                            spline_eval_2D(i1, i2)</div>
-<div class="line"><a id="l01206" name="l01206"></a><span class="lineno"> 1206</span>                                    = eval_no_bc(deriv_order, coord_eval_2D, spline_coef_2D);</div>
-<div class="line"><a id="l01207" name="l01207"></a><span class="lineno"> 1207</span>                        }</div>
-<div class="line"><a id="l01208" name="l01208"></a><span class="lineno"> 1208</span>                    }</div>
-<div class="line"><a id="l01209" name="l01209"></a><span class="lineno"> 1209</span>                });</div>
-<div class="line"><a id="l01210" name="l01210"></a><span class="lineno"> 1210</span>    }</div>
-<div class="line"><a id="l01211" name="l01211"></a><span class="lineno"> 1211</span> </div>
-<div class="line"><a id="l01212" name="l01212"></a><span class="lineno"> 1212</span>    <span class="comment">/** @brief Perform batched 2D integrations of a spline function (described by its spline coefficients) along the dimensions of interest and store results on a subdomain of batch_domain.</span></div>
-<div class="line"><span class="lineno"> 1213</span><span class="comment">     *</span></div>
-<div class="line"><span class="lineno"> 1214</span><span class="comment">     * The spline coefficients represent a 2D spline function defined on a B-splines (basis splines). They can be obtained via various methods, such as using a SplineBuilder2D.</span></div>
-<div class="line"><span class="lineno"> 1215</span><span class="comment">     *</span></div>
-<div class="line"><span class="lineno"> 1216</span><span class="comment">     * This is not a nD integration. This is a batched 2D integration.</span></div>
-<div class="line"><span class="lineno"> 1217</span><span class="comment">     * This means that for each element of integrals, the integration is performed with the 2D set of</span></div>
-<div class="line"><span class="lineno"> 1218</span><span class="comment">     * spline coefficients identified by the same DiscreteElement.</span></div>
-<div class="line"><span class="lineno"> 1219</span><span class="comment">     *</span></div>
-<div class="line"><span class="lineno"> 1220</span><span class="comment">     * @param[out] integrals The integrals of the 2D spline function on the subdomain of batch_domain. For practical reasons those are</span></div>
-<div class="line"><span class="lineno"> 1221</span><span class="comment">     * stored in a ChunkSpan defined on a batch_domain_type. Note that the coordinates of the</span></div>
-<div class="line"><span class="lineno"> 1222</span><span class="comment">     * points represented by this domain are unused and irrelevant.</span></div>
-<div class="line"><span class="lineno"> 1223</span><span class="comment">     * @param[in] spline_coef A ChunkSpan storing the 2D spline coefficients.</span></div>
-<div class="line"><span class="lineno"> 1224</span><span class="comment">     */</span></div>
-<div class="line"><a id="l01225" name="l01225"></a><span class="lineno"> 1225</span>    <span class="keyword">template</span> &lt;<span class="keyword">class</span> Layout1, <span class="keyword">class</span> Layout2, <span class="keyword">class</span> BatchedDDom, <span class="keyword">class</span> BatchedSplineDDom&gt;</div>
-<div class="line"><a id="l01226" name="l01226"></a><span class="lineno"> 1226</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classddc_1_1SplineEvaluator2D.html#ab86c06491c10e6594b48ccb461c3fe21">integrate</a>(</div>
-<div class="line"><a id="l01227" name="l01227"></a><span class="lineno"> 1227</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1ChunkCommon.html#a0214c802aca8ce0770988bb2784f104a">ChunkSpan</a>&lt;<span class="keywordtype">double</span>, BatchedDDom, Layout1, memory_space&gt; <span class="keyword">const</span> integrals,</div>
-<div class="line"><a id="l01228" name="l01228"></a><span class="lineno"> 1228</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1ChunkCommon.html#a0214c802aca8ce0770988bb2784f104a">ChunkSpan</a>&lt;<span class="keywordtype">double</span> <span class="keyword">const</span>, BatchedSplineDDom, Layout2, memory_space&gt; <span class="keyword">const</span></div>
-<div class="line"><a id="l01229" name="l01229"></a><span class="lineno"> 1229</span>                    spline_coef) <span class="keyword">const</span></div>
-<div class="line"><a id="l01230" name="l01230"></a><span class="lineno"> 1230</span>    {</div>
-<div class="line"><a id="l01231" name="l01231"></a><span class="lineno"> 1231</span>        <span class="keyword">static_assert</span>(</div>
-<div class="line"><a id="l01232" name="l01232"></a><span class="lineno"> 1232</span>                <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::type_seq_contains_v&lt;</div>
-<div class="line"><a id="l01233" name="l01233"></a><span class="lineno"> 1233</span>                        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::detail::TypeSeq&lt;bsplines_type1, bsplines_type2&gt;,</div>
-<div class="line"><a id="l01234" name="l01234"></a><span class="lineno"> 1234</span>                        to_type_seq_t&lt;BatchedSplineDDom&gt;&gt;,</div>
-<div class="line"><a id="l01235" name="l01235"></a><span class="lineno"> 1235</span>                <span class="stringliteral">&quot;The spline coefficients domain must contain the bsplines dimensions&quot;</span>);</div>
-<div class="line"><a id="l01236" name="l01236"></a><span class="lineno"> 1236</span>        <span class="keyword">using</span> batch_domain_type</div>
-<div class="line"><a id="l01237" name="l01237"></a><span class="lineno"> 1237</span>                = <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::remove_dims_of_t&lt;BatchedSplineDDom, bsplines_type1, bsplines_type2&gt;;</div>
-<div class="line"><a id="l01238" name="l01238"></a><span class="lineno"> 1238</span>        <span class="keyword">static_assert</span>(</div>
-<div class="line"><a id="l01239" name="l01239"></a><span class="lineno"> 1239</span>                std::is_same_v&lt;batch_domain_type, BatchedDDom&gt;,</div>
-<div class="line"><a id="l01240" name="l01240"></a><span class="lineno"> 1240</span>                <span class="stringliteral">&quot;The integrals domain must only contain the batch dimensions&quot;</span>);</div>
-<div class="line"><a id="l01241" name="l01241"></a><span class="lineno"> 1241</span> </div>
-<div class="line"><a id="l01242" name="l01242"></a><span class="lineno"> 1242</span>        batch_domain_type batch_domain(integrals.domain());</div>
-<div class="line"><a id="l01243" name="l01243"></a><span class="lineno"> 1243</span>        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1Chunk.html#aa299fb96adef4e448d8d35a354e71806">Chunk</a> values1_alloc(</div>
-<div class="line"><a id="l01244" name="l01244"></a><span class="lineno"> 1244</span>                <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1DiscreteDomain.html#a5cdbd7cda4dd9c4369a8810c88cf3bed">DiscreteDomain</a>&lt;bsplines_type1&gt;(spline_coef.domain()),</div>
-<div class="line"><a id="l01245" name="l01245"></a><span class="lineno"> 1245</span>                <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_class" href="classddc_1_1KokkosAllocator.html">KokkosAllocator</a>&lt;<span class="keywordtype">double</span>, memory_space&gt;());</div>
-<div class="line"><a id="l01246" name="l01246"></a><span class="lineno"> 1246</span>        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1ChunkCommon.html#a0214c802aca8ce0770988bb2784f104a">ChunkSpan</a> values1 = values1_alloc.span_view();</div>
-<div class="line"><a id="l01247" name="l01247"></a><span class="lineno"> 1247</span>        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::integrals(exec_space(), values1);</div>
-<div class="line"><a id="l01248" name="l01248"></a><span class="lineno"> 1248</span>        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1Chunk.html#aa299fb96adef4e448d8d35a354e71806">Chunk</a> values2_alloc(</div>
-<div class="line"><a id="l01249" name="l01249"></a><span class="lineno"> 1249</span>                <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1DiscreteDomain.html#a5cdbd7cda4dd9c4369a8810c88cf3bed">DiscreteDomain</a>&lt;bsplines_type2&gt;(spline_coef.domain()),</div>
-<div class="line"><a id="l01250" name="l01250"></a><span class="lineno"> 1250</span>                <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_class" href="classddc_1_1KokkosAllocator.html">KokkosAllocator</a>&lt;<span class="keywordtype">double</span>, memory_space&gt;());</div>
-<div class="line"><a id="l01251" name="l01251"></a><span class="lineno"> 1251</span>        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1ChunkCommon.html#a0214c802aca8ce0770988bb2784f104a">ChunkSpan</a> values2 = values2_alloc.span_view();</div>
-<div class="line"><a id="l01252" name="l01252"></a><span class="lineno"> 1252</span>        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::integrals(exec_space(), values2);</div>
-<div class="line"><a id="l01253" name="l01253"></a><span class="lineno"> 1253</span> </div>
-<div class="line"><a id="l01254" name="l01254"></a><span class="lineno"> 1254</span>        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::parallel_for_each(</div>
-<div class="line"><a id="l01255" name="l01255"></a><span class="lineno"> 1255</span>                <span class="stringliteral">&quot;ddc_splines_integrate_bsplines&quot;</span>,</div>
-<div class="line"><a id="l01256" name="l01256"></a><span class="lineno"> 1256</span>                exec_space(),</div>
-<div class="line"><a id="l01257" name="l01257"></a><span class="lineno"> 1257</span>                batch_domain,</div>
-<div class="line"><a id="l01258" name="l01258"></a><span class="lineno"> 1258</span>                KOKKOS_LAMBDA(<span class="keyword">typename</span> batch_domain_type::discrete_element_type <span class="keyword">const</span> j) {</div>
-<div class="line"><a id="l01259" name="l01259"></a><span class="lineno"> 1259</span>                    integrals(j) = 0;</div>
-<div class="line"><a id="l01260" name="l01260"></a><span class="lineno"> 1260</span>                    <span class="keywordflow">for</span> (<span class="keyword">typename</span> spline_domain_type1::discrete_element_type <span class="keyword">const</span> i1 :</div>
-<div class="line"><a id="l01261" name="l01261"></a><span class="lineno"> 1261</span>                         values1.domain()) {</div>
-<div class="line"><a id="l01262" name="l01262"></a><span class="lineno"> 1262</span>                        <span class="keywordflow">for</span> (<span class="keyword">typename</span> spline_domain_type2::discrete_element_type <span class="keyword">const</span> i2 :</div>
-<div class="line"><a id="l01263" name="l01263"></a><span class="lineno"> 1263</span>                             values2.domain()) {</div>
-<div class="line"><a id="l01264" name="l01264"></a><span class="lineno"> 1264</span>                            integrals(j) += spline_coef(i1, i2, j) * values1(i1) * values2(i2);</div>
-<div class="line"><a id="l01265" name="l01265"></a><span class="lineno"> 1265</span>                        }</div>
-<div class="line"><a id="l01266" name="l01266"></a><span class="lineno"> 1266</span>                    }</div>
-<div class="line"><a id="l01267" name="l01267"></a><span class="lineno"> 1267</span>                });</div>
-<div class="line"><a id="l01268" name="l01268"></a><span class="lineno"> 1268</span>    }</div>
-<div class="line"><a id="l01269" name="l01269"></a><span class="lineno"> 1269</span> </div>
-<div class="line"><a id="l01270" name="l01270"></a><span class="lineno"> 1270</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l01271" name="l01271"></a><span class="lineno"> 1271</span>    <span class="comment">/**</span></div>
-<div class="line"><span class="lineno"> 1272</span><span class="comment">     * @brief Evaluate the function on B-splines at the coordinate given.</span></div>
+<div class="line"><span class="lineno"> 1072</span><span class="comment">     * If one of the dimensions is not present, its corresponding order of derivation is considered to be 0.</span></div>
+<div class="line"><span class="lineno"> 1073</span><span class="comment">     * @param coord_eval The coordinate where the spline is differentiated. Note that only the components along the dimensions of interest are used.</span></div>
+<div class="line"><span class="lineno"> 1074</span><span class="comment">     * @param spline_coef A ChunkSpan storing the 2D spline coefficients.</span></div>
+<div class="line"><span class="lineno"> 1075</span><span class="comment">     *</span></div>
+<div class="line"><span class="lineno"> 1076</span><span class="comment">     * @return The derivative of the spline function at the desired coordinate.</span></div>
+<div class="line"><span class="lineno"> 1077</span><span class="comment">     */</span></div>
+<div class="line"><a id="l01078" name="l01078"></a><span class="lineno"> 1078</span>    <span class="keyword">template</span> &lt;<span class="keyword">class</span> DElem, <span class="keyword">class</span> Layout, <span class="keyword">class</span>... CoordsDims&gt;</div>
+<div class="line"><a id="l01079" name="l01079"></a><span class="lineno"> 1079</span>    <a class="code hl_function" href="classddc_1_1SplineEvaluator2D.html#a5a9924012f1a29c5449cb66f74e67ed9">KOKKOS_FUNCTION</a> <span class="keywordtype">double</span> <a class="code hl_function" href="classddc_1_1SplineEvaluator2D.html#a5a9924012f1a29c5449cb66f74e67ed9">deriv</a>(</div>
+<div class="line"><a id="l01080" name="l01080"></a><span class="lineno"> 1080</span>            DElem <span class="keyword">const</span>&amp; deriv_order,</div>
+<div class="line"><a id="l01081" name="l01081"></a><span class="lineno"> 1081</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;CoordsDims...&gt; <span class="keyword">const</span>&amp; coord_eval,</div>
+<div class="line"><a id="l01082" name="l01082"></a><span class="lineno"> 1082</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1ChunkCommon.html#a0214c802aca8ce0770988bb2784f104a">ChunkSpan</a>&lt;<span class="keywordtype">double</span> <span class="keyword">const</span>, spline_domain_type, Layout, memory_space&gt; <span class="keyword">const</span></div>
+<div class="line"><a id="l01083" name="l01083"></a><span class="lineno"> 1083</span>                    spline_coef) <span class="keyword">const</span></div>
+<div class="line"><a id="l01084" name="l01084"></a><span class="lineno"> 1084</span>    {</div>
+<div class="line"><a id="l01085" name="l01085"></a><span class="lineno"> 1085</span>        <span class="keywordflow">return</span> eval_no_bc(deriv_order, coord_eval, spline_coef);</div>
+<div class="line"><a id="l01086" name="l01086"></a><span class="lineno"> 1086</span>    }</div>
+<div class="line"><a id="l01087" name="l01087"></a><span class="lineno"> 1087</span> </div>
+<div class="line"><a id="l01088" name="l01088"></a><span class="lineno"> 1088</span>    <span class="comment">/**</span></div>
+<div class="line"><span class="lineno"> 1089</span><span class="comment">     * @brief Differentiate 2D spline function (described by its spline coefficients) on a mesh along the dimensions of interest.</span></div>
+<div class="line"><span class="lineno"> 1090</span><span class="comment">     *</span></div>
+<div class="line"><span class="lineno"> 1091</span><span class="comment">     * The spline coefficients represent a 2D spline function defined on a cartesian product of batch_domain and B-splines</span></div>
+<div class="line"><span class="lineno"> 1092</span><span class="comment">     * (basis splines). They can be obtained via various methods, such as using a SplineBuilder2D.</span></div>
+<div class="line"><span class="lineno"> 1093</span><span class="comment">     *</span></div>
+<div class="line"><span class="lineno"> 1094</span><span class="comment">     * This is not a nD differentiation. This is a batched 2D differentiation.</span></div>
+<div class="line"><span class="lineno"> 1095</span><span class="comment">     * This means that for each slice of coordinates identified by a batch_domain_type::discrete_element_type,</span></div>
+<div class="line"><span class="lineno"> 1096</span><span class="comment">     * the differentiation is performed with the 2D set of spline coefficients identified by the same batch_domain_type::discrete_element_type.</span></div>
+<div class="line"><span class="lineno"> 1097</span><span class="comment">     *</span></div>
+<div class="line"><span class="lineno"> 1098</span><span class="comment">     * @param[in] deriv_order A DiscreteElement containing the orders of derivation for each of the dimensions of interest.</span></div>
+<div class="line"><span class="lineno"> 1099</span><span class="comment">     * If one of the dimensions is not present, its corresponding order of derivation is considered to be 0.</span></div>
+<div class="line"><span class="lineno"> 1100</span><span class="comment">     * @param[out] spline_eval The derivatives of the 2D spline function at the desired coordinates. For practical reasons those are</span></div>
+<div class="line"><span class="lineno"> 1101</span><span class="comment">     * stored in a ChunkSpan defined on a batched_evaluation_domain_type. Note that the coordinates of the</span></div>
+<div class="line"><span class="lineno"> 1102</span><span class="comment">     * points represented by this domain are unused and irrelevant (but the points themselves (DiscreteElement) are used to select</span></div>
+<div class="line"><span class="lineno"> 1103</span><span class="comment">     * the set of 2D spline coefficients retained to perform the evaluation).</span></div>
+<div class="line"><span class="lineno"> 1104</span><span class="comment">     * @param[in] coords_eval The coordinates where the spline is differentiated. Those are</span></div>
+<div class="line"><span class="lineno"> 1105</span><span class="comment">     * stored in a ChunkSpan defined on a batched_evaluation_domain_type. Note that the coordinates of the</span></div>
+<div class="line"><span class="lineno"> 1106</span><span class="comment">     * points represented by this domain are unused and irrelevant (but the points themselves (DiscreteElement) are used to select</span></div>
+<div class="line"><span class="lineno"> 1107</span><span class="comment">     * the set of 2D spline coefficients retained to perform the evaluation).</span></div>
+<div class="line"><span class="lineno"> 1108</span><span class="comment">     * @param[in] spline_coef A ChunkSpan storing the 2D spline coefficients.</span></div>
+<div class="line"><span class="lineno"> 1109</span><span class="comment">     */</span></div>
+<div class="line"><a id="l01110" name="l01110"></a><span class="lineno"> 1110</span>    <span class="keyword">template</span> &lt;</div>
+<div class="line"><a id="l01111" name="l01111"></a><span class="lineno"> 1111</span>            <span class="keyword">class</span> DElem,</div>
+<div class="line"><a id="l01112" name="l01112"></a><span class="lineno"> 1112</span>            <span class="keyword">class</span> Layout1,</div>
+<div class="line"><a id="l01113" name="l01113"></a><span class="lineno"> 1113</span>            <span class="keyword">class</span> Layout2,</div>
+<div class="line"><a id="l01114" name="l01114"></a><span class="lineno"> 1114</span>            <span class="keyword">class</span> Layout3,</div>
+<div class="line"><a id="l01115" name="l01115"></a><span class="lineno"> 1115</span>            <span class="keyword">class</span> BatchedInterpolationDDom,</div>
+<div class="line"><a id="l01116" name="l01116"></a><span class="lineno"> 1116</span>            <span class="keyword">class</span>... CoordsDims&gt;</div>
+<div class="line"><a id="l01117" name="l01117"></a><span class="lineno"> 1117</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classddc_1_1SplineEvaluator2D.html#a4ef7f169f7e2ab3e68b6b4d5fd8134a3">deriv</a>(</div>
+<div class="line"><a id="l01118" name="l01118"></a><span class="lineno"> 1118</span>            DElem <span class="keyword">const</span>&amp; deriv_order,</div>
+<div class="line"><a id="l01119" name="l01119"></a><span class="lineno"> 1119</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1ChunkCommon.html#a0214c802aca8ce0770988bb2784f104a">ChunkSpan</a>&lt;<span class="keywordtype">double</span>, BatchedInterpolationDDom, Layout1, memory_space&gt; <span class="keyword">const</span></div>
+<div class="line"><a id="l01120" name="l01120"></a><span class="lineno"> 1120</span>                    spline_eval,</div>
+<div class="line"><a id="l01121" name="l01121"></a><span class="lineno"> 1121</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1ChunkCommon.html#a0214c802aca8ce0770988bb2784f104a">ChunkSpan</a>&lt;</div>
+<div class="line"><a id="l01122" name="l01122"></a><span class="lineno"> 1122</span>                    <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;CoordsDims...&gt; <span class="keyword">const</span>,</div>
+<div class="line"><a id="l01123" name="l01123"></a><span class="lineno"> 1123</span>                    BatchedInterpolationDDom,</div>
+<div class="line"><a id="l01124" name="l01124"></a><span class="lineno"> 1124</span>                    Layout2,</div>
+<div class="line"><a id="l01125" name="l01125"></a><span class="lineno"> 1125</span>                    memory_space&gt; <span class="keyword">const</span> coords_eval,</div>
+<div class="line"><a id="l01126" name="l01126"></a><span class="lineno"> 1126</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1ChunkCommon.html#a0214c802aca8ce0770988bb2784f104a">ChunkSpan</a>&lt;</div>
+<div class="line"><a id="l01127" name="l01127"></a><span class="lineno"> 1127</span>                    <span class="keywordtype">double</span> <span class="keyword">const</span>,</div>
+<div class="line"><a id="l01128" name="l01128"></a><span class="lineno"> 1128</span>                    batched_spline_domain_type&lt;BatchedInterpolationDDom&gt;,</div>
+<div class="line"><a id="l01129" name="l01129"></a><span class="lineno"> 1129</span>                    Layout3,</div>
+<div class="line"><a id="l01130" name="l01130"></a><span class="lineno"> 1130</span>                    memory_space&gt; <span class="keyword">const</span> spline_coef) <span class="keyword">const</span></div>
+<div class="line"><a id="l01131" name="l01131"></a><span class="lineno"> 1131</span>    {</div>
+<div class="line"><a id="l01132" name="l01132"></a><span class="lineno"> 1132</span>        <span class="keyword">static_assert</span>(is_discrete_element_v&lt;DElem&gt;);</div>
+<div class="line"><a id="l01133" name="l01133"></a><span class="lineno"> 1133</span> </div>
+<div class="line"><a id="l01134" name="l01134"></a><span class="lineno"> 1134</span>        batch_domain_type&lt;BatchedInterpolationDDom&gt; <span class="keyword">const</span> batch_domain(coords_eval.domain());</div>
+<div class="line"><a id="l01135" name="l01135"></a><span class="lineno"> 1135</span>        evaluation_domain_type1 <span class="keyword">const</span> evaluation_domain1(spline_eval.domain());</div>
+<div class="line"><a id="l01136" name="l01136"></a><span class="lineno"> 1136</span>        evaluation_domain_type2 <span class="keyword">const</span> evaluation_domain2(spline_eval.domain());</div>
+<div class="line"><a id="l01137" name="l01137"></a><span class="lineno"> 1137</span>        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::parallel_for_each(</div>
+<div class="line"><a id="l01138" name="l01138"></a><span class="lineno"> 1138</span>                <span class="stringliteral">&quot;ddc_splines_differentiate_2d&quot;</span>,</div>
+<div class="line"><a id="l01139" name="l01139"></a><span class="lineno"> 1139</span>                exec_space(),</div>
+<div class="line"><a id="l01140" name="l01140"></a><span class="lineno"> 1140</span>                batch_domain,</div>
+<div class="line"><a id="l01141" name="l01141"></a><span class="lineno"> 1141</span>                KOKKOS_CLASS_LAMBDA(</div>
+<div class="line"><a id="l01142" name="l01142"></a><span class="lineno"> 1142</span>                        <span class="keyword">typename</span> batch_domain_type&lt;</div>
+<div class="line"><a id="l01143" name="l01143"></a><span class="lineno"> 1143</span>                                BatchedInterpolationDDom&gt;::discrete_element_type <span class="keyword">const</span> j) {</div>
+<div class="line"><a id="l01144" name="l01144"></a><span class="lineno"> 1144</span>                    <span class="keyword">auto</span> <span class="keyword">const</span> spline_eval_2D = spline_eval[j];</div>
+<div class="line"><a id="l01145" name="l01145"></a><span class="lineno"> 1145</span>                    <span class="keyword">auto</span> <span class="keyword">const</span> coords_eval_2D = coords_eval[j];</div>
+<div class="line"><a id="l01146" name="l01146"></a><span class="lineno"> 1146</span>                    <span class="keyword">auto</span> <span class="keyword">const</span> spline_coef_2D = spline_coef[j];</div>
+<div class="line"><a id="l01147" name="l01147"></a><span class="lineno"> 1147</span>                    <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span> i1 : evaluation_domain1) {</div>
+<div class="line"><a id="l01148" name="l01148"></a><span class="lineno"> 1148</span>                        <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span> i2 : evaluation_domain2) {</div>
+<div class="line"><a id="l01149" name="l01149"></a><span class="lineno"> 1149</span>                            spline_eval_2D(i1, i2) = eval_no_bc(</div>
+<div class="line"><a id="l01150" name="l01150"></a><span class="lineno"> 1150</span>                                    deriv_order,</div>
+<div class="line"><a id="l01151" name="l01151"></a><span class="lineno"> 1151</span>                                    coords_eval_2D(i1, i2),</div>
+<div class="line"><a id="l01152" name="l01152"></a><span class="lineno"> 1152</span>                                    spline_coef_2D);</div>
+<div class="line"><a id="l01153" name="l01153"></a><span class="lineno"> 1153</span>                        }</div>
+<div class="line"><a id="l01154" name="l01154"></a><span class="lineno"> 1154</span>                    }</div>
+<div class="line"><a id="l01155" name="l01155"></a><span class="lineno"> 1155</span>                });</div>
+<div class="line"><a id="l01156" name="l01156"></a><span class="lineno"> 1156</span>    }</div>
+<div class="line"><a id="l01157" name="l01157"></a><span class="lineno"> 1157</span> </div>
+<div class="line"><a id="l01158" name="l01158"></a><span class="lineno"> 1158</span>    <span class="comment">/**</span></div>
+<div class="line"><span class="lineno"> 1159</span><span class="comment">     * @brief Differentiate 2D spline function (described by its spline coefficients) on a mesh along the dimensions of interest.</span></div>
+<div class="line"><span class="lineno"> 1160</span><span class="comment">     *</span></div>
+<div class="line"><span class="lineno"> 1161</span><span class="comment">     * The spline coefficients represent a 2D spline function defined on a cartesian product of batch_domain and B-splines</span></div>
+<div class="line"><span class="lineno"> 1162</span><span class="comment">     * (basis splines). They can be obtained via various methods, such as using a SplineBuilder2D.</span></div>
+<div class="line"><span class="lineno"> 1163</span><span class="comment">     *</span></div>
+<div class="line"><span class="lineno"> 1164</span><span class="comment">     * This is not a multidimensional differentiation. This is a batched 2D differentiation.</span></div>
+<div class="line"><span class="lineno"> 1165</span><span class="comment">     * This means that for each slice of spline_eval the differentiation is performed with</span></div>
+<div class="line"><span class="lineno"> 1166</span><span class="comment">     * the 2D set of spline coefficients identified by the same batch_domain_type::discrete_element_type.</span></div>
+<div class="line"><span class="lineno"> 1167</span><span class="comment">     *</span></div>
+<div class="line"><span class="lineno"> 1168</span><span class="comment">     * @param[in] deriv_order A DiscreteElement containing the orders of derivation for each of the dimensions of interest.</span></div>
+<div class="line"><span class="lineno"> 1169</span><span class="comment">     * If one of the dimensions is not present, its corresponding order of derivation is considered to be 0.</span></div>
+<div class="line"><span class="lineno"> 1170</span><span class="comment">     * @param[out] spline_eval The derivatives of the 2D spline function at the desired coordinates.</span></div>
+<div class="line"><span class="lineno"> 1171</span><span class="comment">     * @param[in] spline_coef A ChunkSpan storing the 2D spline coefficients.</span></div>
+<div class="line"><span class="lineno"> 1172</span><span class="comment">     */</span></div>
+<div class="line"><a id="l01173" name="l01173"></a><span class="lineno"> 1173</span>    <span class="keyword">template</span> &lt;<span class="keyword">class</span> DElem, <span class="keyword">class</span> Layout1, <span class="keyword">class</span> Layout2, <span class="keyword">class</span> BatchedInterpolationDDom&gt;</div>
+<div class="line"><a id="l01174" name="l01174"></a><span class="lineno"> 1174</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classddc_1_1SplineEvaluator2D.html#a8f9c9e1c00cdc5c9b340817943ddb3e3">deriv</a>(</div>
+<div class="line"><a id="l01175" name="l01175"></a><span class="lineno"> 1175</span>            DElem <span class="keyword">const</span>&amp; deriv_order,</div>
+<div class="line"><a id="l01176" name="l01176"></a><span class="lineno"> 1176</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1ChunkCommon.html#a0214c802aca8ce0770988bb2784f104a">ChunkSpan</a>&lt;<span class="keywordtype">double</span>, BatchedInterpolationDDom, Layout1, memory_space&gt; <span class="keyword">const</span></div>
+<div class="line"><a id="l01177" name="l01177"></a><span class="lineno"> 1177</span>                    spline_eval,</div>
+<div class="line"><a id="l01178" name="l01178"></a><span class="lineno"> 1178</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1ChunkCommon.html#a0214c802aca8ce0770988bb2784f104a">ChunkSpan</a>&lt;</div>
+<div class="line"><a id="l01179" name="l01179"></a><span class="lineno"> 1179</span>                    <span class="keywordtype">double</span> <span class="keyword">const</span>,</div>
+<div class="line"><a id="l01180" name="l01180"></a><span class="lineno"> 1180</span>                    batched_spline_domain_type&lt;BatchedInterpolationDDom&gt;,</div>
+<div class="line"><a id="l01181" name="l01181"></a><span class="lineno"> 1181</span>                    Layout2,</div>
+<div class="line"><a id="l01182" name="l01182"></a><span class="lineno"> 1182</span>                    memory_space&gt; <span class="keyword">const</span> spline_coef) <span class="keyword">const</span></div>
+<div class="line"><a id="l01183" name="l01183"></a><span class="lineno"> 1183</span>    {</div>
+<div class="line"><a id="l01184" name="l01184"></a><span class="lineno"> 1184</span>        <span class="keyword">static_assert</span>(is_discrete_element_v&lt;DElem&gt;);</div>
+<div class="line"><a id="l01185" name="l01185"></a><span class="lineno"> 1185</span> </div>
+<div class="line"><a id="l01186" name="l01186"></a><span class="lineno"> 1186</span>        batch_domain_type&lt;BatchedInterpolationDDom&gt; <span class="keyword">const</span> batch_domain(spline_eval.domain());</div>
+<div class="line"><a id="l01187" name="l01187"></a><span class="lineno"> 1187</span>        evaluation_domain_type1 <span class="keyword">const</span> evaluation_domain1(spline_eval.domain());</div>
+<div class="line"><a id="l01188" name="l01188"></a><span class="lineno"> 1188</span>        evaluation_domain_type2 <span class="keyword">const</span> evaluation_domain2(spline_eval.domain());</div>
+<div class="line"><a id="l01189" name="l01189"></a><span class="lineno"> 1189</span>        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::parallel_for_each(</div>
+<div class="line"><a id="l01190" name="l01190"></a><span class="lineno"> 1190</span>                <span class="stringliteral">&quot;ddc_splines_differentiate_2d&quot;</span>,</div>
+<div class="line"><a id="l01191" name="l01191"></a><span class="lineno"> 1191</span>                exec_space(),</div>
+<div class="line"><a id="l01192" name="l01192"></a><span class="lineno"> 1192</span>                batch_domain,</div>
+<div class="line"><a id="l01193" name="l01193"></a><span class="lineno"> 1193</span>                KOKKOS_CLASS_LAMBDA(</div>
+<div class="line"><a id="l01194" name="l01194"></a><span class="lineno"> 1194</span>                        <span class="keyword">typename</span> batch_domain_type&lt;</div>
+<div class="line"><a id="l01195" name="l01195"></a><span class="lineno"> 1195</span>                                BatchedInterpolationDDom&gt;::discrete_element_type <span class="keyword">const</span> j) {</div>
+<div class="line"><a id="l01196" name="l01196"></a><span class="lineno"> 1196</span>                    <span class="keyword">auto</span> <span class="keyword">const</span> spline_eval_2D = spline_eval[j];</div>
+<div class="line"><a id="l01197" name="l01197"></a><span class="lineno"> 1197</span>                    <span class="keyword">auto</span> <span class="keyword">const</span> spline_coef_2D = spline_coef[j];</div>
+<div class="line"><a id="l01198" name="l01198"></a><span class="lineno"> 1198</span>                    <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span> i1 : evaluation_domain1) {</div>
+<div class="line"><a id="l01199" name="l01199"></a><span class="lineno"> 1199</span>                        <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span> i2 : evaluation_domain2) {</div>
+<div class="line"><a id="l01200" name="l01200"></a><span class="lineno"> 1200</span>                            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;continuous_dimension_type1, continuous_dimension_type2&gt;</div>
+<div class="line"><a id="l01201" name="l01201"></a><span class="lineno"> 1201</span>                                    coord_eval_2D(<a class="code hl_namespace" href="namespaceddc.html">ddc</a>::coordinate(i1), <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::coordinate(i2));</div>
+<div class="line"><a id="l01202" name="l01202"></a><span class="lineno"> 1202</span>                            spline_eval_2D(i1, i2)</div>
+<div class="line"><a id="l01203" name="l01203"></a><span class="lineno"> 1203</span>                                    = eval_no_bc(deriv_order, coord_eval_2D, spline_coef_2D);</div>
+<div class="line"><a id="l01204" name="l01204"></a><span class="lineno"> 1204</span>                        }</div>
+<div class="line"><a id="l01205" name="l01205"></a><span class="lineno"> 1205</span>                    }</div>
+<div class="line"><a id="l01206" name="l01206"></a><span class="lineno"> 1206</span>                });</div>
+<div class="line"><a id="l01207" name="l01207"></a><span class="lineno"> 1207</span>    }</div>
+<div class="line"><a id="l01208" name="l01208"></a><span class="lineno"> 1208</span> </div>
+<div class="line"><a id="l01209" name="l01209"></a><span class="lineno"> 1209</span>    <span class="comment">/** @brief Perform batched 2D integrations of a spline function (described by its spline coefficients) along the dimensions of interest and store results on a subdomain of batch_domain.</span></div>
+<div class="line"><span class="lineno"> 1210</span><span class="comment">     *</span></div>
+<div class="line"><span class="lineno"> 1211</span><span class="comment">     * The spline coefficients represent a 2D spline function defined on a B-splines (basis splines). They can be obtained via various methods, such as using a SplineBuilder2D.</span></div>
+<div class="line"><span class="lineno"> 1212</span><span class="comment">     *</span></div>
+<div class="line"><span class="lineno"> 1213</span><span class="comment">     * This is not a nD integration. This is a batched 2D integration.</span></div>
+<div class="line"><span class="lineno"> 1214</span><span class="comment">     * This means that for each element of integrals, the integration is performed with the 2D set of</span></div>
+<div class="line"><span class="lineno"> 1215</span><span class="comment">     * spline coefficients identified by the same DiscreteElement.</span></div>
+<div class="line"><span class="lineno"> 1216</span><span class="comment">     *</span></div>
+<div class="line"><span class="lineno"> 1217</span><span class="comment">     * @param[out] integrals The integrals of the 2D spline function on the subdomain of batch_domain. For practical reasons those are</span></div>
+<div class="line"><span class="lineno"> 1218</span><span class="comment">     * stored in a ChunkSpan defined on a batch_domain_type. Note that the coordinates of the</span></div>
+<div class="line"><span class="lineno"> 1219</span><span class="comment">     * points represented by this domain are unused and irrelevant.</span></div>
+<div class="line"><span class="lineno"> 1220</span><span class="comment">     * @param[in] spline_coef A ChunkSpan storing the 2D spline coefficients.</span></div>
+<div class="line"><span class="lineno"> 1221</span><span class="comment">     */</span></div>
+<div class="line"><a id="l01222" name="l01222"></a><span class="lineno"> 1222</span>    <span class="keyword">template</span> &lt;<span class="keyword">class</span> Layout1, <span class="keyword">class</span> Layout2, <span class="keyword">class</span> BatchedDDom, <span class="keyword">class</span> BatchedSplineDDom&gt;</div>
+<div class="line"><a id="l01223" name="l01223"></a><span class="lineno"> 1223</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classddc_1_1SplineEvaluator2D.html#ab86c06491c10e6594b48ccb461c3fe21">integrate</a>(</div>
+<div class="line"><a id="l01224" name="l01224"></a><span class="lineno"> 1224</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1ChunkCommon.html#a0214c802aca8ce0770988bb2784f104a">ChunkSpan</a>&lt;<span class="keywordtype">double</span>, BatchedDDom, Layout1, memory_space&gt; <span class="keyword">const</span> integrals,</div>
+<div class="line"><a id="l01225" name="l01225"></a><span class="lineno"> 1225</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1ChunkCommon.html#a0214c802aca8ce0770988bb2784f104a">ChunkSpan</a>&lt;<span class="keywordtype">double</span> <span class="keyword">const</span>, BatchedSplineDDom, Layout2, memory_space&gt; <span class="keyword">const</span></div>
+<div class="line"><a id="l01226" name="l01226"></a><span class="lineno"> 1226</span>                    spline_coef) <span class="keyword">const</span></div>
+<div class="line"><a id="l01227" name="l01227"></a><span class="lineno"> 1227</span>    {</div>
+<div class="line"><a id="l01228" name="l01228"></a><span class="lineno"> 1228</span>        <span class="keyword">static_assert</span>(</div>
+<div class="line"><a id="l01229" name="l01229"></a><span class="lineno"> 1229</span>                <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::type_seq_contains_v&lt;</div>
+<div class="line"><a id="l01230" name="l01230"></a><span class="lineno"> 1230</span>                        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::detail::TypeSeq&lt;bsplines_type1, bsplines_type2&gt;,</div>
+<div class="line"><a id="l01231" name="l01231"></a><span class="lineno"> 1231</span>                        to_type_seq_t&lt;BatchedSplineDDom&gt;&gt;,</div>
+<div class="line"><a id="l01232" name="l01232"></a><span class="lineno"> 1232</span>                <span class="stringliteral">&quot;The spline coefficients domain must contain the bsplines dimensions&quot;</span>);</div>
+<div class="line"><a id="l01233" name="l01233"></a><span class="lineno"> 1233</span>        <span class="keyword">using</span> batch_domain_type</div>
+<div class="line"><a id="l01234" name="l01234"></a><span class="lineno"> 1234</span>                = <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::remove_dims_of_t&lt;BatchedSplineDDom, bsplines_type1, bsplines_type2&gt;;</div>
+<div class="line"><a id="l01235" name="l01235"></a><span class="lineno"> 1235</span>        <span class="keyword">static_assert</span>(</div>
+<div class="line"><a id="l01236" name="l01236"></a><span class="lineno"> 1236</span>                std::is_same_v&lt;batch_domain_type, BatchedDDom&gt;,</div>
+<div class="line"><a id="l01237" name="l01237"></a><span class="lineno"> 1237</span>                <span class="stringliteral">&quot;The integrals domain must only contain the batch dimensions&quot;</span>);</div>
+<div class="line"><a id="l01238" name="l01238"></a><span class="lineno"> 1238</span> </div>
+<div class="line"><a id="l01239" name="l01239"></a><span class="lineno"> 1239</span>        batch_domain_type batch_domain(integrals.domain());</div>
+<div class="line"><a id="l01240" name="l01240"></a><span class="lineno"> 1240</span>        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1Chunk.html#aa299fb96adef4e448d8d35a354e71806">Chunk</a> values1_alloc(</div>
+<div class="line"><a id="l01241" name="l01241"></a><span class="lineno"> 1241</span>                <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1DiscreteDomain.html#a5cdbd7cda4dd9c4369a8810c88cf3bed">DiscreteDomain</a>&lt;bsplines_type1&gt;(spline_coef.domain()),</div>
+<div class="line"><a id="l01242" name="l01242"></a><span class="lineno"> 1242</span>                <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_class" href="classddc_1_1KokkosAllocator.html">KokkosAllocator</a>&lt;<span class="keywordtype">double</span>, memory_space&gt;());</div>
+<div class="line"><a id="l01243" name="l01243"></a><span class="lineno"> 1243</span>        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1ChunkCommon.html#a0214c802aca8ce0770988bb2784f104a">ChunkSpan</a> values1 = values1_alloc.span_view();</div>
+<div class="line"><a id="l01244" name="l01244"></a><span class="lineno"> 1244</span>        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::integrals(exec_space(), values1);</div>
+<div class="line"><a id="l01245" name="l01245"></a><span class="lineno"> 1245</span>        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1Chunk.html#aa299fb96adef4e448d8d35a354e71806">Chunk</a> values2_alloc(</div>
+<div class="line"><a id="l01246" name="l01246"></a><span class="lineno"> 1246</span>                <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1DiscreteDomain.html#a5cdbd7cda4dd9c4369a8810c88cf3bed">DiscreteDomain</a>&lt;bsplines_type2&gt;(spline_coef.domain()),</div>
+<div class="line"><a id="l01247" name="l01247"></a><span class="lineno"> 1247</span>                <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_class" href="classddc_1_1KokkosAllocator.html">KokkosAllocator</a>&lt;<span class="keywordtype">double</span>, memory_space&gt;());</div>
+<div class="line"><a id="l01248" name="l01248"></a><span class="lineno"> 1248</span>        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1ChunkCommon.html#a0214c802aca8ce0770988bb2784f104a">ChunkSpan</a> values2 = values2_alloc.span_view();</div>
+<div class="line"><a id="l01249" name="l01249"></a><span class="lineno"> 1249</span>        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::integrals(exec_space(), values2);</div>
+<div class="line"><a id="l01250" name="l01250"></a><span class="lineno"> 1250</span> </div>
+<div class="line"><a id="l01251" name="l01251"></a><span class="lineno"> 1251</span>        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::parallel_for_each(</div>
+<div class="line"><a id="l01252" name="l01252"></a><span class="lineno"> 1252</span>                <span class="stringliteral">&quot;ddc_splines_integrate_bsplines&quot;</span>,</div>
+<div class="line"><a id="l01253" name="l01253"></a><span class="lineno"> 1253</span>                exec_space(),</div>
+<div class="line"><a id="l01254" name="l01254"></a><span class="lineno"> 1254</span>                batch_domain,</div>
+<div class="line"><a id="l01255" name="l01255"></a><span class="lineno"> 1255</span>                KOKKOS_LAMBDA(<span class="keyword">typename</span> batch_domain_type::discrete_element_type <span class="keyword">const</span> j) {</div>
+<div class="line"><a id="l01256" name="l01256"></a><span class="lineno"> 1256</span>                    integrals(j) = 0;</div>
+<div class="line"><a id="l01257" name="l01257"></a><span class="lineno"> 1257</span>                    <span class="keywordflow">for</span> (<span class="keyword">typename</span> spline_domain_type1::discrete_element_type <span class="keyword">const</span> i1 :</div>
+<div class="line"><a id="l01258" name="l01258"></a><span class="lineno"> 1258</span>                         values1.domain()) {</div>
+<div class="line"><a id="l01259" name="l01259"></a><span class="lineno"> 1259</span>                        <span class="keywordflow">for</span> (<span class="keyword">typename</span> spline_domain_type2::discrete_element_type <span class="keyword">const</span> i2 :</div>
+<div class="line"><a id="l01260" name="l01260"></a><span class="lineno"> 1260</span>                             values2.domain()) {</div>
+<div class="line"><a id="l01261" name="l01261"></a><span class="lineno"> 1261</span>                            integrals(j) += spline_coef(i1, i2, j) * values1(i1) * values2(i2);</div>
+<div class="line"><a id="l01262" name="l01262"></a><span class="lineno"> 1262</span>                        }</div>
+<div class="line"><a id="l01263" name="l01263"></a><span class="lineno"> 1263</span>                    }</div>
+<div class="line"><a id="l01264" name="l01264"></a><span class="lineno"> 1264</span>                });</div>
+<div class="line"><a id="l01265" name="l01265"></a><span class="lineno"> 1265</span>    }</div>
+<div class="line"><a id="l01266" name="l01266"></a><span class="lineno"> 1266</span> </div>
+<div class="line"><a id="l01267" name="l01267"></a><span class="lineno"> 1267</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l01268" name="l01268"></a><span class="lineno"> 1268</span>    <span class="comment">/**</span></div>
+<div class="line"><span class="lineno"> 1269</span><span class="comment">     * @brief Evaluate the function on B-splines at the coordinate given.</span></div>
+<div class="line"><span class="lineno"> 1270</span><span class="comment">     *</span></div>
+<div class="line"><span class="lineno"> 1271</span><span class="comment">     * This function firstly deals with the boundary conditions and calls the SplineEvaluator2D::eval_no_bc function</span></div>
+<div class="line"><span class="lineno"> 1272</span><span class="comment">     * to evaluate.</span></div>
 <div class="line"><span class="lineno"> 1273</span><span class="comment">     *</span></div>
-<div class="line"><span class="lineno"> 1274</span><span class="comment">     * This function firstly deals with the boundary conditions and calls the SplineEvaluator2D::eval_no_bc function</span></div>
-<div class="line"><span class="lineno"> 1275</span><span class="comment">     * to evaluate.</span></div>
-<div class="line"><span class="lineno"> 1276</span><span class="comment">     *</span></div>
-<div class="line"><span class="lineno"> 1277</span><span class="comment">     * @param[in] coord_eval The 2D coordinate where we want to evaluate.</span></div>
-<div class="line"><span class="lineno"> 1278</span><span class="comment">     * @param[in] spline_coef The B-splines coefficients of the function we want to evaluate.</span></div>
-<div class="line"><span class="lineno"> 1279</span><span class="comment">     * @param[out] vals1 A ChunkSpan with the not-null values of each function of the spline in the first dimension.</span></div>
-<div class="line"><span class="lineno"> 1280</span><span class="comment">     * @param[out] vals2 A ChunkSpan with the not-null values of each function of the spline in the second dimension.</span></div>
-<div class="line"><span class="lineno"> 1281</span><span class="comment">     *</span></div>
-<div class="line"><span class="lineno"> 1282</span><span class="comment">     * @return A double with the value of the function at the coordinate given.</span></div>
-<div class="line"><span class="lineno"> 1283</span><span class="comment">     *</span></div>
-<div class="line"><span class="lineno"> 1284</span><span class="comment">     * @see SplineBoundaryValue</span></div>
-<div class="line"><span class="lineno"> 1285</span><span class="comment">     */</span></div>
-<div class="line"><a id="l01286" name="l01286"></a><span class="lineno"> 1286</span>    <span class="keyword">template</span> &lt;<span class="keyword">class</span> Layout, <span class="keyword">class</span>... CoordsDims&gt;</div>
-<div class="line"><a id="l01287" name="l01287"></a><span class="lineno"> 1287</span>    KOKKOS_INLINE_FUNCTION <span class="keywordtype">double</span> eval(</div>
-<div class="line"><a id="l01288" name="l01288"></a><span class="lineno"> 1288</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;CoordsDims...&gt; coord_eval,</div>
-<div class="line"><a id="l01289" name="l01289"></a><span class="lineno"> 1289</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1ChunkCommon.html#a0214c802aca8ce0770988bb2784f104a">ChunkSpan</a>&lt;<span class="keywordtype">double</span> <span class="keyword">const</span>, spline_domain_type, Layout, memory_space&gt; <span class="keyword">const</span></div>
-<div class="line"><a id="l01290" name="l01290"></a><span class="lineno"> 1290</span>                    spline_coef) <span class="keyword">const</span></div>
-<div class="line"><a id="l01291" name="l01291"></a><span class="lineno"> 1291</span>    {</div>
-<div class="line"><a id="l01292" name="l01292"></a><span class="lineno"> 1292</span>        <span class="keyword">using</span> Dim1 = continuous_dimension_type1;</div>
-<div class="line"><a id="l01293" name="l01293"></a><span class="lineno"> 1293</span>        <span class="keyword">using</span> Dim2 = continuous_dimension_type2;</div>
-<div class="line"><a id="l01294" name="l01294"></a><span class="lineno"> 1294</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (bsplines_type1::is_periodic()) {</div>
-<div class="line"><a id="l01295" name="l01295"></a><span class="lineno"> 1295</span>            <span class="keywordflow">if</span> (<a class="code hl_namespace" href="namespaceddc.html">ddc</a>::get&lt;Dim1&gt;(coord_eval) &lt; <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type1&gt;().rmin()</div>
-<div class="line"><a id="l01296" name="l01296"></a><span class="lineno"> 1296</span>                || <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::get&lt;Dim1&gt;(coord_eval) &gt; <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type1&gt;().rmax()) {</div>
-<div class="line"><a id="l01297" name="l01297"></a><span class="lineno"> 1297</span>                <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::get&lt;Dim1&gt;(coord_eval)</div>
-<div class="line"><a id="l01298" name="l01298"></a><span class="lineno"> 1298</span>                        -= Kokkos::floor(</div>
-<div class="line"><a id="l01299" name="l01299"></a><span class="lineno"> 1299</span>                                   (<a class="code hl_namespace" href="namespaceddc.html">ddc</a>::get&lt;Dim1&gt;(coord_eval)</div>
-<div class="line"><a id="l01300" name="l01300"></a><span class="lineno"> 1300</span>                                    - <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type1&gt;().rmin())</div>
-<div class="line"><a id="l01301" name="l01301"></a><span class="lineno"> 1301</span>                                   / <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type1&gt;().length())</div>
-<div class="line"><a id="l01302" name="l01302"></a><span class="lineno"> 1302</span>                           * <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type1&gt;().length();</div>
-<div class="line"><a id="l01303" name="l01303"></a><span class="lineno"> 1303</span>            }</div>
-<div class="line"><a id="l01304" name="l01304"></a><span class="lineno"> 1304</span>        }</div>
-<div class="line"><a id="l01305" name="l01305"></a><span class="lineno"> 1305</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (bsplines_type2::is_periodic()) {</div>
-<div class="line"><a id="l01306" name="l01306"></a><span class="lineno"> 1306</span>            <span class="keywordflow">if</span> (<a class="code hl_namespace" href="namespaceddc.html">ddc</a>::get&lt;Dim2&gt;(coord_eval) &lt; <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type2&gt;().rmin()</div>
-<div class="line"><a id="l01307" name="l01307"></a><span class="lineno"> 1307</span>                || <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::get&lt;Dim2&gt;(coord_eval) &gt; <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type2&gt;().rmax()) {</div>
-<div class="line"><a id="l01308" name="l01308"></a><span class="lineno"> 1308</span>                <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::get&lt;Dim2&gt;(coord_eval)</div>
-<div class="line"><a id="l01309" name="l01309"></a><span class="lineno"> 1309</span>                        -= Kokkos::floor(</div>
-<div class="line"><a id="l01310" name="l01310"></a><span class="lineno"> 1310</span>                                   (<a class="code hl_namespace" href="namespaceddc.html">ddc</a>::get&lt;Dim2&gt;(coord_eval)</div>
-<div class="line"><a id="l01311" name="l01311"></a><span class="lineno"> 1311</span>                                    - <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type2&gt;().rmin())</div>
-<div class="line"><a id="l01312" name="l01312"></a><span class="lineno"> 1312</span>                                   / <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type2&gt;().length())</div>
-<div class="line"><a id="l01313" name="l01313"></a><span class="lineno"> 1313</span>                           * <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type2&gt;().length();</div>
-<div class="line"><a id="l01314" name="l01314"></a><span class="lineno"> 1314</span>            }</div>
-<div class="line"><a id="l01315" name="l01315"></a><span class="lineno"> 1315</span>        }</div>
-<div class="line"><a id="l01316" name="l01316"></a><span class="lineno"> 1316</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (!bsplines_type1::is_periodic()) {</div>
-<div class="line"><a id="l01317" name="l01317"></a><span class="lineno"> 1317</span>            <span class="keywordflow">if</span> (<a class="code hl_namespace" href="namespaceddc.html">ddc</a>::get&lt;Dim1&gt;(coord_eval) &lt; <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type1&gt;().rmin()) {</div>
-<div class="line"><a id="l01318" name="l01318"></a><span class="lineno"> 1318</span>                <span class="keywordflow">return</span> m_lower_extrap_rule_1(coord_eval, spline_coef);</div>
+<div class="line"><span class="lineno"> 1274</span><span class="comment">     * @param[in] coord_eval The 2D coordinate where we want to evaluate.</span></div>
+<div class="line"><span class="lineno"> 1275</span><span class="comment">     * @param[in] spline_coef The B-splines coefficients of the function we want to evaluate.</span></div>
+<div class="line"><span class="lineno"> 1276</span><span class="comment">     * @param[out] vals1 A ChunkSpan with the not-null values of each function of the spline in the first dimension.</span></div>
+<div class="line"><span class="lineno"> 1277</span><span class="comment">     * @param[out] vals2 A ChunkSpan with the not-null values of each function of the spline in the second dimension.</span></div>
+<div class="line"><span class="lineno"> 1278</span><span class="comment">     *</span></div>
+<div class="line"><span class="lineno"> 1279</span><span class="comment">     * @return A double with the value of the function at the coordinate given.</span></div>
+<div class="line"><span class="lineno"> 1280</span><span class="comment">     *</span></div>
+<div class="line"><span class="lineno"> 1281</span><span class="comment">     * @see SplineBoundaryValue</span></div>
+<div class="line"><span class="lineno"> 1282</span><span class="comment">     */</span></div>
+<div class="line"><a id="l01283" name="l01283"></a><span class="lineno"> 1283</span>    <span class="keyword">template</span> &lt;<span class="keyword">class</span> Layout, <span class="keyword">class</span>... CoordsDims&gt;</div>
+<div class="line"><a id="l01284" name="l01284"></a><span class="lineno"> 1284</span>    KOKKOS_INLINE_FUNCTION <span class="keywordtype">double</span> eval(</div>
+<div class="line"><a id="l01285" name="l01285"></a><span class="lineno"> 1285</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;CoordsDims...&gt; coord_eval,</div>
+<div class="line"><a id="l01286" name="l01286"></a><span class="lineno"> 1286</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1ChunkCommon.html#a0214c802aca8ce0770988bb2784f104a">ChunkSpan</a>&lt;<span class="keywordtype">double</span> <span class="keyword">const</span>, spline_domain_type, Layout, memory_space&gt; <span class="keyword">const</span></div>
+<div class="line"><a id="l01287" name="l01287"></a><span class="lineno"> 1287</span>                    spline_coef) <span class="keyword">const</span></div>
+<div class="line"><a id="l01288" name="l01288"></a><span class="lineno"> 1288</span>    {</div>
+<div class="line"><a id="l01289" name="l01289"></a><span class="lineno"> 1289</span>        <span class="keyword">using</span> Dim1 = continuous_dimension_type1;</div>
+<div class="line"><a id="l01290" name="l01290"></a><span class="lineno"> 1290</span>        <span class="keyword">using</span> Dim2 = continuous_dimension_type2;</div>
+<div class="line"><a id="l01291" name="l01291"></a><span class="lineno"> 1291</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (bsplines_type1::is_periodic()) {</div>
+<div class="line"><a id="l01292" name="l01292"></a><span class="lineno"> 1292</span>            <span class="keywordflow">if</span> (<a class="code hl_namespace" href="namespaceddc.html">ddc</a>::get&lt;Dim1&gt;(coord_eval) &lt; <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type1&gt;().rmin()</div>
+<div class="line"><a id="l01293" name="l01293"></a><span class="lineno"> 1293</span>                || <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::get&lt;Dim1&gt;(coord_eval) &gt; <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type1&gt;().rmax()) {</div>
+<div class="line"><a id="l01294" name="l01294"></a><span class="lineno"> 1294</span>                <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::get&lt;Dim1&gt;(coord_eval)</div>
+<div class="line"><a id="l01295" name="l01295"></a><span class="lineno"> 1295</span>                        -= Kokkos::floor(</div>
+<div class="line"><a id="l01296" name="l01296"></a><span class="lineno"> 1296</span>                                   (<a class="code hl_namespace" href="namespaceddc.html">ddc</a>::get&lt;Dim1&gt;(coord_eval)</div>
+<div class="line"><a id="l01297" name="l01297"></a><span class="lineno"> 1297</span>                                    - <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type1&gt;().rmin())</div>
+<div class="line"><a id="l01298" name="l01298"></a><span class="lineno"> 1298</span>                                   / <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type1&gt;().length())</div>
+<div class="line"><a id="l01299" name="l01299"></a><span class="lineno"> 1299</span>                           * <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type1&gt;().length();</div>
+<div class="line"><a id="l01300" name="l01300"></a><span class="lineno"> 1300</span>            }</div>
+<div class="line"><a id="l01301" name="l01301"></a><span class="lineno"> 1301</span>        }</div>
+<div class="line"><a id="l01302" name="l01302"></a><span class="lineno"> 1302</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (bsplines_type2::is_periodic()) {</div>
+<div class="line"><a id="l01303" name="l01303"></a><span class="lineno"> 1303</span>            <span class="keywordflow">if</span> (<a class="code hl_namespace" href="namespaceddc.html">ddc</a>::get&lt;Dim2&gt;(coord_eval) &lt; <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type2&gt;().rmin()</div>
+<div class="line"><a id="l01304" name="l01304"></a><span class="lineno"> 1304</span>                || <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::get&lt;Dim2&gt;(coord_eval) &gt; <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type2&gt;().rmax()) {</div>
+<div class="line"><a id="l01305" name="l01305"></a><span class="lineno"> 1305</span>                <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::get&lt;Dim2&gt;(coord_eval)</div>
+<div class="line"><a id="l01306" name="l01306"></a><span class="lineno"> 1306</span>                        -= Kokkos::floor(</div>
+<div class="line"><a id="l01307" name="l01307"></a><span class="lineno"> 1307</span>                                   (<a class="code hl_namespace" href="namespaceddc.html">ddc</a>::get&lt;Dim2&gt;(coord_eval)</div>
+<div class="line"><a id="l01308" name="l01308"></a><span class="lineno"> 1308</span>                                    - <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type2&gt;().rmin())</div>
+<div class="line"><a id="l01309" name="l01309"></a><span class="lineno"> 1309</span>                                   / <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type2&gt;().length())</div>
+<div class="line"><a id="l01310" name="l01310"></a><span class="lineno"> 1310</span>                           * <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type2&gt;().length();</div>
+<div class="line"><a id="l01311" name="l01311"></a><span class="lineno"> 1311</span>            }</div>
+<div class="line"><a id="l01312" name="l01312"></a><span class="lineno"> 1312</span>        }</div>
+<div class="line"><a id="l01313" name="l01313"></a><span class="lineno"> 1313</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (!bsplines_type1::is_periodic()) {</div>
+<div class="line"><a id="l01314" name="l01314"></a><span class="lineno"> 1314</span>            <span class="keywordflow">if</span> (<a class="code hl_namespace" href="namespaceddc.html">ddc</a>::get&lt;Dim1&gt;(coord_eval) &lt; <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type1&gt;().rmin()) {</div>
+<div class="line"><a id="l01315" name="l01315"></a><span class="lineno"> 1315</span>                <span class="keywordflow">return</span> m_lower_extrap_rule_1(coord_eval, spline_coef);</div>
+<div class="line"><a id="l01316" name="l01316"></a><span class="lineno"> 1316</span>            }</div>
+<div class="line"><a id="l01317" name="l01317"></a><span class="lineno"> 1317</span>            <span class="keywordflow">if</span> (<a class="code hl_namespace" href="namespaceddc.html">ddc</a>::get&lt;Dim1&gt;(coord_eval) &gt; <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type1&gt;().rmax()) {</div>
+<div class="line"><a id="l01318" name="l01318"></a><span class="lineno"> 1318</span>                <span class="keywordflow">return</span> m_upper_extrap_rule_1(coord_eval, spline_coef);</div>
 <div class="line"><a id="l01319" name="l01319"></a><span class="lineno"> 1319</span>            }</div>
-<div class="line"><a id="l01320" name="l01320"></a><span class="lineno"> 1320</span>            <span class="keywordflow">if</span> (<a class="code hl_namespace" href="namespaceddc.html">ddc</a>::get&lt;Dim1&gt;(coord_eval) &gt; <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type1&gt;().rmax()) {</div>
-<div class="line"><a id="l01321" name="l01321"></a><span class="lineno"> 1321</span>                <span class="keywordflow">return</span> m_upper_extrap_rule_1(coord_eval, spline_coef);</div>
-<div class="line"><a id="l01322" name="l01322"></a><span class="lineno"> 1322</span>            }</div>
-<div class="line"><a id="l01323" name="l01323"></a><span class="lineno"> 1323</span>        }</div>
-<div class="line"><a id="l01324" name="l01324"></a><span class="lineno"> 1324</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (!bsplines_type2::is_periodic()) {</div>
-<div class="line"><a id="l01325" name="l01325"></a><span class="lineno"> 1325</span>            <span class="keywordflow">if</span> (<a class="code hl_namespace" href="namespaceddc.html">ddc</a>::get&lt;Dim2&gt;(coord_eval) &lt; <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type2&gt;().rmin()) {</div>
-<div class="line"><a id="l01326" name="l01326"></a><span class="lineno"> 1326</span>                <span class="keywordflow">return</span> m_lower_extrap_rule_2(coord_eval, spline_coef);</div>
+<div class="line"><a id="l01320" name="l01320"></a><span class="lineno"> 1320</span>        }</div>
+<div class="line"><a id="l01321" name="l01321"></a><span class="lineno"> 1321</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (!bsplines_type2::is_periodic()) {</div>
+<div class="line"><a id="l01322" name="l01322"></a><span class="lineno"> 1322</span>            <span class="keywordflow">if</span> (<a class="code hl_namespace" href="namespaceddc.html">ddc</a>::get&lt;Dim2&gt;(coord_eval) &lt; <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type2&gt;().rmin()) {</div>
+<div class="line"><a id="l01323" name="l01323"></a><span class="lineno"> 1323</span>                <span class="keywordflow">return</span> m_lower_extrap_rule_2(coord_eval, spline_coef);</div>
+<div class="line"><a id="l01324" name="l01324"></a><span class="lineno"> 1324</span>            }</div>
+<div class="line"><a id="l01325" name="l01325"></a><span class="lineno"> 1325</span>            <span class="keywordflow">if</span> (<a class="code hl_namespace" href="namespaceddc.html">ddc</a>::get&lt;Dim2&gt;(coord_eval) &gt; <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type2&gt;().rmax()) {</div>
+<div class="line"><a id="l01326" name="l01326"></a><span class="lineno"> 1326</span>                <span class="keywordflow">return</span> m_upper_extrap_rule_2(coord_eval, spline_coef);</div>
 <div class="line"><a id="l01327" name="l01327"></a><span class="lineno"> 1327</span>            }</div>
-<div class="line"><a id="l01328" name="l01328"></a><span class="lineno"> 1328</span>            <span class="keywordflow">if</span> (<a class="code hl_namespace" href="namespaceddc.html">ddc</a>::get&lt;Dim2&gt;(coord_eval) &gt; <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type2&gt;().rmax()) {</div>
-<div class="line"><a id="l01329" name="l01329"></a><span class="lineno"> 1329</span>                <span class="keywordflow">return</span> m_upper_extrap_rule_2(coord_eval, spline_coef);</div>
-<div class="line"><a id="l01330" name="l01330"></a><span class="lineno"> 1330</span>            }</div>
-<div class="line"><a id="l01331" name="l01331"></a><span class="lineno"> 1331</span>        }</div>
-<div class="line"><a id="l01332" name="l01332"></a><span class="lineno"> 1332</span>        <span class="keywordflow">return</span> eval_no_bc(</div>
-<div class="line"><a id="l01333" name="l01333"></a><span class="lineno"> 1333</span>                <a class="code hl_namespace" href="namespaceddc.html">ddc</a><a class="code hl_function" href="classddc_1_1DiscreteElement.html#aae48d441289e8e21b6584903647e9c77">::</a>DiscreteElement<a class="code hl_function" href="classddc_1_1DiscreteElement.html#aae48d441289e8e21b6584903647e9c77">&lt;</a><a class="code hl_function" href="classddc_1_1DiscreteElement.html#aae48d441289e8e21b6584903647e9c77">&gt;</a><a class="code hl_function" href="classddc_1_1DiscreteElement.html#aae48d441289e8e21b6584903647e9c77">(</a><a class="code hl_function" href="classddc_1_1DiscreteElement.html#aae48d441289e8e21b6584903647e9c77">)</a>,</div>
-<div class="line"><a id="l01334" name="l01334"></a><span class="lineno"> 1334</span>                <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;continuous_dimension_type1, continuous_dimension_type2&gt;(</div>
-<div class="line"><a id="l01335" name="l01335"></a><span class="lineno"> 1335</span>                        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::get&lt;Dim1&gt;(coord_eval),</div>
-<div class="line"><a id="l01336" name="l01336"></a><span class="lineno"> 1336</span>                        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::get&lt;Dim2&gt;(coord_eval)),</div>
-<div class="line"><a id="l01337" name="l01337"></a><span class="lineno"> 1337</span>                spline_coef);</div>
-<div class="line"><a id="l01338" name="l01338"></a><span class="lineno"> 1338</span>    }</div>
-<div class="line"><a id="l01339" name="l01339"></a><span class="lineno"> 1339</span> </div>
-<div class="line"><a id="l01340" name="l01340"></a><span class="lineno"> 1340</span>    <span class="comment">/**</span></div>
-<div class="line"><span class="lineno"> 1341</span><span class="comment">     * @brief Evaluate the function or its derivative at the coordinate given.</span></div>
-<div class="line"><span class="lineno"> 1342</span><span class="comment">     *</span></div>
-<div class="line"><span class="lineno"> 1343</span><span class="comment">     * @param[in] deriv_order A DiscreteElement containing the orders of derivation for each of the dimensions of interest.</span></div>
-<div class="line"><span class="lineno"> 1344</span><span class="comment">     * If one of the dimensions is not present, its corresponding order of derivation is considered to be 0.</span></div>
-<div class="line"><span class="lineno"> 1345</span><span class="comment">     * @param[in] coord_eval The coordinate where we want to evaluate.</span></div>
-<div class="line"><span class="lineno"> 1346</span><span class="comment">     * @param[in] splne_coef The B-splines coefficients of the function we want to evaluate.</span></div>
-<div class="line"><span class="lineno"> 1347</span><span class="comment">     */</span></div>
-<div class="line"><a id="l01348" name="l01348"></a><span class="lineno"> 1348</span>    <span class="keyword">template</span> &lt;<span class="keyword">class</span>... DDims, <span class="keyword">class</span> Layout, <span class="keyword">class</span>... CoordsDims&gt;</div>
-<div class="line"><a id="l01349" name="l01349"></a><span class="lineno"> 1349</span>    KOKKOS_INLINE_FUNCTION <span class="keywordtype">double</span> eval_no_bc(</div>
-<div class="line"><a id="l01350" name="l01350"></a><span class="lineno"> 1350</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::DiscreteElement&lt;DDims...&gt; <span class="keyword">const</span>&amp; deriv_order,</div>
-<div class="line"><a id="l01351" name="l01351"></a><span class="lineno"> 1351</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;CoordsDims...&gt; <span class="keyword">const</span>&amp; coord_eval,</div>
-<div class="line"><a id="l01352" name="l01352"></a><span class="lineno"> 1352</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1ChunkCommon.html#a0214c802aca8ce0770988bb2784f104a">ChunkSpan</a>&lt;<span class="keywordtype">double</span> <span class="keyword">const</span>, spline_domain_type, Layout, memory_space&gt; <span class="keyword">const</span></div>
-<div class="line"><a id="l01353" name="l01353"></a><span class="lineno"> 1353</span>                    spline_coef) <span class="keyword">const</span></div>
-<div class="line"><a id="l01354" name="l01354"></a><span class="lineno"> 1354</span>    {</div>
-<div class="line"><a id="l01355" name="l01355"></a><span class="lineno"> 1355</span>        <span class="keyword">using</span> deriv_dim1 = <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_struct" href="namespaceddc.html#structddc_1_1Deriv">Deriv</a>&lt;continuous_dimension_type1&gt;;</div>
-<div class="line"><a id="l01356" name="l01356"></a><span class="lineno"> 1356</span>        <span class="keyword">using</span> deriv_dim2 = <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_struct" href="namespaceddc.html#structddc_1_1Deriv">Deriv</a>&lt;continuous_dimension_type2&gt;;</div>
-<div class="line"><a id="l01357" name="l01357"></a><span class="lineno"> 1357</span>        <span class="keyword">using</span> deriv_dims = <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::detail::TypeSeq&lt;DDims...&gt;;</div>
-<div class="line"><a id="l01358" name="l01358"></a><span class="lineno"> 1358</span> </div>
-<div class="line"><a id="l01359" name="l01359"></a><span class="lineno"> 1359</span>        <span class="comment">// Check that the tags are valid</span></div>
-<div class="line"><a id="l01360" name="l01360"></a><span class="lineno"> 1360</span>        <span class="keyword">static_assert</span>(</div>
-<div class="line"><a id="l01361" name="l01361"></a><span class="lineno"> 1361</span>                (in_tags_v&lt;DDims, <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::detail::TypeSeq&lt;deriv_dim1, deriv_dim2&gt;&gt; &amp;&amp; ...),</div>
-<div class="line"><a id="l01362" name="l01362"></a><span class="lineno"> 1362</span>                <span class="stringliteral">&quot;The only valid dimensions for deriv_order are Deriv&lt;Dim1&gt; and Deriv&lt;Dim2&gt;&quot;</span>);</div>
+<div class="line"><a id="l01328" name="l01328"></a><span class="lineno"> 1328</span>        }</div>
+<div class="line"><a id="l01329" name="l01329"></a><span class="lineno"> 1329</span>        <span class="keywordflow">return</span> eval_no_bc(</div>
+<div class="line"><a id="l01330" name="l01330"></a><span class="lineno"> 1330</span>                <a class="code hl_namespace" href="namespaceddc.html">ddc</a><a class="code hl_function" href="classddc_1_1DiscreteElement.html#aae48d441289e8e21b6584903647e9c77">::</a>DiscreteElement<a class="code hl_function" href="classddc_1_1DiscreteElement.html#aae48d441289e8e21b6584903647e9c77">&lt;</a><a class="code hl_function" href="classddc_1_1DiscreteElement.html#aae48d441289e8e21b6584903647e9c77">&gt;</a><a class="code hl_function" href="classddc_1_1DiscreteElement.html#aae48d441289e8e21b6584903647e9c77">(</a><a class="code hl_function" href="classddc_1_1DiscreteElement.html#aae48d441289e8e21b6584903647e9c77">)</a>,</div>
+<div class="line"><a id="l01331" name="l01331"></a><span class="lineno"> 1331</span>                <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;continuous_dimension_type1, continuous_dimension_type2&gt;(</div>
+<div class="line"><a id="l01332" name="l01332"></a><span class="lineno"> 1332</span>                        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::get&lt;Dim1&gt;(coord_eval),</div>
+<div class="line"><a id="l01333" name="l01333"></a><span class="lineno"> 1333</span>                        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::get&lt;Dim2&gt;(coord_eval)),</div>
+<div class="line"><a id="l01334" name="l01334"></a><span class="lineno"> 1334</span>                spline_coef);</div>
+<div class="line"><a id="l01335" name="l01335"></a><span class="lineno"> 1335</span>    }</div>
+<div class="line"><a id="l01336" name="l01336"></a><span class="lineno"> 1336</span> </div>
+<div class="line"><a id="l01337" name="l01337"></a><span class="lineno"> 1337</span>    <span class="comment">/**</span></div>
+<div class="line"><span class="lineno"> 1338</span><span class="comment">     * @brief Evaluate the function or its derivative at the coordinate given.</span></div>
+<div class="line"><span class="lineno"> 1339</span><span class="comment">     *</span></div>
+<div class="line"><span class="lineno"> 1340</span><span class="comment">     * @param[in] deriv_order A DiscreteElement containing the orders of derivation for each of the dimensions of interest.</span></div>
+<div class="line"><span class="lineno"> 1341</span><span class="comment">     * If one of the dimensions is not present, its corresponding order of derivation is considered to be 0.</span></div>
+<div class="line"><span class="lineno"> 1342</span><span class="comment">     * @param[in] coord_eval The coordinate where we want to evaluate.</span></div>
+<div class="line"><span class="lineno"> 1343</span><span class="comment">     * @param[in] splne_coef The B-splines coefficients of the function we want to evaluate.</span></div>
+<div class="line"><span class="lineno"> 1344</span><span class="comment">     */</span></div>
+<div class="line"><a id="l01345" name="l01345"></a><span class="lineno"> 1345</span>    <span class="keyword">template</span> &lt;<span class="keyword">class</span>... DerivDims, <span class="keyword">class</span> Layout, <span class="keyword">class</span>... CoordsDims&gt;</div>
+<div class="line"><a id="l01346" name="l01346"></a><span class="lineno"> 1346</span>    KOKKOS_INLINE_FUNCTION <span class="keywordtype">double</span> eval_no_bc(</div>
+<div class="line"><a id="l01347" name="l01347"></a><span class="lineno"> 1347</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::DiscreteElement&lt;DerivDims...&gt; <span class="keyword">const</span>&amp; deriv_order,</div>
+<div class="line"><a id="l01348" name="l01348"></a><span class="lineno"> 1348</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;CoordsDims...&gt; <span class="keyword">const</span>&amp; coord_eval,</div>
+<div class="line"><a id="l01349" name="l01349"></a><span class="lineno"> 1349</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1ChunkCommon.html#a0214c802aca8ce0770988bb2784f104a">ChunkSpan</a>&lt;<span class="keywordtype">double</span> <span class="keyword">const</span>, spline_domain_type, Layout, memory_space&gt; <span class="keyword">const</span></div>
+<div class="line"><a id="l01350" name="l01350"></a><span class="lineno"> 1350</span>                    spline_coef) <span class="keyword">const</span></div>
+<div class="line"><a id="l01351" name="l01351"></a><span class="lineno"> 1351</span>    {</div>
+<div class="line"><a id="l01352" name="l01352"></a><span class="lineno"> 1352</span>        <span class="keyword">using</span> deriv_dim1 = <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_struct" href="namespaceddc.html#structddc_1_1Deriv">Deriv</a>&lt;continuous_dimension_type1&gt;;</div>
+<div class="line"><a id="l01353" name="l01353"></a><span class="lineno"> 1353</span>        <span class="keyword">using</span> deriv_dim2 = <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_struct" href="namespaceddc.html#structddc_1_1Deriv">Deriv</a>&lt;continuous_dimension_type2&gt;;</div>
+<div class="line"><a id="l01354" name="l01354"></a><span class="lineno"> 1354</span>        <span class="keyword">using</span> deriv_dims = <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::detail::TypeSeq&lt;DerivDims...&gt;;</div>
+<div class="line"><a id="l01355" name="l01355"></a><span class="lineno"> 1355</span> </div>
+<div class="line"><a id="l01356" name="l01356"></a><span class="lineno"> 1356</span>        <span class="comment">// Check that the tags are valid</span></div>
+<div class="line"><a id="l01357" name="l01357"></a><span class="lineno"> 1357</span>        <span class="keyword">static_assert</span>(</div>
+<div class="line"><a id="l01358" name="l01358"></a><span class="lineno"> 1358</span>                (in_tags_v&lt;DerivDims, <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::detail::TypeSeq&lt;deriv_dim1, deriv_dim2&gt;&gt; &amp;&amp; ...),</div>
+<div class="line"><a id="l01359" name="l01359"></a><span class="lineno"> 1359</span>                <span class="stringliteral">&quot;The only valid dimensions for deriv_order are Deriv&lt;Dim1&gt; and Deriv&lt;Dim2&gt;&quot;</span>);</div>
+<div class="line"><a id="l01360" name="l01360"></a><span class="lineno"> 1360</span> </div>
+<div class="line"><a id="l01361" name="l01361"></a><span class="lineno"> 1361</span>        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::DiscreteElement&lt;bsplines_type1&gt; jmin1;</div>
+<div class="line"><a id="l01362" name="l01362"></a><span class="lineno"> 1362</span>        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::DiscreteElement&lt;bsplines_type2&gt; jmin2;</div>
 <div class="line"><a id="l01363" name="l01363"></a><span class="lineno"> 1363</span> </div>
-<div class="line"><a id="l01364" name="l01364"></a><span class="lineno"> 1364</span>        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::DiscreteElement&lt;bsplines_type1&gt; jmin1;</div>
-<div class="line"><a id="l01365" name="l01365"></a><span class="lineno"> 1365</span>        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::DiscreteElement&lt;bsplines_type2&gt; jmin2;</div>
-<div class="line"><a id="l01366" name="l01366"></a><span class="lineno"> 1366</span> </div>
-<div class="line"><a id="l01367" name="l01367"></a><span class="lineno"> 1367</span>        std::array&lt;<span class="keywordtype">double</span>, bsplines_type1::degree() + 1&gt; vals1_ptr;</div>
-<div class="line"><a id="l01368" name="l01368"></a><span class="lineno"> 1368</span>        Kokkos::mdspan&lt;<span class="keywordtype">double</span>, Kokkos::extents&lt;std::size_t, bsplines_type1::degree() + 1&gt;&gt; <span class="keyword">const</span></div>
-<div class="line"><a id="l01369" name="l01369"></a><span class="lineno"> 1369</span>                vals1(vals1_ptr.data());</div>
-<div class="line"><a id="l01370" name="l01370"></a><span class="lineno"> 1370</span>        std::array&lt;<span class="keywordtype">double</span>, bsplines_type2::degree() + 1&gt; vals2_ptr;</div>
-<div class="line"><a id="l01371" name="l01371"></a><span class="lineno"> 1371</span>        Kokkos::mdspan&lt;<span class="keywordtype">double</span>, Kokkos::extents&lt;std::size_t, bsplines_type2::degree() + 1&gt;&gt; <span class="keyword">const</span></div>
-<div class="line"><a id="l01372" name="l01372"></a><span class="lineno"> 1372</span>                vals2(vals2_ptr.data());</div>
-<div class="line"><a id="l01373" name="l01373"></a><span class="lineno"> 1373</span>        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;continuous_dimension_type1&gt; <span class="keyword">const</span> coord_eval_interest1(coord_eval);</div>
-<div class="line"><a id="l01374" name="l01374"></a><span class="lineno"> 1374</span>        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;continuous_dimension_type2&gt; <span class="keyword">const</span> coord_eval_interest2(coord_eval);</div>
-<div class="line"><a id="l01375" name="l01375"></a><span class="lineno"> 1375</span> </div>
-<div class="line"><a id="l01376" name="l01376"></a><span class="lineno"> 1376</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (!in_tags_v&lt;deriv_dim1, deriv_dims&gt;) {</div>
-<div class="line"><a id="l01377" name="l01377"></a><span class="lineno"> 1377</span>            jmin1 = <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type1&gt;().eval_basis(vals1, coord_eval_interest1);</div>
-<div class="line"><a id="l01378" name="l01378"></a><span class="lineno"> 1378</span>        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l01379" name="l01379"></a><span class="lineno"> 1379</span>            <span class="keyword">auto</span> <span class="keyword">const</span> order1 = deriv_order.<span class="keyword">template</span> uid&lt;deriv_dim1&gt;();</div>
-<div class="line"><a id="l01380" name="l01380"></a><span class="lineno"> 1380</span>            KOKKOS_ASSERT(order1 &gt; 0 &amp;&amp; order1 &lt;= bsplines_type1::degree())</div>
-<div class="line"><a id="l01381" name="l01381"></a><span class="lineno"> 1381</span> </div>
-<div class="line"><a id="l01382" name="l01382"></a><span class="lineno"> 1382</span>            std::array&lt;<span class="keywordtype">double</span>, (bsplines_type1::degree() + 1) * (bsplines_type1::degree() + 1)&gt;</div>
-<div class="line"><a id="l01383" name="l01383"></a><span class="lineno"> 1383</span>                    derivs1_ptr;</div>
-<div class="line"><a id="l01384" name="l01384"></a><span class="lineno"> 1384</span>            Kokkos::mdspan&lt;</div>
-<div class="line"><a id="l01385" name="l01385"></a><span class="lineno"> 1385</span>                    <span class="keywordtype">double</span>,</div>
-<div class="line"><a id="l01386" name="l01386"></a><span class="lineno"> 1386</span>                    Kokkos::extents&lt;</div>
-<div class="line"><a id="l01387" name="l01387"></a><span class="lineno"> 1387</span>                            std::size_t,</div>
-<div class="line"><a id="l01388" name="l01388"></a><span class="lineno"> 1388</span>                            bsplines_type1::degree() + 1,</div>
-<div class="line"><a id="l01389" name="l01389"></a><span class="lineno"> 1389</span>                            Kokkos::dynamic_extent&gt;&gt; <span class="keyword">const</span> derivs1(derivs1_ptr.data(), order1 + 1);</div>
+<div class="line"><a id="l01364" name="l01364"></a><span class="lineno"> 1364</span>        std::array&lt;<span class="keywordtype">double</span>, bsplines_type1::degree() + 1&gt; vals1_ptr;</div>
+<div class="line"><a id="l01365" name="l01365"></a><span class="lineno"> 1365</span>        Kokkos::mdspan&lt;<span class="keywordtype">double</span>, Kokkos::extents&lt;std::size_t, bsplines_type1::degree() + 1&gt;&gt; <span class="keyword">const</span></div>
+<div class="line"><a id="l01366" name="l01366"></a><span class="lineno"> 1366</span>                vals1(vals1_ptr.data());</div>
+<div class="line"><a id="l01367" name="l01367"></a><span class="lineno"> 1367</span>        std::array&lt;<span class="keywordtype">double</span>, bsplines_type2::degree() + 1&gt; vals2_ptr;</div>
+<div class="line"><a id="l01368" name="l01368"></a><span class="lineno"> 1368</span>        Kokkos::mdspan&lt;<span class="keywordtype">double</span>, Kokkos::extents&lt;std::size_t, bsplines_type2::degree() + 1&gt;&gt; <span class="keyword">const</span></div>
+<div class="line"><a id="l01369" name="l01369"></a><span class="lineno"> 1369</span>                vals2(vals2_ptr.data());</div>
+<div class="line"><a id="l01370" name="l01370"></a><span class="lineno"> 1370</span>        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;continuous_dimension_type1&gt; <span class="keyword">const</span> coord_eval_interest1(coord_eval);</div>
+<div class="line"><a id="l01371" name="l01371"></a><span class="lineno"> 1371</span>        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;continuous_dimension_type2&gt; <span class="keyword">const</span> coord_eval_interest2(coord_eval);</div>
+<div class="line"><a id="l01372" name="l01372"></a><span class="lineno"> 1372</span> </div>
+<div class="line"><a id="l01373" name="l01373"></a><span class="lineno"> 1373</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (!in_tags_v&lt;deriv_dim1, deriv_dims&gt;) {</div>
+<div class="line"><a id="l01374" name="l01374"></a><span class="lineno"> 1374</span>            jmin1 = <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type1&gt;().eval_basis(vals1, coord_eval_interest1);</div>
+<div class="line"><a id="l01375" name="l01375"></a><span class="lineno"> 1375</span>        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l01376" name="l01376"></a><span class="lineno"> 1376</span>            <span class="keyword">auto</span> <span class="keyword">const</span> order1 = deriv_order.<span class="keyword">template</span> uid&lt;deriv_dim1&gt;();</div>
+<div class="line"><a id="l01377" name="l01377"></a><span class="lineno"> 1377</span>            KOKKOS_ASSERT(order1 &gt; 0 &amp;&amp; order1 &lt;= bsplines_type1::degree())</div>
+<div class="line"><a id="l01378" name="l01378"></a><span class="lineno"> 1378</span> </div>
+<div class="line"><a id="l01379" name="l01379"></a><span class="lineno"> 1379</span>            std::array&lt;<span class="keywordtype">double</span>, (bsplines_type1::degree() + 1) * (bsplines_type1::degree() + 1)&gt;</div>
+<div class="line"><a id="l01380" name="l01380"></a><span class="lineno"> 1380</span>                    derivs1_ptr;</div>
+<div class="line"><a id="l01381" name="l01381"></a><span class="lineno"> 1381</span>            Kokkos::mdspan&lt;</div>
+<div class="line"><a id="l01382" name="l01382"></a><span class="lineno"> 1382</span>                    <span class="keywordtype">double</span>,</div>
+<div class="line"><a id="l01383" name="l01383"></a><span class="lineno"> 1383</span>                    Kokkos::extents&lt;</div>
+<div class="line"><a id="l01384" name="l01384"></a><span class="lineno"> 1384</span>                            std::size_t,</div>
+<div class="line"><a id="l01385" name="l01385"></a><span class="lineno"> 1385</span>                            bsplines_type1::degree() + 1,</div>
+<div class="line"><a id="l01386" name="l01386"></a><span class="lineno"> 1386</span>                            Kokkos::dynamic_extent&gt;&gt; <span class="keyword">const</span> derivs1(derivs1_ptr.data(), order1 + 1);</div>
+<div class="line"><a id="l01387" name="l01387"></a><span class="lineno"> 1387</span> </div>
+<div class="line"><a id="l01388" name="l01388"></a><span class="lineno"> 1388</span>            jmin1 = <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type1&gt;()</div>
+<div class="line"><a id="l01389" name="l01389"></a><span class="lineno"> 1389</span>                            .eval_basis_and_n_derivs(derivs1, coord_eval_interest1, order1);</div>
 <div class="line"><a id="l01390" name="l01390"></a><span class="lineno"> 1390</span> </div>
-<div class="line"><a id="l01391" name="l01391"></a><span class="lineno"> 1391</span>            jmin1 = <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type1&gt;()</div>
-<div class="line"><a id="l01392" name="l01392"></a><span class="lineno"> 1392</span>                            .eval_basis_and_n_derivs(derivs1, coord_eval_interest1, order1);</div>
-<div class="line"><a id="l01393" name="l01393"></a><span class="lineno"> 1393</span> </div>
-<div class="line"><a id="l01394" name="l01394"></a><span class="lineno"> 1394</span>            <span class="keywordflow">for</span> (std::size_t i = 0; i &lt; bsplines_type1::degree() + 1; ++i) {</div>
-<div class="line"><a id="l01395" name="l01395"></a><span class="lineno"> 1395</span>                vals1[i] = DDC_MDSPAN_ACCESS_OP(derivs1, i, order1);</div>
-<div class="line"><a id="l01396" name="l01396"></a><span class="lineno"> 1396</span>            }</div>
-<div class="line"><a id="l01397" name="l01397"></a><span class="lineno"> 1397</span>        }</div>
-<div class="line"><a id="l01398" name="l01398"></a><span class="lineno"> 1398</span> </div>
-<div class="line"><a id="l01399" name="l01399"></a><span class="lineno"> 1399</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (!in_tags_v&lt;deriv_dim2, deriv_dims&gt;) {</div>
-<div class="line"><a id="l01400" name="l01400"></a><span class="lineno"> 1400</span>            jmin2 = <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type2&gt;().eval_basis(vals2, coord_eval_interest2);</div>
-<div class="line"><a id="l01401" name="l01401"></a><span class="lineno"> 1401</span>        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l01402" name="l01402"></a><span class="lineno"> 1402</span>            <span class="keyword">auto</span> <span class="keyword">const</span> order2 = deriv_order.<span class="keyword">template</span> uid&lt;deriv_dim2&gt;();</div>
-<div class="line"><a id="l01403" name="l01403"></a><span class="lineno"> 1403</span>            KOKKOS_ASSERT(order2 &gt; 0 &amp;&amp; order2 &lt;= bsplines_type2::degree())</div>
-<div class="line"><a id="l01404" name="l01404"></a><span class="lineno"> 1404</span> </div>
-<div class="line"><a id="l01405" name="l01405"></a><span class="lineno"> 1405</span>            std::array&lt;<span class="keywordtype">double</span>, (bsplines_type2::degree() + 1) * (bsplines_type2::degree() + 1)&gt;</div>
-<div class="line"><a id="l01406" name="l01406"></a><span class="lineno"> 1406</span>                    derivs2_ptr;</div>
-<div class="line"><a id="l01407" name="l01407"></a><span class="lineno"> 1407</span>            Kokkos::mdspan&lt;</div>
-<div class="line"><a id="l01408" name="l01408"></a><span class="lineno"> 1408</span>                    <span class="keywordtype">double</span>,</div>
-<div class="line"><a id="l01409" name="l01409"></a><span class="lineno"> 1409</span>                    Kokkos::extents&lt;</div>
-<div class="line"><a id="l01410" name="l01410"></a><span class="lineno"> 1410</span>                            std::size_t,</div>
-<div class="line"><a id="l01411" name="l01411"></a><span class="lineno"> 1411</span>                            bsplines_type2::degree() + 1,</div>
-<div class="line"><a id="l01412" name="l01412"></a><span class="lineno"> 1412</span>                            Kokkos::dynamic_extent&gt;&gt; <span class="keyword">const</span> derivs2(derivs2_ptr.data(), order2 + 1);</div>
+<div class="line"><a id="l01391" name="l01391"></a><span class="lineno"> 1391</span>            <span class="keywordflow">for</span> (std::size_t i = 0; i &lt; bsplines_type1::degree() + 1; ++i) {</div>
+<div class="line"><a id="l01392" name="l01392"></a><span class="lineno"> 1392</span>                vals1[i] = DDC_MDSPAN_ACCESS_OP(derivs1, i, order1);</div>
+<div class="line"><a id="l01393" name="l01393"></a><span class="lineno"> 1393</span>            }</div>
+<div class="line"><a id="l01394" name="l01394"></a><span class="lineno"> 1394</span>        }</div>
+<div class="line"><a id="l01395" name="l01395"></a><span class="lineno"> 1395</span> </div>
+<div class="line"><a id="l01396" name="l01396"></a><span class="lineno"> 1396</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (!in_tags_v&lt;deriv_dim2, deriv_dims&gt;) {</div>
+<div class="line"><a id="l01397" name="l01397"></a><span class="lineno"> 1397</span>            jmin2 = <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type2&gt;().eval_basis(vals2, coord_eval_interest2);</div>
+<div class="line"><a id="l01398" name="l01398"></a><span class="lineno"> 1398</span>        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l01399" name="l01399"></a><span class="lineno"> 1399</span>            <span class="keyword">auto</span> <span class="keyword">const</span> order2 = deriv_order.<span class="keyword">template</span> uid&lt;deriv_dim2&gt;();</div>
+<div class="line"><a id="l01400" name="l01400"></a><span class="lineno"> 1400</span>            KOKKOS_ASSERT(order2 &gt; 0 &amp;&amp; order2 &lt;= bsplines_type2::degree())</div>
+<div class="line"><a id="l01401" name="l01401"></a><span class="lineno"> 1401</span> </div>
+<div class="line"><a id="l01402" name="l01402"></a><span class="lineno"> 1402</span>            std::array&lt;<span class="keywordtype">double</span>, (bsplines_type2::degree() + 1) * (bsplines_type2::degree() + 1)&gt;</div>
+<div class="line"><a id="l01403" name="l01403"></a><span class="lineno"> 1403</span>                    derivs2_ptr;</div>
+<div class="line"><a id="l01404" name="l01404"></a><span class="lineno"> 1404</span>            Kokkos::mdspan&lt;</div>
+<div class="line"><a id="l01405" name="l01405"></a><span class="lineno"> 1405</span>                    <span class="keywordtype">double</span>,</div>
+<div class="line"><a id="l01406" name="l01406"></a><span class="lineno"> 1406</span>                    Kokkos::extents&lt;</div>
+<div class="line"><a id="l01407" name="l01407"></a><span class="lineno"> 1407</span>                            std::size_t,</div>
+<div class="line"><a id="l01408" name="l01408"></a><span class="lineno"> 1408</span>                            bsplines_type2::degree() + 1,</div>
+<div class="line"><a id="l01409" name="l01409"></a><span class="lineno"> 1409</span>                            Kokkos::dynamic_extent&gt;&gt; <span class="keyword">const</span> derivs2(derivs2_ptr.data(), order2 + 1);</div>
+<div class="line"><a id="l01410" name="l01410"></a><span class="lineno"> 1410</span> </div>
+<div class="line"><a id="l01411" name="l01411"></a><span class="lineno"> 1411</span>            jmin2 = <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type2&gt;()</div>
+<div class="line"><a id="l01412" name="l01412"></a><span class="lineno"> 1412</span>                            .eval_basis_and_n_derivs(derivs2, coord_eval_interest2, order2);</div>
 <div class="line"><a id="l01413" name="l01413"></a><span class="lineno"> 1413</span> </div>
-<div class="line"><a id="l01414" name="l01414"></a><span class="lineno"> 1414</span>            jmin2 = <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;bsplines_type2&gt;()</div>
-<div class="line"><a id="l01415" name="l01415"></a><span class="lineno"> 1415</span>                            .eval_basis_and_n_derivs(derivs2, coord_eval_interest2, order2);</div>
-<div class="line"><a id="l01416" name="l01416"></a><span class="lineno"> 1416</span> </div>
-<div class="line"><a id="l01417" name="l01417"></a><span class="lineno"> 1417</span>            <span class="keywordflow">for</span> (std::size_t i = 0; i &lt; bsplines_type2::degree() + 1; ++i) {</div>
-<div class="line"><a id="l01418" name="l01418"></a><span class="lineno"> 1418</span>                vals2[i] = DDC_MDSPAN_ACCESS_OP(derivs2, i, order2);</div>
-<div class="line"><a id="l01419" name="l01419"></a><span class="lineno"> 1419</span>            }</div>
-<div class="line"><a id="l01420" name="l01420"></a><span class="lineno"> 1420</span>        }</div>
-<div class="line"><a id="l01421" name="l01421"></a><span class="lineno"> 1421</span> </div>
-<div class="line"><a id="l01422" name="l01422"></a><span class="lineno"> 1422</span>        <span class="keywordtype">double</span> y = 0.0;</div>
-<div class="line"><a id="l01423" name="l01423"></a><span class="lineno"> 1423</span>        <span class="keywordflow">for</span> (std::size_t i = 0; i &lt; bsplines_type1::degree() + 1; ++i) {</div>
-<div class="line"><a id="l01424" name="l01424"></a><span class="lineno"> 1424</span>            <span class="keywordflow">for</span> (std::size_t j = 0; j &lt; bsplines_type2::degree() + 1; ++j) {</div>
-<div class="line"><a id="l01425" name="l01425"></a><span class="lineno"> 1425</span>                y += spline_coef(</div>
-<div class="line"><a id="l01426" name="l01426"></a><span class="lineno"> 1426</span>                             <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::DiscreteElement&lt;</div>
-<div class="line"><a id="l01427" name="l01427"></a><span class="lineno"> 1427</span>                                     bsplines_type1,</div>
-<div class="line"><a id="l01428" name="l01428"></a><span class="lineno"> 1428</span>                                     bsplines_type2&gt;(jmin1 + i, jmin2 + j))</div>
-<div class="line"><a id="l01429" name="l01429"></a><span class="lineno"> 1429</span>                     * vals1[i] * vals2[j];</div>
-<div class="line"><a id="l01430" name="l01430"></a><span class="lineno"> 1430</span>            }</div>
-<div class="line"><a id="l01431" name="l01431"></a><span class="lineno"> 1431</span>        }</div>
-<div class="line"><a id="l01432" name="l01432"></a><span class="lineno"> 1432</span>        <span class="keywordflow">return</span> y;</div>
-<div class="line"><a id="l01433" name="l01433"></a><span class="lineno"> 1433</span>    }</div>
-<div class="line"><a id="l01434" name="l01434"></a><span class="lineno"> 1434</span>};</div>
-<div class="line"><a id="l01435" name="l01435"></a><span class="lineno"> 1435</span> </div>
-<div class="line"><a id="l01436" name="l01436"></a><span class="lineno"> 1436</span>} <span class="comment">// namespace ddc</span></div>
+<div class="line"><a id="l01414" name="l01414"></a><span class="lineno"> 1414</span>            <span class="keywordflow">for</span> (std::size_t i = 0; i &lt; bsplines_type2::degree() + 1; ++i) {</div>
+<div class="line"><a id="l01415" name="l01415"></a><span class="lineno"> 1415</span>                vals2[i] = DDC_MDSPAN_ACCESS_OP(derivs2, i, order2);</div>
+<div class="line"><a id="l01416" name="l01416"></a><span class="lineno"> 1416</span>            }</div>
+<div class="line"><a id="l01417" name="l01417"></a><span class="lineno"> 1417</span>        }</div>
+<div class="line"><a id="l01418" name="l01418"></a><span class="lineno"> 1418</span> </div>
+<div class="line"><a id="l01419" name="l01419"></a><span class="lineno"> 1419</span>        <span class="keywordtype">double</span> y = 0.0;</div>
+<div class="line"><a id="l01420" name="l01420"></a><span class="lineno"> 1420</span>        <span class="keywordflow">for</span> (std::size_t i = 0; i &lt; bsplines_type1::degree() + 1; ++i) {</div>
+<div class="line"><a id="l01421" name="l01421"></a><span class="lineno"> 1421</span>            <span class="keywordflow">for</span> (std::size_t j = 0; j &lt; bsplines_type2::degree() + 1; ++j) {</div>
+<div class="line"><a id="l01422" name="l01422"></a><span class="lineno"> 1422</span>                y += spline_coef(</div>
+<div class="line"><a id="l01423" name="l01423"></a><span class="lineno"> 1423</span>                             <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::DiscreteElement&lt;</div>
+<div class="line"><a id="l01424" name="l01424"></a><span class="lineno"> 1424</span>                                     bsplines_type1,</div>
+<div class="line"><a id="l01425" name="l01425"></a><span class="lineno"> 1425</span>                                     bsplines_type2&gt;(jmin1 + i, jmin2 + j))</div>
+<div class="line"><a id="l01426" name="l01426"></a><span class="lineno"> 1426</span>                     * vals1[i] * vals2[j];</div>
+<div class="line"><a id="l01427" name="l01427"></a><span class="lineno"> 1427</span>            }</div>
+<div class="line"><a id="l01428" name="l01428"></a><span class="lineno"> 1428</span>        }</div>
+<div class="line"><a id="l01429" name="l01429"></a><span class="lineno"> 1429</span>        <span class="keywordflow">return</span> y;</div>
+<div class="line"><a id="l01430" name="l01430"></a><span class="lineno"> 1430</span>    }</div>
+<div class="line"><a id="l01431" name="l01431"></a><span class="lineno"> 1431</span>};</div>
+<div class="line"><a id="l01432" name="l01432"></a><span class="lineno"> 1432</span> </div>
+<div class="line"><a id="l01433" name="l01433"></a><span class="lineno"> 1433</span>} <span class="comment">// namespace ddc</span></div>
 <div class="ttc" id="aclassddc_1_1ChunkCommon_html_a0214c802aca8ce0770988bb2784f104a"><div class="ttname"><a href="classddc_1_1ChunkCommon.html#a0214c802aca8ce0770988bb2784f104a">ddc::ChunkCommon::ChunkSpan</a></div><div class="ttdeci">friend class ChunkSpan</div><div class="ttdef"><b>Definition</b> <a href="chunk__common_8hpp_source.html#l00076">chunk_common.hpp:76</a></div></div>
 <div class="ttc" id="aclassddc_1_1Chunk_html_aa299fb96adef4e448d8d35a354e71806"><div class="ttname"><a href="classddc_1_1Chunk.html#aa299fb96adef4e448d8d35a354e71806">ddc::Chunk::Chunk</a></div><div class="ttdeci">friend class Chunk</div><div class="ttdef"><b>Definition</b> <a href="chunk_8hpp_source.html#l00081">chunk.hpp:81</a></div></div>
 <div class="ttc" id="aclassddc_1_1DiscreteDomain_html_a5cdbd7cda4dd9c4369a8810c88cf3bed"><div class="ttname"><a href="classddc_1_1DiscreteDomain.html#a5cdbd7cda4dd9c4369a8810c88cf3bed">ddc::DiscreteDomain::DiscreteDomain</a></div><div class="ttdeci">friend class DiscreteDomain</div><div class="ttdef"><b>Definition</b> <a href="discrete__domain_8hpp_source.html#l00064">discrete_domain.hpp:64</a></div></div>
@@ -1573,12 +1570,12 @@ $(document).ready(function(){initNavTree('spline__evaluator__2d_8hpp_source.html
 <div class="ttc" id="aclassddc_1_1SplineEvaluator2D_html_a09446d939cd0dc1258c0d2844a800c16"><div class="ttname"><a href="classddc_1_1SplineEvaluator2D.html#a09446d939cd0dc1258c0d2844a800c16">ddc::SplineEvaluator2D::SplineEvaluator2D</a></div><div class="ttdeci">SplineEvaluator2D(SplineEvaluator2D &amp;&amp;x)=default</div><div class="ttdoc">Move-constructs.</div></div>
 <div class="ttc" id="aclassddc_1_1SplineEvaluator2D_html_a0f48eb7c1d37b93ff10b1203d917a8e5"><div class="ttname"><a href="classddc_1_1SplineEvaluator2D.html#a0f48eb7c1d37b93ff10b1203d917a8e5">ddc::SplineEvaluator2D::lower_extrapolation_rule_dim_1</a></div><div class="ttdeci">lower_extrapolation_rule_1_type lower_extrapolation_rule_dim_1() const</div><div class="ttdoc">Get the lower extrapolation rule along the first dimension.</div><div class="ttdef"><b>Definition</b> <a href="spline__evaluator__2d_8hpp_source.html#l00288">spline_evaluator_2d.hpp:288</a></div></div>
 <div class="ttc" id="aclassddc_1_1SplineEvaluator2D_html_a4adff050479c898210628323ae05f42a"><div class="ttname"><a href="classddc_1_1SplineEvaluator2D.html#a4adff050479c898210628323ae05f42a">ddc::SplineEvaluator2D::operator=</a></div><div class="ttdeci">SplineEvaluator2D &amp; operator=(SplineEvaluator2D const &amp;x)=default</div><div class="ttdoc">Copy-assigns.</div></div>
-<div class="ttc" id="aclassddc_1_1SplineEvaluator2D_html_a4ef7f169f7e2ab3e68b6b4d5fd8134a3"><div class="ttname"><a href="classddc_1_1SplineEvaluator2D.html#a4ef7f169f7e2ab3e68b6b4d5fd8134a3">ddc::SplineEvaluator2D::deriv</a></div><div class="ttdeci">void deriv(DElem const &amp;deriv_order, ddc::ChunkSpan&lt; double, BatchedInterpolationDDom, Layout1, memory_space &gt; const spline_eval, ddc::ChunkSpan&lt; ddc::Coordinate&lt; CoordsDims... &gt; const, BatchedInterpolationDDom, Layout2, memory_space &gt; const coords_eval, ddc::ChunkSpan&lt; double const, batched_spline_domain_type&lt; BatchedInterpolationDDom &gt;, Layout3, memory_space &gt; const spline_coef) const</div><div class="ttdoc">Differentiate 2D spline function (described by its spline coefficients) on a mesh along the dimension...</div><div class="ttdef"><b>Definition</b> <a href="spline__evaluator__2d_8hpp_source.html#l01119">spline_evaluator_2d.hpp:1119</a></div></div>
+<div class="ttc" id="aclassddc_1_1SplineEvaluator2D_html_a4ef7f169f7e2ab3e68b6b4d5fd8134a3"><div class="ttname"><a href="classddc_1_1SplineEvaluator2D.html#a4ef7f169f7e2ab3e68b6b4d5fd8134a3">ddc::SplineEvaluator2D::deriv</a></div><div class="ttdeci">void deriv(DElem const &amp;deriv_order, ddc::ChunkSpan&lt; double, BatchedInterpolationDDom, Layout1, memory_space &gt; const spline_eval, ddc::ChunkSpan&lt; ddc::Coordinate&lt; CoordsDims... &gt; const, BatchedInterpolationDDom, Layout2, memory_space &gt; const coords_eval, ddc::ChunkSpan&lt; double const, batched_spline_domain_type&lt; BatchedInterpolationDDom &gt;, Layout3, memory_space &gt; const spline_coef) const</div><div class="ttdoc">Differentiate 2D spline function (described by its spline coefficients) on a mesh along the dimension...</div><div class="ttdef"><b>Definition</b> <a href="spline__evaluator__2d_8hpp_source.html#l01117">spline_evaluator_2d.hpp:1117</a></div></div>
 <div class="ttc" id="aclassddc_1_1SplineEvaluator2D_html_a549bbf3020f0abd6c542e27e9888a56a"><div class="ttname"><a href="classddc_1_1SplineEvaluator2D.html#a549bbf3020f0abd6c542e27e9888a56a">ddc::SplineEvaluator2D::SplineEvaluator2D</a></div><div class="ttdeci">SplineEvaluator2D(SplineEvaluator2D const &amp;x)=default</div><div class="ttdoc">Copy-constructs.</div></div>
 <div class="ttc" id="aclassddc_1_1SplineEvaluator2D_html_a5a8b1cfcc584f6ab50ee30145f029ebf"><div class="ttname"><a href="classddc_1_1SplineEvaluator2D.html#a5a8b1cfcc584f6ab50ee30145f029ebf">ddc::SplineEvaluator2D::~SplineEvaluator2D</a></div><div class="ttdeci">~SplineEvaluator2D()=default</div><div class="ttdoc">Destructs.</div></div>
-<div class="ttc" id="aclassddc_1_1SplineEvaluator2D_html_a5a9924012f1a29c5449cb66f74e67ed9"><div class="ttname"><a href="classddc_1_1SplineEvaluator2D.html#a5a9924012f1a29c5449cb66f74e67ed9">ddc::SplineEvaluator2D::deriv</a></div><div class="ttdeci">KOKKOS_FUNCTION double deriv(DElem const &amp;deriv_order, ddc::Coordinate&lt; CoordsDims... &gt; const &amp;coord_eval, ddc::ChunkSpan&lt; double const, spline_domain_type, Layout, memory_space &gt; const spline_coef) const</div><div class="ttdoc">Differentiate 2D spline function (described by its spline coefficients) at a given coordinate along t...</div><div class="ttdef"><b>Definition</b> <a href="spline__evaluator__2d_8hpp_source.html#l01080">spline_evaluator_2d.hpp:1080</a></div></div>
-<div class="ttc" id="aclassddc_1_1SplineEvaluator2D_html_a8f9c9e1c00cdc5c9b340817943ddb3e3"><div class="ttname"><a href="classddc_1_1SplineEvaluator2D.html#a8f9c9e1c00cdc5c9b340817943ddb3e3">ddc::SplineEvaluator2D::deriv</a></div><div class="ttdeci">void deriv(DElem const &amp;deriv_order, ddc::ChunkSpan&lt; double, BatchedInterpolationDDom, Layout1, memory_space &gt; const spline_eval, ddc::ChunkSpan&lt; double const, batched_spline_domain_type&lt; BatchedInterpolationDDom &gt;, Layout2, memory_space &gt; const spline_coef) const</div><div class="ttdoc">Differentiate 2D spline function (described by its spline coefficients) on a mesh along the dimension...</div><div class="ttdef"><b>Definition</b> <a href="spline__evaluator__2d_8hpp_source.html#l01177">spline_evaluator_2d.hpp:1177</a></div></div>
-<div class="ttc" id="aclassddc_1_1SplineEvaluator2D_html_ab86c06491c10e6594b48ccb461c3fe21"><div class="ttname"><a href="classddc_1_1SplineEvaluator2D.html#ab86c06491c10e6594b48ccb461c3fe21">ddc::SplineEvaluator2D::integrate</a></div><div class="ttdeci">void integrate(ddc::ChunkSpan&lt; double, BatchedDDom, Layout1, memory_space &gt; const integrals, ddc::ChunkSpan&lt; double const, BatchedSplineDDom, Layout2, memory_space &gt; const spline_coef) const</div><div class="ttdoc">Perform batched 2D integrations of a spline function (described by its spline coefficients) along the...</div><div class="ttdef"><b>Definition</b> <a href="spline__evaluator__2d_8hpp_source.html#l01226">spline_evaluator_2d.hpp:1226</a></div></div>
+<div class="ttc" id="aclassddc_1_1SplineEvaluator2D_html_a5a9924012f1a29c5449cb66f74e67ed9"><div class="ttname"><a href="classddc_1_1SplineEvaluator2D.html#a5a9924012f1a29c5449cb66f74e67ed9">ddc::SplineEvaluator2D::deriv</a></div><div class="ttdeci">KOKKOS_FUNCTION double deriv(DElem const &amp;deriv_order, ddc::Coordinate&lt; CoordsDims... &gt; const &amp;coord_eval, ddc::ChunkSpan&lt; double const, spline_domain_type, Layout, memory_space &gt; const spline_coef) const</div><div class="ttdoc">Differentiate 2D spline function (described by its spline coefficients) at a given coordinate along t...</div><div class="ttdef"><b>Definition</b> <a href="spline__evaluator__2d_8hpp_source.html#l01079">spline_evaluator_2d.hpp:1079</a></div></div>
+<div class="ttc" id="aclassddc_1_1SplineEvaluator2D_html_a8f9c9e1c00cdc5c9b340817943ddb3e3"><div class="ttname"><a href="classddc_1_1SplineEvaluator2D.html#a8f9c9e1c00cdc5c9b340817943ddb3e3">ddc::SplineEvaluator2D::deriv</a></div><div class="ttdeci">void deriv(DElem const &amp;deriv_order, ddc::ChunkSpan&lt; double, BatchedInterpolationDDom, Layout1, memory_space &gt; const spline_eval, ddc::ChunkSpan&lt; double const, batched_spline_domain_type&lt; BatchedInterpolationDDom &gt;, Layout2, memory_space &gt; const spline_coef) const</div><div class="ttdoc">Differentiate 2D spline function (described by its spline coefficients) on a mesh along the dimension...</div><div class="ttdef"><b>Definition</b> <a href="spline__evaluator__2d_8hpp_source.html#l01174">spline_evaluator_2d.hpp:1174</a></div></div>
+<div class="ttc" id="aclassddc_1_1SplineEvaluator2D_html_ab86c06491c10e6594b48ccb461c3fe21"><div class="ttname"><a href="classddc_1_1SplineEvaluator2D.html#ab86c06491c10e6594b48ccb461c3fe21">ddc::SplineEvaluator2D::integrate</a></div><div class="ttdeci">void integrate(ddc::ChunkSpan&lt; double, BatchedDDom, Layout1, memory_space &gt; const integrals, ddc::ChunkSpan&lt; double const, BatchedSplineDDom, Layout2, memory_space &gt; const spline_coef) const</div><div class="ttdoc">Perform batched 2D integrations of a spline function (described by its spline coefficients) along the...</div><div class="ttdef"><b>Definition</b> <a href="spline__evaluator__2d_8hpp_source.html#l01223">spline_evaluator_2d.hpp:1223</a></div></div>
 <div class="ttc" id="aclassddc_1_1SplineEvaluator2D_html_ad326988914e40f7e23a32396b6607d60"><div class="ttname"><a href="classddc_1_1SplineEvaluator2D.html#ad326988914e40f7e23a32396b6607d60">ddc::SplineEvaluator2D::upper_extrapolation_rule_dim_2</a></div><div class="ttdeci">upper_extrapolation_rule_2_type upper_extrapolation_rule_dim_2() const</div><div class="ttdoc">Get the upper extrapolation rule along the second dimension.</div><div class="ttdef"><b>Definition</b> <a href="spline__evaluator__2d_8hpp_source.html#l00330">spline_evaluator_2d.hpp:330</a></div></div>
 <div class="ttc" id="aclassddc_1_1SplineEvaluator2D_html_ad7e2ce4dba00ac5801987978cd42e169"><div class="ttname"><a href="classddc_1_1SplineEvaluator2D.html#ad7e2ce4dba00ac5801987978cd42e169">ddc::SplineEvaluator2D::upper_extrapolation_rule_dim_1</a></div><div class="ttdeci">upper_extrapolation_rule_1_type upper_extrapolation_rule_dim_1() const</div><div class="ttdoc">Get the upper extrapolation rule along the first dimension.</div><div class="ttdef"><b>Definition</b> <a href="spline__evaluator__2d_8hpp_source.html#l00302">spline_evaluator_2d.hpp:302</a></div></div>
 <div class="ttc" id="aclassddc_1_1SplineEvaluator2D_html_ad8594a9cead725650dc4697906710f5a"><div class="ttname"><a href="classddc_1_1SplineEvaluator2D.html#ad8594a9cead725650dc4697906710f5a">ddc::SplineEvaluator2D::lower_extrapolation_rule_dim_2</a></div><div class="ttdeci">lower_extrapolation_rule_2_type lower_extrapolation_rule_dim_2() const</div><div class="ttdoc">Get the lower extrapolation rule along the second dimension.</div><div class="ttdef"><b>Definition</b> <a href="spline__evaluator__2d_8hpp_source.html#l00316">spline_evaluator_2d.hpp:316</a></div></div>

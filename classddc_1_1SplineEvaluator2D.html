@@ -1330,7 +1330,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 <p>The spline coefficients represent a 2D spline function defined on a B-splines (basis splines). They can be obtained via various methods, such as using a <a class="el" href="classddc_1_1SplineBuilder2D.html" title="A class for creating a 2D spline approximation of a function.">SplineBuilder2D</a>.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">deriv_order</td><td>A <a class="el" href="classddc_1_1DiscreteElement.html" title="A DiscreteElement identifies an element of the discrete dimension.">DiscreteElement</a> containing the orders of derivation for each of the dimensions of interest. If one of the dimensions is not present, its corresponding order of derivation is considered to be 0. The highest valid order is 2. </td></tr>
+    <tr><td class="paramname">deriv_order</td><td>A <a class="el" href="classddc_1_1DiscreteElement.html" title="A DiscreteElement identifies an element of the discrete dimension.">DiscreteElement</a> containing the orders of derivation for each of the dimensions of interest. If one of the dimensions is not present, its corresponding order of derivation is considered to be 0. </td></tr>
     <tr><td class="paramname">coord_eval</td><td>The coordinate where the spline is differentiated. Note that only the components along the dimensions of interest are used. </td></tr>
     <tr><td class="paramname">spline_coef</td><td>A <a class="el" href="classddc_1_1ChunkSpan.html">ChunkSpan</a> storing the 2D spline coefficients.</td></tr>
   </table>
@@ -1338,7 +1338,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The derivative of the spline function at the desired coordinate. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="spline__evaluator__2d_8hpp_source.html#l01080">1080</a> of file <a class="el" href="spline__evaluator__2d_8hpp_source.html">spline_evaluator_2d.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="spline__evaluator__2d_8hpp_source.html#l01079">1079</a> of file <a class="el" href="spline__evaluator__2d_8hpp_source.html">spline_evaluator_2d.hpp</a>.</p>
 
 </div>
 </div>
@@ -1397,7 +1397,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 <p>This is not a nD differentiation. This is a batched 2D differentiation. This means that for each slice of coordinates identified by a batch_domain_type::discrete_element_type, the differentiation is performed with the 2D set of spline coefficients identified by the same batch_domain_type::discrete_element_type.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">deriv_order</td><td>A <a class="el" href="classddc_1_1DiscreteElement.html" title="A DiscreteElement identifies an element of the discrete dimension.">DiscreteElement</a> containing the orders of derivation for each of the dimensions of interest. If one of the dimensions is not present, its corresponding order of derivation is considered to be 0. The highest valid order is 2. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">deriv_order</td><td>A <a class="el" href="classddc_1_1DiscreteElement.html" title="A DiscreteElement identifies an element of the discrete dimension.">DiscreteElement</a> containing the orders of derivation for each of the dimensions of interest. If one of the dimensions is not present, its corresponding order of derivation is considered to be 0. </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">spline_eval</td><td>The derivatives of the 2D spline function at the desired coordinates. For practical reasons those are stored in a <a class="el" href="classddc_1_1ChunkSpan.html">ChunkSpan</a> defined on a batched_evaluation_domain_type. Note that the coordinates of the points represented by this domain are unused and irrelevant (but the points themselves (<a class="el" href="classddc_1_1DiscreteElement.html" title="A DiscreteElement identifies an element of the discrete dimension.">DiscreteElement</a>) are used to select the set of 2D spline coefficients retained to perform the evaluation). </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">coords_eval</td><td>The coordinates where the spline is differentiated. Those are stored in a <a class="el" href="classddc_1_1ChunkSpan.html">ChunkSpan</a> defined on a batched_evaluation_domain_type. Note that the coordinates of the points represented by this domain are unused and irrelevant (but the points themselves (<a class="el" href="classddc_1_1DiscreteElement.html" title="A DiscreteElement identifies an element of the discrete dimension.">DiscreteElement</a>) are used to select the set of 2D spline coefficients retained to perform the evaluation). </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">spline_coef</td><td>A <a class="el" href="classddc_1_1ChunkSpan.html">ChunkSpan</a> storing the 2D spline coefficients. </td></tr>
@@ -1405,7 +1405,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="spline__evaluator__2d_8hpp_source.html#l01119">1119</a> of file <a class="el" href="spline__evaluator__2d_8hpp_source.html">spline_evaluator_2d.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="spline__evaluator__2d_8hpp_source.html#l01117">1117</a> of file <a class="el" href="spline__evaluator__2d_8hpp_source.html">spline_evaluator_2d.hpp</a>.</p>
 
 </div>
 </div>
@@ -1458,14 +1458,14 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 <p>This is not a multidimensional differentiation. This is a batched 2D differentiation. This means that for each slice of spline_eval the differentiation is performed with the 2D set of spline coefficients identified by the same batch_domain_type::discrete_element_type.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">deriv_order</td><td>A <a class="el" href="classddc_1_1DiscreteElement.html" title="A DiscreteElement identifies an element of the discrete dimension.">DiscreteElement</a> containing the orders of derivation for each of the dimensions of interest. If one of the dimensions is not present, its corresponding order of derivation is considered to be 0. The highest valid order is 2. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">deriv_order</td><td>A <a class="el" href="classddc_1_1DiscreteElement.html" title="A DiscreteElement identifies an element of the discrete dimension.">DiscreteElement</a> containing the orders of derivation for each of the dimensions of interest. If one of the dimensions is not present, its corresponding order of derivation is considered to be 0. </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">spline_eval</td><td>The derivatives of the 2D spline function at the desired coordinates. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">spline_coef</td><td>A <a class="el" href="classddc_1_1ChunkSpan.html">ChunkSpan</a> storing the 2D spline coefficients. </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="spline__evaluator__2d_8hpp_source.html#l01177">1177</a> of file <a class="el" href="spline__evaluator__2d_8hpp_source.html">spline_evaluator_2d.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="spline__evaluator__2d_8hpp_source.html#l01174">1174</a> of file <a class="el" href="spline__evaluator__2d_8hpp_source.html">spline_evaluator_2d.hpp</a>.</p>
 
 </div>
 </div>
@@ -1518,7 +1518,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="spline__evaluator__2d_8hpp_source.html#l01226">1226</a> of file <a class="el" href="spline__evaluator__2d_8hpp_source.html">spline_evaluator_2d.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="spline__evaluator__2d_8hpp_source.html#l01223">1223</a> of file <a class="el" href="spline__evaluator__2d_8hpp_source.html">spline_evaluator_2d.hpp</a>.</p>
 
 </div>
 </div>

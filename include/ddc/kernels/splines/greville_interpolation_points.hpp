@@ -77,13 +77,13 @@ class GrevilleInterpolationPoints
 
         ddc::DiscreteElement<BSplines> ib0(bspline_domain.front());
 
-        ddc::for_each(bspline_domain, [&](ddc::DiscreteElement<BSplines> ib) {
+        ddc::host_for_each(bspline_domain, [&](ddc::DiscreteElement<BSplines> ib) {
             // Define the Greville points from the bspline knots
             greville_points[ib - ib0] = 0.0;
             ddc::DiscreteDomain<NonUniformBsplinesKnots<BSplines>> const sub_domain(
                     ddc::discrete_space<BSplines>().get_first_support_knot(ib) + 1,
                     n_points_in_average);
-            ddc::for_each(sub_domain, [&](auto ik) {
+            ddc::host_for_each(sub_domain, [&](auto ik) {
                 greville_points[ib - ib0] += ddc::coordinate(ik);
             });
             greville_points[ib - ib0] /= n_points_in_average.value();
@@ -181,7 +181,7 @@ public:
                             ddc::discrete_space<BSplines>().get_last_support_knot(spline_idx)
                                     - n_knots_in_domain,
                             n_knots_in_domain);
-                    ddc::for_each(
+                    ddc::host_for_each(
                             sub_domain,
                             [&](DiscreteElement<UniformBsplinesKnots<BSplines>> ik) {
                                 points_with_bcs[i] += ddc::coordinate(ik);
@@ -201,7 +201,7 @@ public:
                     domain(domain_start, ddc::DiscreteVector<IntermediateSampling>(domain_size));
 
             // Copy central points
-            ddc::for_each(domain, [&](auto ip) {
+            ddc::host_for_each(domain, [&](auto ip) {
                 points_with_bcs[ip - domain_start + n_start] = points_wo_bcs.coordinate(ip);
             });
 
@@ -216,7 +216,7 @@ public:
                     ddc::DiscreteDomain<UniformBsplinesKnots<BSplines>> const sub_domain(
                             ddc::discrete_space<BSplines>().get_first_support_knot(spline_idx) + 1,
                             n_knots_in_domain);
-                    ddc::for_each(
+                    ddc::host_for_each(
                             sub_domain,
                             [&](DiscreteElement<UniformBsplinesKnots<BSplines>> ik) {
                                 points_with_bcs[npoints - 1 - i] += ddc::coordinate(ik);
@@ -247,7 +247,7 @@ public:
                         domain(domain_start, length(points_with_bcs.size()));
 
                 points_with_bcs[0] = points_wo_bcs.coordinate(domain.front());
-                ddc::for_each(domain.remove(length(1), length(1)), [&](auto ip) {
+                ddc::host_for_each(domain.remove(length(1), length(1)), [&](auto ip) {
                     points_with_bcs[ip - domain_start] = points_wo_bcs.coordinate(ip);
                 });
                 points_with_bcs[points_with_bcs.size() - 1]

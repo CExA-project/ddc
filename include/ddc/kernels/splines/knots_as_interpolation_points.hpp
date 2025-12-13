@@ -57,7 +57,7 @@ public:
             std::vector<double> knots(ddc::discrete_space<BSplines>().npoints());
             ddc::DiscreteDomain<knot_discrete_dimension_t<BSplines>> break_point_domain(
                     ddc::discrete_space<BSplines>().break_point_domain());
-            ddc::for_each(
+            ddc::host_for_each(
                     break_point_domain,
                     [&](ddc::DiscreteElement<knot_discrete_dimension_t<BSplines>> ik) {
                         knots[ik - break_point_domain.front()] = ddc::coordinate(ik);

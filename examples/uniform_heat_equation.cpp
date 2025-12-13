@@ -50,7 +50,7 @@ template <class ChunkType>
 void display(double time, ChunkType temp)
 {
     double const mean_temp
-            = ddc::transform_reduce(temp.domain(), 0., ddc::reducer::sum<double>(), temp)
+            = ddc::host_transform_reduce(temp.domain(), 0., ddc::reducer::sum<double>(), temp)
               / temp.domain().size();
     std::cout << std::fixed << std::setprecision(3);
     std::cout << "At t = " << time << ",\n";
@@ -58,7 +58,7 @@ void display(double time, ChunkType temp)
     ddc::ChunkSpan const temp_slice
             = temp[ddc::get_domain<DDimY>(temp).front() + ddc::get_domain<DDimY>(temp).size() / 2];
     std::cout << "  * temperature[y:" << ddc::get_domain<DDimY>(temp).size() / 2 << "] = {";
-    ddc::for_each(ddc::get_domain<DDimX>(temp), [=](ddc::DiscreteElement<DDimX> const ix) {
+    ddc::host_for_each(ddc::get_domain<DDimX>(temp), [=](ddc::DiscreteElement<DDimX> const ix) {
         std::cout << std::setw(6) << temp_slice(ix);
     });
     std::cout << " }\n" << std::flush;

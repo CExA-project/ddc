@@ -79,7 +79,7 @@ template <class ChunkType>
 void display(double time, ChunkType density)
 {
     double const mean_density
-            = ddc::transform_reduce(density.domain(), 0., ddc::reducer::sum<double>(), density)
+            = ddc::host_transform_reduce(density.domain(), 0., ddc::reducer::sum<double>(), density)
               / density.domain().size();
     std::cout << std::fixed << std::setprecision(3);
     std::cout << "At t = " << time << ",\n";
@@ -88,7 +88,7 @@ void display(double time, ChunkType density)
     ddc::ChunkSpan const density_slice = density
             [ddc::get_domain<DDimY>(density).front() + ddc::get_domain<DDimY>(density).size() / 2];
     std::cout << "  * density[y:" << ddc::get_domain<DDimY>(density).size() / 2 << "] = {";
-    ddc::for_each(ddc::get_domain<DDimX>(density), [=](ddc::DiscreteElement<DDimX> const ix) {
+    ddc::host_for_each(ddc::get_domain<DDimX>(density), [=](ddc::DiscreteElement<DDimX> const ix) {
         std::cout << std::setw(6) << density_slice(ix) << " ";
     });
     std::cout << " }\n" << std::flush;

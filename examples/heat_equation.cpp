@@ -61,7 +61,7 @@ void display(double time, ChunkType temp)
     // input. So it is used here as a function that maps indices of the temperature domain
     // to the temperature value at that point
     double const mean_temp
-            = ddc::transform_reduce(temp.domain(), 0., ddc::reducer::sum<double>(), temp)
+            = ddc::host_transform_reduce(temp.domain(), 0., ddc::reducer::sum<double>(), temp)
               / temp.domain().size();
     std::cout << std::fixed << std::setprecision(3);
     std::cout << "At t = " << time << ",\n";
@@ -70,7 +70,7 @@ void display(double time, ChunkType temp)
     ddc::ChunkSpan const temp_slice
             = temp[ddc::get_domain<DDimY>(temp).front() + ddc::get_domain<DDimY>(temp).size() / 2];
     std::cout << "  * temperature[y:" << ddc::get_domain<DDimY>(temp).size() / 2 << "] = {";
-    ddc::for_each(ddc::get_domain<DDimX>(temp), [=](ddc::DiscreteElement<DDimX> const ix) {
+    ddc::host_for_each(ddc::get_domain<DDimX>(temp), [=](ddc::DiscreteElement<DDimX> const ix) {
         std::cout << std::setw(6) << temp_slice(ix);
     });
     std::cout << " }\n" << std::flush;
@@ -165,7 +165,7 @@ int main(int argc, char** argv)
 
     //! [time-domains]
     // max(1/dx^2)
-    double const invdx2_max = ddc::transform_reduce(
+    double const invdx2_max = ddc::host_transform_reduce(
             x_domain,
             0.,
             ddc::reducer::max<double>(),
@@ -173,7 +173,7 @@ int main(int argc, char** argv)
                 return 1. / (ddc::distance_at_left(ix) * ddc::distance_at_right(ix));
             });
     // max(1/dy^2)
-    double const invdy2_max = ddc::transform_reduce(
+    double const invdy2_max = ddc::host_transform_reduce(
             y_domain,
             0.,
             ddc::reducer::max<double>(),

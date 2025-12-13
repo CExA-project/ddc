@@ -26,7 +26,7 @@ struct Fourier;
 /**
  * @brief A named argument to choose the direction of the FFT.
  *
- * @see kwArgs_impl, kwArgs_fft
+ * @see kwArgsImpl, kwArgs_fft
  */
 enum class FFT_Direction {
     FORWARD, ///< Forward, corresponds to direct FFT up to normalization
@@ -36,7 +36,7 @@ enum class FFT_Direction {
 /**
  * @brief A named argument to choose the type of normalization of the FFT.
  *
- * @see kwArgs_impl, kwArgs_fft
+ * @see kwArgsImpl, kwArgs_fft
  */
 enum class FFT_Normalization {
     OFF, ///< No normalization. Un-normalized FFT is sum_j f(x_j)*e^-ikx_j
@@ -55,19 +55,19 @@ enum class FFT_Normalization {
 namespace ddc::detail::fft {
 
 template <typename T>
-struct real_type
+struct RealType
 {
     using type = T;
 };
 
 template <typename T>
-struct real_type<Kokkos::complex<T>>
+struct RealType<Kokkos::complex<T>>
 {
     using type = T;
 };
 
 template <typename T>
-using real_type_t = typename real_type<T>::type;
+using real_type_t = typename RealType<T>::type;
 
 // is_complex : trait to determine if type is Kokkos::complex<something>
 template <typename T>
@@ -88,7 +88,7 @@ constexpr bool is_complex_v = is_complex<T>::value;
  *
  * @see FFT_impl
  */
-struct kwArgs_impl
+struct KwArgsImpl
 {
     ddc::FFT_Direction
             direction; // Only effective for C2C transform and for normalization BACKWARD and FORWARD
@@ -173,7 +173,7 @@ void impl(
         ExecSpace const& exec_space,
         ddc::ChunkSpan<Tin, ddc::DiscreteDomain<DDimIn...>, LayoutIn, MemorySpace> const& in,
         ddc::ChunkSpan<Tout, ddc::DiscreteDomain<DDimOut...>, LayoutOut, MemorySpace> const& out,
-        kwArgs_impl const& kwargs)
+        KwArgsImpl const& kwargs)
 {
     static_assert(
             std::is_same_v<real_type_t<Tin>, float> || std::is_same_v<real_type_t<Tin>, double>,

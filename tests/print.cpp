@@ -63,7 +63,7 @@ TEST(Print, InvalidDemangledTypeName)
 }
 
 template <typename ElementType>
-void PrintTestCheckOutput0d()
+void TestPrintTestCheckOutput0d()
 {
     ddc::DiscreteDomain<> const domain_full;
 
@@ -81,8 +81,8 @@ void PrintTestCheckOutput0d()
 
 TEST(Print, CheckOutput0d)
 {
-    PrintTestCheckOutput0d<float>();
-    PrintTestCheckOutput0d<double>();
+    TestPrintTestCheckOutput0d<float>();
+    TestPrintTestCheckOutput0d<double>();
 }
 
 template <typename ElementType>
@@ -223,7 +223,7 @@ TEST(Print, CheckOutput2dElision)
 }
 
 template <typename ElementType>
-void PrintTestCheckoutOutput3d()
+void TestPrintTestCheckoutOutput3d()
 {
     unsigned const dim0 = 3;
     unsigned const dim1 = 3;
@@ -264,12 +264,12 @@ void PrintTestCheckoutOutput3d()
 
 TEST(Print, CheckOutput3d)
 {
-    PrintTestCheckoutOutput3d<float>();
-    PrintTestCheckoutOutput3d<double>();
+    TestPrintTestCheckoutOutput3d<float>();
+    TestPrintTestCheckoutOutput3d<double>();
 }
 
 #if defined(KOKKOS_COMPILER_GNU) || defined(KOKKOS_COMPILER_CLANG)
-void PrintTestMetadata()
+void TestPrintTestMetadata()
 {
     using ElementType = double;
 
@@ -303,6 +303,6 @@ void PrintTestMetadata()
 
 TEST(Print, CheckMetadata)
 {
-    PrintTestMetadata();
+    TestPrintTestMetadata();
 }
 #endif

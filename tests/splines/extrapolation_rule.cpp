@@ -113,7 +113,7 @@ KOKKOS_FUNCTION Coord<X> x0()
 
 // Templated function giving last coordinate of the mesh in given dimension.
 template <typename X>
-KOKKOS_FUNCTION Coord<X> xN()
+KOKKOS_FUNCTION Coord<X> xn()
 {
     return Coord<X>(1.);
 }
@@ -122,7 +122,7 @@ KOKKOS_FUNCTION Coord<X> xN()
 template <typename X>
 double dx(std::size_t ncells)
 {
-    return (xN<X>() - x0<X>()) / ncells;
+    return (xn<X>() - x0<X>()) / ncells;
 }
 
 // Templated function giving break points of mesh in given dimension for non-uniform case.
@@ -137,11 +137,11 @@ std::vector<Coord<X>> breaks(std::size_t ncells)
 }
 
 template <class DDim>
-void InterestDimInitializer(std::size_t const ncells)
+void interest_dim_initializer(std::size_t const ncells)
 {
     using CDim = typename DDim::continuous_dimension_type;
 #if defined(BSPLINES_TYPE_UNIFORM)
-    ddc::init_discrete_space<BSplines<CDim>>(x0<CDim>(), xN<CDim>(), ncells);
+    ddc::init_discrete_space<BSplines<CDim>>(x0<CDim>(), xn<CDim>(), ncells);
 #elif defined(BSPLINES_TYPE_NON_UNIFORM)
     ddc::init_discrete_space<BSplines<CDim>>(breaks<CDim>(ncells));
 #endif
@@ -155,7 +155,7 @@ template <
         typename DDimI1,
         typename DDimI2,
         typename... DDims>
-void ExtrapolationRuleSplineTest()
+void TestExtrapolationRuleSpline()
 {
     using I1 = typename DDimI1::continuous_dimension_type;
     using I2 = typename DDimI2::continuous_dimension_type;
@@ -163,10 +163,10 @@ void ExtrapolationRuleSplineTest()
     // Instantiate execution spaces and initialize spaces
     ExecSpace const exec_space;
     std::size_t const ncells = 10;
-    InterestDimInitializer<DDimI1>(ncells);
+    interest_dim_initializer<DDimI1>(ncells);
     ddc::init_discrete_space<DDimI1>(
             GrevillePoints1<BSplines<I1>>::template get_sampling<DDimI1>());
-    InterestDimInitializer<DDimI2>(ncells);
+    interest_dim_initializer<DDimI2>(ncells);
     ddc::init_discrete_space<DDimI2>(
             GrevillePoints2<BSplines<I2>>::template get_sampling<DDimI2>());
 
@@ -241,18 +241,18 @@ void ExtrapolationRuleSplineTest()
     using extrapolation_rule_dim_1_type = ddc::ConstantExtrapolationRule<I1, I2>;
     using extrapolation_rule_dim_2_type = ddc::PeriodicExtrapolationRule<I2>;
     extrapolation_rule_dim_1_type const extrapolation_rule_left_dim_1(x0<I1>());
-    extrapolation_rule_dim_1_type const extrapolation_rule_right_dim_1(xN<I1>());
+    extrapolation_rule_dim_1_type const extrapolation_rule_right_dim_1(xn<I1>());
     extrapolation_rule_dim_2_type const extrapolation_rule_left_dim_2;
     extrapolation_rule_dim_2_type const extrapolation_rule_right_dim_2;
 #    else
     using extrapolation_rule_dim_1_type = ddc::ConstantExtrapolationRule<I1, I2>;
     using extrapolation_rule_dim_2_type = ddc::ConstantExtrapolationRule<I2, I1>;
-    extrapolation_rule_dim_1_type const extrapolation_rule_left_dim_1(x0<I1>(), x0<I2>(), xN<I2>());
+    extrapolation_rule_dim_1_type const extrapolation_rule_left_dim_1(x0<I1>(), x0<I2>(), xn<I2>());
     extrapolation_rule_dim_1_type const
-            extrapolation_rule_right_dim_1(xN<I1>(), x0<I2>(), xN<I2>());
-    extrapolation_rule_dim_2_type const extrapolation_rule_left_dim_2(x0<I2>(), x0<I1>(), xN<I1>());
+            extrapolation_rule_right_dim_1(xn<I1>(), x0<I2>(), xn<I2>());
+    extrapolation_rule_dim_2_type const extrapolation_rule_left_dim_2(x0<I2>(), x0<I1>(), xn<I1>());
     extrapolation_rule_dim_2_type const
-            extrapolation_rule_right_dim_2(xN<I2>(), x0<I1>(), xN<I1>());
+            extrapolation_rule_right_dim_2(xn<I2>(), x0<I1>(), xn<I1>());
 #    endif
 #endif
 
@@ -279,7 +279,7 @@ void ExtrapolationRuleSplineTest()
     // Set coords_eval outside of the domain
     // - I1: +1 to ensure left bound is outside domain
     // - I2 this point should be found on the grid in the periodic case
-    Coord<I1, I2> const displ(xN<I1>() - x0<I1>() + 1, 2 * xN<I2>() - x0<I2>());
+    Coord<I1, I2> const displ(xn<I1>() - x0<I1>() + 1, 2 * xn<I2>() - x0<I2>());
     ddc::parallel_for_each(
             exec_space,
             coords_eval.domain(),
@@ -313,7 +313,7 @@ void ExtrapolationRuleSplineTest()
                 double const tmp = vals(vals.template domain<DDimI1>().back(), e_without_interest);
 #    else
                 double tmp;
-                if (Coord<I2>(coords_eval(e)) > xN<I2>()) {
+                if (Coord<I2>(coords_eval(e)) > xn<I2>()) {
                     typename decltype(ddc::remove_dims_of(
                             vals.domain(),
                             vals.template domain<DDimI1, DDimI2>()))::discrete_element_type const
@@ -354,7 +354,7 @@ void ExtrapolationRuleSplineTest()
 
 TEST(SUFFIX(ExtrapolationRuleSplineHost), 2DXY)
 {
-    ExtrapolationRuleSplineTest<
+    TestExtrapolationRuleSpline<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DDimGPS1<DimX>,
@@ -365,7 +365,7 @@ TEST(SUFFIX(ExtrapolationRuleSplineHost), 2DXY)
 
 TEST(SUFFIX(ExtrapolationRuleSplineDevice), 2DXY)
 {
-    ExtrapolationRuleSplineTest<
+    TestExtrapolationRuleSpline<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             DDimGPS1<DimX>,

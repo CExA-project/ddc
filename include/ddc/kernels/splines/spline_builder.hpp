@@ -195,7 +195,7 @@ private:
     double m_dx; // average cell size for normalization of derivatives
 
     // interpolator specific
-    std::unique_ptr<ddc::detail::SplinesLinearProblem<exec_space>> matrix;
+    std::unique_ptr<ddc::detail::SplinesLinearProblem<exec_space>> m_matrix;
 
     /// Calculate offset so that the matrix is diagonally dominant
     void compute_offset(interpolation_domain_type const& interpolation_domain, int& offset);
@@ -403,7 +403,7 @@ private:
                         ddc::DiscreteDomain<bsplines_type>(
                                 ddc::DiscreteElement<bsplines_type>(0),
                                 ddc::DiscreteVector<bsplines_type>(
-                                        matrix->required_number_of_rhs_rows()))));
+                                        m_matrix->required_number_of_rhs_rows()))));
     }
 
 public:
@@ -662,14 +662,14 @@ void SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower,
             upper_band_width = bsplines_type::degree() - 1;
         }
         if constexpr (bsplines_type::is_periodic()) {
-            matrix = ddc::detail::SplinesLinearProblemMaker::make_new_periodic_band_matrix<
+            m_matrix = ddc::detail::SplinesLinearProblemMaker::make_new_periodic_band_matrix<
                     ExecSpace>(
                     ddc::discrete_space<BSplines>().nbasis(),
                     upper_band_width,
                     upper_band_width,
                     bsplines_type::is_uniform());
         } else {
-            matrix = ddc::detail::SplinesLinearProblemMaker::
+            m_matrix = ddc::detail::SplinesLinearProblemMaker::
                     make_new_block_matrix_with_band_main_block<ExecSpace>(
                             ddc::discrete_space<BSplines>().nbasis(),
                             upper_band_width,
@@ -679,7 +679,7 @@ void SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower,
                             upper_block_size);
         }
     } else if constexpr (Solver == ddc::SplineSolver::GINKGO) {
-        matrix = ddc::detail::SplinesLinearProblemMaker::make_new_sparse<ExecSpace>(
+        m_matrix = ddc::detail::SplinesLinearProblemMaker::make_new_sparse<ExecSpace>(
                 ddc::discrete_space<BSplines>().nbasis(),
                 cols_per_chunk,
                 preconditioner_max_block_size);
@@ -687,7 +687,7 @@ void SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower,
 
     build_matrix_system();
 
-    matrix->setup_solver();
+    m_matrix->setup_solver();
 }
 
 template <
@@ -725,7 +725,7 @@ void SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower,
         // iterate only to deg as last bspline is 0
         for (std::size_t i = 0; i < s_nbc_xmin; ++i) {
             for (std::size_t j = 0; j < bsplines_type::degree(); ++j) {
-                matrix->set_element(
+                m_matrix->set_element(
                         i,
                         j,
                         DDC_MDSPAN_ACCESS_OP(derivs, j, s_nbc_xmin - i - 1 + s_odd));
@@ -747,7 +747,10 @@ void SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower,
             int const j = ddc::detail::
                     modulo(int(jmin.uid() - m_offset + s),
                            static_cast<int>(ddc::discrete_space<BSplines>().nbasis()));
-            matrix->set_element(ix.uid() - start + s_nbc_xmin, j, DDC_MDSPAN_ACCESS_OP(values, s));
+            m_matrix->set_element(
+                    ix.uid() - start + s_nbc_xmin,
+                    j,
+                    DDC_MDSPAN_ACCESS_OP(values, s));
         }
     });
 
@@ -779,7 +782,10 @@ void SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower,
         int const j0 = ddc::discrete_space<BSplines>().nbasis() - bsplines_type::degree();
         for (std::size_t j = 0; j < bsplines_type::degree(); ++j) {
             for (std::size_t i = 0; i < s_nbc_xmax; ++i) {
-                matrix->set_element(i0 + i, j0 + j, DDC_MDSPAN_ACCESS_OP(derivs, j + 1, i + s_odd));
+                m_matrix->set_element(
+                        i0 + i,
+                        j0 + j,
+                        DDC_MDSPAN_ACCESS_OP(derivs, j + 1, i + s_odd));
             }
         }
     }
@@ -923,7 +929,7 @@ operator()(
             static_cast<std::size_t>(spline_tr.template extent<bsplines_type>()),
             batch_domain(batched_interpolation_domain).size());
     // Compute spline coef
-    matrix->solve(bcoef_section, false);
+    m_matrix->solve(bcoef_section, false);
     // Transpose back spline_tr into spline.
     ddc::parallel_for_each(
             "ddc_splines_transpose_back_rhs",
@@ -1002,13 +1008,13 @@ SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower, BcUp
     // Remove additional B-splines in the periodic case (cf. UniformBSplines::full_domain() documentation)
     ddc::ChunkSpan const integral_bsplines_without_periodic_additional_bsplines
             = integral_bsplines[spline_domain().take_first(
-                    ddc::DiscreteVector<bsplines_type>(matrix->size()))];
+                    ddc::DiscreteVector<bsplines_type>(m_matrix->size()))];
 
     // Allocate mirror with additional rows (cf. SplinesLinearProblem3x3Blocks documentation)
     Kokkos::View<double**, Kokkos::LayoutRight, MemorySpace> const
             integral_bsplines_mirror_with_additional_allocation(
                     "integral_bsplines_mirror_with_additional_allocation",
-                    matrix->required_number_of_rhs_rows(),
+                    m_matrix->required_number_of_rhs_rows(),
                     1);
 
     // Extract relevant subview
@@ -1025,7 +1031,7 @@ SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower, BcUp
     Kokkos::deep_copy(
             integral_bsplines_mirror,
             integral_bsplines_without_periodic_additional_bsplines.allocation_kokkos_view());
-    matrix->solve(integral_bsplines_mirror_with_additional_allocation, true);
+    m_matrix->solve(integral_bsplines_mirror_with_additional_allocation, true);
     Kokkos::deep_copy(
             integral_bsplines_without_periodic_additional_bsplines.allocation_kokkos_view(),
             integral_bsplines_mirror);

@@ -130,7 +130,7 @@ KOKKOS_FUNCTION Coord<X> x0()
 
 // Templated function giving last coordinate of the mesh in given dimension.
 template <typename X>
-KOKKOS_FUNCTION Coord<X> xN()
+KOKKOS_FUNCTION Coord<X> xn()
 {
     return Coord<X>(1.);
 }
@@ -139,7 +139,7 @@ KOKKOS_FUNCTION Coord<X> xN()
 template <typename X>
 double dx(std::size_t ncells)
 {
-    return (xN<X>() - x0<X>()) / ncells;
+    return (xn<X>() - x0<X>()) / ncells;
 }
 
 // Templated function giving break points of mesh in given dimension for non-uniform case.
@@ -154,11 +154,11 @@ std::vector<Coord<X>> breaks(std::size_t ncells)
 }
 
 template <class DDim>
-void InterestDimInitializer(std::size_t const ncells)
+void interest_dim_initializer(std::size_t const ncells)
 {
     using CDim = typename DDim::continuous_dimension_type;
 #if defined(BSPLINES_TYPE_UNIFORM)
-    ddc::init_discrete_space<BSplines<CDim>>(x0<CDim>(), xN<CDim>(), ncells);
+    ddc::init_discrete_space<BSplines<CDim>>(x0<CDim>(), xn<CDim>(), ncells);
 #elif defined(BSPLINES_TYPE_NON_UNIFORM)
     ddc::init_discrete_space<BSplines<CDim>>(breaks<CDim>(ncells));
 #endif
@@ -174,7 +174,7 @@ template <
         typename DDimI2,
         typename DDimI3,
         typename... DDims>
-void Batched3dSplineTest()
+void TestBatched3dSpline()
 {
     using I1 = typename DDimI1::continuous_dimension_type;
     using I2 = typename DDimI2::continuous_dimension_type;
@@ -183,9 +183,9 @@ void Batched3dSplineTest()
     // Instantiate execution spaces and initialize spaces
     ExecSpace const exec_space;
     std::size_t const ncells = 10;
-    InterestDimInitializer<DDimI1>(ncells);
-    InterestDimInitializer<DDimI2>(ncells);
-    InterestDimInitializer<DDimI3>(ncells);
+    interest_dim_initializer<DDimI1>(ncells);
+    interest_dim_initializer<DDimI2>(ncells);
+    interest_dim_initializer<DDimI3>(ncells);
 
     // Create the values domain (mesh)
     ddc::DiscreteDomain<DDimI1> const interpolation_domain1
@@ -331,7 +331,7 @@ void Batched3dSplineTest()
                     auto x2 = ddc::coordinate(ddc::DiscreteElement<DDimI2>(e));
                     auto x3 = ddc::coordinate(ddc::DiscreteElement<DDimI3>(e));
                     derivs1_rhs_host(e)
-                            = evaluator.deriv(xN<I1>(), x2, x3, deriv_idx + shift - 1, 0, 0);
+                            = evaluator.deriv(xn<I1>(), x2, x3, deriv_idx + shift - 1, 0, 0);
                 });
         auto derivs1_rhs_alloc = ddc::create_mirror_view_and_copy(exec_space, derivs1_rhs_host);
         ddc::ChunkSpan const derivs1_rhs = derivs1_rhs_alloc.span_view();
@@ -396,7 +396,7 @@ void Batched3dSplineTest()
                     auto deriv_idx = ddc::DiscreteElement<ddc::Deriv<I2>>(e).uid();
                     auto x3 = ddc::coordinate(ddc::DiscreteElement<DDimI3>(e));
                     derivs2_rhs_host(e)
-                            = evaluator.deriv(x1, xN<I2>(), x3, 0, deriv_idx + shift - 1, 0);
+                            = evaluator.deriv(x1, xn<I2>(), x3, 0, deriv_idx + shift - 1, 0);
                 });
 
         auto derivs2_rhs_alloc = ddc::create_mirror_view_and_copy(exec_space, derivs2_rhs_host);
@@ -464,7 +464,7 @@ void Batched3dSplineTest()
                     auto x2 = ddc::coordinate(ddc::DiscreteElement<DDimI2>(e));
                     auto deriv_idx = ddc::DiscreteElement<ddc::Deriv<I3>>(e).uid();
                     derivs3_rhs_host(e)
-                            = evaluator.deriv(x1, x2, xN<I3>(), 0, 0, deriv_idx + shift - 1);
+                            = evaluator.deriv(x1, x2, xn<I3>(), 0, 0, deriv_idx + shift - 1);
                 });
 
         auto derivs3_rhs_alloc = ddc::create_mirror_view_and_copy(exec_space, derivs3_rhs_host);
@@ -530,7 +530,7 @@ void Batched3dSplineTest()
                                                                     deriv_idx2 + shift - 1,
                                                                     0);
                     derivs_mixed_rhs1_lhs2_host(e) = evaluator
-                                                             .deriv(xN<I1>(),
+                                                             .deriv(xn<I1>(),
                                                                     x0<I2>(),
                                                                     x3,
                                                                     deriv_idx1 + shift - 1,
@@ -538,14 +538,14 @@ void Batched3dSplineTest()
                                                                     0);
                     derivs_mixed_lhs1_rhs2_host(e) = evaluator
                                                              .deriv(x0<I1>(),
-                                                                    xN<I2>(),
+                                                                    xn<I2>(),
                                                                     x3,
                                                                     deriv_idx1 + shift - 1,
                                                                     deriv_idx2 + shift - 1,
                                                                     0);
                     derivs_mixed_rhs1_rhs2_host(e) = evaluator
-                                                             .deriv(xN<I1>(),
-                                                                    xN<I2>(),
+                                                             .deriv(xn<I1>(),
+                                                                    xn<I2>(),
                                                                     x3,
                                                                     deriv_idx1 + shift - 1,
                                                                     deriv_idx2 + shift - 1,
@@ -631,7 +631,7 @@ void Batched3dSplineTest()
                                                                     deriv_idx3 + shift - 1);
                     derivs_mixed_rhs2_lhs3_host(e) = evaluator
                                                              .deriv(x1,
-                                                                    xN<I2>(),
+                                                                    xn<I2>(),
                                                                     x0<I3>(),
                                                                     0,
                                                                     deriv_idx2 + shift - 1,
@@ -639,14 +639,14 @@ void Batched3dSplineTest()
                     derivs_mixed_lhs2_rhs3_host(e) = evaluator
                                                              .deriv(x1,
                                                                     x0<I2>(),
-                                                                    xN<I3>(),
+                                                                    xn<I3>(),
                                                                     0,
                                                                     deriv_idx2 + shift - 1,
                                                                     deriv_idx3 + shift - 1);
                     derivs_mixed_rhs2_rhs3_host(e) = evaluator
                                                              .deriv(x1,
-                                                                    xN<I2>(),
-                                                                    xN<I3>(),
+                                                                    xn<I2>(),
+                                                                    xn<I3>(),
                                                                     0,
                                                                     deriv_idx2 + shift - 1,
                                                                     deriv_idx3 + shift - 1);
@@ -730,7 +730,7 @@ void Batched3dSplineTest()
                                                                     0,
                                                                     deriv_idx3 + shift - 1);
                     derivs_mixed_rhs1_lhs3_host(e) = evaluator
-                                                             .deriv(xN<I1>(),
+                                                             .deriv(xn<I1>(),
                                                                     x2,
                                                                     x0<I3>(),
                                                                     deriv_idx1 + shift - 1,
@@ -739,14 +739,14 @@ void Batched3dSplineTest()
                     derivs_mixed_lhs1_rhs3_host(e) = evaluator
                                                              .deriv(x0<I1>(),
                                                                     x2,
-                                                                    xN<I3>(),
+                                                                    xn<I3>(),
                                                                     deriv_idx1 + shift - 1,
                                                                     0,
                                                                     deriv_idx3 + shift - 1);
                     derivs_mixed_rhs1_rhs3_host(e) = evaluator
-                                                             .deriv(xN<I1>(),
+                                                             .deriv(xn<I1>(),
                                                                     x2,
-                                                                    xN<I3>(),
+                                                                    xn<I3>(),
                                                                     deriv_idx1 + shift - 1,
                                                                     0,
                                                                     deriv_idx3 + shift - 1);
@@ -887,7 +887,7 @@ void Batched3dSplineTest()
                     derivs_mixed_rhs1_lhs2_lhs3_host(
                             typename decltype(derivs_domain_all)::discrete_element_type(ii, jj, kk))
                             = evaluator
-                                      .deriv(xN<I1>(),
+                                      .deriv(xn<I1>(),
                                              x0<I2>(),
                                              x0<I3>(),
                                              ii + shift - 1,
@@ -897,7 +897,7 @@ void Batched3dSplineTest()
                             typename decltype(derivs_domain_all)::discrete_element_type(ii, jj, kk))
                             = evaluator
                                       .deriv(x0<I1>(),
-                                             xN<I2>(),
+                                             xn<I2>(),
                                              x0<I3>(),
                                              ii + shift - 1,
                                              jj + shift - 1,
@@ -905,8 +905,8 @@ void Batched3dSplineTest()
                     derivs_mixed_rhs1_rhs2_lhs3_host(
                             typename decltype(derivs_domain_all)::discrete_element_type(ii, jj, kk))
                             = evaluator
-                                      .deriv(xN<I1>(),
-                                             xN<I2>(),
+                                      .deriv(xn<I1>(),
+                                             xn<I2>(),
                                              x0<I3>(),
                                              ii + shift - 1,
                                              jj + shift - 1,
@@ -916,16 +916,16 @@ void Batched3dSplineTest()
                             = evaluator
                                       .deriv(x0<I1>(),
                                              x0<I2>(),
-                                             xN<I3>(),
+                                             xn<I3>(),
                                              ii + shift - 1,
                                              jj + shift - 1,
                                              kk + shift - 1);
                     derivs_mixed_rhs1_lhs2_rhs3_host(
                             typename decltype(derivs_domain_all)::discrete_element_type(ii, jj, kk))
                             = evaluator
-                                      .deriv(xN<I1>(),
+                                      .deriv(xn<I1>(),
                                              x0<I2>(),
-                                             xN<I3>(),
+                                             xn<I3>(),
                                              ii + shift - 1,
                                              jj + shift - 1,
                                              kk + shift - 1);
@@ -933,17 +933,17 @@ void Batched3dSplineTest()
                             typename decltype(derivs_domain_all)::discrete_element_type(ii, jj, kk))
                             = evaluator
                                       .deriv(x0<I1>(),
-                                             xN<I2>(),
-                                             xN<I3>(),
+                                             xn<I2>(),
+                                             xn<I3>(),
                                              ii + shift - 1,
                                              jj + shift - 1,
                                              kk + shift - 1);
                     derivs_mixed_rhs1_rhs2_rhs3_host(
                             typename decltype(derivs_domain_all)::discrete_element_type(ii, jj, kk))
                             = evaluator
-                                      .deriv(xN<I1>(),
-                                             xN<I2>(),
-                                             xN<I3>(),
+                                      .deriv(xn<I1>(),
+                                             xn<I2>(),
+                                             xn<I3>(),
                                              ii + shift - 1,
                                              jj + shift - 1,
                                              kk + shift - 1);
@@ -1355,7 +1355,7 @@ void Batched3dSplineTest()
 
 TEST(SUFFIX(Batched3dSplineHost), 3DXYZ)
 {
-    Batched3dSplineTest<
+    TestBatched3dSpline<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DDimGPS<DimX>,
@@ -1368,7 +1368,7 @@ TEST(SUFFIX(Batched3dSplineHost), 3DXYZ)
 
 TEST(SUFFIX(Batched3dSplineDevice), 3DXYZ)
 {
-    Batched3dSplineTest<
+    TestBatched3dSpline<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             DDimGPS<DimX>,
@@ -1381,7 +1381,7 @@ TEST(SUFFIX(Batched3dSplineDevice), 3DXYZ)
 
 TEST(SUFFIX(Batched3dSplineHost), 4DXYZB)
 {
-    Batched3dSplineTest<
+    TestBatched3dSpline<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DDimGPS<DimX>,
@@ -1395,7 +1395,7 @@ TEST(SUFFIX(Batched3dSplineHost), 4DXYZB)
 
 TEST(SUFFIX(Batched3dSplineHost), 4DXBYZ)
 {
-    Batched3dSplineTest<
+    TestBatched3dSpline<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DDimGPS<DimX>,
@@ -1409,7 +1409,7 @@ TEST(SUFFIX(Batched3dSplineHost), 4DXBYZ)
 
 TEST(SUFFIX(Batched3dSplineHost), 4DXYBZ)
 {
-    Batched3dSplineTest<
+    TestBatched3dSpline<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DDimGPS<DimX>,
@@ -1423,7 +1423,7 @@ TEST(SUFFIX(Batched3dSplineHost), 4DXYBZ)
 
 TEST(SUFFIX(Batched3dSplineHost), 4DBXYZ)
 {
-    Batched3dSplineTest<
+    TestBatched3dSpline<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DDimGPS<DimX>,

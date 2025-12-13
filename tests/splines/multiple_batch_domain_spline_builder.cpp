@@ -105,7 +105,7 @@ KOKKOS_FUNCTION Coord<X> x0()
 
 // Templated function giving last coordinate of the mesh in given dimension.
 template <typename X>
-KOKKOS_FUNCTION Coord<X> xN()
+KOKKOS_FUNCTION Coord<X> xn()
 {
     return Coord<X>(1.);
 }
@@ -114,7 +114,7 @@ KOKKOS_FUNCTION Coord<X> xN()
 template <typename X>
 double dx(std::size_t ncells)
 {
-    return (xN<X>() - x0<X>()) / ncells;
+    return (xn<X>() - x0<X>()) / ncells;
 }
 
 // Templated function giving break points of mesh in given dimension for non-uniform case.
@@ -129,11 +129,11 @@ std::vector<Coord<X>> breaks(std::size_t ncells)
 }
 
 template <class DDim>
-void InterestDimInitializer(std::size_t const ncells)
+void interest_dim_initializer(std::size_t const ncells)
 {
     using CDim = typename DDim::continuous_dimension_type;
 #if defined(BSPLINES_TYPE_UNIFORM)
-    ddc::init_discrete_space<BSplines<CDim>>(x0<CDim>(), xN<CDim>(), ncells);
+    ddc::init_discrete_space<BSplines<CDim>>(x0<CDim>(), xn<CDim>(), ncells);
 #elif defined(BSPLINES_TYPE_NON_UNIFORM)
     ddc::init_discrete_space<BSplines<CDim>>(breaks<CDim>(ncells));
 #endif
@@ -148,7 +148,7 @@ template <
         class Builder,
         class Evaluator,
         typename... DDims>
-std::tuple<double, double, double> ComputeEvaluationError(
+std::tuple<double, double, double> compute_evaluation_error(
         ExecSpace const& exec_space,
         ddc::DiscreteDomain<DDims...> const& dom_vals,
         Builder const& spline_builder,
@@ -217,7 +217,7 @@ std::tuple<double, double, double> ComputeEvaluationError(
              ++ii) {
             derivs_rhs1_host(
                     typename decltype(derivs_rhs1_host.domain())::discrete_element_type(ii))
-                    = evaluator.deriv(xN<I>(), ii + shift - 1);
+                    = evaluator.deriv(xn<I>(), ii + shift - 1);
         }
         auto derivs_rhs1_alloc = ddc::create_mirror_view_and_copy(exec_space, derivs_rhs1_host);
         ddc::ChunkSpan const derivs_rhs1 = derivs_rhs1_alloc.span_view();
@@ -303,7 +303,7 @@ std::tuple<double, double, double> ComputeEvaluationError(
                     typename Builder::template batch_domain_type<
                             ddc::DiscreteDomain<DDims...>>::discrete_element_type const e) {
                 return Kokkos::abs(
-                        spline_eval_integrals(e) - evaluator.deriv(xN<I>(), -1)
+                        spline_eval_integrals(e) - evaluator.deriv(xn<I>(), -1)
                         + evaluator.deriv(x0<I>(), -1));
             });
 
@@ -314,7 +314,7 @@ std::tuple<double, double, double> ComputeEvaluationError(
 // multiple batch patterns using the same builders and evaluators, one
 // recovers values that were used to build the spline
 template <typename ExecSpace, typename MemorySpace, typename DDimI, typename... DDims>
-void MultipleBatchDomainSplineTest()
+void TestMultipleBatchDomainSpline()
 {
     using I = typename DDimI::continuous_dimension_type;
 
@@ -322,7 +322,7 @@ void MultipleBatchDomainSplineTest()
     ExecSpace const exec_space;
 
     std::size_t const ncells = 10;
-    InterestDimInitializer<DDimI>(ncells);
+    interest_dim_initializer<DDimI>(ncells);
 
     // Create the values domain (mesh)
     ddc::DiscreteDomain<DDimI> const interpolation_domain
@@ -368,9 +368,13 @@ void MultipleBatchDomainSplineTest()
     evaluator_type<DDimI> const evaluator(spline_builder.interpolation_domain());
 
     // Check the evaluation error for the first domain
-    auto const [max_norm_error, max_norm_error_diff, max_norm_error_integ] = ComputeEvaluationError<
-            ExecSpace,
-            MemorySpace>(exec_space, dom_vals, spline_builder, spline_evaluator_batched, evaluator);
+    auto const [max_norm_error, max_norm_error_diff, max_norm_error_integ]
+            = compute_evaluation_error<ExecSpace, MemorySpace>(
+                    exec_space,
+                    dom_vals,
+                    spline_builder,
+                    spline_evaluator_batched,
+                    evaluator);
 
     double const max_norm = evaluator.max_norm();
     double const max_norm_diff = evaluator.max_norm(1);
@@ -393,7 +397,7 @@ void MultipleBatchDomainSplineTest()
 
     // Check the evaluation error for the domain with an additional batch dimension
     auto const [max_norm_error_extra, max_norm_error_diff_extra, max_norm_error_integ_extra]
-            = ComputeEvaluationError<ExecSpace, MemorySpace>(
+            = compute_evaluation_error<ExecSpace, MemorySpace>(
                     exec_space,
                     dom_vals_extra,
                     spline_builder,
@@ -453,7 +457,7 @@ void MultipleBatchDomainSplineTest()
 
 TEST(SUFFIX(MultipleBatchDomainSpline), 1DX)
 {
-    MultipleBatchDomainSplineTest<
+    TestMultipleBatchDomainSpline<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             DDimGPS<DimX>,
@@ -462,7 +466,7 @@ TEST(SUFFIX(MultipleBatchDomainSpline), 1DX)
 
 TEST(SUFFIX(MultipleBatchDomainSpline), 2DXB)
 {
-    MultipleBatchDomainSplineTest<
+    TestMultipleBatchDomainSpline<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             DDimGPS<DimX>,
@@ -472,7 +476,7 @@ TEST(SUFFIX(MultipleBatchDomainSpline), 2DXB)
 
 TEST(SUFFIX(MultipleBatchDomainSpline), 2DBX)
 {
-    MultipleBatchDomainSplineTest<
+    TestMultipleBatchDomainSpline<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             DDimGPS<DimX>,

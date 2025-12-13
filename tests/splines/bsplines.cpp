@@ -23,15 +23,15 @@
 template <class T>
 struct BSplinesFixture;
 
-template <std::size_t D, std::size_t Nc, bool periodic>
+template <std::size_t D, std::size_t Nc, bool Periodic>
 struct BSplinesFixture<std::tuple<
         std::integral_constant<std::size_t, D>,
         std::integral_constant<std::size_t, Nc>,
-        std::integral_constant<bool, periodic>>> : public testing::Test
+        std::integral_constant<bool, Periodic>>> : public testing::Test
 {
     struct DimX
     {
-        static constexpr bool PERIODIC = periodic;
+        static constexpr bool PERIODIC = Periodic;
     };
     struct UBSplinesX : ddc::UniformBSplines<DimX, D>
     {

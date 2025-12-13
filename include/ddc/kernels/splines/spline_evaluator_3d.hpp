@@ -584,8 +584,7 @@ public:
      * obtained via various methods, such as using a SplineBuilder3D.
      *
      * @param deriv_order A DiscreteElement containing the orders of derivation for each of the dimensions of interest.
-     * If one of the dimensions is not present, its corresponding order of derivation is considered to be 0. The highest
-     * valid order is 3.
+     * If one of the dimensions is not present, its corresponding order of derivation is considered to be 0.
      * @param coord_eval The coordinate where the spline is differentiated. Note that only the components along the dimensions of interest are used.
      * @param spline_coef A ChunkSpan storing the 3D spline coefficients.
      *
@@ -613,8 +612,7 @@ public:
      * the differentiation is performed with the 3D set of spline coefficients identified by the same batch_domain_type::discrete_element_type.
      *
      * @param[in] deriv_order A DiscreteElement containing the orders of derivation for each of the dimensions of interest.
-     * If one of the dimensions is not present, its corresponding order of derivation is considered to be 0. The highest
-     * valid order is 3.
+     * If one of the dimensions is not present, its corresponding order of derivation is considered to be 0.
      * @param[out] spline_eval The derivatives of the 3D spline function at the desired coordinates. For practical reasons those are
      * stored in a ChunkSpan defined on a batched_evaluation_domain_type.
      * @param[in] coords_eval The coordinates where the spline is differentiated. Those are
@@ -685,8 +683,7 @@ public:
      * the 3D set of spline coefficients identified by the same batch_domain_type::discrete_element_type.
      *
      * @param[in] deriv_order A DiscreteElement containing the orders of derivation for each of the dimensions of interest.
-     * If one of the dimensions is not present, its corresponding order of derivation is considered to be 0. The highest
-     * valid order is 3.
+     * If one of the dimensions is not present, its corresponding order of derivation is considered to be 0.
      * @param[out] spline_eval The derivatives of the 3D spline function at the desired coordinates.
      * @param[in] spline_coef A ChunkSpan storing the 3D spline coefficients.
      */
@@ -904,9 +901,9 @@ private:
      * @param[in] coord_eval The coordinate where we want to evaluate.
      * @param[in] splne_coef The B-splines coefficients of the function we want to evaluate.
      */
-    template <class... DDims, class Layout, class... CoordsDims>
+    template <class... DerivDims, class Layout, class... CoordsDims>
     KOKKOS_INLINE_FUNCTION double eval_no_bc(
-            ddc::DiscreteElement<DDims...> const& deriv_order,
+            ddc::DiscreteElement<DerivDims...> const& deriv_order,
             ddc::Coordinate<CoordsDims...> const& coord_eval,
             ddc::ChunkSpan<double const, spline_domain_type, Layout, memory_space> const
                     spline_coef) const
@@ -914,11 +911,12 @@ private:
         using deriv_dim1 = Deriv<continuous_dimension_type1>;
         using deriv_dim2 = Deriv<continuous_dimension_type2>;
         using deriv_dim3 = Deriv<continuous_dimension_type3>;
-        using deriv_dims = detail::TypeSeq<DDims...>;
+        using deriv_dims = detail::TypeSeq<DerivDims...>;
 
         // Check that the tags are valid
         static_assert(
-                (in_tags_v<DDims, ddc::detail::TypeSeq<deriv_dim1, deriv_dim2, deriv_dim3>> && ...),
+                (in_tags_v<DerivDims, ddc::detail::TypeSeq<deriv_dim1, deriv_dim2, deriv_dim3>>
+                 && ...),
                 "The only valid dimensions for deriv_order are Deriv<Dim1>, Deriv<Dim2> and "
                 "Deriv<Dim3>");
 

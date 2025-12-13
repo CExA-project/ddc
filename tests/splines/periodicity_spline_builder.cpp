@@ -72,7 +72,7 @@ Coord<X> x0()
 
 // Templated function giving last coordinate of the mesh in given dimension.
 template <typename X>
-Coord<X> xN()
+Coord<X> xn()
 {
     return Coord<X>(1.);
 }
@@ -81,7 +81,7 @@ Coord<X> xN()
 template <typename X>
 double dx(std::size_t ncells)
 {
-    return (xN<X>() - x0<X>()) / ncells;
+    return (xn<X>() - x0<X>()) / ncells;
 }
 
 // Templated function giving break points of mesh in given dimension for non-uniform case.
@@ -97,11 +97,11 @@ std::vector<Coord<X>> breaks(std::size_t ncells)
 
 // Helper to initialize space
 template <class DDim>
-void InterestDimInitializer(std::size_t const ncells)
+void interest_dim_initializer(std::size_t const ncells)
 {
     using CDim = typename DDim::continuous_dimension_type;
 #if defined(BSPLINES_TYPE_UNIFORM)
-    ddc::init_discrete_space<BSplines<CDim>>(x0<CDim>(), xN<CDim>(), ncells);
+    ddc::init_discrete_space<BSplines<CDim>>(x0<CDim>(), xn<CDim>(), ncells);
 #elif defined(BSPLINES_TYPE_NON_UNIFORM)
     ddc::init_discrete_space<BSplines<CDim>>(breaks<CDim>(ncells));
 #endif
@@ -111,13 +111,13 @@ void InterestDimInitializer(std::size_t const ncells)
 // Checks that when evaluating the spline at interpolation points one
 // recovers values that were used to build the spline
 template <typename ExecSpace, typename MemorySpace, typename X>
-void PeriodicitySplineBuilderTest()
+void TestPeriodicitySplineBuilder()
 {
     // Instantiate execution spaces and initialize spaces
     ExecSpace const exec_space;
 
     std::size_t const ncells = 10;
-    InterestDimInitializer<DDim<X>>(ncells);
+    interest_dim_initializer<DDim<X>>(ncells);
 
     // Create the values domain (mesh)
     ddc::DiscreteDomain<DDim<X>> const dom_vals
@@ -204,7 +204,7 @@ void PeriodicitySplineBuilderTest()
 
 TEST(PeriodicitySplineBuilderHost, 1D)
 {
-    PeriodicitySplineBuilderTest<
+    TestPeriodicitySplineBuilder<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DimX>();
@@ -212,7 +212,7 @@ TEST(PeriodicitySplineBuilderHost, 1D)
 
 TEST(PeriodicitySplineBuilderDevice, 1D)
 {
-    PeriodicitySplineBuilderTest<
+    TestPeriodicitySplineBuilder<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             DimX>();

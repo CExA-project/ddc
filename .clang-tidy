@@ -65,4 +65,23 @@ Checks: >
   -readability-redundant-access-specifiers
 WarningsAsErrors: '*'
 CheckOptions:
-  cppcoreguidelines-rvalue-reference-param-not-moved.AllowPartialMove: 'true'
+  - key: cppcoreguidelines-rvalue-reference-param-not-moved.AllowPartialMove
+    value: 'true'
+  - key: readability-identifier-naming.ClassCase
+    value: CamelCase
+  - key: readability-identifier-naming.FunctionCase
+    value: lower_case
+  - key: readability-identifier-naming.FunctionIgnoredRegexp
+    value: '(Test.*)'
+  - key: readability-identifier-naming.NamespaceCase
+    value: lower_case
+  - key: readability-identifier-naming.PrivateMemberCase
+    value: lower_case
+  - key: readability-identifier-naming.PrivateMemberPrefix
+    value: m_
+  - key: readability-identifier-naming.StructCase
+    value: CamelCase
+  - key: readability-identifier-naming.StructIgnoredRegexp
+    value: '(is_.*|sum|prod|land|lor|band|bor|bxor|min|max|minmax|coordinate_of|chunk_traits|rebind|kwArgs_fft)'
+  - key: readability-identifier-naming.TemplateParameterCase
+    value: CamelCase

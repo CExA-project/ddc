@@ -39,7 +39,7 @@ void blinker_init(
 }
 
 template <class ElementType, class DDimX, class DDimY>
-std::ostream& print_2DChunk(
+std::ostream& print_2d_chunk(
         std::ostream& os,
         ddc::ChunkSpan<ElementType, ddc::DiscreteDomain<DDimX, DDimY>> chunk)
 {
@@ -91,7 +91,7 @@ int main()
     std::size_t iter = 0;
     for (; iter < nt; ++iter) {
         ddc::parallel_deepcopy(cells_in_host_alloc, cells_in);
-        print_2DChunk(std::cout, cells_in_host_alloc.span_cview()) << "\n";
+        print_2d_chunk(std::cout, cells_in_host_alloc.span_cview()) << "\n";
         ddc::parallel_for_each(
                 inner_domain_xy,
                 KOKKOS_LAMBDA(ddc::DiscreteElement<DDimX, DDimY> const ixy) {
@@ -122,7 +122,7 @@ int main()
         ddc::parallel_deepcopy(cells_in, cells_out);
     }
     ddc::parallel_deepcopy(cells_in_host_alloc, cells_in);
-    print_2DChunk(std::cout, cells_in_host_alloc.span_cview()) << "\n";
+    print_2d_chunk(std::cout, cells_in_host_alloc.span_cview()) << "\n";
 
     return 0;
 }

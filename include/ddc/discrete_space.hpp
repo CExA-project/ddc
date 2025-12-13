@@ -74,7 +74,7 @@ template <class DDim, class MemorySpace>
 using ddim_impl_t = typename DDim::template Impl<DDim, MemorySpace>;
 
 template <class T>
-class gpu_proxy
+class GpuProxy
 {
     // Here are some reasonable concepts that T should satisfy to avoid undefined behaviors:
     // - copy-constructible: objects may be memcopied to the device,
@@ -119,17 +119,17 @@ inline std::optional<DualDiscretization<DDim>> g_discrete_space_dual;
 #if defined(KOKKOS_ENABLE_CUDA)
 // Global GPU variable viewing data owned by the CPU
 template <class DDim>
-__constant__ gpu_proxy<ddim_impl_t<DDim, GlobalVariableDeviceSpace>> g_discrete_space_device;
+__constant__ GpuProxy<ddim_impl_t<DDim, GlobalVariableDeviceSpace>> g_discrete_space_device;
 #elif defined(KOKKOS_ENABLE_HIP)
 // Global GPU variable viewing data owned by the CPU
 // WARNING: do not put the `inline` keyword, seems to fail on MI100 rocm/4.5.0
 template <class DDim>
-__constant__ gpu_proxy<ddim_impl_t<DDim, GlobalVariableDeviceSpace>> g_discrete_space_device;
+__constant__ GpuProxy<ddim_impl_t<DDim, GlobalVariableDeviceSpace>> g_discrete_space_device;
 #elif defined(KOKKOS_ENABLE_SYCL)
 // Global GPU variable viewing data owned by the CPU
 template <class DDim>
 SYCL_EXTERNAL inline sycl::ext::oneapi::experimental::device_global<
-        gpu_proxy<ddim_impl_t<DDim, GlobalVariableDeviceSpace>>>
+        GpuProxy<ddim_impl_t<DDim, GlobalVariableDeviceSpace>>>
         g_discrete_space_device;
 #endif
 

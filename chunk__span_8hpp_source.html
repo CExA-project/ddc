@@ -401,7 +401,7 @@ $(document).ready(function(){initNavTree('chunk__span_8hpp_source.html',''); ini
 <div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>    {</div>
 <div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>        <span class="keyword">using</span> detail::TypeSeq;</div>
 <div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>        <span class="keyword">using</span> QueryDDom = <span class="keyword">typename</span> detail::RebindDomain&lt;SupportType, TypeSeq&lt;QueryDDims...&gt;&gt;::type;</div>
-<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>        KOKKOS_ASSERT((QueryDDom(<span class="keyword">this</span>-&gt;m_domain).contains(slice_spec)))</div>
+<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>        KOKKOS_ASSERT(QueryDDom(<span class="keyword">this</span>-&gt;m_domain).contains(slice_spec))</div>
 <div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>        slicer&lt;to_type_seq_t&lt;SupportType&gt;&gt; <span class="keyword">const</span> slicer;</div>
 <div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>        <span class="keyword">auto</span> subview = slicer(</div>
 <div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>                <span class="keyword">this</span>-&gt;allocation_mdspan(),</div>
@@ -479,7 +479,7 @@ $(document).ready(function(){initNavTree('chunk__span_8hpp_source.html',''); ini
 <div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span>        <span class="keyword">static_assert</span>(</div>
 <div class="line"><a id="l00351" name="l00351"></a><span class="lineno">  351</span>                SupportType::rank() == (0 + ... + DElems::size()),</div>
 <div class="line"><a id="l00352" name="l00352"></a><span class="lineno">  352</span>                <span class="stringliteral">&quot;Invalid number of dimensions&quot;</span>);</div>
-<div class="line"><a id="l00353" name="l00353"></a><span class="lineno">  353</span>        KOKKOS_ASSERT((<span class="keyword">this</span>-&gt;m_domain.contains(delems...)))</div>
+<div class="line"><a id="l00353" name="l00353"></a><span class="lineno">  353</span>        KOKKOS_ASSERT(<span class="keyword">this</span>-&gt;m_domain.contains(delems...))</div>
 <div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span>        <span class="keywordflow">return</span> DDC_MDSPAN_ACCESS_OP(</div>
 <div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span>                <span class="keyword">this</span>-&gt;m_allocation_mdspan,</div>
 <div class="line"><a id="l00356" name="l00356"></a><span class="lineno">  356</span>                detail::array(<span class="keyword">this</span>-&gt;m_domain.distance_from_front(delems...)));</div>

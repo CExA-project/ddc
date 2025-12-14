@@ -428,7 +428,7 @@ $(document).ready(function(){initNavTree('sparse__discrete__domain_8hpp_source.h
 <div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span>                <span class="keyword">sizeof</span>...(DDims) == (0 + ... + DElems::size()),</div>
 <div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span>                <span class="stringliteral">&quot;Invalid number of dimensions&quot;</span>);</div>
 <div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span>        <span class="keyword">static_assert</span>((is_discrete_element_v&lt;DElems&gt; &amp;&amp; ...), <span class="stringliteral">&quot;Expected DiscreteElements&quot;</span>);</div>
-<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span>        KOKKOS_ASSERT((contains(delems...)))</div>
+<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span>        KOKKOS_ASSERT(contains(delems...))</div>
 <div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span>        <span class="keywordflow">return</span> <a class="code hl_function" href="classddc_1_1DiscreteVector.html#a62e896bfa78045521042a0eab87c0acb">DiscreteVector</a>&lt;DDims...&gt;(</div>
 <div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span>                (detail::lower_bound(</div>
 <div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span>                         get&lt;DDims&gt;(m_views).data(),</div>

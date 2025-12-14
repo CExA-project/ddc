@@ -155,7 +155,7 @@ $(document).ready(function(){initNavTree('fft_8hpp_source.html',''); initResizab
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="comment">/**</span></div>
 <div class="line"><span class="lineno">   27</span><span class="comment"> * @brief A named argument to choose the direction of the FFT.</span></div>
 <div class="line"><span class="lineno">   28</span><span class="comment"> *</span></div>
-<div class="line"><span class="lineno">   29</span><span class="comment"> * @see kwArgs_impl, kwArgs_fft</span></div>
+<div class="line"><span class="lineno">   29</span><span class="comment"> * @see kwArgsImpl, kwArgs_fft</span></div>
 <div class="line"><span class="lineno">   30</span><span class="comment"> */</span></div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="keyword">enum</span> <span class="keyword">class</span> <a class="code hl_enumeration" href="namespaceddc.html#ae672eb355c3d1fa7de604e8bf6164853">FFT_Direction</a> {</div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    <a class="code hl_enumvalue" href="namespaceddc.html#ae672eb355c3d1fa7de604e8bf6164853abfec72bb37910c61f36b6c29a1f7ec31">FORWARD</a>, <span class="comment">///&lt; Forward, corresponds to direct FFT up to normalization</span></div>
@@ -165,7 +165,7 @@ $(document).ready(function(){initNavTree('fft_8hpp_source.html',''); initResizab
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="comment">/**</span></div>
 <div class="line"><span class="lineno">   37</span><span class="comment"> * @brief A named argument to choose the type of normalization of the FFT.</span></div>
 <div class="line"><span class="lineno">   38</span><span class="comment"> *</span></div>
-<div class="line"><span class="lineno">   39</span><span class="comment"> * @see kwArgs_impl, kwArgs_fft</span></div>
+<div class="line"><span class="lineno">   39</span><span class="comment"> * @see kwArgsImpl, kwArgs_fft</span></div>
 <div class="line"><span class="lineno">   40</span><span class="comment"> */</span></div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="keyword">enum</span> <span class="keyword">class</span> <a class="code hl_enumeration" href="namespaceddc.html#a5d5291156a65ec442dfcd7274f045631">FFT_Normalization</a> {</div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <a class="code hl_enumvalue" href="namespaceddc.html#a5d5291156a65ec442dfcd7274f045631a88559a0cfd8250c9d65970cc145c92d4">OFF</a>, <span class="comment">///&lt; No normalization. Un-normalized FFT is sum_j f(x_j)*e^-ikx_j</span></div>
@@ -184,19 +184,19 @@ $(document).ready(function(){initNavTree('fft_8hpp_source.html',''); initResizab
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><span class="keyword">namespace</span> <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::detail::fft {</div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="keyword">struct</span> real_type</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="keyword">struct</span> RealType</div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>{</div>
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <span class="keyword">using</span> type = T;</div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>};</div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
 <div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span><span class="keyword">struct</span> real_type&lt;Kokkos::complex&lt;T&gt;&gt;</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span><span class="keyword">struct</span> RealType&lt;Kokkos::complex&lt;T&gt;&gt;</div>
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>{</div>
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    <span class="keyword">using</span> type = T;</div>
 <div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>};</div>
 <div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span> </div>
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span><span class="keyword">using</span> real_type_t = <span class="keyword">typename</span> real_type&lt;T&gt;::type;</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span><span class="keyword">using</span> real_type_t = <span class="keyword">typename</span> RealType&lt;T&gt;::type;</div>
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
 <div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span><span class="comment">// is_complex : trait to determine if type is Kokkos::complex&lt;something&gt;</span></div>
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
@@ -217,7 +217,7 @@ $(document).ready(function(){initNavTree('fft_8hpp_source.html',''); initResizab
 <div class="line"><span class="lineno">   88</span><span class="comment"> *</span></div>
 <div class="line"><span class="lineno">   89</span><span class="comment"> * @see FFT_impl</span></div>
 <div class="line"><span class="lineno">   90</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span><span class="keyword">struct</span> kwArgs_impl</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span><span class="keyword">struct</span> KwArgsImpl</div>
 <div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>{</div>
 <div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_enumeration" href="namespaceddc.html#ae672eb355c3d1fa7de604e8bf6164853">FFT_Direction</a></div>
 <div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>            direction; <span class="comment">// Only effective for C2C transform and for normalization BACKWARD and FORWARD</span></div>
@@ -302,7 +302,7 @@ $(document).ready(function(){initNavTree('fft_8hpp_source.html',''); initResizab
 <div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>        ExecSpace <span class="keyword">const</span>&amp; exec_space,</div>
 <div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1ChunkCommon.html#a0214c802aca8ce0770988bb2784f104a">ChunkSpan</a>&lt;Tin, <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1DiscreteDomain.html#a5cdbd7cda4dd9c4369a8810c88cf3bed">DiscreteDomain</a>&lt;DDimIn...&gt;, LayoutIn, MemorySpace&gt; <span class="keyword">const</span>&amp; in,</div>
 <div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1ChunkCommon.html#a0214c802aca8ce0770988bb2784f104a">ChunkSpan</a>&lt;Tout, <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1DiscreteDomain.html#a5cdbd7cda4dd9c4369a8810c88cf3bed">DiscreteDomain</a>&lt;DDimOut...&gt;, LayoutOut, MemorySpace&gt; <span class="keyword">const</span>&amp; out,</div>
-<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>        kwArgs_impl <span class="keyword">const</span>&amp; kwargs)</div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>        KwArgsImpl <span class="keyword">const</span>&amp; kwargs)</div>
 <div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>{</div>
 <div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>    <span class="keyword">static_assert</span>(</div>
 <div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>            std::is_same_v&lt;real_type_t&lt;Tin&gt;, <span class="keywordtype">float</span>&gt; || std::is_same_v&lt;real_type_t&lt;Tin&gt;, <span class="keywordtype">double</span>&gt;,</div>

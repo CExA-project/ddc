@@ -227,16 +227,16 @@ $(document).ready(function(){initNavTree('parallel__transform__reduce_8hpp_sourc
 <div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>    <span class="keyword">template</span> &lt;std::size_t I&gt;</div>
 <div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>    <span class="keyword">using</span> index_type = DiscreteElementType;</div>
 <div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span> </div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    Reducer reducer;</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    Reducer m_reducer;</div>
 <div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span> </div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    Functor functor;</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    Functor m_functor;</div>
 <div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span> </div>
 <div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    Support m_support;</div>
 <div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span> </div>
 <div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span><span class="keyword">public</span>:</div>
 <div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>    TransformReducerKokkosLambdaAdapter(Reducer <span class="keyword">const</span>&amp; r, Functor <span class="keyword">const</span>&amp; f, Support <span class="keyword">const</span>&amp; support)</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>        : reducer(r)</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>        , functor(f)</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>        : m_reducer(r)</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>        , m_functor(f)</div>
 <div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>        , m_support(support)</div>
 <div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>    {</div>
 <div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    }</div>
@@ -246,13 +246,13 @@ $(document).ready(function(){initNavTree('parallel__transform__reduce_8hpp_sourc
 <div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>            [[maybe_unused]] index_type&lt;0&gt; unused_id,</div>
 <div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>            <span class="keyword">typename</span> Reducer::value_type&amp; a) <span class="keyword">const</span></div>
 <div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>    {</div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>        a = reducer(a, functor(DiscreteElement<a class="code hl_function" href="classddc_1_1DiscreteElement.html#aae48d441289e8e21b6584903647e9c77">&lt;</a><a class="code hl_function" href="classddc_1_1DiscreteElement.html#aae48d441289e8e21b6584903647e9c77">&gt;</a><a class="code hl_function" href="classddc_1_1DiscreteElement.html#aae48d441289e8e21b6584903647e9c77">(</a><a class="code hl_function" href="classddc_1_1DiscreteElement.html#aae48d441289e8e21b6584903647e9c77">)</a>));</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>        a = m_reducer(a, m_functor(DiscreteElement<a class="code hl_function" href="classddc_1_1DiscreteElement.html#aae48d441289e8e21b6584903647e9c77">&lt;</a><a class="code hl_function" href="classddc_1_1DiscreteElement.html#aae48d441289e8e21b6584903647e9c77">&gt;</a><a class="code hl_function" href="classddc_1_1DiscreteElement.html#aae48d441289e8e21b6584903647e9c77">(</a><a class="code hl_function" href="classddc_1_1DiscreteElement.html#aae48d441289e8e21b6584903647e9c77">)</a>));</div>
 <div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    }</div>
 <div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span> </div>
 <div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    <span class="keyword">template</span> &lt;std::size_t N = <span class="keyword">sizeof</span>...(Idx), std::enable_if_t&lt;(N &gt; 0), <span class="keywordtype">bool</span>&gt; = <span class="keyword">true</span>&gt;</div>
 <div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>    KOKKOS_FUNCTION <span class="keywordtype">void</span> operator()(index_type&lt;Idx&gt;... ids, <span class="keyword">typename</span> Reducer::value_type&amp; a) <span class="keyword">const</span></div>
 <div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>    {</div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>        a = reducer(a, functor(m_support(<span class="keyword">typename</span> Support::discrete_vector_type(ids...))));</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>        a = m_reducer(a, m_functor(m_support(<span class="keyword">typename</span> Support::discrete_vector_type(ids...))));</div>
 <div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>    }</div>
 <div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>};</div>
 <div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span> </div>

@@ -249,7 +249,7 @@ $(document).ready(function(){initNavTree('constant__extrapolation__rule_8hpp_sou
 <div class="line"><span class="lineno">  120</span><span class="comment">     *</span></div>
 <div class="line"><span class="lineno">  121</span><span class="comment">     * @param[in] eval_pos Coordinate in the dimension given inside the domain where we will evaluate each points outside the domain.</span></div>
 <div class="line"><span class="lineno">  122</span><span class="comment">     */</span></div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    <span class="keyword">template</span> &lt;<span class="keyword">class</span> DimNI_sfinae = DimNI, std::enable_if_t&lt;DimNI_sfinae::PERIODIC, <span class="keywordtype">int</span>&gt; = 0&gt;</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    <span class="keyword">template</span> &lt;<span class="keyword">class</span> SFINAEDimNI = DimNI, std::enable_if_t&lt;SFINAEDimNI::PERIODIC, <span class="keywordtype">int</span>&gt; = 0&gt;</div>
 <div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>    <span class="keyword">explicit</span> <a class="code hl_function" href="structddc_1_1ConstantExtrapolationRule_3_01DimI_00_01DimNI_01_4.html#a60c0c81e29ae0f43e6d1a21ff81106ec">ConstantExtrapolationRule</a>(<a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;DimI&gt; eval_pos)</div>
 <div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>        : m_eval_pos(eval_pos)</div>
 <div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>        , m_eval_pos_not_interest_min(0.)</div>

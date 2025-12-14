@@ -771,7 +771,7 @@ Functions</h2></td></tr>
 <tr class="memitem:a3141ff839615992a3c9c144bda702653"><td class="memTemplItemLeft" align="right" valign="top">T&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a3141ff839615992a3c9c144bda702653">parallel_transform_reduce</a> (<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Support</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;domain, T <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">neutral</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BinaryReductionOp</a> &amp;&amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">reduce</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">UnaryTransformOp</a> &amp;&amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">transform</a>) <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">noexcept</a></td></tr>
 <tr class="memdesc:a3141ff839615992a3c9c144bda702653"><td class="mdescLeft">&#160;</td><td class="mdescRight">A reduction over a nD domain using the <code>Kokkos</code> default execution space.  <br /></td></tr>
 <tr class="separator:a3141ff839615992a3c9c144bda702653"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a23d4abcde702238b33c5185cd6457658" id="r_a23d4abcde702238b33c5185cd6457658"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">PDI_inout_t</a> access, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DataType</a> &gt; </td></tr>
+<tr class="memitem:a23d4abcde702238b33c5185cd6457658" id="r_a23d4abcde702238b33c5185cd6457658"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">PDI_inout_t</a> Access, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DataType</a> &gt; </td></tr>
 <tr class="memitem:a23d4abcde702238b33c5185cd6457658"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">void</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a23d4abcde702238b33c5185cd6457658">expose_to_pdi</a> (std::string <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">name</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DataType</a> &amp;&amp;data)</td></tr>
 <tr class="separator:a23d4abcde702238b33c5185cd6457658"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad1758d8bf1e3c6a363d0ee5ec254d517" id="r_ad1758d8bf1e3c6a363d0ee5ec254d517"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DataType</a> &gt; </td></tr>
@@ -1863,7 +1863,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </div><div class="memdoc">
 
 <p>A named argument to choose the direction of the FFT. </p>
-<dl class="section see"><dt>See also</dt><dd>kwArgs_impl, <a class="el" href="namespaceddc.html#structddc_1_1kwArgs__fft" title="A structure embedding the configuration of the exposed FFT function with the type of normalization.">kwArgs_fft</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d" title="Initialize (emplace) a global singleton discrete space.">kwArgsImpl</a>, <a class="el" href="namespaceddc.html#structddc_1_1kwArgs__fft" title="A structure embedding the configuration of the exposed FFT function with the type of normalization.">kwArgs_fft</a> </dd></dl>
 <table class="fieldtable">
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ae672eb355c3d1fa7de604e8bf6164853abfec72bb37910c61f36b6c29a1f7ec31" name="ae672eb355c3d1fa7de604e8bf6164853abfec72bb37910c61f36b6c29a1f7ec31"></a>FORWARD&#160;</td><td class="fielddoc"><p>Forward, corresponds to direct FFT up to normalization. </p>
 </td></tr>
@@ -1896,7 +1896,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </div><div class="memdoc">
 
 <p>A named argument to choose the type of normalization of the FFT. </p>
-<dl class="section see"><dt>See also</dt><dd>kwArgs_impl, <a class="el" href="namespaceddc.html#structddc_1_1kwArgs__fft" title="A structure embedding the configuration of the exposed FFT function with the type of normalization.">kwArgs_fft</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d" title="Initialize (emplace) a global singleton discrete space.">kwArgsImpl</a>, <a class="el" href="namespaceddc.html#structddc_1_1kwArgs__fft" title="A structure embedding the configuration of the exposed FFT function with the type of normalization.">kwArgs_fft</a> </dd></dl>
 <table class="fieldtable">
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a5d5291156a65ec442dfcd7274f045631a88559a0cfd8250c9d65970cc145c92d4" name="a5d5291156a65ec442dfcd7274f045631a88559a0cfd8250c9d65970cc145c92d4"></a>OFF&#160;</td><td class="fielddoc"><p>No normalization. Un-normalized FFT is sum_j f(x_j)*e^-ikx_j. </p>
 </td></tr>
@@ -5807,7 +5807,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">PDI_inout_t</a> access, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DataType</a> &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">PDI_inout_t</a> Access, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DataType</a> &gt; </div>
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">void</a> ddc::expose_to_pdi </td>

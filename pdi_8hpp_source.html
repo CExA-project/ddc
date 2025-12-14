@@ -210,13 +210,13 @@ $(document).ready(function(){initNavTree('pdi_8hpp_source.html',''); initResizab
 <div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    <span class="comment">/// API with access argument</span></div>
 <div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span> </div>
 <div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    <span class="keyword">template</span> &lt;</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>            PDI_inout_t access,</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>            PDI_inout_t Access,</div>
 <div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>            <span class="keyword">class</span> BorrowedChunk,</div>
 <div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>            std::enable_if_t&lt;is_borrowed_chunk_v&lt;BorrowedChunk&gt;, <span class="keywordtype">int</span>&gt; = 0&gt;</div>
 <div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    <a class="code hl_class" href="classddc_1_1PdiEvent.html">PdiEvent</a>&amp; <a class="code hl_function" href="classddc_1_1PdiEvent.html#ada4058655f4cadaf359894d0a544d3b8">with</a>(std::string <span class="keyword">const</span>&amp; name, BorrowedChunk&amp;&amp; data)</div>
 <div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    {</div>
 <div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>        <span class="keyword">static_assert</span>(</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>                !(access &amp; PDI_IN) || (chunk_default_access_v&lt;BorrowedChunk&gt; &amp; PDI_IN),</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>                !(Access &amp; PDI_IN) || (chunk_default_access_v&lt;BorrowedChunk&gt; &amp; PDI_IN),</div>
 <div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>                <span class="stringliteral">&quot;Invalid access for constant data&quot;</span>);</div>
 <div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>        std::array <span class="keyword">const</span> extents = detail::array(data.domain().extents());</div>
 <div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>        PDI_share(store_name(name + <span class="stringliteral">&quot;_rank&quot;</span>), store_scalar(extents.size()), PDI_OUT);</div>
@@ -227,26 +227,26 @@ $(document).ready(function(){initNavTree('pdi_8hpp_source.html',''); initResizab
 <div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>        PDI_share(</div>
 <div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>                store_name(name),</div>
 <div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>                <span class="keyword">const_cast</span>&lt;chunk_value_t&lt;BorrowedChunk&gt;*&gt;(data.data_handle()),</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>                access);</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>                Access);</div>
 <div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>        <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
 <div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    }</div>
 <div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span> </div>
 <div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    <span class="keyword">template</span> &lt;</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>            PDI_inout_t access,</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>            PDI_inout_t Access,</div>
 <div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>            <span class="keyword">class</span> Arithmetic,</div>
 <div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>            std::enable_if_t&lt;std::is_arithmetic_v&lt;std::remove_reference_t&lt;Arithmetic&gt;&gt;, <span class="keywordtype">int</span>&gt; = 0&gt;</div>
 <div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    <a class="code hl_class" href="classddc_1_1PdiEvent.html">PdiEvent</a>&amp; <a class="code hl_function" href="classddc_1_1PdiEvent.html#ac52d3155e073493a6c1d93cc3938434a">with</a>(std::string <span class="keyword">const</span>&amp; name, Arithmetic&amp;&amp; data)</div>
 <div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    {</div>
 <div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>        <span class="keyword">static_assert</span>(</div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>                !(access &amp; PDI_IN) || (default_access_v&lt;Arithmetic&gt; &amp; PDI_IN),</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>                !(Access &amp; PDI_IN) || (default_access_v&lt;Arithmetic&gt; &amp; PDI_IN),</div>
 <div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>                <span class="stringliteral">&quot;Invalid access for constant data&quot;</span>);</div>
 <div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>        <span class="keyword">using</span> value_type = std::remove_cv_t&lt;std::remove_reference_t&lt;Arithmetic&gt;&gt;;</div>
 <div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>        value_type* data_ptr = <span class="keyword">const_cast</span>&lt;value_type*&gt;(&amp;data);</div>
 <div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>        <span class="comment">// for read-only data, we share a copy instead of the data itself in case we received a ref on a temporary,</span></div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (!(access &amp; PDI_IN)) {</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (!(Access &amp; PDI_IN)) {</div>
 <div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>            data_ptr = store_scalar(data);</div>
 <div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>        }</div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>        PDI_share(store_name(name), data_ptr, access);</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>        PDI_share(store_name(name), data_ptr, Access);</div>
 <div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>        <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
 <div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>    }</div>
 <div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span> </div>
@@ -273,10 +273,10 @@ $(document).ready(function(){initNavTree('pdi_8hpp_source.html',''); initResizab
 <div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>    <span class="comment">/// @}</span></div>
 <div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>};</div>
 <div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span> </div>
-<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span><span class="keyword">template</span> &lt;PDI_inout_t access, <span class="keyword">class</span> DataType&gt;</div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span><span class="keyword">template</span> &lt;PDI_inout_t Access, <span class="keyword">class</span> DataType&gt;</div>
 <div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span><span class="keywordtype">void</span> <a class="code hl_function" href="namespaceddc.html#a23d4abcde702238b33c5185cd6457658">expose_to_pdi</a>(std::string <span class="keyword">const</span>&amp; name, DataType&amp;&amp; data)</div>
 <div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>{</div>
-<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>    <a class="code hl_class" href="classddc_1_1PdiEvent.html">PdiEvent</a><a class="code hl_function" href="classddc_1_1PdiEvent.html#aa694ad4ce4952cade218bfa994f98258">(</a>name<a class="code hl_function" href="classddc_1_1PdiEvent.html#aa694ad4ce4952cade218bfa994f98258">)</a>.with&lt;access&gt;(name, std::forward&lt;DataType&gt;(data));</div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>    <a class="code hl_class" href="classddc_1_1PdiEvent.html">PdiEvent</a><a class="code hl_function" href="classddc_1_1PdiEvent.html#aa694ad4ce4952cade218bfa994f98258">(</a>name<a class="code hl_function" href="classddc_1_1PdiEvent.html#aa694ad4ce4952cade218bfa994f98258">)</a>.with&lt;Access&gt;(name, std::forward&lt;DataType&gt;(data));</div>
 <div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>}</div>
 <div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span> </div>
 <div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> DataType&gt;</div>

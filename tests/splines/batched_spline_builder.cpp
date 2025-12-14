@@ -104,7 +104,7 @@ KOKKOS_FUNCTION Coord<X> x0()
 
 // Templated function giving last coordinate of the mesh in given dimension.
 template <typename X>
-KOKKOS_FUNCTION Coord<X> xN()
+KOKKOS_FUNCTION Coord<X> xn()
 {
     return Coord<X>(1.);
 }
@@ -113,7 +113,7 @@ KOKKOS_FUNCTION Coord<X> xN()
 template <typename X>
 double dx(std::size_t ncells)
 {
-    return (xN<X>() - x0<X>()) / ncells;
+    return (xn<X>() - x0<X>()) / ncells;
 }
 
 // Templated function giving break points of mesh in given dimension for non-uniform case.
@@ -128,11 +128,11 @@ std::vector<Coord<X>> breaks(std::size_t ncells)
 }
 
 template <class DDim>
-void InterestDimInitializer(std::size_t const ncells)
+void interest_dim_initializer(std::size_t const ncells)
 {
     using CDim = typename DDim::continuous_dimension_type;
 #if defined(BSPLINES_TYPE_UNIFORM)
-    ddc::init_discrete_space<BSplines<CDim>>(x0<CDim>(), xN<CDim>(), ncells);
+    ddc::init_discrete_space<BSplines<CDim>>(x0<CDim>(), xn<CDim>(), ncells);
 #elif defined(BSPLINES_TYPE_NON_UNIFORM)
     ddc::init_discrete_space<BSplines<CDim>>(breaks<CDim>(ncells));
 #endif
@@ -142,7 +142,7 @@ void InterestDimInitializer(std::size_t const ncells)
 // Checks that when evaluating the spline at interpolation points one
 // recovers values that were used to build the spline
 template <typename ExecSpace, typename MemorySpace, typename DDimI, typename... DDims>
-void BatchedSplineTest()
+void TestBatchedSpline()
 {
     using I = typename DDimI::continuous_dimension_type;
 
@@ -150,7 +150,7 @@ void BatchedSplineTest()
     ExecSpace const exec_space;
 
     std::size_t const ncells = 10;
-    InterestDimInitializer<DDimI>(ncells);
+    interest_dim_initializer<DDimI>(ncells);
 
     // Create the values domain (mesh)
     ddc::DiscreteDomain<DDimI> const interpolation_domain
@@ -231,7 +231,7 @@ void BatchedSplineTest()
              ++ii) {
             derivs_rhs1_host(
                     typename decltype(derivs_rhs1_host.domain())::discrete_element_type(ii))
-                    = evaluator.deriv(xN<I>(), ii + shift - 1);
+                    = evaluator.deriv(xn<I>(), ii + shift - 1);
         }
         auto derivs_rhs1_alloc = ddc::create_mirror_view_and_copy(exec_space, derivs_rhs1_host);
         ddc::ChunkSpan const derivs_rhs1 = derivs_rhs1_alloc.span_view();
@@ -334,7 +334,7 @@ void BatchedSplineTest()
                     typename decltype(spline_builder)::template batch_domain_type<
                             ddc::DiscreteDomain<DDims...>>::discrete_element_type const e) {
                 return Kokkos::abs(
-                        spline_eval_integrals(e) - evaluator.deriv(xN<I>(), -1)
+                        spline_eval_integrals(e) - evaluator.deriv(xn<I>(), -1)
                         + evaluator.deriv(x0<I>(), -1));
             });
 
@@ -388,7 +388,7 @@ void BatchedSplineTest()
 
 TEST(SUFFIX(BatchedSplineHost), 1DX)
 {
-    BatchedSplineTest<
+    TestBatchedSpline<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DDimGPS<DimX>,
@@ -397,7 +397,7 @@ TEST(SUFFIX(BatchedSplineHost), 1DX)
 
 TEST(SUFFIX(BatchedSplineDevice), 1DX)
 {
-    BatchedSplineTest<
+    TestBatchedSpline<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             DDimGPS<DimX>,
@@ -406,7 +406,7 @@ TEST(SUFFIX(BatchedSplineDevice), 1DX)
 
 TEST(SUFFIX(BatchedSplineHost), 2DXB1)
 {
-    BatchedSplineTest<
+    TestBatchedSpline<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DDimGPS<DimX>,
@@ -416,7 +416,7 @@ TEST(SUFFIX(BatchedSplineHost), 2DXB1)
 
 TEST(SUFFIX(BatchedSplineHost), 2DB1X)
 {
-    BatchedSplineTest<
+    TestBatchedSpline<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DDimGPS<DimX>,
@@ -426,7 +426,7 @@ TEST(SUFFIX(BatchedSplineHost), 2DB1X)
 
 TEST(SUFFIX(BatchedSplineDevice), 2DXB1)
 {
-    BatchedSplineTest<
+    TestBatchedSpline<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             DDimGPS<DimX>,
@@ -436,7 +436,7 @@ TEST(SUFFIX(BatchedSplineDevice), 2DXB1)
 
 TEST(SUFFIX(BatchedSplineDevice), 2DB1X)
 {
-    BatchedSplineTest<
+    TestBatchedSpline<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             DDimGPS<DimX>,
@@ -446,7 +446,7 @@ TEST(SUFFIX(BatchedSplineDevice), 2DB1X)
 
 TEST(SUFFIX(BatchedSplineHost), 3DXB1B2)
 {
-    BatchedSplineTest<
+    TestBatchedSpline<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DDimGPS<DimX>,
@@ -457,7 +457,7 @@ TEST(SUFFIX(BatchedSplineHost), 3DXB1B2)
 
 TEST(SUFFIX(BatchedSplineHost), 3DB1XB2)
 {
-    BatchedSplineTest<
+    TestBatchedSpline<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DDimGPS<DimX>,
@@ -468,7 +468,7 @@ TEST(SUFFIX(BatchedSplineHost), 3DB1XB2)
 
 TEST(SUFFIX(BatchedSplineHost), 3DB1B2X)
 {
-    BatchedSplineTest<
+    TestBatchedSpline<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DDimGPS<DimX>,
@@ -479,7 +479,7 @@ TEST(SUFFIX(BatchedSplineHost), 3DB1B2X)
 
 TEST(SUFFIX(BatchedSplineDevice), 3DXB1B2)
 {
-    BatchedSplineTest<
+    TestBatchedSpline<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             DDimGPS<DimX>,
@@ -490,7 +490,7 @@ TEST(SUFFIX(BatchedSplineDevice), 3DXB1B2)
 
 TEST(SUFFIX(BatchedSplineDevice), 3DB1XB2)
 {
-    BatchedSplineTest<
+    TestBatchedSpline<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             DDimGPS<DimX>,
@@ -501,7 +501,7 @@ TEST(SUFFIX(BatchedSplineDevice), 3DB1XB2)
 
 TEST(SUFFIX(BatchedSplineDevice), 3DB1B2X)
 {
-    BatchedSplineTest<
+    TestBatchedSpline<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             DDimGPS<DimX>,

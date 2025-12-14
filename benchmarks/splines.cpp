@@ -33,23 +33,23 @@ struct X
     static constexpr bool PERIODIC = true;
 };
 
-template <bool IsNonUniform, std::size_t s_degree_x>
+template <bool IsNonUniform, std::size_t DegreeX>
 struct BSplinesX
     : std::conditional_t<
               IsNonUniform,
-              ddc::NonUniformBSplines<X, s_degree_x>,
-              ddc::UniformBSplines<X, s_degree_x>>
+              ddc::NonUniformBSplines<X, DegreeX>,
+              ddc::UniformBSplines<X, DegreeX>>
 {
 };
 
-template <bool IsNonUniform, std::size_t s_degree_x>
+template <bool IsNonUniform, std::size_t DegreeX>
 using GrevillePoints = ddc::GrevilleInterpolationPoints<
-        BSplinesX<IsNonUniform, s_degree_x>,
+        BSplinesX<IsNonUniform, DegreeX>,
         ddc::BoundCond::PERIODIC,
         ddc::BoundCond::PERIODIC>;
 
-template <bool IsNonUniform, std::size_t s_degree_x>
-struct DDimX : GrevillePoints<IsNonUniform, s_degree_x>::interpolation_discrete_dimension_type
+template <bool IsNonUniform, std::size_t DegreeX>
+struct DDimX : GrevillePoints<IsNonUniform, DegreeX>::interpolation_discrete_dimension_type
 {
 };
 
@@ -60,7 +60,7 @@ struct DDimY : ddc::UniformPointSampling<Y>
 };
 
 // Function to monitor GPU memory asynchronously
-void monitorMemoryAsync(std::mutex& mutex, bool& monitorFlag, std::size_t& maxUsedMem)
+void monitor_memory_async(std::mutex& mutex, bool& monitorFlag, std::size_t& maxUsedMem)
 {
     while (monitorFlag) {
         std::this_thread::sleep_for(std::chrono::microseconds(10)); // Adjust the interval as needed
@@ -81,7 +81,7 @@ void monitorMemoryAsync(std::mutex& mutex, bool& monitorFlag, std::size_t& maxUs
     }
 }
 
-template <typename ExecSpace, bool IsNonUniform, std::size_t s_degree_x>
+template <typename ExecSpace, bool IsNonUniform, std::size_t DegreeX>
 void characteristics_advection_unitary(benchmark::State& state)
 {
     std::size_t const nx = state.range(3);
@@ -105,7 +105,7 @@ void characteristics_advection_unitary(benchmark::State& state)
     std::mutex mutex;
     // Create a thread to monitor GPU memory asynchronously
     std::thread monitorThread(
-            monitorMemoryAsync,
+            monitor_memory_async,
             std::ref(mutex),
             std::ref(monitorFlag),
             std::ref(maxUsedMem));
@@ -113,42 +113,42 @@ void characteristics_advection_unitary(benchmark::State& state)
     if constexpr (!IsNonUniform) {
         ddc::init_discrete_space<BSplinesX<
                 IsNonUniform,
-                s_degree_x>>(ddc::Coordinate<X>(0.), ddc::Coordinate<X>(1.), nx);
+                DegreeX>>(ddc::Coordinate<X>(0.), ddc::Coordinate<X>(1.), nx);
     } else {
         std::vector<ddc::Coordinate<X>> breaks(nx + 1);
         for (std::size_t i(0); i < nx + 1; ++i) {
             breaks[i] = ddc::Coordinate<X>(static_cast<double>(i) / nx);
         }
-        ddc::init_discrete_space<BSplinesX<IsNonUniform, s_degree_x>>(breaks);
+        ddc::init_discrete_space<BSplinesX<IsNonUniform, DegreeX>>(breaks);
     }
-    ddc::init_discrete_space<DDimX<IsNonUniform, s_degree_x>>(
+    ddc::init_discrete_space<DDimX<IsNonUniform, DegreeX>>(
             ddc::GrevilleInterpolationPoints<
-                    BSplinesX<IsNonUniform, s_degree_x>,
+                    BSplinesX<IsNonUniform, DegreeX>,
                     ddc::BoundCond::PERIODIC,
                     ddc::BoundCond::PERIODIC>::
-                    template get_sampling<DDimX<IsNonUniform, s_degree_x>>());
+                    template get_sampling<DDimX<IsNonUniform, DegreeX>>());
     ddc::DiscreteDomain<DDimY> const y_domain = ddc::init_discrete_space<DDimY>(DDimY::init<DDimY>(
             ddc::Coordinate<Y>(-1.),
             ddc::Coordinate<Y>(1.),
             ddc::DiscreteVector<DDimY>(ny)));
 
     auto const x_domain = ddc::GrevilleInterpolationPoints<
-            BSplinesX<IsNonUniform, s_degree_x>,
+            BSplinesX<IsNonUniform, DegreeX>,
             ddc::BoundCond::PERIODIC,
-            ddc::BoundCond::PERIODIC>::template get_domain<DDimX<IsNonUniform, s_degree_x>>();
+            ddc::BoundCond::PERIODIC>::template get_domain<DDimX<IsNonUniform, DegreeX>>();
     ddc::Chunk density_alloc(
-            ddc::DiscreteDomain<DDimX<IsNonUniform, s_degree_x>, DDimY>(x_domain, y_domain),
+            ddc::DiscreteDomain<DDimX<IsNonUniform, DegreeX>, DDimY>(x_domain, y_domain),
             ddc::KokkosAllocator<double, typename ExecSpace::memory_space>());
     ddc::ChunkSpan const density = density_alloc.span_view();
     // Initialize the density on the main domain
-    ddc::DiscreteDomain<DDimX<IsNonUniform, s_degree_x>, DDimY> const x_mesh
-            = ddc::DiscreteDomain<DDimX<IsNonUniform, s_degree_x>, DDimY>(x_domain, y_domain);
+    ddc::DiscreteDomain<DDimX<IsNonUniform, DegreeX>, DDimY> const x_mesh
+            = ddc::DiscreteDomain<DDimX<IsNonUniform, DegreeX>, DDimY>(x_domain, y_domain);
     ddc::parallel_for_each(
             ExecSpace(),
             x_mesh,
-            KOKKOS_LAMBDA(ddc::DiscreteElement<DDimX<IsNonUniform, s_degree_x>, DDimY> const ixy) {
-                double const x = ddc::coordinate(
-                        ddc::DiscreteElement<DDimX<IsNonUniform, s_degree_x>>(ixy));
+            KOKKOS_LAMBDA(ddc::DiscreteElement<DDimX<IsNonUniform, DegreeX>, DDimY> const ixy) {
+                double const x
+                        = ddc::coordinate(ddc::DiscreteElement<DDimX<IsNonUniform, DegreeX>>(ixy));
                 double const y = ddc::coordinate(ddc::DiscreteElement<DDimY>(ixy));
                 density(ixy) = 9.999 * Kokkos::exp(-(x * x + y * y) / 0.1 / 2);
                 // initial_density(ixy) = 9.999 * ((x * x + y * y) < 0.25);
@@ -156,8 +156,8 @@ void characteristics_advection_unitary(benchmark::State& state)
     ddc::SplineBuilder<
             ExecSpace,
             typename ExecSpace::memory_space,
-            BSplinesX<IsNonUniform, s_degree_x>,
-            DDimX<IsNonUniform, s_degree_x>,
+            BSplinesX<IsNonUniform, DegreeX>,
+            DDimX<IsNonUniform, DegreeX>,
             ddc::BoundCond::PERIODIC,
             ddc::BoundCond::PERIODIC,
             Backend> const spline_builder(x_domain, cols_per_chunk, preconditioner_max_block_size);
@@ -165,8 +165,8 @@ void characteristics_advection_unitary(benchmark::State& state)
     ddc::SplineEvaluator<
             ExecSpace,
             typename ExecSpace::memory_space,
-            BSplinesX<IsNonUniform, s_degree_x>,
-            DDimX<IsNonUniform, s_degree_x>,
+            BSplinesX<IsNonUniform, DegreeX>,
+            DDimX<IsNonUniform, DegreeX>,
             ddc::PeriodicExtrapolationRule<X>,
             ddc::PeriodicExtrapolationRule<X>> const
             spline_evaluator(periodic_extrapolation, periodic_extrapolation);
@@ -184,11 +184,9 @@ void characteristics_advection_unitary(benchmark::State& state)
         ddc::parallel_for_each(
                 ExecSpace(),
                 feet_coords.domain(),
-                KOKKOS_LAMBDA(
-                        ddc::DiscreteElement<DDimX<IsNonUniform, s_degree_x>, DDimY> const e) {
+                KOKKOS_LAMBDA(ddc::DiscreteElement<DDimX<IsNonUniform, DegreeX>, DDimY> const e) {
                     feet_coords(e)
-                            = ddc::coordinate(
-                                      ddc::DiscreteElement<DDimX<IsNonUniform, s_degree_x>>(e))
+                            = ddc::coordinate(ddc::DiscreteElement<DDimX<IsNonUniform, DegreeX>>(e))
                               - ddc::Coordinate<X>(0.0176429863);
                 });
         Kokkos::Profiling::popRegion();
@@ -212,13 +210,13 @@ void characteristics_advection_unitary(benchmark::State& state)
     /// The reason is it acts on underlying global   ///
     /// variables, which is always a bad idea.       ///
     ////////////////////////////////////////////////////
-    ddc::detail::g_discrete_space_dual<BSplinesX<IsNonUniform, s_degree_x>>.reset();
+    ddc::detail::g_discrete_space_dual<BSplinesX<IsNonUniform, DegreeX>>.reset();
     if constexpr (!IsNonUniform) {
-        ddc::detail::g_discrete_space_dual<ddc::UniformBsplinesKnots<BSplinesX<IsNonUniform, s_degree_x>>>.reset();
+        ddc::detail::g_discrete_space_dual<ddc::UniformBsplinesKnots<BSplinesX<IsNonUniform, DegreeX>>>.reset();
     } else {
-        ddc::detail::g_discrete_space_dual<ddc::NonUniformBsplinesKnots<BSplinesX<IsNonUniform, s_degree_x>>>.reset();
+        ddc::detail::g_discrete_space_dual<ddc::NonUniformBsplinesKnots<BSplinesX<IsNonUniform, DegreeX>>>.reset();
     }
-    ddc::detail::g_discrete_space_dual<DDimX<IsNonUniform, s_degree_x>>.reset();
+    ddc::detail::g_discrete_space_dual<DDimX<IsNonUniform, DegreeX>>.reset();
     ddc::detail::g_discrete_space_dual<DDimY>.reset();
     ////////////////////////////////////////////////////
 }

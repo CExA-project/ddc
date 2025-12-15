@@ -36,6 +36,39 @@
 
 #endif
 
+// This is a copy of the KOKKOS_IMPL_DEPRECATED_WARNING_PUSH/POP macros
+// clang-format off
+#if defined(__NVCOMPILER)
+  #define DDC_DISABLE_DEPRECATED_WARNINGS_PUSH() \
+    _Pragma("diag_suppress 1216") \
+    _Pragma("diag_suppress deprecated_entity_with_custom_message")
+  #define DDC_DISABLE_DEPRECATED_WARNINGS_POP() \
+    _Pragma("diag_default 1216") \
+    _Pragma("diag_suppress deprecated_entity_with_custom_message")
+#elif defined(__EDG__)
+  #define DDC_DISABLE_DEPRECATED_WARNINGS_PUSH() \
+    _Pragma("warning push")                      \
+    _Pragma("warning disable 1478")
+  #define DDC_DISABLE_DEPRECATED_WARNINGS_POP() \
+    _Pragma("warning pop")
+#elif defined(__GNUC__) || defined(__clang__)
+  #define DDC_DISABLE_DEPRECATED_WARNINGS_PUSH() \
+    _Pragma("GCC diagnostic push")               \
+    _Pragma("GCC diagnostic ignored \"-Wdeprecated-declarations\"")
+  #define DDC_DISABLE_DEPRECATED_WARNINGS_POP() \
+    _Pragma("GCC diagnostic pop")
+#elif defined(_MSC_VER)
+  #define DDC_DISABLE_DEPRECATED_WARNINGS_PUSH() \
+    _Pragma("warning(push)")                     \
+    _Pragma("warning(disable: 4996)")
+  #define DDC_DISABLE_DEPRECATED_WARNINGS_POP() \
+    _Pragma("warning(pop)")
+#else
+  #define DDC_DISABLE_DEPRECATED_WARNINGS_PUSH()
+  #define DDC_DISABLE_DEPRECATED_WARNINGS_POP()
+#endif
+// clang-format on
+
 #if defined(__HIP_DEVICE_COMPILE__)
 #    define DDC_CURRENT_KOKKOS_SPACE Kokkos::HIPSpace
 #elif defined(__CUDA_ARCH__)

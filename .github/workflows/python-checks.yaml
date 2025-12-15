@@ -29,10 +29,10 @@ jobs:
     name: Python format using black
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8  # v5.0.0
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8  # v6.0.1
       - name: Install dependencies
         run: |
-          pipx install black
+          pipx install black~=25.11
       - name: Check format using black
         run: |
           black --line-length 100 --check bin/trailing_spaces $(git ls-files '*.py')
@@ -41,10 +41,10 @@ jobs:
     name: Python lint using pylint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8  # v5.0.0
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8  # v6.0.1
       - name: Install dependencies
         run: |
-          pipx install pylint
+          pipx install pylint~=4.0
       - name: Analysing the code with pylint
         run: |
           pylint bin/trailing_spaces $(git ls-files '*.py' ':!benchmarks/splines_plot.py')

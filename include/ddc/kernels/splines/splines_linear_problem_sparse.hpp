@@ -31,7 +31,7 @@ namespace ddc::detail {
 template <class KokkosViewType>
 auto to_gko_dense(std::shared_ptr<gko::Executor const> const& gko_exec, KokkosViewType const& view)
 {
-    static_assert((Kokkos::is_view_v<KokkosViewType> && KokkosViewType::rank == 2));
+    static_assert(Kokkos::is_view_v<KokkosViewType> && KokkosViewType::rank == 2);
     using value_type = typename KokkosViewType::traits::value_type;
 
     if (view.stride(1) != 1) {

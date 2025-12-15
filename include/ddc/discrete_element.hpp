@@ -281,7 +281,7 @@ public:
     template <class... OTags>
     KOKKOS_FUNCTION constexpr DiscreteElement& operator+=(DiscreteVector<OTags...> const& rhs)
     {
-        static_assert(((type_seq_contains_v<detail::TypeSeq<OTags>, tags_seq>) && ...));
+        static_assert((type_seq_contains_v<detail::TypeSeq<OTags>, tags_seq> && ...));
         ((m_values[type_seq_rank_v<OTags, tags_seq>] += rhs.template get<OTags>()), ...);
         return *this;
     }
@@ -300,7 +300,7 @@ public:
     template <class... OTags>
     KOKKOS_FUNCTION constexpr DiscreteElement& operator-=(DiscreteVector<OTags...> const& rhs)
     {
-        static_assert(((type_seq_contains_v<detail::TypeSeq<OTags>, tags_seq>) && ...));
+        static_assert((type_seq_contains_v<detail::TypeSeq<OTags>, tags_seq> && ...));
         ((m_values[type_seq_rank_v<OTags, tags_seq>] -= rhs.template get<OTags>()), ...);
         return *this;
     }
@@ -393,7 +393,7 @@ KOKKOS_FUNCTION constexpr DiscreteElement<Tags...> operator+(
         DiscreteVector<OTags...> const& rhs)
 {
     using detail::TypeSeq;
-    static_assert(((type_seq_contains_v<TypeSeq<OTags>, TypeSeq<Tags...>>) && ...));
+    static_assert((type_seq_contains_v<TypeSeq<OTags>, TypeSeq<Tags...>> && ...));
     DiscreteElement<Tags...> result(lhs);
     result += rhs;
     return result;
@@ -419,7 +419,7 @@ KOKKOS_FUNCTION constexpr DiscreteElement<Tags...> operator-(
         DiscreteVector<OTags...> const& rhs)
 {
     using detail::TypeSeq;
-    static_assert(((type_seq_contains_v<TypeSeq<OTags>, TypeSeq<Tags...>>) && ...));
+    static_assert((type_seq_contains_v<TypeSeq<OTags>, TypeSeq<Tags...>> && ...));
     DiscreteElement<Tags...> result(lhs);
     result -= rhs;
     return result;

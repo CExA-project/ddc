@@ -24,12 +24,12 @@ struct PolynomialEvaluator
     private:
         std::array<double, Degree + 1> m_coeffs;
 
-        double m_xN;
+        double m_xn;
 
     public:
         template <class Domain>
         explicit Evaluator(Domain domain)
-            : m_xN(std::max(std::abs(rmin(domain)), std::abs(rmax(domain))))
+            : m_xn(std::max(std::abs(rmin(domain)), std::abs(rmax(domain))))
         {
             std::random_device rd;
             std::mt19937 gen(rd());
@@ -70,7 +70,7 @@ struct PolynomialEvaluator
 
         KOKKOS_FUNCTION double max_norm(int diff = 0) const
         {
-            return Kokkos::abs(deriv(m_xN, diff));
+            return Kokkos::abs(deriv(m_xn, diff));
         }
 
     private:

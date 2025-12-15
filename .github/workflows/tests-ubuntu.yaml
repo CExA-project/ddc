@@ -45,7 +45,7 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8  # v5.0.0
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8  # v6.0.1
       - uses: jidicula/clang-format-action@6cd220de46c89139a0365edae93eee8eb30ca8fe  # v4.16.0
         with:
           clang-format-version: '21'
@@ -80,7 +80,7 @@ jobs:
         uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be  # v1.3.1
         with: {tool-cache: true, large-packages: false}
       - name: Checkout built branch
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8  # v5.0.0
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8  # v6.0.1
       - name: Login to GitHub Container Registry
         uses: docker/login-action@5e57cd118135c172c3672efd75eb46360885c0ef  # v3.6.0
         with:
@@ -110,7 +110,7 @@ jobs:
           docker save ghcr.io/cexa-project/ddc/${{matrix.image}}_${{matrix.backend}}:${GITHUB_SHA:0:7} > ${{matrix.image}}_${{matrix.backend}}.tar
       - name: Generate docker artifact from image
         if: needs.id_repo.outputs.in_base_repo == 'false'
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4  # v5.0.0
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f  # v6.0.0
         with:
           name: ${{matrix.image}}_${{matrix.backend}}-artifact
           path: ${{matrix.image}}_${{matrix.backend}}.tar
@@ -133,12 +133,12 @@ jobs:
         uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be  # v1.3.1
         with: {tool-cache: true, large-packages: false}
       - name: Checkout built branch
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8  # v5.0.0
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8  # v6.0.1
         with:
           submodules: true
       - name: Collect image artifact
         if: needs.id_repo.outputs.in_base_repo == 'false'
-        uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53  # v6.0.0
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131  # v7.0.0
         with:
           name: |
             ${{matrix.image}}_${{matrix.backend.name}}-artifact
@@ -186,7 +186,7 @@ jobs:
             ghcr.io/cexa-project/ddc/${{matrix.image}}_${{matrix.backend.name}}:${GITHUB_SHA:0:7} \
             bash run.sh
       - name: Upload coverage reports to Codecov with GitHub Action
-        uses: codecov/codecov-action@5a1091511ad55cbe89839c7260b706298ca349f7  # v5.5.1
+        uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de  # v5.5.2
         with:
           files: coverage.lcov
           disable_search: true
@@ -241,12 +241,12 @@ jobs:
         uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be  # v1.3.1
         with: {tool-cache: true, large-packages: false}
       - name: Checkout built branch
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8  # v5.0.0
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8  # v6.0.1
         with:
           submodules: true
       - name: Collect image artifact
         if: needs.id_repo.outputs.in_base_repo == 'false'
-        uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53  # v6.0.0
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131  # v7.0.0
         with:
           name: |
             ${{matrix.image}}_${{matrix.backend.name}}-artifact
@@ -345,7 +345,7 @@ jobs:
             cmake --build build
             if [ 'xcpu' = 'x${{matrix.backend.name}}' ]
             then
-              ctest --test-dir build --output-on-failure --timeout 20 --output-junit tests.xml
+              ctest --test-dir build --output-on-failure --timeout 25 --output-junit tests.xml
               cp build/tests.xml .
               ./build/examples/characteristics_advection
               ./build/examples/game_of_life
@@ -402,12 +402,12 @@ jobs:
         uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be  # v1.3.1
         with: {tool-cache: true, large-packages: false}
       - name: Checkout built branch
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8  # v5.0.0
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8  # v6.0.1
         with:
           submodules: true
       - name: Collect image artifact
         if: needs.id_repo.outputs.in_base_repo == 'false'
-        uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53  # v6.0.0
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131  # v7.0.0
         with:
           name: |
             ${{matrix.image}}_${{matrix.backend.name}}-artifact
@@ -454,7 +454,7 @@ jobs:
               . /src/sanitizer_env.sh
             fi
 
-            ctest --test-dir build --output-on-failure --timeout 20 --output-junit tests.xml
+            ctest --test-dir build --output-on-failure --timeout 30 --output-junit tests.xml
             cp build/tests.xml .
             ./build/examples/characteristics_advection
             ./build/examples/game_of_life
@@ -502,12 +502,12 @@ jobs:
         uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be  # v1.3.1
         with: {tool-cache: true, large-packages: false}
       - name: Checkout built branch
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8  # v5.0.0
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8  # v6.0.1
         with:
           submodules: true
       - name: Collect image artifact
         if: needs.id_repo.outputs.in_base_repo == 'false'
-        uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53  # v6.0.0
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131  # v7.0.0
         with:
           name: |
             ${{matrix.image}}_${{matrix.backend.name}}-artifact

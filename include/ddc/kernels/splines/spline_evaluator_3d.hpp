@@ -12,6 +12,7 @@
 
 #include <Kokkos_Core.hpp>
 
+#include "deriv.hpp"
 #include "integrals.hpp"
 #include "periodic_extrapolation_rule.hpp"
 
@@ -54,21 +55,6 @@ template <
         class UpperExtrapolationRule3>
 class SplineEvaluator3D
 {
-private:
-    /**
-     * @brief Tag to indicate that the value of the spline should be evaluated.
-     */
-    struct eval_type
-    {
-    };
-
-    /**
-     * @brief Tag to indicate that derivative of the spline should be evaluated.
-     */
-    struct eval_deriv_type
-    {
-    };
-
 public:
     /// @brief The type of the first evaluation continuous dimension used by this class.
     using continuous_dimension_type1 = typename BSplines1::continuous_dimension_type;
@@ -592,405 +578,31 @@ public:
     }
 
     /**
-     * @brief Differentiate 3D spline function (described by its spline coefficients) at a given coordinate along first dimension of interest.
+     * @brief Differentiate 3D spline function (described by its spline coefficients) at a given coordinate along the dimensions of interest.
      *
      * The spline coefficients represent a 3D spline function defined on a B-splines (basis splines). They can be
      * obtained via various methods, such as using a SplineBuilder3D.
      *
+     * @param deriv_order A DiscreteElement containing the orders of derivation for each of the dimensions of interest.
+     * If one of the dimensions is not present, its corresponding order of derivation is considered to be 0.
      * @param coord_eval The coordinate where the spline is differentiated. Note that only the components along the dimensions of interest are used.
      * @param spline_coef A ChunkSpan storing the 3D spline coefficients.
      *
      * @return The derivative of the spline function at the desired coordinate.
      */
-    template <class Layout, class... CoordsDims>
-    KOKKOS_FUNCTION double deriv_dim_1(
-            ddc::Coordinate<CoordsDims...> const& coord_eval,
-            ddc::ChunkSpan<double const, spline_domain_type, Layout, memory_space> const
-                    spline_coef) const
-    {
-        return eval_no_bc<eval_deriv_type, eval_type, eval_type>(coord_eval, spline_coef);
-    }
-
-    /**
-     * @brief Differentiate 3D spline function (described by its spline coefficients) at a given coordinate along second dimension of interest.
-     *
-     * The spline coefficients represent a 3D spline function defined on a B-splines (basis splines). They can be
-     * obtained via various methods, such as using a SplineBuilder3D.
-     *
-     * @param coord_eval The coordinate where the spline is differentiated. Note that only the components along the dimensions of interest are used.
-     * @param spline_coef A ChunkSpan storing the 3D spline coefficients.
-     *
-     * @return The derivative of the spline function at the desired coordinate.
-     */
-    template <class Layout, class... CoordsDims>
-    KOKKOS_FUNCTION double deriv_dim_2(
-            ddc::Coordinate<CoordsDims...> const& coord_eval,
-            ddc::ChunkSpan<double const, spline_domain_type, Layout, memory_space> const
-                    spline_coef) const
-    {
-        return eval_no_bc<eval_type, eval_deriv_type, eval_type>(coord_eval, spline_coef);
-    }
-
-    /**
-     * @brief Differentiate 3D spline function (described by its spline coefficients) at a given coordinate along third dimension of interest.
-     *
-     * The spline coefficients represent a 3D spline function defined on a B-splines (basis splines). They can be
-     * obtained via various methods, such as using a SplineBuilder3D.
-     *
-     * @param coord_eval The coordinate where the spline is differentiated. Note that only the components along the dimensions of interest are used.
-     * @param spline_coef A ChunkSpan storing the 3D spline coefficients.
-     *
-     * @return The derivative of the spline function at the desired coordinate.
-     */
-    template <class Layout, class... CoordsDims>
-    KOKKOS_FUNCTION double deriv_dim_3(
-            ddc::Coordinate<CoordsDims...> const& coord_eval,
-            ddc::ChunkSpan<double const, spline_domain_type, Layout, memory_space> const
-                    spline_coef) const
-    {
-        return eval_no_bc<eval_type, eval_type, eval_deriv_type>(coord_eval, spline_coef);
-    }
-
-    /**
-     * @brief Cross-differentiate 3D spline function (described by its spline coefficients) at a given coordinate along the first and second dimensions.
-     *
-     * The spline coefficients represent a 3D spline function defined on a B-splines (basis splines). They can be
-     * obtained via various methods, such as using a SplineBuilder3D.
-     *
-     * @param coord_eval The coordinate where the spline is differentiated. Note that only the components along the dimensions of interest are used.
-     * @param spline_coef A ChunkSpan storing the 3D spline coefficients.
-     *
-     * @return The derivative of the spline function at the desired coordinate.
-     */
-    template <class Layout, class... CoordsDims>
-    KOKKOS_FUNCTION double deriv_1_and_2(
-            ddc::Coordinate<CoordsDims...> const& coord_eval,
-            ddc::ChunkSpan<double const, spline_domain_type, Layout, memory_space> const
-                    spline_coef) const
-    {
-        return eval_no_bc<eval_deriv_type, eval_deriv_type, eval_type>(coord_eval, spline_coef);
-    }
-
-    /**
-     * @brief Cross-differentiate 3D spline function (described by its spline coefficients) at a given coordinate along the second and third dimensions.
-     *
-     * The spline coefficients represent a 3D spline function defined on a B-splines (basis splines). They can be
-     * obtained via various methods, such as using a SplineBuilder3D.
-     *
-     * @param coord_eval The coordinate where the spline is differentiated. Note that only the components along the dimensions of interest are used.
-     * @param spline_coef A ChunkSpan storing the 3D spline coefficients.
-     *
-     * @return The derivative of the spline function at the desired coordinate.
-     */
-    template <class Layout, class... CoordsDims>
-    KOKKOS_FUNCTION double deriv_2_and_3(
-            ddc::Coordinate<CoordsDims...> const& coord_eval,
-            ddc::ChunkSpan<double const, spline_domain_type, Layout, memory_space> const
-                    spline_coef) const
-    {
-        return eval_no_bc<eval_type, eval_deriv_type, eval_deriv_type>(coord_eval, spline_coef);
-    }
-
-    /**
-     * @brief Cross-differentiate 3D spline function (described by its spline coefficients) at a given coordinate along the first and third dimensions.
-     *
-     * The spline coefficients represent a 3D spline function defined on a B-splines (basis splines). They can be
-     * obtained via various methods, such as using a SplineBuilder3D.
-     *
-     * @param coord_eval The coordinate where the spline is differentiated. Note that only the components along the dimensions of interest are used.
-     * @param spline_coef A ChunkSpan storing the 3D spline coefficients.
-     *
-     * @return The derivative of the spline function at the desired coordinate.
-     */
-    template <class Layout, class... CoordsDims>
-    KOKKOS_FUNCTION double deriv_1_and_3(
-            ddc::Coordinate<CoordsDims...> const& coord_eval,
-            ddc::ChunkSpan<double const, spline_domain_type, Layout, memory_space> const
-                    spline_coef) const
-    {
-        return eval_no_bc<eval_deriv_type, eval_type, eval_deriv_type>(coord_eval, spline_coef);
-    }
-
-    /**
-     * @brief Cross-differentiate 3D spline function (described by its spline coefficients) at a given coordinate along the dimensions of interest.
-     *
-     * The spline coefficients represent a 3D spline function defined on a B-splines (basis splines). They can be
-     * obtained via various methods, such as using a SplineBuilder3D.
-     *
-     * @param coord_eval The coordinate where the spline is differentiated. Note that only the components along the dimensions of interest are used.
-     * @param spline_coef A ChunkSpan storing the 3D spline coefficients.
-     *
-     * @return The derivative of the spline function at the desired coordinate.
-     */
-    template <class Layout, class... CoordsDims>
-    KOKKOS_FUNCTION double deriv_1_2_3(
-            ddc::Coordinate<CoordsDims...> const& coord_eval,
-            ddc::ChunkSpan<double const, spline_domain_type, Layout, memory_space> const
-                    spline_coef) const
-    {
-        return eval_no_bc<
-                eval_deriv_type,
-                eval_deriv_type,
-                eval_deriv_type>(coord_eval, spline_coef);
-    }
-
-    /**
-     * @brief Differentiate 3D spline function (described by its spline coefficients) at a given coordinate along a specified dimension of interest.
-     *
-     * The spline coefficients represent a 3D spline function defined on a B-splines (basis splines). They can be
-     * obtained via various methods, such as using a SplineBuilder3D.
-     *
-     * @tparam InterestDim Dimension along which differentiation is performed.
-     *
-     * @param coord_eval The coordinate where the spline is differentiated. Note that only the components along the dimensions of interest are used.
-     * @param spline_coef A ChunkSpan storing the 3D spline coefficients.
-     *
-     * @return The derivative of the spline function at the desired coordinate.
-     */
-    template <class InterestDim, class Layout, class... CoordsDims>
+    template <class DElem, class Layout, class... CoordsDims>
     KOKKOS_FUNCTION double deriv(
+            DElem const& deriv_order,
             ddc::Coordinate<CoordsDims...> const& coord_eval,
             ddc::ChunkSpan<double const, spline_domain_type, Layout, memory_space> const
                     spline_coef) const
     {
-        static_assert(
-                std::is_same_v<InterestDim, continuous_dimension_type1>
-                || std::is_same_v<InterestDim, continuous_dimension_type2>
-                || std::is_same_v<InterestDim, continuous_dimension_type3>);
-        if constexpr (std::is_same_v<InterestDim, continuous_dimension_type1>) {
-            return deriv_dim_1(coord_eval, spline_coef);
-        } else if constexpr (std::is_same_v<InterestDim, continuous_dimension_type2>) {
-            return deriv_dim_2(coord_eval, spline_coef);
-        } else if constexpr (std::is_same_v<InterestDim, continuous_dimension_type3>) {
-            return deriv_dim_3(coord_eval, spline_coef);
-        }
+        static_assert(is_discrete_element_v<DElem>);
+        return eval_no_bc(deriv_order, coord_eval, spline_coef);
     }
 
     /**
-     * @brief Double-differentiate 3D spline function (described by its spline coefficients) at a given coordinate along specified dimensions of interest.
-     *
-     * The spline coefficients represent a 3D spline function defined on a B-splines (basis splines). They can be
-     * obtained via various methods, such as using a SplineBuilder3D.
-     *
-     * Note: double-differentiation other than cross-differentiation is not supported atm. See #440
-     *
-     * @tparam InterestDim1 First dimension along which differentiation is performed.
-     * @tparam InterestDim2 Second dimension along which differentiation is performed.
-     *
-     * @param coord_eval The coordinate where the spline is double-differentiated. Note that only the components along the dimensions of interest are used.
-     * @param spline_coef A ChunkSpan storing the 3D spline coefficients.
-     *
-     * @return The derivative of the spline function at the desired coordinate.
-     */
-    template <class InterestDim1, class InterestDim2, class Layout, class... CoordsDims>
-    KOKKOS_FUNCTION double deriv2(
-            ddc::Coordinate<CoordsDims...> const& coord_eval,
-            ddc::ChunkSpan<double const, spline_domain_type, Layout, memory_space> const
-                    spline_coef) const
-    {
-        static_assert(
-                (std::is_same_v<InterestDim1, continuous_dimension_type1>
-                 && std::is_same_v<InterestDim2, continuous_dimension_type2>)
-                || (std::is_same_v<InterestDim2, continuous_dimension_type1>
-                    && std::is_same_v<InterestDim1, continuous_dimension_type2>)
-                || (std::is_same_v<InterestDim1, continuous_dimension_type2>
-                    && std::is_same_v<InterestDim2, continuous_dimension_type3>)
-                || (std::is_same_v<InterestDim2, continuous_dimension_type2>
-                    && std::is_same_v<InterestDim1, continuous_dimension_type3>)
-                || (std::is_same_v<InterestDim1, continuous_dimension_type1>
-                    && std::is_same_v<InterestDim2, continuous_dimension_type3>)
-                || (std::is_same_v<InterestDim2, continuous_dimension_type1>
-                    && std::is_same_v<InterestDim1, continuous_dimension_type3>));
-
-        if constexpr (
-                (std::is_same_v<InterestDim1, continuous_dimension_type1>
-                 && std::is_same_v<InterestDim2, continuous_dimension_type2>)
-                || (std::is_same_v<InterestDim2, continuous_dimension_type1>
-                    && std::is_same_v<InterestDim1, continuous_dimension_type2>)) {
-            return deriv_1_and_2(coord_eval, spline_coef);
-        } else if constexpr (
-                (std::is_same_v<InterestDim1, continuous_dimension_type2>
-                 && std::is_same_v<InterestDim2, continuous_dimension_type3>)
-                || (std::is_same_v<InterestDim2, continuous_dimension_type2>
-                    && std::is_same_v<InterestDim1, continuous_dimension_type3>)) {
-            return deriv_2_and_3(coord_eval, spline_coef);
-        } else if constexpr (
-                (std::is_same_v<InterestDim1, continuous_dimension_type1>
-                 && std::is_same_v<InterestDim2, continuous_dimension_type3>)
-                || (std::is_same_v<InterestDim2, continuous_dimension_type1>
-                    && std::is_same_v<InterestDim1, continuous_dimension_type3>)) {
-            return deriv_1_and_3(coord_eval, spline_coef);
-        }
-    }
-
-    /**
-     * @brief Triple-differentiate 3D spline function (described by its spline coefficients) at a given coordinate along specified dimensions of interest.
-     *
-     * The spline coefficients represent a 3D spline function defined on a B-splines (basis splines). They can be
-     * obtained via various methods, such as using a SplineBuilder3D.
-     *
-     * Note: triple-differentiation other than cross-differentiation is not supported atm. See #440
-     *
-     * @tparam InterestDim1 First dimension along which differentiation is performed.
-     * @tparam InterestDim2 Second dimension along which differentiation is performed.
-     * @tparam InterestDim3 Third dimension along which differentiation is performed.
-     *
-     * @param coord_eval The coordinate where the spline is triple-differentiated. Note that only the components along the dimensions of interest are used.
-     * @param spline_coef A ChunkSpan storing the 3D spline coefficients.
-     *
-     * @return The derivative of the spline function at the desired coordinate.
-     */
-    template <
-            class InterestDim1,
-            class InterestDim2,
-            class InterestDim3,
-            class Layout,
-            class... CoordsDims>
-    KOKKOS_FUNCTION double deriv3(
-            ddc::Coordinate<CoordsDims...> const& coord_eval,
-            ddc::ChunkSpan<double const, spline_domain_type, Layout, memory_space> const
-                    spline_coef) const
-    {
-        static_assert(
-                (std::is_same_v<InterestDim1, continuous_dimension_type1>
-                 && std::is_same_v<InterestDim2, continuous_dimension_type2>
-                 && std::is_same_v<InterestDim3, continuous_dimension_type3>)
-                || (std::is_same_v<InterestDim3, continuous_dimension_type1>
-                    && std::is_same_v<InterestDim1, continuous_dimension_type2>
-                    && std::is_same_v<InterestDim2, continuous_dimension_type3>)
-                || (std::is_same_v<InterestDim2, continuous_dimension_type1>
-                    && std::is_same_v<InterestDim3, continuous_dimension_type2>
-                    && std::is_same_v<InterestDim1, continuous_dimension_type3>));
-
-        return deriv_1_2_3(coord_eval, spline_coef);
-    }
-
-    /**
-     * @brief Differentiate 3D spline function (described by its spline coefficients) on a mesh along first dimension of interest.
-     *
-     * The spline coefficients represent a 3D spline function defined on a cartesian product of batch_domain and B-splines
-     * (basis splines). They can be obtained via various methods, such as using a SplineBuilder3D.
-     *
-     * This is not a nD evaluation. This is a batched 3D differentiation.
-     * This means that for each slice of coordinates identified by a batch_domain_type::discrete_element_type,
-     * the differentiation is performed with the 3D set of spline coefficients identified by the same batch_domain_type::discrete_element_type.
-     *
-     * @param[out] spline_eval The derivatives of the 3D spline function at the desired coordinates. For practical reasons those are
-     * stored in a ChunkSpan defined on a batched_evaluation_domain_type. Note that the coordinates of the
-     * points represented by this domain are unused and irrelevant (but the points themselves (DiscreteElement) are used to select
-     * the set of 3D spline coefficients retained to perform the evaluation).
-     * @param[in] coords_eval The coordinates where the spline is differentiated. Those are
-     * stored in a ChunkSpan defined on a batched_evaluation_domain_type. Note that the coordinates of the
-     * points represented by this domain are unused and irrelevant (but the points themselves (DiscreteElement) are used to select
-     * the set of 3D spline coefficients retained to perform the evaluation).
-     * @param[in] spline_coef A ChunkSpan storing the 3D spline coefficients.
-     */
-    template <
-            class Layout1,
-            class Layout2,
-            class Layout3,
-            class BatchedInterpolationDDom,
-            class... CoordsDims>
-    void deriv_dim_1(
-            ddc::ChunkSpan<double, BatchedInterpolationDDom, Layout1, memory_space> const
-                    spline_eval,
-            ddc::ChunkSpan<
-                    ddc::Coordinate<CoordsDims...> const,
-                    BatchedInterpolationDDom,
-                    Layout2,
-                    memory_space> const coords_eval,
-            ddc::ChunkSpan<
-                    double const,
-                    batched_spline_domain_type<BatchedInterpolationDDom>,
-                    Layout3,
-                    memory_space> const spline_coef) const
-    {
-        batch_domain_type<BatchedInterpolationDDom> const batch_domain(coords_eval.domain());
-        evaluation_domain_type1 const evaluation_domain1(spline_eval.domain());
-        evaluation_domain_type2 const evaluation_domain2(spline_eval.domain());
-        evaluation_domain_type3 const evaluation_domain3(spline_eval.domain());
-        ddc::parallel_for_each(
-                "ddc_splines_differentiate_3d_dim_1",
-                exec_space(),
-                batch_domain,
-                KOKKOS_CLASS_LAMBDA(
-                        typename batch_domain_type<
-                                BatchedInterpolationDDom>::discrete_element_type const j) {
-                    auto const spline_eval_3D = spline_eval[j];
-                    auto const coords_eval_3D = coords_eval[j];
-                    auto const spline_coef_3D = spline_coef[j];
-                    for (auto const i1 : evaluation_domain1) {
-                        for (auto const i2 : evaluation_domain2) {
-                            for (auto const i3 : evaluation_domain3) {
-                                spline_eval_3D(i1, i2, i3) = eval_no_bc<
-                                        eval_deriv_type,
-                                        eval_type,
-                                        eval_type>(coords_eval_3D(i1, i2, i3), spline_coef_3D);
-                            }
-                        }
-                    }
-                });
-    }
-
-    /**
-     * @brief Differentiate 3D spline function (described by its spline coefficients) on a mesh along first dimension of interest.
-     *
-     * The spline coefficients represent a 3D spline function defined on a cartesian product of batch_domain and B-splines
-     * (basis splines). They can be obtained via various methods, such as using a SplineBuilder3D.
-     *
-     * This is not a multidimensional evaluation. This is a batched 3D evaluation.
-     * This means that for each slice of spline_eval the evaluation is performed with
-     * the 3D set of spline coefficients identified by the same batch_domain_type::discrete_element_type.
-     *
-     * @param[out] spline_eval The derivatives of the 3D spline function at the desired coordinates.
-     * @param[in] spline_coef A ChunkSpan storing the 3D spline coefficients.
-     */
-    template <class Layout1, class Layout2, class BatchedInterpolationDDom>
-    void deriv_dim_1(
-            ddc::ChunkSpan<double, BatchedInterpolationDDom, Layout1, memory_space> const
-                    spline_eval,
-            ddc::ChunkSpan<
-                    double const,
-                    batched_spline_domain_type<BatchedInterpolationDDom>,
-                    Layout2,
-                    memory_space> const spline_coef) const
-    {
-        batch_domain_type<BatchedInterpolationDDom> const batch_domain(spline_eval.domain());
-        evaluation_domain_type1 const evaluation_domain1(spline_eval.domain());
-        evaluation_domain_type2 const evaluation_domain2(spline_eval.domain());
-        evaluation_domain_type3 const evaluation_domain3(spline_eval.domain());
-        ddc::parallel_for_each(
-                "ddc_splines_differentiate_3d_dim_1",
-                exec_space(),
-                batch_domain,
-                KOKKOS_CLASS_LAMBDA(
-                        typename batch_domain_type<
-                                BatchedInterpolationDDom>::discrete_element_type const j) {
-                    auto const spline_eval_3D = spline_eval[j];
-                    auto const spline_coef_3D = spline_coef[j];
-                    for (auto const i1 : evaluation_domain1) {
-                        for (auto const i2 : evaluation_domain2) {
-                            for (auto const i3 : evaluation_domain3) {
-                                ddc::Coordinate<
-                                        continuous_dimension_type1,
-                                        continuous_dimension_type2,
-                                        continuous_dimension_type3>
-                                        coord_eval_3D(
-                                                ddc::coordinate(i1),
-                                                ddc::coordinate(i2),
-                                                ddc::coordinate(i3));
-                                spline_eval_3D(i1, i2, i3) = eval_no_bc<
-                                        eval_deriv_type,
-                                        eval_type,
-                                        eval_type>(coord_eval_3D, spline_coef_3D);
-                            }
-                        }
-                    }
-                });
-    }
-
-    /**
-     * @brief Differentiate 3D spline function (described by its spline coefficients) on a mesh along second dimension of interest.
+     * @brief Differentiate 3D spline function (described by its spline coefficients) on a mesh along the dimensions of interest.
      *
      * The spline coefficients represent a 3D spline function defined on a cartesian product of batch_domain and B-splines
      * (basis splines). They can be obtained via various methods, such as using a SplineBuilder3D.
@@ -999,6 +611,8 @@ public:
      * This means that for each slice of coordinates identified by a batch_domain_type::discrete_element_type,
      * the differentiation is performed with the 3D set of spline coefficients identified by the same batch_domain_type::discrete_element_type.
      *
+     * @param[in] deriv_order A DiscreteElement containing the orders of derivation for each of the dimensions of interest.
+     * If one of the dimensions is not present, its corresponding order of derivation is considered to be 0.
      * @param[out] spline_eval The derivatives of the 3D spline function at the desired coordinates. For practical reasons those are
      * stored in a ChunkSpan defined on a batched_evaluation_domain_type.
      * @param[in] coords_eval The coordinates where the spline is differentiated. Those are
@@ -1008,12 +622,14 @@ public:
      * @param[in] spline_coef A ChunkSpan storing the 3D spline coefficients.
      */
     template <
+            class DElem,
             class Layout1,
             class Layout2,
             class Layout3,
             class BatchedInterpolationDDom,
             class... CoordsDims>
-    void deriv_dim_2(
+    void deriv(
+            DElem const& deriv_order,
             ddc::ChunkSpan<double, BatchedInterpolationDDom, Layout1, memory_space> const
                     spline_eval,
             ddc::ChunkSpan<
@@ -1027,12 +643,14 @@ public:
                     Layout3,
                     memory_space> const spline_coef) const
     {
+        static_assert(is_discrete_element_v<DElem>);
+
         batch_domain_type<BatchedInterpolationDDom> const batch_domain(coords_eval.domain());
         evaluation_domain_type1 const evaluation_domain1(spline_eval.domain());
         evaluation_domain_type2 const evaluation_domain2(spline_eval.domain());
         evaluation_domain_type3 const evaluation_domain3(spline_eval.domain());
         ddc::parallel_for_each(
-                "ddc_splines_differentiate_3d_dim_2",
+                "ddc_splines_cross_differentiate_3d",
                 exec_space(),
                 batch_domain,
                 KOKKOS_CLASS_LAMBDA(
@@ -1044,620 +662,8 @@ public:
                     for (auto const i1 : evaluation_domain1) {
                         for (auto const i2 : evaluation_domain2) {
                             for (auto const i3 : evaluation_domain3) {
-                                spline_eval_3D(i1, i2, i3) = eval_no_bc<
-                                        eval_type,
-                                        eval_deriv_type,
-                                        eval_type>(coords_eval_3D(i1, i2, i3), spline_coef_3D);
-                            }
-                        }
-                    }
-                });
-    }
-
-    /**
-     * @brief Differentiate 3D spline function (described by its spline coefficients) on a mesh along second dimension of interest.
-     *
-     * The spline coefficients represent a 3D spline function defined on a cartesian product of batch_domain and B-splines
-     * (basis splines). They can be obtained via various methods, such as using a SplineBuilder3D.
-     *
-     * This is not a multidimensional evaluation. This is a batched 3D evaluation.
-     * This means that for each slice of spline_eval the evaluation is performed with
-     * the 3D set of spline coefficients identified by the same batch_domain_type::discrete_element_type.
-     *
-     * @param[out] spline_eval The derivatives of the 3D spline function at the desired coordinates.
-     * @param[in] spline_coef A ChunkSpan storing the 3D spline coefficients.
-     */
-    template <class Layout1, class Layout2, class BatchedInterpolationDDom>
-    void deriv_dim_2(
-            ddc::ChunkSpan<double, BatchedInterpolationDDom, Layout1, memory_space> const
-                    spline_eval,
-            ddc::ChunkSpan<
-                    double const,
-                    batched_spline_domain_type<BatchedInterpolationDDom>,
-                    Layout2,
-                    memory_space> const spline_coef) const
-    {
-        batch_domain_type<BatchedInterpolationDDom> const batch_domain(spline_eval.domain());
-        evaluation_domain_type1 const evaluation_domain1(spline_eval.domain());
-        evaluation_domain_type2 const evaluation_domain2(spline_eval.domain());
-        evaluation_domain_type3 const evaluation_domain3(spline_eval.domain());
-        ddc::parallel_for_each(
-                "ddc_splines_differentiate_3d_dim_2",
-                exec_space(),
-                batch_domain,
-                KOKKOS_CLASS_LAMBDA(
-                        typename batch_domain_type<
-                                BatchedInterpolationDDom>::discrete_element_type const j) {
-                    auto const spline_eval_3D = spline_eval[j];
-                    auto const spline_coef_3D = spline_coef[j];
-                    for (auto const i1 : evaluation_domain1) {
-                        for (auto const i2 : evaluation_domain2) {
-                            for (auto const i3 : evaluation_domain3) {
-                                ddc::Coordinate<
-                                        continuous_dimension_type1,
-                                        continuous_dimension_type2,
-                                        continuous_dimension_type3>
-                                        coord_eval_3D(
-                                                ddc::coordinate(i1),
-                                                ddc::coordinate(i2),
-                                                ddc::coordinate(i3));
-                                spline_eval_3D(i1, i2, i3) = eval_no_bc<
-                                        eval_type,
-                                        eval_deriv_type,
-                                        eval_type>(coord_eval_3D, spline_coef_3D);
-                            }
-                        }
-                    }
-                });
-    }
-
-    /**
-     * @brief Differentiate 3D spline function (described by its spline coefficients) on a mesh along third dimension of interest.
-     *
-     * The spline coefficients represent a 3D spline function defined on a cartesian product of batch_domain and B-splines
-     * (basis splines). They can be obtained via various methods, such as using a SplineBuilder3D.
-     *
-     * This is not a nD differentiation. This is a batched 3D differentiation.
-     * This means that for each slice of coordinates identified by a batch_domain_type::discrete_element_type,
-     * the differentiation is performed with the 3D set of spline coefficients identified by the same batch_domain_type::discrete_element_type.
-     *
-     * @param[out] spline_eval The derivatives of the 3D spline function at the desired coordinates. For practical reasons those are
-     * stored in a ChunkSpan defined on a batched_evaluation_domain_type.
-     * @param[in] coords_eval The coordinates where the spline is differentiated. Those are
-     * stored in a ChunkSpan defined on a batched_evaluation_domain_type. Note that the coordinates of the
-     * points represented by this domain are unused and irrelevant (but the points themselves (DiscreteElement) are used to select
-     * the set of 3D spline coefficients retained to perform the evaluation).
-     * @param[in] spline_coef A ChunkSpan storing the 3D spline coefficients.
-     */
-    template <
-            class Layout1,
-            class Layout2,
-            class Layout3,
-            class BatchedInterpolationDDom,
-            class... CoordsDims>
-    void deriv_dim_3(
-            ddc::ChunkSpan<double, BatchedInterpolationDDom, Layout1, memory_space> const
-                    spline_eval,
-            ddc::ChunkSpan<
-                    ddc::Coordinate<CoordsDims...> const,
-                    BatchedInterpolationDDom,
-                    Layout2,
-                    memory_space> const coords_eval,
-            ddc::ChunkSpan<
-                    double const,
-                    batched_spline_domain_type<BatchedInterpolationDDom>,
-                    Layout3,
-                    memory_space> const spline_coef) const
-    {
-        batch_domain_type<BatchedInterpolationDDom> const batch_domain(coords_eval.domain());
-        evaluation_domain_type1 const evaluation_domain1(spline_eval.domain());
-        evaluation_domain_type2 const evaluation_domain2(spline_eval.domain());
-        evaluation_domain_type3 const evaluation_domain3(spline_eval.domain());
-        ddc::parallel_for_each(
-                "ddc_splines_differentiate_3d_dim_3",
-                exec_space(),
-                batch_domain,
-                KOKKOS_CLASS_LAMBDA(
-                        typename batch_domain_type<
-                                BatchedInterpolationDDom>::discrete_element_type const j) {
-                    auto const spline_eval_3D = spline_eval[j];
-                    auto const coords_eval_3D = coords_eval[j];
-                    auto const spline_coef_3D = spline_coef[j];
-                    for (auto const i1 : evaluation_domain1) {
-                        for (auto const i2 : evaluation_domain2) {
-                            for (auto const i3 : evaluation_domain3) {
-                                spline_eval_3D(i1, i2, i3)
-                                        = eval_no_bc<eval_type, eval_type, eval_deriv_type>(
-                                                coords_eval_3D(i1, i2, i3),
-                                                spline_coef_3D);
-                            }
-                        }
-                    }
-                });
-    }
-
-    /**
-     * @brief Differentiate 3D spline function (described by its spline coefficients) on a mesh along third dimension of interest.
-     *
-     * The spline coefficients represent a 3D spline function defined on a cartesian product of batch_domain and B-splines
-     * (basis splines). They can be obtained via various methods, such as using a SplineBuilder3D.
-     *
-     * This is not a multidimensional evaluation. This is a batched 3D evaluation.
-     * This means that for each slice of spline_eval the evaluation is performed with
-     * the 3D set of spline coefficients identified by the same batch_domain_type::discrete_element_type.
-     *
-     * @param[out] spline_eval The derivatives of the 3D spline function at the desired coordinates.
-     * @param[in] spline_coef A ChunkSpan storing the 3D spline coefficients.
-     */
-    template <class Layout1, class Layout2, class BatchedInterpolationDDom>
-    void deriv_dim_3(
-            ddc::ChunkSpan<double, BatchedInterpolationDDom, Layout1, memory_space> const
-                    spline_eval,
-            ddc::ChunkSpan<
-                    double const,
-                    batched_spline_domain_type<BatchedInterpolationDDom>,
-                    Layout2,
-                    memory_space> const spline_coef) const
-    {
-        batch_domain_type<BatchedInterpolationDDom> const batch_domain(spline_eval.domain());
-        evaluation_domain_type1 const evaluation_domain1(spline_eval.domain());
-        evaluation_domain_type2 const evaluation_domain2(spline_eval.domain());
-        evaluation_domain_type3 const evaluation_domain3(spline_eval.domain());
-        ddc::parallel_for_each(
-                "ddc_splines_differentiate_3d_dim_3",
-                exec_space(),
-                batch_domain,
-                KOKKOS_CLASS_LAMBDA(
-                        typename batch_domain_type<
-                                BatchedInterpolationDDom>::discrete_element_type const j) {
-                    auto const spline_eval_3D = spline_eval[j];
-                    auto const spline_coef_3D = spline_coef[j];
-                    for (auto const i1 : evaluation_domain1) {
-                        for (auto const i2 : evaluation_domain2) {
-                            for (auto const i3 : evaluation_domain3) {
-                                ddc::Coordinate<
-                                        continuous_dimension_type1,
-                                        continuous_dimension_type2,
-                                        continuous_dimension_type3>
-                                        coord_eval_3D(
-                                                ddc::coordinate(i1),
-                                                ddc::coordinate(i2),
-                                                ddc::coordinate(i3));
-                                spline_eval_3D(i1, i2, i3) = eval_no_bc<
-                                        eval_type,
-                                        eval_type,
-                                        eval_deriv_type>(coord_eval_3D, spline_coef_3D);
-                            }
-                        }
-                    }
-                });
-    }
-
-    /**
-     * @brief Cross-differentiate 3D spline function (described by its spline coefficients) on a mesh along the first and second dimensions of interest.
-     *
-     * The spline coefficients represent a 3D spline function defined on a cartesian product of batch_domain and B-splines
-     * (basis splines). They can be obtained via various methods, such as using a SplineBuilder3D.
-     *
-     * This is not a nD cross-differentiation. This is a batched 3D cross-differentiation.
-     * This means that for each slice of coordinates identified by a batch_domain_type::discrete_element_type,
-     * the cross-differentiation is performed with the 3D set of spline coefficients identified by the same batch_domain_type::discrete_element_type.
-     *
-     * @param[out] spline_eval The cross-derivatives of the 3D spline function at the desired coordinates. For practical reasons those are
-     * stored in a ChunkSpan defined on a batched_evaluation_domain_type.
-     * @param[in] coords_eval The coordinates where the spline is differentiated. Those are
-     * stored in a ChunkSpan defined on a batched_evaluation_domain_type. Note that the coordinates of the
-     * points represented by this domain are unused and irrelevant (but the points themselves (DiscreteElement) are used to select
-     * the set of 3D spline coefficients retained to perform the evaluation).
-     * @param[in] spline_coef A ChunkSpan storing the 3D spline coefficients.
-     */
-    template <
-            class Layout1,
-            class Layout2,
-            class Layout3,
-            class BatchedInterpolationDDom,
-            class... CoordsDims>
-    void deriv_1_and_2(
-            ddc::ChunkSpan<double, BatchedInterpolationDDom, Layout1, memory_space> const
-                    spline_eval,
-            ddc::ChunkSpan<
-                    ddc::Coordinate<CoordsDims...> const,
-                    BatchedInterpolationDDom,
-                    Layout2,
-                    memory_space> const coords_eval,
-            ddc::ChunkSpan<
-                    double const,
-                    batched_spline_domain_type<BatchedInterpolationDDom>,
-                    Layout3,
-                    memory_space> const spline_coef) const
-    {
-        batch_domain_type<BatchedInterpolationDDom> const batch_domain(coords_eval.domain());
-        evaluation_domain_type1 const evaluation_domain1(spline_eval.domain());
-        evaluation_domain_type2 const evaluation_domain2(spline_eval.domain());
-        evaluation_domain_type3 const evaluation_domain3(spline_eval.domain());
-        ddc::parallel_for_each(
-                "ddc_splines_cross_differentiate_3d_dim1_2",
-                exec_space(),
-                batch_domain,
-                KOKKOS_CLASS_LAMBDA(
-                        typename batch_domain_type<
-                                BatchedInterpolationDDom>::discrete_element_type const j) {
-                    auto const spline_eval_3D = spline_eval[j];
-                    auto const coords_eval_3D = coords_eval[j];
-                    auto const spline_coef_3D = spline_coef[j];
-                    for (auto const i1 : evaluation_domain1) {
-                        for (auto const i2 : evaluation_domain2) {
-                            for (auto const i3 : evaluation_domain3) {
-                                spline_eval_3D(i1, i2, i3) = eval_no_bc<
-                                        eval_deriv_type,
-                                        eval_deriv_type,
-                                        eval_type>(coords_eval_3D(i1, i2, i3), spline_coef_3D);
-                            }
-                        }
-                    }
-                });
-    }
-
-    /**
-     * @brief Cross-differentiate 3D spline function (described by its spline coefficients) on a mesh along the first and second dimensions of interest.
-     *
-     * The spline coefficients represent a 3D spline function defined on a cartesian product of batch_domain and B-splines
-     * (basis splines). They can be obtained via various methods, such as using a SplineBuilder3D.
-     *
-     * This is not a multidimensional evaluation. This is a batched 3D evaluation.
-     * This means that for each slice of spline_eval the evaluation is performed with
-     * the 3D set of spline coefficients identified by the same batch_domain_type::discrete_element_type.
-     *
-     * @param[out] spline_eval The cross-derivatives of the 3D spline function at the desired coordinates.
-     * @param[in] spline_coef A ChunkSpan storing the 3D spline coefficients.
-     */
-    template <class Layout1, class Layout2, class BatchedInterpolationDDom>
-    void deriv_1_and_2(
-            ddc::ChunkSpan<double, BatchedInterpolationDDom, Layout1, memory_space> const
-                    spline_eval,
-            ddc::ChunkSpan<
-                    double const,
-                    batched_spline_domain_type<BatchedInterpolationDDom>,
-                    Layout2,
-                    memory_space> const spline_coef) const
-    {
-        batch_domain_type<BatchedInterpolationDDom> const batch_domain(spline_eval.domain());
-        evaluation_domain_type1 const evaluation_domain1(spline_eval.domain());
-        evaluation_domain_type2 const evaluation_domain2(spline_eval.domain());
-        evaluation_domain_type3 const evaluation_domain3(spline_eval.domain());
-        ddc::parallel_for_each(
-                "ddc_splines_cross_differentiate_3d_dim1_2",
-                exec_space(),
-                batch_domain,
-                KOKKOS_CLASS_LAMBDA(
-                        typename batch_domain_type<
-                                BatchedInterpolationDDom>::discrete_element_type const j) {
-                    auto const spline_eval_3D = spline_eval[j];
-                    auto const spline_coef_3D = spline_coef[j];
-                    for (auto const i1 : evaluation_domain1) {
-                        for (auto const i2 : evaluation_domain2) {
-                            for (auto const i3 : evaluation_domain3) {
-                                ddc::Coordinate<
-                                        continuous_dimension_type1,
-                                        continuous_dimension_type2,
-                                        continuous_dimension_type3>
-                                        coord_eval_3D(
-                                                ddc::coordinate(i1),
-                                                ddc::coordinate(i2),
-                                                ddc::coordinate(i3));
-                                spline_eval_3D(i1, i2, i3) = eval_no_bc<
-                                        eval_deriv_type,
-                                        eval_deriv_type,
-                                        eval_type>(coord_eval_3D, spline_coef_3D);
-                            }
-                        }
-                    }
-                });
-    }
-
-    /**
-     * @brief Cross-differentiate 3D spline function (described by its spline coefficients) on a mesh along the second and third dimensions of interest.
-     *
-     * The spline coefficients represent a 3D spline function defined on a cartesian product of batch_domain and B-splines
-     * (basis splines). They can be obtained via various methods, such as using a SplineBuilder3D.
-     *
-     * This is not a nD cross-differentiation. This is a batched 3D cross-differentiation.
-     * This means that for each slice of coordinates identified by a batch_domain_type::discrete_element_type,
-     * the cross-differentiation is performed with the 3D set of spline coefficients identified by the same batch_domain_type::discrete_element_type.
-     *
-     * @param[out] spline_eval The cross-derivatives of the 3D spline function at the desired coordinates. For practical reasons those are
-     * stored in a ChunkSpan defined on a batched_evaluation_domain_type.
-     * @param[in] coords_eval The coordinates where the spline is differentiated. Those are
-     * stored in a ChunkSpan defined on a batched_evaluation_domain_type. Note that the coordinates of the
-     * points represented by this domain are unused and irrelevant (but the points themselves (DiscreteElement) are used to select
-     * the set of 3D spline coefficients retained to perform the evaluation).
-     * @param[in] spline_coef A ChunkSpan storing the 3D spline coefficients.
-     */
-    template <
-            class Layout1,
-            class Layout2,
-            class Layout3,
-            class BatchedInterpolationDDom,
-            class... CoordsDims>
-    void deriv_2_and_3(
-            ddc::ChunkSpan<double, BatchedInterpolationDDom, Layout1, memory_space> const
-                    spline_eval,
-            ddc::ChunkSpan<
-                    ddc::Coordinate<CoordsDims...> const,
-                    BatchedInterpolationDDom,
-                    Layout2,
-                    memory_space> const coords_eval,
-            ddc::ChunkSpan<
-                    double const,
-                    batched_spline_domain_type<BatchedInterpolationDDom>,
-                    Layout3,
-                    memory_space> const spline_coef) const
-    {
-        batch_domain_type<BatchedInterpolationDDom> const batch_domain(coords_eval.domain());
-        evaluation_domain_type1 const evaluation_domain1(spline_eval.domain());
-        evaluation_domain_type2 const evaluation_domain2(spline_eval.domain());
-        evaluation_domain_type3 const evaluation_domain3(spline_eval.domain());
-        ddc::parallel_for_each(
-                "ddc_splines_cross_differentiate_3d_dim2_3",
-                exec_space(),
-                batch_domain,
-                KOKKOS_CLASS_LAMBDA(
-                        typename batch_domain_type<
-                                BatchedInterpolationDDom>::discrete_element_type const j) {
-                    auto const spline_eval_3D = spline_eval[j];
-                    auto const coords_eval_3D = coords_eval[j];
-                    auto const spline_coef_3D = spline_coef[j];
-                    for (auto const i1 : evaluation_domain1) {
-                        for (auto const i2 : evaluation_domain2) {
-                            for (auto const i3 : evaluation_domain3) {
-                                spline_eval_3D(i1, i2, i3)
-                                        = eval_no_bc<eval_type, eval_deriv_type, eval_deriv_type>(
-                                                coords_eval_3D(i1, i2, i3),
-                                                spline_coef_3D);
-                            }
-                        }
-                    }
-                });
-    }
-
-    /**
-     * @brief Cross-differentiate 3D spline function (described by its spline coefficients) on a mesh along the second and third dimensions of interest.
-     *
-     * The spline coefficients represent a 3D spline function defined on a cartesian product of batch_domain and B-splines
-     * (basis splines). They can be obtained via various methods, such as using a SplineBuilder3D.
-     *
-     * This is not a multidimensional evaluation. This is a batched 3D evaluation.
-     * This means that for each slice of spline_eval the evaluation is performed with
-     * the 3D set of spline coefficients identified by the same batch_domain_type::discrete_element_type.
-     *
-     * @param[out] spline_eval The cross-derivatives of the 3D spline function at the desired coordinates.
-     * @param[in] spline_coef A ChunkSpan storing the 3D spline coefficients.
-     */
-    template <class Layout1, class Layout2, class BatchedInterpolationDDom>
-    void deriv_2_and_3(
-            ddc::ChunkSpan<double, BatchedInterpolationDDom, Layout1, memory_space> const
-                    spline_eval,
-            ddc::ChunkSpan<
-                    double const,
-                    batched_spline_domain_type<BatchedInterpolationDDom>,
-                    Layout2,
-                    memory_space> const spline_coef) const
-    {
-        batch_domain_type<BatchedInterpolationDDom> const batch_domain(spline_eval.domain());
-        evaluation_domain_type1 const evaluation_domain1(spline_eval.domain());
-        evaluation_domain_type2 const evaluation_domain2(spline_eval.domain());
-        evaluation_domain_type3 const evaluation_domain3(spline_eval.domain());
-        ddc::parallel_for_each(
-                "ddc_splines_cross_differentiate_3d_dim2_3",
-                exec_space(),
-                batch_domain,
-                KOKKOS_CLASS_LAMBDA(
-                        typename batch_domain_type<
-                                BatchedInterpolationDDom>::discrete_element_type const j) {
-                    auto const spline_eval_3D = spline_eval[j];
-                    auto const spline_coef_3D = spline_coef[j];
-                    for (auto const i1 : evaluation_domain1) {
-                        for (auto const i2 : evaluation_domain2) {
-                            for (auto const i3 : evaluation_domain3) {
-                                ddc::Coordinate<
-                                        continuous_dimension_type1,
-                                        continuous_dimension_type2,
-                                        continuous_dimension_type3>
-                                        coord_eval_3D(
-                                                ddc::coordinate(i1),
-                                                ddc::coordinate(i2),
-                                                ddc::coordinate(i3));
-                                spline_eval_3D(i1, i2, i3) = eval_no_bc<
-                                        eval_type,
-                                        eval_deriv_type,
-                                        eval_deriv_type>(coord_eval_3D, spline_coef_3D);
-                            }
-                        }
-                    }
-                });
-    }
-
-    /**
-     * @brief Cross-differentiate 3D spline function (described by its spline coefficients) on a mesh along the first and third dimensions of interest.
-     *
-     * The spline coefficients represent a 3D spline function defined on a cartesian product of batch_domain and B-splines
-     * (basis splines). They can be obtained via various methods, such as using a SplineBuilder3D.
-     *
-     * This is not a nD cross-differentiation. This is a batched 3D cross-differentiation.
-     * This means that for each slice of coordinates identified by a batch_domain_type::discrete_element_type,
-     * the cross-differentiation is performed with the 3D set of spline coefficients identified by the same batch_domain_type::discrete_element_type.
-     *
-     * @param[out] spline_eval The cross-derivatives of the 3D spline function at the desired coordinates. For practical reasons those are
-     * stored in a ChunkSpan defined on a batched_evaluation_domain_type.
-     * @param[in] coords_eval The coordinates where the spline is differentiated. Those are
-     * stored in a ChunkSpan defined on a batched_evaluation_domain_type. Note that the coordinates of the
-     * points represented by this domain are unused and irrelevant (but the points themselves (DiscreteElement) are used to select
-     * the set of 3D spline coefficients retained to perform the evaluation).
-     * @param[in] spline_coef A ChunkSpan storing the 3D spline coefficients.
-     */
-    template <
-            class Layout1,
-            class Layout2,
-            class Layout3,
-            class BatchedInterpolationDDom,
-            class... CoordsDims>
-    void deriv_1_and_3(
-            ddc::ChunkSpan<double, BatchedInterpolationDDom, Layout1, memory_space> const
-                    spline_eval,
-            ddc::ChunkSpan<
-                    ddc::Coordinate<CoordsDims...> const,
-                    BatchedInterpolationDDom,
-                    Layout2,
-                    memory_space> const coords_eval,
-            ddc::ChunkSpan<
-                    double const,
-                    batched_spline_domain_type<BatchedInterpolationDDom>,
-                    Layout3,
-                    memory_space> const spline_coef) const
-    {
-        batch_domain_type<BatchedInterpolationDDom> const batch_domain(coords_eval.domain());
-        evaluation_domain_type1 const evaluation_domain1(spline_eval.domain());
-        evaluation_domain_type2 const evaluation_domain2(spline_eval.domain());
-        evaluation_domain_type3 const evaluation_domain3(spline_eval.domain());
-        ddc::parallel_for_each(
-                "ddc_splines_cross_differentiate_3d_dim1_3",
-                exec_space(),
-                batch_domain,
-                KOKKOS_CLASS_LAMBDA(
-                        typename batch_domain_type<
-                                BatchedInterpolationDDom>::discrete_element_type const j) {
-                    auto const spline_eval_3D = spline_eval[j];
-                    auto const coords_eval_3D = coords_eval[j];
-                    auto const spline_coef_3D = spline_coef[j];
-                    for (auto const i1 : evaluation_domain1) {
-                        for (auto const i2 : evaluation_domain2) {
-                            for (auto const i3 : evaluation_domain3) {
-                                spline_eval_3D(i1, i2, i3)
-                                        = eval_no_bc<eval_deriv_type, eval_type, eval_deriv_type>(
-                                                coords_eval_3D(i1, i2, i3),
-                                                spline_coef_3D);
-                            }
-                        }
-                    }
-                });
-    }
-
-    /**
-     * @brief Cross-differentiate 3D spline function (described by its spline coefficients) on a mesh along the first and third dimensions of interest.
-     *
-     * The spline coefficients represent a 3D spline function defined on a cartesian product of batch_domain and B-splines
-     * (basis splines). They can be obtained via various methods, such as using a SplineBuilder3D.
-     *
-     * This is not a multidimensional evaluation. This is a batched 3D evaluation.
-     * This means that for each slice of spline_eval the evaluation is performed with
-     * the 3D set of spline coefficients identified by the same batch_domain_type::discrete_element_type.
-     *
-     * @param[out] spline_eval The cross-derivatives of the 3D spline function at the desired coordinates.
-     * @param[in] spline_coef A ChunkSpan storing the 3D spline coefficients.
-     */
-    template <class Layout1, class Layout2, class BatchedInterpolationDDom>
-    void deriv_1_and_3(
-            ddc::ChunkSpan<double, BatchedInterpolationDDom, Layout1, memory_space> const
-                    spline_eval,
-            ddc::ChunkSpan<
-                    double const,
-                    batched_spline_domain_type<BatchedInterpolationDDom>,
-                    Layout2,
-                    memory_space> const spline_coef) const
-    {
-        batch_domain_type<BatchedInterpolationDDom> const batch_domain(spline_eval.domain());
-        evaluation_domain_type1 const evaluation_domain1(spline_eval.domain());
-        evaluation_domain_type2 const evaluation_domain2(spline_eval.domain());
-        evaluation_domain_type3 const evaluation_domain3(spline_eval.domain());
-        ddc::parallel_for_each(
-                "ddc_splines_cross_differentiate_3d_dim1_3",
-                exec_space(),
-                batch_domain,
-                KOKKOS_CLASS_LAMBDA(
-                        typename batch_domain_type<
-                                BatchedInterpolationDDom>::discrete_element_type const j) {
-                    auto const spline_eval_3D = spline_eval[j];
-                    auto const spline_coef_3D = spline_coef[j];
-                    for (auto const i1 : evaluation_domain1) {
-                        for (auto const i2 : evaluation_domain2) {
-                            for (auto const i3 : evaluation_domain3) {
-                                ddc::Coordinate<
-                                        continuous_dimension_type1,
-                                        continuous_dimension_type2,
-                                        continuous_dimension_type3>
-                                        coord_eval_3D(
-                                                ddc::coordinate(i1),
-                                                ddc::coordinate(i2),
-                                                ddc::coordinate(i3));
-                                spline_eval_3D(i1, i2, i3) = eval_no_bc<
-                                        eval_deriv_type,
-                                        eval_type,
-                                        eval_deriv_type>(coord_eval_3D, spline_coef_3D);
-                            }
-                        }
-                    }
-                });
-    }
-
-    /**
-     * @brief Cross-differentiate 3D spline function (described by its spline coefficients) on a mesh along the dimensions of interest.
-     *
-     * The spline coefficients represent a 3D spline function defined on a cartesian product of batch_domain and B-splines
-     * (basis splines). They can be obtained via various methods, such as using a SplineBuilder3D.
-     *
-     * This is not a nD cross-differentiation. This is a batched 3D cross-differentiation.
-     * This means that for each slice of coordinates identified by a batch_domain_type::discrete_element_type,
-     * the cross-differentiation is performed with the 3D set of spline coefficients identified by the same batch_domain_type::discrete_element_type.
-     *
-     * @param[out] spline_eval The cross-derivatives of the 3D spline function at the desired coordinates. For practical reasons those are
-     * stored in a ChunkSpan defined on a batched_evaluation_domain_type.
-     * @param[in] coords_eval The coordinates where the spline is differentiated. Those are
-     * stored in a ChunkSpan defined on a batched_evaluation_domain_type. Note that the coordinates of the
-     * points represented by this domain are unused and irrelevant (but the points themselves (DiscreteElement) are used to select
-     * the set of 3D spline coefficients retained to perform the evaluation).
-     * @param[in] spline_coef A ChunkSpan storing the 3D spline coefficients.
-     */
-    template <
-            class Layout1,
-            class Layout2,
-            class Layout3,
-            class BatchedInterpolationDDom,
-            class... CoordsDims>
-    void deriv_1_2_3(
-            ddc::ChunkSpan<double, BatchedInterpolationDDom, Layout1, memory_space> const
-                    spline_eval,
-            ddc::ChunkSpan<
-                    ddc::Coordinate<CoordsDims...> const,
-                    BatchedInterpolationDDom,
-                    Layout2,
-                    memory_space> const coords_eval,
-            ddc::ChunkSpan<
-                    double const,
-                    batched_spline_domain_type<BatchedInterpolationDDom>,
-                    Layout3,
-                    memory_space> const spline_coef) const
-    {
-        batch_domain_type<BatchedInterpolationDDom> const batch_domain(coords_eval.domain());
-        evaluation_domain_type1 const evaluation_domain1(spline_eval.domain());
-        evaluation_domain_type2 const evaluation_domain2(spline_eval.domain());
-        evaluation_domain_type3 const evaluation_domain3(spline_eval.domain());
-        ddc::parallel_for_each(
-                "ddc_splines_cross_differentiate_3d_dim1_2_3",
-                exec_space(),
-                batch_domain,
-                KOKKOS_CLASS_LAMBDA(
-                        typename batch_domain_type<
-                                BatchedInterpolationDDom>::discrete_element_type const j) {
-                    auto const spline_eval_3D = spline_eval[j];
-                    auto const coords_eval_3D = coords_eval[j];
-                    auto const spline_coef_3D = spline_coef[j];
-                    for (auto const i1 : evaluation_domain1) {
-                        for (auto const i2 : evaluation_domain2) {
-                            for (auto const i3 : evaluation_domain3) {
-                                spline_eval_3D(i1, i2, i3) = eval_no_bc<
-                                        eval_deriv_type,
-                                        eval_deriv_type,
-                                        eval_deriv_type>(
+                                spline_eval_3D(i1, i2, i3) = eval_no_bc(
+                                        deriv_order,
                                         coords_eval_3D(i1, i2, i3),
                                         spline_coef_3D);
                             }
@@ -1667,20 +673,23 @@ public:
     }
 
     /**
-     * @brief Cross-differentiate 3D spline function (described by its spline coefficients) on a mesh along the dimensions of interest.
+     * @brief Differentiate 3D spline function (described by its spline coefficients) on a mesh along the dimensions of interest.
      *
      * The spline coefficients represent a 3D spline function defined on a cartesian product of batch_domain and B-splines
      * (basis splines). They can be obtained via various methods, such as using a SplineBuilder3D.
      *
-     * This is not a multidimensional evaluation. This is a batched 3D evaluation.
-     * This means that for each slice of spline_eval the evaluation is performed with
+     * This is not a multidimensional differentiation. This is a batched 3D differentiation.
+     * This means that for each slice of spline_eval the differentiation is performed with
      * the 3D set of spline coefficients identified by the same batch_domain_type::discrete_element_type.
      *
-     * @param[out] spline_eval The cross-derivatives of the 3D spline function at the desired coordinates.
+     * @param[in] deriv_order A DiscreteElement containing the orders of derivation for each of the dimensions of interest.
+     * If one of the dimensions is not present, its corresponding order of derivation is considered to be 0.
+     * @param[out] spline_eval The derivatives of the 3D spline function at the desired coordinates.
      * @param[in] spline_coef A ChunkSpan storing the 3D spline coefficients.
      */
-    template <class Layout1, class Layout2, class BatchedInterpolationDDom>
-    void deriv_1_2_3(
+    template <class DElem, class Layout1, class Layout2, class BatchedInterpolationDDom>
+    void deriv(
+            DElem const& deriv_order,
             ddc::ChunkSpan<double, BatchedInterpolationDDom, Layout1, memory_space> const
                     spline_eval,
             ddc::ChunkSpan<
@@ -1689,12 +698,14 @@ public:
                     Layout2,
                     memory_space> const spline_coef) const
     {
+        static_assert(is_discrete_element_v<DElem>);
+
         batch_domain_type<BatchedInterpolationDDom> const batch_domain(spline_eval.domain());
         evaluation_domain_type1 const evaluation_domain1(spline_eval.domain());
         evaluation_domain_type2 const evaluation_domain2(spline_eval.domain());
         evaluation_domain_type3 const evaluation_domain3(spline_eval.domain());
         ddc::parallel_for_each(
-                "ddc_splines_cross_differentiate_3d_dim1_2_3",
+                "ddc_splines_cross_differentiate_3d",
                 exec_space(),
                 batch_domain,
                 KOKKOS_CLASS_LAMBDA(
@@ -1713,362 +724,12 @@ public:
                                                 ddc::coordinate(i1),
                                                 ddc::coordinate(i2),
                                                 ddc::coordinate(i3));
-                                spline_eval_3D(i1, i2, i3) = eval_no_bc<
-                                        eval_deriv_type,
-                                        eval_deriv_type,
-                                        eval_deriv_type>(coord_eval_3D, spline_coef_3D);
+                                spline_eval_3D(i1, i2, i3)
+                                        = eval_no_bc(deriv_order, coord_eval_3D, spline_coef_3D);
                             }
                         }
                     }
                 });
-    }
-
-    /**
-     * @brief Differentiate spline function (described by its spline coefficients) on a mesh along a specified dimension of interest.
-     *
-     * The spline coefficients represent a 3D spline function defined on a cartesian product of batch_domain and B-splines
-     * (basis splines). They can be obtained via various methods, such as using a SplineBuilder3D.
-     *
-     * This is not a nD evaluation. This is a batched 3D differentiation.
-     * This means that for each slice of coordinates identified by a batch_domain_type::discrete_element_type,
-     * the differentiation is performed with the 3D set of spline coefficients identified by the same batch_domain_type::discrete_element_type.
-     *
-     * @tparam InterestDim Dimension along which differentiation is performed.
-     * @param[out] spline_eval The derivatives of the 3D spline function at the desired coordinates. For practical reasons those are
-     * stored in a ChunkSpan defined on a batched_evaluation_domain_type.
-     * @param[in] coords_eval The coordinates where the spline is differentiated. Those are
-     * stored in a ChunkSpan defined on a batched_evaluation_domain_type. Note that the coordinates of the
-     * points represented by this domain are unused and irrelevant (but the points themselves (DiscreteElement) are used to select
-     * the set of 3D spline coefficients retained to perform the evaluation).
-     * @param[in] spline_coef A ChunkSpan storing the 3D spline coefficients.
-     */
-    template <
-            class InterestDim,
-            class Layout1,
-            class Layout2,
-            class Layout3,
-            class BatchedInterpolationDDom,
-            class... CoordsDims>
-    void deriv(
-            ddc::ChunkSpan<double, BatchedInterpolationDDom, Layout1, memory_space> const
-                    spline_eval,
-            ddc::ChunkSpan<
-                    ddc::Coordinate<CoordsDims...> const,
-                    BatchedInterpolationDDom,
-                    Layout2,
-                    memory_space> const coords_eval,
-            ddc::ChunkSpan<
-                    double const,
-                    batched_spline_domain_type<BatchedInterpolationDDom>,
-                    Layout3,
-                    memory_space> const spline_coef) const
-    {
-        static_assert(
-                std::is_same_v<InterestDim, continuous_dimension_type1>
-                || std::is_same_v<InterestDim, continuous_dimension_type2>
-                || std::is_same_v<InterestDim, continuous_dimension_type3>);
-        if constexpr (std::is_same_v<InterestDim, continuous_dimension_type1>) {
-            return deriv_dim_1(spline_eval, coords_eval, spline_coef);
-        } else if constexpr (std::is_same_v<InterestDim, continuous_dimension_type2>) {
-            return deriv_dim_2(spline_eval, coords_eval, spline_coef);
-        } else if constexpr (std::is_same_v<InterestDim, continuous_dimension_type3>) {
-            return deriv_dim_3(spline_eval, coords_eval, spline_coef);
-        }
-    }
-
-    /**
-     * @brief Differentiate spline function (described by its spline coefficients) on a mesh along a specified dimension of interest.
-     *
-     * The spline coefficients represent a 3D spline function defined on a cartesian product of batch_domain and B-splines
-     * (basis splines). They can be obtained via various methods, such as using a SplineBuilder3D.
-     *
-     * This is not a multidimensional evaluation. This is a batched 3D evaluation.
-     * This means that for each slice of spline_eval the evaluation is performed with
-     * the 3D set of spline coefficients identified by the same batch_domain_type::discrete_element_type.
-     *
-     * @tparam InterestDim Dimension along which differentiation is performed.
-     * @param[out] spline_eval The derivatives of the 3D spline function at the desired coordinates.
-     * @param[in] spline_coef A ChunkSpan storing the 3D spline coefficients.
-     */
-    template <class InterestDim, class Layout1, class Layout2, class BatchedInterpolationDDom>
-    void deriv(
-            ddc::ChunkSpan<double, BatchedInterpolationDDom, Layout1, memory_space> const
-                    spline_eval,
-            ddc::ChunkSpan<
-                    double const,
-                    batched_spline_domain_type<BatchedInterpolationDDom>,
-                    Layout2,
-                    memory_space> const spline_coef) const
-    {
-        static_assert(
-                std::is_same_v<InterestDim, continuous_dimension_type1>
-                || std::is_same_v<InterestDim, continuous_dimension_type2>
-                || std::is_same_v<InterestDim, continuous_dimension_type3>);
-        if constexpr (std::is_same_v<InterestDim, continuous_dimension_type1>) {
-            return deriv_dim_1(spline_eval, spline_coef);
-        } else if constexpr (std::is_same_v<InterestDim, continuous_dimension_type2>) {
-            return deriv_dim_2(spline_eval, spline_coef);
-        } else if constexpr (std::is_same_v<InterestDim, continuous_dimension_type3>) {
-            return deriv_dim_3(spline_eval, spline_coef);
-        }
-    }
-
-    /**
-     * @brief Double-differentiate 3D spline function (described by its spline coefficients) on a mesh along specified dimensions of interest.
-     *
-     * The spline coefficients represent a 3D spline function defined on a cartesian product of batch_domain and B-splines
-     * (basis splines). They can be obtained via various methods, such as using a SplineBuilder3D.
-     *
-     * This is not a nD evaluation. This is a batched 3D differentiation.
-     * This means that for each slice of coordinates identified by a batch_domain_type::discrete_element_type,
-     * the differentiation is performed with the 3D set of spline coefficients identified by the same batch_domain_type::discrete_element_type.
-     *
-     * Note: double-differentiation other than cross-differentiation is not supported atm. See #440
-     *
-     * @tparam InterestDim1 First dimension along which differentiation is performed.
-     * @tparam InterestDim2 Second dimension along which differentiation is performed.
-     *
-     * @param[out] spline_eval The derivatives of the 3D spline function at the desired coordinates. For practical reasons those are
-     * stored in a ChunkSpan defined on a batched_evaluation_domain_type.
-     * @param[in] coords_eval The coordinates where the spline is differentiated. Those are
-     * stored in a ChunkSpan defined on a batched_evaluation_domain_type. Note that the coordinates of the
-     * points represented by this domain are unused and irrelevant (but the points themselves (DiscreteElement) are used to select
-     * the set of 3D spline coefficients retained to perform the evaluation).
-     * @param[in] spline_coef A ChunkSpan storing the 3D spline coefficients.
-     */
-    template <
-            class InterestDim1,
-            class InterestDim2,
-            class Layout1,
-            class Layout2,
-            class Layout3,
-            class BatchedInterpolationDDom,
-            class... CoordsDims>
-    void deriv2(
-            ddc::ChunkSpan<double, BatchedInterpolationDDom, Layout1, memory_space> const
-                    spline_eval,
-            ddc::ChunkSpan<
-                    ddc::Coordinate<CoordsDims...> const,
-                    BatchedInterpolationDDom,
-                    Layout2,
-                    memory_space> const coords_eval,
-            ddc::ChunkSpan<
-                    double const,
-                    batched_spline_domain_type<BatchedInterpolationDDom>,
-                    Layout3,
-                    memory_space> const spline_coef) const
-    {
-        static_assert(
-                (std::is_same_v<InterestDim1, continuous_dimension_type1>
-                 && std::is_same_v<InterestDim2, continuous_dimension_type2>)
-                || (std::is_same_v<InterestDim2, continuous_dimension_type1>
-                    && std::is_same_v<InterestDim1, continuous_dimension_type2>)
-                || (std::is_same_v<InterestDim1, continuous_dimension_type2>
-                    && std::is_same_v<InterestDim2, continuous_dimension_type3>)
-                || (std::is_same_v<InterestDim2, continuous_dimension_type2>
-                    && std::is_same_v<InterestDim1, continuous_dimension_type3>)
-                || (std::is_same_v<InterestDim1, continuous_dimension_type1>
-                    && std::is_same_v<InterestDim2, continuous_dimension_type3>)
-                || (std::is_same_v<InterestDim2, continuous_dimension_type1>
-                    && std::is_same_v<InterestDim1, continuous_dimension_type3>));
-
-        if constexpr (
-                (std::is_same_v<InterestDim1, continuous_dimension_type1>
-                 && std::is_same_v<InterestDim2, continuous_dimension_type2>)
-                || (std::is_same_v<InterestDim2, continuous_dimension_type1>
-                    && std::is_same_v<InterestDim1, continuous_dimension_type2>)) {
-            return deriv_1_and_2(spline_eval, coords_eval, spline_coef);
-        } else if constexpr (
-                (std::is_same_v<InterestDim1, continuous_dimension_type2>
-                 && std::is_same_v<InterestDim2, continuous_dimension_type3>)
-                || (std::is_same_v<InterestDim2, continuous_dimension_type2>
-                    && std::is_same_v<InterestDim1, continuous_dimension_type3>)) {
-            return deriv_2_and_3(spline_eval, coords_eval, spline_coef);
-        } else if constexpr (
-                (std::is_same_v<InterestDim1, continuous_dimension_type1>
-                 && std::is_same_v<InterestDim2, continuous_dimension_type3>)
-                || (std::is_same_v<InterestDim2, continuous_dimension_type1>
-                    && std::is_same_v<InterestDim1, continuous_dimension_type3>)) {
-            return deriv_1_and_3(spline_eval, coords_eval, spline_coef);
-        }
-    }
-
-    /**
-     * @brief Double-differentiate 3D spline function (described by its spline coefficients) on a mesh along specified dimensions of interest.
-     *
-     * The spline coefficients represent a 3D spline function defined on a cartesian product of batch_domain and B-splines
-     * (basis splines). They can be obtained via various methods, such as using a SplineBuilder3D.
-     *
-     * This is not a multidimensional evaluation. This is a batched 3D evaluation.
-     * This means that for each slice of spline_eval the evaluation is performed with
-     * the 3D set of spline coefficients identified by the same batch_domain_type::discrete_element_type.
-     *
-     * Note: double-differentiation other than cross-differentiation is not supported atm. See #440
-     *
-     * @tparam InterestDim1 First dimension along which differentiation is performed.
-     * @tparam InterestDim2 Second dimension along which differentiation is performed.
-     *
-     * @param[out] spline_eval The derivatives of the 3D spline function at the desired coordinates.
-     * @param[in] spline_coef A ChunkSpan storing the 3D spline coefficients.
-     */
-    template <
-            class InterestDim1,
-            class InterestDim2,
-            class Layout1,
-            class Layout2,
-            class BatchedInterpolationDDom>
-    void deriv2(
-            ddc::ChunkSpan<double, BatchedInterpolationDDom, Layout1, memory_space> const
-                    spline_eval,
-            ddc::ChunkSpan<
-                    double const,
-                    batched_spline_domain_type<BatchedInterpolationDDom>,
-                    Layout2,
-                    memory_space> const spline_coef) const
-    {
-        static_assert(
-                (std::is_same_v<InterestDim1, continuous_dimension_type1>
-                 && std::is_same_v<InterestDim2, continuous_dimension_type2>)
-                || (std::is_same_v<InterestDim2, continuous_dimension_type1>
-                    && std::is_same_v<InterestDim1, continuous_dimension_type2>)
-                || (std::is_same_v<InterestDim1, continuous_dimension_type2>
-                    && std::is_same_v<InterestDim2, continuous_dimension_type3>)
-                || (std::is_same_v<InterestDim2, continuous_dimension_type2>
-                    && std::is_same_v<InterestDim1, continuous_dimension_type3>)
-                || (std::is_same_v<InterestDim1, continuous_dimension_type1>
-                    && std::is_same_v<InterestDim2, continuous_dimension_type3>)
-                || (std::is_same_v<InterestDim2, continuous_dimension_type1>
-                    && std::is_same_v<InterestDim1, continuous_dimension_type3>));
-
-        if constexpr (
-                (std::is_same_v<InterestDim1, continuous_dimension_type1>
-                 && std::is_same_v<InterestDim2, continuous_dimension_type2>)
-                || (std::is_same_v<InterestDim2, continuous_dimension_type1>
-                    && std::is_same_v<InterestDim1, continuous_dimension_type2>)) {
-            return deriv_1_and_2(spline_eval, spline_coef);
-        } else if constexpr (
-                (std::is_same_v<InterestDim1, continuous_dimension_type2>
-                 && std::is_same_v<InterestDim2, continuous_dimension_type3>)
-                || (std::is_same_v<InterestDim2, continuous_dimension_type2>
-                    && std::is_same_v<InterestDim1, continuous_dimension_type3>)) {
-            return deriv_2_and_3(spline_eval, spline_coef);
-        } else if constexpr (
-                (std::is_same_v<InterestDim1, continuous_dimension_type1>
-                 && std::is_same_v<InterestDim2, continuous_dimension_type3>)
-                || (std::is_same_v<InterestDim2, continuous_dimension_type1>
-                    && std::is_same_v<InterestDim1, continuous_dimension_type3>)) {
-            return deriv_1_and_3(spline_eval, spline_coef);
-        }
-    }
-
-    /**
-     * @brief Differentiate spline function (described by its spline coefficients) on a mesh along a specified dimensions of interest.
-     *
-     * The spline coefficients represent a 3D spline function defined on a cartesian product of batch_domain and B-splines
-     * (basis splines). They can be obtained via various methods, such as using a SplineBuilder3D.
-     *
-     * This is not a nD evaluation. This is a batched 3D differentiation.
-     * This means that for each slice of coordinates identified by a batch_domain_type::discrete_element_type,
-     * the differentiation is performed with the 3D set of spline coefficients identified by the same batch_domain_type::discrete_element_type.
-     *
-     * Note: triple-differentiation other than cross-differentiation is not supported atm. See #440
-     *
-     * @tparam InterestDim1 First dimension along which differentiation is performed.
-     * @tparam InterestDim2 Second dimension along which differentiation is performed.
-     * @tparam InterestDim3 Third dimension along which differentiation is performed.
-     *
-     * @param[out] spline_eval The derivatives of the 3D spline function at the desired coordinates. For practical reasons those are
-     * stored in a ChunkSpan defined on a batched_evaluation_domain_type.
-     * @param[in] coords_eval The coordinates where the spline is differentiated. Those are
-     * stored in a ChunkSpan defined on a batched_evaluation_domain_type. Note that the coordinates of the
-     * points represented by this domain are unused and irrelevant (but the points themselves (DiscreteElement) are used to select
-     * the set of 3D spline coefficients retained to perform the evaluation).
-     * @param[in] spline_coef A ChunkSpan storing the 3D spline coefficients.
-     */
-    template <
-            class InterestDim1,
-            class InterestDim2,
-            class InterestDim3,
-            class Layout1,
-            class Layout2,
-            class Layout3,
-            class BatchedInterpolationDDom,
-            class... CoordsDims>
-    void deriv3(
-            ddc::ChunkSpan<double, BatchedInterpolationDDom, Layout1, memory_space> const
-                    spline_eval,
-            ddc::ChunkSpan<
-                    ddc::Coordinate<CoordsDims...> const,
-                    BatchedInterpolationDDom,
-                    Layout2,
-                    memory_space> const coords_eval,
-            ddc::ChunkSpan<
-                    double const,
-                    batched_spline_domain_type<BatchedInterpolationDDom>,
-                    Layout3,
-                    memory_space> const spline_coef) const
-    {
-        static_assert(
-                (std::is_same_v<InterestDim1, continuous_dimension_type1>
-                 && std::is_same_v<InterestDim2, continuous_dimension_type2>
-                 && std::is_same_v<InterestDim3, continuous_dimension_type3>)
-                || (std::is_same_v<InterestDim3, continuous_dimension_type1>
-                    && std::is_same_v<InterestDim1, continuous_dimension_type2>
-                    && std::is_same_v<InterestDim2, continuous_dimension_type3>)
-                || (std::is_same_v<InterestDim2, continuous_dimension_type1>
-                    && std::is_same_v<InterestDim3, continuous_dimension_type2>
-                    && std::is_same_v<InterestDim1, continuous_dimension_type3>));
-
-        return deriv_1_2_3(spline_eval, coords_eval, spline_coef);
-    }
-
-    /**
-     * @brief Differentiate spline function (described by its spline coefficients) on a mesh along specified dimensions of interest.
-     *
-     * The spline coefficients represent a 3D spline function defined on a cartesian product of batch_domain and B-splines
-     * (basis splines). They can be obtained via various methods, such as using a SplineBuilder3D.
-     *
-     * This is not a multidimensional evaluation. This is a batched 3D evaluation.
-     * This means that for each slice of spline_eval the evaluation is performed with
-     * the 3D set of spline coefficients identified by the same batch_domain_type::discrete_element_type.
-     *
-     * Note: triple-differentiation other than cross-differentiation is not supported atm. See #440
-     *
-     * @tparam InterestDim1 First dimension along which differentiation is performed.
-     * @tparam InterestDim2 Second dimension along which differentiation is performed.
-     * @tparam InterestDim3 Third dimension along which differentiation is performed.
-     *
-     * @param[out] spline_eval The derivatives of the 3D spline function at the desired coordinates.
-     * @param[in] spline_coef A ChunkSpan storing the 3D spline coefficients.
-     */
-    template <
-            class InterestDim1,
-            class InterestDim2,
-            class InterestDim3,
-            class Layout1,
-            class Layout2,
-            class BatchedInterpolationDDom>
-    void deriv3(
-            ddc::ChunkSpan<double, BatchedInterpolationDDom, Layout1, memory_space> const
-                    spline_eval,
-            ddc::ChunkSpan<
-                    double const,
-                    batched_spline_domain_type<BatchedInterpolationDDom>,
-                    Layout2,
-                    memory_space> const spline_coef) const
-    {
-        static_assert(
-                (std::is_same_v<InterestDim1, continuous_dimension_type1>
-                 && std::is_same_v<InterestDim2, continuous_dimension_type2>
-                 && std::is_same_v<InterestDim3, continuous_dimension_type3>)
-                || (std::is_same_v<InterestDim3, continuous_dimension_type1>
-                    && std::is_same_v<InterestDim1, continuous_dimension_type2>
-                    && std::is_same_v<InterestDim2, continuous_dimension_type3>)
-                || (std::is_same_v<InterestDim2, continuous_dimension_type1>
-                    && std::is_same_v<InterestDim3, continuous_dimension_type2>
-                    && std::is_same_v<InterestDim1, continuous_dimension_type3>));
-
-        return deriv_1_2_3(spline_eval, spline_coef);
     }
 
     /** @brief Perform batched 3D integrations of a spline function (described by its spline coefficients) along the dimensions of interest and store results on a subdomain of batch_domain.
@@ -2220,7 +881,8 @@ private:
                 return m_upper_extrap_rule_3(coord_eval, spline_coef);
             }
         }
-        return eval_no_bc<eval_type, eval_type, eval_type>(
+        return eval_no_bc(
+                ddc::DiscreteElement<>(),
                 ddc::Coordinate<
                         continuous_dimension_type1,
                         continuous_dimension_type2,
@@ -2234,23 +896,30 @@ private:
     /**
      * @brief Evaluate the function or its derivative at the coordinate given.
      *
+     * @param[in] deriv_order A DiscreteElement containing the orders of derivation for each of the dimensions of interest.
+     * If one of the dimensions is not present, its corresponding order of derivation is considered to be 0.
      * @param[in] coord_eval The coordinate where we want to evaluate.
      * @param[in] splne_coef The B-splines coefficients of the function we want to evaluate.
-     * @tparam EvalType1 A flag indicating if we evaluate the function or its derivative in the first dimension. The type of this object is either `eval_type` or `eval_deriv_type`.
-     * @tparam EvalType2 A flag indicating if we evaluate the function or its derivative in the second dimension. The type of this object is either `eval_type` or `eval_deriv_type`.
      */
-    template <class EvalType1, class EvalType2, class EvalType3, class Layout, class... CoordsDims>
+    template <class... DerivDims, class Layout, class... CoordsDims>
     KOKKOS_INLINE_FUNCTION double eval_no_bc(
+            ddc::DiscreteElement<DerivDims...> const& deriv_order,
             ddc::Coordinate<CoordsDims...> const& coord_eval,
             ddc::ChunkSpan<double const, spline_domain_type, Layout, memory_space> const
                     spline_coef) const
     {
+        using deriv_dim1 = Deriv<continuous_dimension_type1>;
+        using deriv_dim2 = Deriv<continuous_dimension_type2>;
+        using deriv_dim3 = Deriv<continuous_dimension_type3>;
+        using deriv_dims = detail::TypeSeq<DerivDims...>;
+
+        // Check that the tags are valid
         static_assert(
-                std::is_same_v<EvalType1, eval_type> || std::is_same_v<EvalType1, eval_deriv_type>);
-        static_assert(
-                std::is_same_v<EvalType2, eval_type> || std::is_same_v<EvalType2, eval_deriv_type>);
-        static_assert(
-                std::is_same_v<EvalType3, eval_type> || std::is_same_v<EvalType3, eval_deriv_type>);
+                (in_tags_v<DerivDims, ddc::detail::TypeSeq<deriv_dim1, deriv_dim2, deriv_dim3>>
+                 && ...),
+                "The only valid dimensions for deriv_order are Deriv<Dim1>, Deriv<Dim2> and "
+                "Deriv<Dim3>");
+
         ddc::DiscreteElement<bsplines_type1> jmin1;
         ddc::DiscreteElement<bsplines_type2> jmin2;
         ddc::DiscreteElement<bsplines_type3> jmin3;
@@ -2268,20 +937,73 @@ private:
         ddc::Coordinate<continuous_dimension_type2> const coord_eval_interest2(coord_eval);
         ddc::Coordinate<continuous_dimension_type3> const coord_eval_interest3(coord_eval);
 
-        if constexpr (std::is_same_v<EvalType1, eval_type>) {
+        if constexpr (!in_tags_v<deriv_dim1, deriv_dims>) {
             jmin1 = ddc::discrete_space<bsplines_type1>().eval_basis(vals1, coord_eval_interest1);
-        } else if constexpr (std::is_same_v<EvalType1, eval_deriv_type>) {
-            jmin1 = ddc::discrete_space<bsplines_type1>().eval_deriv(vals1, coord_eval_interest1);
+        } else {
+            auto const order1 = deriv_order.template uid<deriv_dim1>();
+            KOKKOS_ASSERT(order1 > 0 && order1 <= bsplines_type1::degree())
+
+            std::array<double, (bsplines_type1::degree() + 1) * (bsplines_type1::degree() + 1)>
+                    derivs1_ptr;
+            Kokkos::mdspan<
+                    double,
+                    Kokkos::extents<
+                            std::size_t,
+                            bsplines_type1::degree() + 1,
+                            Kokkos::dynamic_extent>> const derivs1(derivs1_ptr.data(), order1 + 1);
+
+            jmin1 = ddc::discrete_space<bsplines_type1>()
+                            .eval_basis_and_n_derivs(derivs1, coord_eval_interest1, order1);
+
+            for (std::size_t i = 0; i < bsplines_type1::degree() + 1; ++i) {
+                vals1[i] = DDC_MDSPAN_ACCESS_OP(derivs1, i, order1);
+            }
         }
-        if constexpr (std::is_same_v<EvalType2, eval_type>) {
+
+        if constexpr (!in_tags_v<deriv_dim2, deriv_dims>) {
             jmin2 = ddc::discrete_space<bsplines_type2>().eval_basis(vals2, coord_eval_interest2);
-        } else if constexpr (std::is_same_v<EvalType2, eval_deriv_type>) {
-            jmin2 = ddc::discrete_space<bsplines_type2>().eval_deriv(vals2, coord_eval_interest2);
+        } else {
+            auto const order2 = deriv_order.template uid<deriv_dim2>();
+            KOKKOS_ASSERT(order2 > 0 && order2 <= bsplines_type2::degree())
+
+            std::array<double, (bsplines_type2::degree() + 1) * (bsplines_type2::degree() + 1)>
+                    derivs2_ptr;
+            Kokkos::mdspan<
+                    double,
+                    Kokkos::extents<
+                            std::size_t,
+                            bsplines_type2::degree() + 1,
+                            Kokkos::dynamic_extent>> const derivs2(derivs2_ptr.data(), order2 + 1);
+
+            jmin2 = ddc::discrete_space<bsplines_type2>()
+                            .eval_basis_and_n_derivs(derivs2, coord_eval_interest2, order2);
+
+            for (std::size_t i = 0; i < bsplines_type2::degree() + 1; ++i) {
+                vals2[i] = DDC_MDSPAN_ACCESS_OP(derivs2, i, order2);
+            }
         }
-        if constexpr (std::is_same_v<EvalType3, eval_type>) {
+
+        if constexpr (!in_tags_v<deriv_dim3, deriv_dims>) {
             jmin3 = ddc::discrete_space<bsplines_type3>().eval_basis(vals3, coord_eval_interest3);
-        } else if constexpr (std::is_same_v<EvalType3, eval_deriv_type>) {
-            jmin3 = ddc::discrete_space<bsplines_type3>().eval_deriv(vals3, coord_eval_interest3);
+        } else {
+            auto const order3 = deriv_order.template uid<deriv_dim3>();
+            KOKKOS_ASSERT(order3 > 0 && order3 <= bsplines_type3::degree())
+
+            std::array<double, (bsplines_type3::degree() + 1) * (bsplines_type3::degree() + 1)>
+                    derivs3_ptr;
+            Kokkos::mdspan<
+                    double,
+                    Kokkos::extents<
+                            std::size_t,
+                            bsplines_type3::degree() + 1,
+                            Kokkos::dynamic_extent>> const derivs3(derivs3_ptr.data(), order3 + 1);
+
+            jmin3 = ddc::discrete_space<bsplines_type3>()
+                            .eval_basis_and_n_derivs(derivs3, coord_eval_interest3, order3);
+
+            for (std::size_t i = 0; i < bsplines_type3::degree() + 1; ++i) {
+                vals3[i] = DDC_MDSPAN_ACCESS_OP(derivs3, i, order3);
+            }
         }
 
         double y = 0.0;

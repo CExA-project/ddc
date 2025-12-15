@@ -30,13 +30,13 @@
 namespace ddc::detail {
 
 template <class T>
-struct type_holder
+struct TypeHolder
 {
     using type = T;
 };
 
 template <class KokkosLP>
-struct kokkos_to_mdspan_layout
+struct KokkosToMdspanLayout
 {
     static_assert(
             std::is_same_v<KokkosLP, KokkosLP>,
@@ -44,85 +44,85 @@ struct kokkos_to_mdspan_layout
 };
 
 template <>
-struct kokkos_to_mdspan_layout<Kokkos::LayoutLeft>
+struct KokkosToMdspanLayout<Kokkos::LayoutLeft>
 {
     using type = Kokkos::layout_left;
 };
 
 template <>
-struct kokkos_to_mdspan_layout<Kokkos::LayoutRight>
+struct KokkosToMdspanLayout<Kokkos::LayoutRight>
 {
     using type = Kokkos::layout_right;
 };
 
 template <>
-struct kokkos_to_mdspan_layout<Kokkos::LayoutStride>
+struct KokkosToMdspanLayout<Kokkos::LayoutStride>
 {
     using type = Kokkos::layout_stride;
 };
 
 /// Alias template to transform a mdspan layout type to a Kokkos layout type
 template <class KokkosLP>
-using kokkos_to_mdspan_layout_t = typename kokkos_to_mdspan_layout<KokkosLP>::type;
+using kokkos_to_mdspan_layout_t = typename KokkosToMdspanLayout<KokkosLP>::type;
 
 
-template <class mdspanLP>
-struct mdspan_to_kokkos_layout
+template <class MdspanLP>
+struct MdspanToKokkosLayout
 {
     static_assert(
-            std::is_same_v<mdspanLP, mdspanLP>,
+            std::is_same_v<MdspanLP, MdspanLP>,
             "Usage of non-specialized mdspan_to_kokkos_layout struct is not allowed");
 };
 
 template <>
-struct mdspan_to_kokkos_layout<Kokkos::layout_left>
+struct MdspanToKokkosLayout<Kokkos::layout_left>
 {
     using type = Kokkos::LayoutLeft;
 };
 
 template <>
-struct mdspan_to_kokkos_layout<Kokkos::layout_right>
+struct MdspanToKokkosLayout<Kokkos::layout_right>
 {
     using type = Kokkos::LayoutRight;
 };
 
 template <>
-struct mdspan_to_kokkos_layout<Kokkos::layout_stride>
+struct MdspanToKokkosLayout<Kokkos::layout_stride>
 {
     using type = Kokkos::LayoutStride;
 };
 
 /// Alias template to transform a Kokkos layout type to a mdspan layout type
-template <class mdspanLP>
-using mdspan_to_kokkos_layout_t = typename mdspan_to_kokkos_layout<mdspanLP>::type;
+template <class MdspanLP>
+using mdspan_to_kokkos_layout_t = typename MdspanToKokkosLayout<MdspanLP>::type;
 
 template <class ET, std::size_t N>
-struct mdspan_to_kokkos_element
+struct MdspanToKokkosElement
     : std::conditional_t<
               N == 0,
-              type_holder<ET>,
-              mdspan_to_kokkos_element<std::add_pointer_t<ET>, N - 1>>
+              TypeHolder<ET>,
+              MdspanToKokkosElement<std::add_pointer_t<ET>, N - 1>>
 {
 };
 
 /// Alias template to transform a mdspan element type to a Kokkos element type
 /// Only dynamic dimensions is supported for now i.e. `double[4]*` is not yet covered.
 template <class ET, std::size_t N>
-using mdspan_to_kokkos_element_t = typename mdspan_to_kokkos_element<ET, N>::type;
+using mdspan_to_kokkos_element_t = typename MdspanToKokkosElement<ET, N>::type;
 
 template <class ET>
-struct kokkos_to_mdspan_element
+struct KokkosToMdspanElement
     : std::conditional_t<
               std::is_pointer_v<std::decay_t<ET>>,
-              kokkos_to_mdspan_element<std::remove_pointer_t<std::decay_t<ET>>>,
-              type_holder<ET>>
+              KokkosToMdspanElement<std::remove_pointer_t<std::decay_t<ET>>>,
+              TypeHolder<ET>>
 {
 };
 
 /// Alias template to transform a Kokkos element type to a mdspan element type
 /// Only dynamic dimensions is supported for now i.e. `double[4]*` is not yet covered.
 template <class ET>
-using kokkos_to_mdspan_element_t = typename kokkos_to_mdspan_element<ET>::type;
+using kokkos_to_mdspan_element_t = typename KokkosToMdspanElement<ET>::type;
 
 
 template <std::size_t... Is>
@@ -175,7 +175,7 @@ KOKKOS_FUNCTION auto build_mdspan(
         Kokkos::View<DataType, Properties...> const view,
         std::index_sequence<Is...>)
 {
-    KOKKOS_ASSERT((is_kokkos_layout_compatible(view)))
+    KOKKOS_ASSERT(is_kokkos_layout_compatible(view))
     DDC_IF_NVCC_THEN_PUSH_AND_SUPPRESS(implicit_return_from_non_void_function)
     using element_type = kokkos_to_mdspan_element_t<DataType>;
     using extents_type = Kokkos::dextents<std::size_t, Kokkos::View<DataType, Properties...>::rank>;

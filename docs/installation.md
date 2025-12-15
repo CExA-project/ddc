@@ -55,20 +55,22 @@ It is recommended on HPC systems or if you want an isolated environment.
 
 ### 1. Install Spack
 
-Download and extract the latest Spack release (replace version if newer is available):
+Download and extract Spack:
 
 ```bash
-wget https://github.com/spack/spack/releases/download/v1.0.1/spack-1.0.1.tar.gz
-tar -xvf spack-1.0.1.tar.gz
-rm spack-1.0.1.tar.gz
+wget https://github.com/spack/spack/releases/download/v1.1.0/spack-1.1.0.tar.gz
+tar -xvf spack-1.1.0.tar.gz
+rm spack-1.1.0.tar.gz
 ```
+
+\note If you already have a Spack installation, the DDC package is available starting from builtin packages `v2025.11.0`.
 
 ### 2. Activate Spack
 
 Spack must be activated before use:
 
 ```bash
-. spack-1.0.1/share/spack/setup-env.sh
+. spack-1.1.0/share/spack/setup-env.sh
 ```
 
 \note Add this line to your `~/.bashrc` or `~/.zshrc` to avoid reactivating in each new shell.
@@ -80,14 +82,6 @@ To avoid polluting other Spack setups, create a dedicated environment:
 ```bash
 spack env create ddc-env
 ```
-
-Pin the Spack built-in packages repository to the commit of DDC recipe release (ensures recipe compatibility):
-
-```bash
-spack --env ddc-env repo update builtin --commit 633ec00a198102d61e7ffcdd551cd455a8689e66
-```
-
-\note Starting from **Spack packages v2025.7.0**, this step will no longer be needed.
 
 Add and install DDC with default variants:
 

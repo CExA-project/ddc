@@ -122,7 +122,7 @@ KOKKOS_FUNCTION Coord<X> x0()
 
 // Templated function giving last coordinate of the mesh in given dimension.
 template <typename X>
-KOKKOS_FUNCTION Coord<X> xN()
+KOKKOS_FUNCTION Coord<X> xn()
 {
     return Coord<X>(1.);
 }
@@ -131,7 +131,7 @@ KOKKOS_FUNCTION Coord<X> xN()
 template <typename X>
 double dx(std::size_t ncells)
 {
-    return (xN<X>() - x0<X>()) / ncells;
+    return (xn<X>() - x0<X>()) / ncells;
 }
 
 // Templated function giving break points of mesh in given dimension for non-uniform case.
@@ -146,11 +146,11 @@ std::vector<Coord<X>> breaks(std::size_t ncells)
 }
 
 template <class DDim>
-void InterestDimInitializer(std::size_t const ncells)
+void interest_dim_initializer(std::size_t const ncells)
 {
     using CDim = typename DDim::continuous_dimension_type;
 #if defined(BSPLINES_TYPE_UNIFORM)
-    ddc::init_discrete_space<BSplines<CDim>>(x0<CDim>(), xN<CDim>(), ncells);
+    ddc::init_discrete_space<BSplines<CDim>>(x0<CDim>(), xn<CDim>(), ncells);
 #elif defined(BSPLINES_TYPE_NON_UNIFORM)
     ddc::init_discrete_space<BSplines<CDim>>(breaks<CDim>(ncells));
 #endif
@@ -166,7 +166,7 @@ template <
         typename Builder,
         typename Evaluator,
         typename... DDims>
-std::tuple<double, double, double, double> ComputeEvaluationError(
+std::tuple<double, double, double, double> compute_evaluation_error(
         ExecSpace const& exec_space,
         ddc::DiscreteDomain<DDims...> const& dom_vals,
         Builder const& spline_builder,
@@ -259,7 +259,7 @@ std::tuple<double, double, double, double> ComputeEvaluationError(
                     auto deriv_idx = ddc::DiscreteElement<ddc::Deriv<I1>>(e).uid();
                     auto x2 = ddc::coordinate(ddc::DiscreteElement<DDimI2>(e));
                     derivs_1d_rhs1_host(e)
-                            = evaluator.deriv(xN<I1>(), x2, deriv_idx + shift - 1, 0);
+                            = evaluator.deriv(xn<I1>(), x2, deriv_idx + shift - 1, 0);
                 });
         auto derivs_1d_rhs1_alloc
                 = ddc::create_mirror_view_and_copy(exec_space, derivs_1d_rhs1_host);
@@ -313,7 +313,7 @@ std::tuple<double, double, double, double> ComputeEvaluationError(
                 KOKKOS_LAMBDA(ddc::DiscreteElement<DDimI1, ddc::Deriv<I2>> const e) {
                     auto x1 = ddc::coordinate(ddc::DiscreteElement<DDimI1>(e));
                     auto deriv_idx = ddc::DiscreteElement<ddc::Deriv<I2>>(e).uid();
-                    derivs2_rhs1_host(e) = evaluator.deriv(x1, xN<I2>(), 0, deriv_idx + shift - 1);
+                    derivs2_rhs1_host(e) = evaluator.deriv(x1, xn<I2>(), 0, deriv_idx + shift - 1);
                 });
 
         auto derivs2_rhs1_alloc = ddc::create_mirror_view_and_copy(exec_space, derivs2_rhs1_host);
@@ -362,13 +362,13 @@ std::tuple<double, double, double, double> ComputeEvaluationError(
                         = evaluator.deriv(x0<I1>(), x0<I2>(), ii + shift - 1, jj + shift - 1);
                 derivs_mixed_rhs_lhs1_host(
                         typename decltype(derivs_domain)::discrete_element_type(ii, jj))
-                        = evaluator.deriv(xN<I1>(), x0<I2>(), ii + shift - 1, jj + shift - 1);
+                        = evaluator.deriv(xn<I1>(), x0<I2>(), ii + shift - 1, jj + shift - 1);
                 derivs_mixed_lhs_rhs1_host(
                         typename decltype(derivs_domain)::discrete_element_type(ii, jj))
-                        = evaluator.deriv(x0<I1>(), xN<I2>(), ii + shift - 1, jj + shift - 1);
+                        = evaluator.deriv(x0<I1>(), xn<I2>(), ii + shift - 1, jj + shift - 1);
                 derivs_mixed_rhs_rhs1_host(
                         typename decltype(derivs_domain)::discrete_element_type(ii, jj))
-                        = evaluator.deriv(xN<I1>(), xN<I2>(), ii + shift - 1, jj + shift - 1);
+                        = evaluator.deriv(xn<I1>(), xn<I2>(), ii + shift - 1, jj + shift - 1);
             }
         }
         auto derivs_mixed_lhs_lhs1_alloc
@@ -445,12 +445,20 @@ std::tuple<double, double, double, double> ComputeEvaluationError(
     // Call spline_evaluator on the same mesh we started with
     spline_evaluator(spline_eval, coords_eval.span_cview(), coef.span_cview());
     spline_evaluator
-            .template deriv<I1>(spline_eval_deriv1, coords_eval.span_cview(), coef.span_cview());
+            .deriv(ddc::DiscreteElement<ddc::Deriv<I1>>(1),
+                   spline_eval_deriv1,
+                   coords_eval.span_cview(),
+                   coef.span_cview());
     spline_evaluator
-            .template deriv<I2>(spline_eval_deriv2, coords_eval.span_cview(), coef.span_cview());
-    spline_evaluator.template deriv2<
-            I1,
-            I2>(spline_eval_deriv12, coords_eval.span_cview(), coef.span_cview());
+            .deriv(ddc::DiscreteElement<ddc::Deriv<I2>>(1),
+                   spline_eval_deriv2,
+                   coords_eval.span_cview(),
+                   coef.span_cview());
+    spline_evaluator
+            .deriv(ddc::DiscreteElement<ddc::Deriv<I1>, ddc::Deriv<I2>>(1, 1),
+                   spline_eval_deriv12,
+                   coords_eval.span_cview(),
+                   coef.span_cview());
 
     // Checking errors (we recover the initial values)
     double const max_norm_error = ddc::parallel_transform_reduce(
@@ -507,7 +515,7 @@ template <
         typename DDimI1,
         typename DDimI2,
         typename... DDims>
-void MultipleBatchDomain2dSplineTest()
+void TestMultipleBatchDomain2dSpline()
 {
     using I1 = typename DDimI1::continuous_dimension_type;
     using I2 = typename DDimI2::continuous_dimension_type;
@@ -515,8 +523,8 @@ void MultipleBatchDomain2dSplineTest()
     // Instantiate execution spaces and initialize spaces
     ExecSpace const exec_space;
     std::size_t const ncells = 10;
-    InterestDimInitializer<DDimI1>(ncells);
-    InterestDimInitializer<DDimI2>(ncells);
+    interest_dim_initializer<DDimI1>(ncells);
+    interest_dim_initializer<DDimI2>(ncells);
 
     // Create the values domain (mesh)
     ddc::DiscreteDomain<DDimI1> const interpolation_domain1
@@ -585,7 +593,7 @@ void MultipleBatchDomain2dSplineTest()
 
     // Check the evaluation error for the first domain
     auto const [max_norm_error, max_norm_error_diff1, max_norm_error_diff2, max_norm_error_diff12]
-            = ComputeEvaluationError<
+            = compute_evaluation_error<
                     ExecSpace,
                     MemorySpace>(exec_space, dom_vals, spline_builder, spline_evaluator, evaluator);
 
@@ -635,7 +643,7 @@ void MultipleBatchDomain2dSplineTest()
              max_norm_error_diff1_extra,
              max_norm_error_diff2_extra,
              max_norm_error_diff12_extra]
-            = ComputeEvaluationError<ExecSpace, MemorySpace>(
+            = compute_evaluation_error<ExecSpace, MemorySpace>(
                     exec_space,
                     dom_vals_extra,
                     spline_builder,
@@ -701,7 +709,7 @@ void MultipleBatchDomain2dSplineTest()
 
 TEST(SUFFIX(MultipleBatchDomain2dSpline), 2DXY)
 {
-    MultipleBatchDomain2dSplineTest<
+    TestMultipleBatchDomain2dSpline<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             DDimGPS<DimX>,
@@ -712,7 +720,7 @@ TEST(SUFFIX(MultipleBatchDomain2dSpline), 2DXY)
 
 TEST(SUFFIX(MultipleBatchDomain2dSpline), 3DXYB)
 {
-    MultipleBatchDomain2dSplineTest<
+    TestMultipleBatchDomain2dSpline<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             DDimGPS<DimX>,
@@ -724,7 +732,7 @@ TEST(SUFFIX(MultipleBatchDomain2dSpline), 3DXYB)
 
 TEST(SUFFIX(MultipleBatchDomain2dSpline), 3DXBY)
 {
-    MultipleBatchDomain2dSplineTest<
+    TestMultipleBatchDomain2dSpline<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             DDimGPS<DimX>,
@@ -736,7 +744,7 @@ TEST(SUFFIX(MultipleBatchDomain2dSpline), 3DXBY)
 
 TEST(SUFFIX(MultipleBatchDomain2dSpline), 3DBXY)
 {
-    MultipleBatchDomain2dSplineTest<
+    TestMultipleBatchDomain2dSpline<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             DDimGPS<DimX>,

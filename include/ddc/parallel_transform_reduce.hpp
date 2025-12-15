@@ -98,16 +98,16 @@ class TransformReducerKokkosLambdaAdapter<Reducer, Functor, Support, std::index_
     template <std::size_t I>
     using index_type = DiscreteElementType;
 
-    Reducer reducer;
+    Reducer m_reducer;
 
-    Functor functor;
+    Functor m_functor;
 
     Support m_support;
 
 public:
     TransformReducerKokkosLambdaAdapter(Reducer const& r, Functor const& f, Support const& support)
-        : reducer(r)
-        , functor(f)
+        : m_reducer(r)
+        , m_functor(f)
         , m_support(support)
     {
     }
@@ -117,13 +117,13 @@ public:
             [[maybe_unused]] index_type<0> unused_id,
             typename Reducer::value_type& a) const
     {
-        a = reducer(a, functor(DiscreteElement<>()));
+        a = m_reducer(a, m_functor(DiscreteElement<>()));
     }
 
     template <std::size_t N = sizeof...(Idx), std::enable_if_t<(N > 0), bool> = true>
     KOKKOS_FUNCTION void operator()(index_type<Idx>... ids, typename Reducer::value_type& a) const
     {
-        a = reducer(a, functor(m_support(typename Support::discrete_vector_type(ids...))));
+        a = m_reducer(a, m_functor(m_support(typename Support::discrete_vector_type(ids...))));
     }
 };
 

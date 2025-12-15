@@ -296,7 +296,7 @@ void TestDeviceForEachStritedSerialDevice1D(
             Kokkos::DefaultExecutionSpace(),
             DDom0D(),
             KOKKOS_LAMBDA(DElem0D) {
-                ddc::device_for_each(view.domain(), [=](DVectX const ix) { view(ix) = 1; });
+                ddc::device_for_each(view.domain(), [=](DElemX const ix) { view(ix) = 1; });
             });
 }
 
@@ -331,7 +331,7 @@ void TestDeviceForEachStritedSerialDevice2D(
             Kokkos::DefaultExecutionSpace(),
             DDom0D(),
             KOKKOS_LAMBDA(DElem0D) {
-                ddc::device_for_each(view.domain(), [=](DVectXY const ixy) { view(ixy) = 1; });
+                ddc::device_for_each(view.domain(), [=](DElemXY const ixy) { view(ixy) = 1; });
             });
 }
 

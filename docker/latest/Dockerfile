@@ -9,6 +9,7 @@ LABEL "org.opencontainers.image.source"="https://github.com/CExA-project/ddc"
 ARG BACKEND
 ARG AMDGPU_VERSION=6.2.1
 ARG CMAKE_VERSION=3.25.3
+ARG LLVM_VERSION=21
 ARG ROCM_VERSION=6.2.1
 
 COPY bash_run /bin/
@@ -34,7 +35,9 @@ RUN chmod +x /bin/bash_run \
     wget \
  && mkdir --parents --mode=0755 /etc/apt/keyrings \
  && wget -O /usr/share/keyrings/pdidev-archive-keyring.gpg https://repo.pdi.dev/ubuntu/pdidev-archive-keyring.gpg \
+ && wget -O /usr/share/keyrings/apt.llvm.org.asc https://apt.llvm.org/llvm-snapshot.gpg.key \
  && echo "deb [arch=amd64 signed-by=/usr/share/keyrings/pdidev-archive-keyring.gpg] https://repo.pdi.dev/ubuntu noble main" > /etc/apt/sources.list.d/pdi.list \
+ && echo "deb [arch=amd64 signed-by=/usr/share/keyrings/apt.llvm.org.asc] http://apt.llvm.org/noble/ llvm-toolchain-noble-${LLVM_VERSION} main" > /etc/apt/sources.list.d/llvm.list \
  && case "x${BACKEND}" in \
     "xhip") \
       echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/rocm.gpg] https://repo.radeon.com/amdgpu/${AMDGPU_VERSION}/ubuntu noble main" > /etc/apt/sources.list.d/amdgpu.list \
@@ -66,8 +69,9 @@ RUN chmod +x /bin/bash_run \
     "cpu") \
       apt-get install -y --no-install-recommends \
       clang \
+      clang-${LLVM_VERSION} \
       clang-tidy \
-      clang-format \
+      clang-tidy-${LLVM_VERSION} \
  ;; "cuda") \
       # libnvjitlink-12-6 seems to be a missing dependency of cusparse
       apt-get install -y --no-install-recommends \

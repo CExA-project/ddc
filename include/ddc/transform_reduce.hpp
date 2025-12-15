@@ -32,7 +32,7 @@ template <
         class UnaryTransformOp,
         class... Is>
 T host_transform_reduce_serial(
-        Support const& support,
+        Support const& domain,
         std::array<Element, N> const& size,
         [[maybe_unused]] T const neutral,
         BinaryReductionOp const& reduce,
@@ -42,13 +42,13 @@ T host_transform_reduce_serial(
     DDC_IF_NVCC_THEN_PUSH_AND_SUPPRESS(implicit_return_from_non_void_function)
     static constexpr std::size_t I = sizeof...(Is);
     if constexpr (I == N) {
-        return transform(support(typename Support::discrete_vector_type(is...)));
+        return transform(domain(typename Support::discrete_vector_type(is...)));
     } else {
         T result = neutral;
         for (Element ii = 0; ii < size[I]; ++ii) {
             result = reduce(
                     host_transform_reduce_serial(
-                            support,
+                            domain,
                             size,
                             neutral,
                             reduce,
@@ -80,7 +80,7 @@ template <
         class UnaryTransformOp,
         class... Is>
 KOKKOS_FUNCTION T device_transform_reduce_serial(
-        Support const& support,
+        Support const& domain,
         std::array<Element, N> const& size,
         [[maybe_unused]] T const neutral,
         BinaryReductionOp const& reduce,
@@ -90,13 +90,13 @@ KOKKOS_FUNCTION T device_transform_reduce_serial(
     DDC_IF_NVCC_THEN_PUSH_AND_SUPPRESS(implicit_return_from_non_void_function)
     static constexpr std::size_t I = sizeof...(Is);
     if constexpr (I == N) {
-        return transform(support(typename Support::discrete_vector_type(is...)));
+        return transform(domain(typename Support::discrete_vector_type(is...)));
     } else {
         T result = neutral;
         for (Element ii = 0; ii < size[I]; ++ii) {
             result = reduce(
                     device_transform_reduce_serial(
-                            support,
+                            domain,
                             size,
                             neutral,
                             reduce,
@@ -150,11 +150,9 @@ T host_transform_reduce(
         BinaryReductionOp&& reduce,
         UnaryTransformOp&& transform) noexcept
 {
-    std::array const size = detail::array(domain.extents());
-
     return detail::host_transform_reduce_serial(
             domain,
-            size,
+            detail::array(domain.extents()),
             neutral,
             std::forward<BinaryReductionOp>(reduce),
             std::forward<UnaryTransformOp>(transform));
@@ -175,11 +173,9 @@ KOKKOS_FUNCTION T device_transform_reduce(
         BinaryReductionOp&& reduce,
         UnaryTransformOp&& transform) noexcept
 {
-    std::array const size = detail::array(domain.extents());
-
     return detail::device_transform_reduce_serial(
             domain,
-            size,
+            detail::array(domain.extents()),
             neutral,
             std::forward<BinaryReductionOp>(reduce),
             std::forward<UnaryTransformOp>(transform));

@@ -36,10 +36,10 @@ template <class S>
 using to_tuple_t = typename ToTuple<S>::type;
 
 template <class TupleOfTuples, class Tuple>
-struct host_for_each_tuple_cat;
+struct for_each_tuple_cat;
 
 template <class... Tuples, class Tuple>
-struct host_for_each_tuple_cat<std::tuple<Tuples...>, Tuple>
+struct for_each_tuple_cat<std::tuple<Tuples...>, Tuple>
 {
     using type = std::tuple<
             decltype(std::tuple_cat(std::declval<Tuples>(), std::declval<Tuple>()))...>;
@@ -47,16 +47,16 @@ struct host_for_each_tuple_cat<std::tuple<Tuples...>, Tuple>
 
 /// Construct a tuple of tuples that is the result of the concatenation of the tuples in TupleOfTuples with Tuple.
 template <class TupleOfTuples, class Tuple>
-using host_for_each_tuple_cat_t = typename host_for_each_tuple_cat<TupleOfTuples, Tuple>::type;
+using for_each_tuple_cat_t = typename for_each_tuple_cat<TupleOfTuples, Tuple>::type;
 
 static_assert(std::is_same_v<
-              host_for_each_tuple_cat_t<
+              for_each_tuple_cat_t<
                       std::tuple<std::tuple<double, double>, std::tuple<int, double>>,
                       std::tuple<int>>,
               std::tuple<std::tuple<double, double, int>, std::tuple<int, double, int>>>);
 
 static_assert(std::is_same_v<
-              host_for_each_tuple_cat_t<std::tuple<std::tuple<double, double>>, std::tuple<int>>,
+              for_each_tuple_cat_t<std::tuple<std::tuple<double, double>>, std::tuple<int>>,
               std::tuple<std::tuple<double, double, int>>>);
 
 template <class InTupleOfTuples, class OutTupleOfTuples>
@@ -67,9 +67,8 @@ struct cartesian_product_impl<std::tuple<std::tuple<HeadArgs...>, TailTuples...>
     : cartesian_product_impl<
               std::tuple<TailTuples...>,
               decltype(std::tuple_cat(
-                      std::declval<host_for_each_tuple_cat_t<
-                              OutTupleOfTuples,
-                              std::tuple<HeadArgs>>>()...))>
+                      std::declval<
+                              for_each_tuple_cat_t<OutTupleOfTuples, std::tuple<HeadArgs>>>()...))>
 {
 };
 

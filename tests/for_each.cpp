@@ -47,7 +47,7 @@ DVectXY constexpr nelems_x_y(nelems_x, nelems_y);
 
 } // namespace anonymous_namespace_workaround_for_each_cpp
 
-TEST(HostForEachSerialHost, Empty)
+TEST(ForEachSerialHost, Empty)
 {
     DDomX const dom(lbound_x, DVectX(0));
     std::vector<int> storage(dom.size(), 0);
@@ -57,7 +57,7 @@ TEST(HostForEachSerialHost, Empty)
             << std::count(storage.begin(), storage.end(), 1) << "\n";
 }
 
-TEST(HostForEachSerialHost, ZeroDimension)
+TEST(ForEachSerialHost, ZeroDimension)
 {
     DDom0D const dom;
     int storage = 0;
@@ -66,7 +66,7 @@ TEST(HostForEachSerialHost, ZeroDimension)
     EXPECT_EQ(storage, 1) << storage << "\n";
 }
 
-TEST(HostForEachSerialHost, OneDimension)
+TEST(ForEachSerialHost, OneDimension)
 {
     DDomX const dom(lbound_x, nelems_x);
     std::vector<int> storage(dom.size(), 0);
@@ -75,7 +75,7 @@ TEST(HostForEachSerialHost, OneDimension)
     EXPECT_EQ(std::count(storage.begin(), storage.end(), 1), dom.size());
 }
 
-TEST(HostForEachSerialHost, TwoDimensions)
+TEST(ForEachSerialHost, TwoDimensions)
 {
     DDomXY const dom(lbound_x_y, nelems_x_y);
     std::vector<int> storage(dom.size(), 0);

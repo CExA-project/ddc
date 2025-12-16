@@ -112,6 +112,7 @@ public:
                 !(Access & PDI_IN) || (default_access_v<Arithmetic> & PDI_IN),
                 "Invalid access for constant data");
         using value_type = std::remove_cv_t<std::remove_reference_t<Arithmetic>>;
+        // NOLINTNEXTLINE(misc-const-correctness)
         value_type* data_ptr = const_cast<value_type*>(&data);
         // for read-only data, we share a copy instead of the data itself in case we received a ref on a temporary,
         if constexpr (!(Access & PDI_IN)) {

@@ -56,7 +56,9 @@ void memcpy_1d(benchmark::State& state)
     for (auto _ : state) {
         std::memcpy(dst_data.data(), src_data.data(), dst_data.size() * sizeof(double));
     }
-    state.SetBytesProcessed(int64_t(state.iterations()) * int64_t(state.range(0) * sizeof(double)));
+    state.SetBytesProcessed(
+            static_cast<int64_t>(state.iterations())
+            * static_cast<int64_t>(state.range(0) * sizeof(double)));
 }
 
 void deepcopy_1d(benchmark::State& state)
@@ -69,7 +71,9 @@ void deepcopy_1d(benchmark::State& state)
     for (auto _ : state) {
         ddc::parallel_deepcopy(dst, src);
     }
-    state.SetBytesProcessed(int64_t(state.iterations()) * int64_t(state.range(0) * sizeof(double)));
+    state.SetBytesProcessed(
+            static_cast<int64_t>(state.iterations())
+            * static_cast<int64_t>(state.range(0) * sizeof(double)));
 }
 
 void memcpy_2d(benchmark::State& state)
@@ -85,8 +89,8 @@ void memcpy_2d(benchmark::State& state)
         }
     }
     state.SetBytesProcessed(
-            int64_t(state.iterations())
-            * int64_t(state.range(0) * state.range(1) * sizeof(double)));
+            static_cast<int64_t>(state.iterations())
+            * static_cast<int64_t>(state.range(0) * state.range(1) * sizeof(double)));
 }
 
 void deepcopy_2d(benchmark::State& state)
@@ -100,8 +104,8 @@ void deepcopy_2d(benchmark::State& state)
         ddc::parallel_deepcopy(dst, src);
     }
     state.SetBytesProcessed(
-            int64_t(state.iterations())
-            * int64_t(state.range(0) * state.range(1) * sizeof(double)));
+            static_cast<int64_t>(state.iterations())
+            * static_cast<int64_t>(state.range(0) * state.range(1) * sizeof(double)));
 }
 
 void deepcopy_subchunk_2d(benchmark::State& state)
@@ -119,8 +123,8 @@ void deepcopy_subchunk_2d(benchmark::State& state)
         }
     }
     state.SetBytesProcessed(
-            int64_t(state.iterations())
-            * int64_t(state.range(0) * state.range(1) * sizeof(double)));
+            static_cast<int64_t>(state.iterations())
+            * static_cast<int64_t>(state.range(0) * state.range(1) * sizeof(double)));
 }
 
 } // namespace anonymous_namespace_workaround_deepcopy_cpp

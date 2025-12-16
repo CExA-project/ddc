@@ -28,7 +28,7 @@ void fill_identity(
 {
     for (std::size_t i(0); i < mat.extent(0); ++i) {
         for (std::size_t j(0); j < mat.extent(1); ++j) {
-            mat(i, j) = int(i == j);
+            mat(i, j) = static_cast<int>(i == j);
         }
     }
 }
@@ -169,7 +169,7 @@ TEST(SplinesLinearProblem, Dense)
     // Build a non-symmetric full-rank matrix (without zero)
     for (std::size_t i(0); i < N; ++i) {
         splines_linear_problem->set_element(i, i, 3. / 4 * ((N + 1) * i + 1));
-        for (std::size_t j(std::max(0, int(i) - int(k))); j < i; ++j) {
+        for (std::size_t j(std::max(0, static_cast<int>(i) - static_cast<int>(k))); j < i; ++j) {
             splines_linear_problem->set_element(i, j, -(1. / 4) / k * (N * i + j + 1));
         }
         for (std::size_t j(i + 1); j < std::min(N, i + k + 1); ++j) {
@@ -191,7 +191,7 @@ TEST(SplinesLinearProblem, Band)
     // Build a non-symmetric full-rank band matrix
     for (std::size_t i(0); i < N; ++i) {
         splines_linear_problem->set_element(i, i, 3. / 4 * ((N + 1) * i + 1));
-        for (std::size_t j(std::max(0, int(i) - int(k))); j < i; ++j) {
+        for (std::size_t j(std::max(0, static_cast<int>(i) - static_cast<int>(k))); j < i; ++j) {
             splines_linear_problem->set_element(i, j, -(1. / 4) / k * (N * i + j + 1));
         }
         for (std::size_t j(i + 1); j < std::min(N, i + k + 1); ++j) {
@@ -213,7 +213,7 @@ TEST(SplinesLinearProblem, PDSBand)
     // Build a positive-definite symmetric full-rank band matrix
     for (std::size_t i(0); i < N; ++i) {
         splines_linear_problem->set_element(i, i, 2.0 * k + 1);
-        for (std::size_t j(std::max(0, int(i) - int(k))); j < i; ++j) {
+        for (std::size_t j(std::max(0, static_cast<int>(i) - static_cast<int>(k))); j < i; ++j) {
             splines_linear_problem->set_element(i, j, -1.0);
         }
         for (std::size_t j(i + 1); j < std::min(N, i + k + 1); ++j) {
@@ -235,7 +235,7 @@ TEST(SplinesLinearProblem, PDSTridiag)
     // Build a positive-definite symmetric full-rank tridiagonal matrix
     for (std::size_t i(0); i < N; ++i) {
         splines_linear_problem->set_element(i, i, 2.0 * k + 1);
-        for (std::size_t j(std::max(0, int(i) - int(k))); j < i; ++j) {
+        for (std::size_t j(std::max(0, static_cast<int>(i) - static_cast<int>(k))); j < i; ++j) {
             splines_linear_problem->set_element(i, j, -1.0);
         }
         for (std::size_t j(i + 1); j < std::min(N, i + k + 1); ++j) {
@@ -260,7 +260,7 @@ TEST(SplinesLinearProblem, 2x2Blocks)
     // Build a non-symmetric full-rank matrix (without zero)
     for (std::size_t i(0); i < N; ++i) {
         splines_linear_problem->set_element(i, i, 3. / 4 * ((N + 1) * i + 1));
-        for (std::size_t j(std::max(0, int(i) - int(k))); j < i; ++j) {
+        for (std::size_t j(std::max(0, static_cast<int>(i) - static_cast<int>(k))); j < i; ++j) {
             splines_linear_problem->set_element(i, j, -(1. / 4) / k * (N * i + j + 1));
         }
         for (std::size_t j(i + 1); j < std::min(N, i + k + 1); ++j) {
@@ -286,7 +286,7 @@ TEST(SplinesLinearProblem, 3x3Blocks)
     // Build a non-symmetric full-rank matrix (without zero)
     for (std::size_t i(0); i < N; ++i) {
         splines_linear_problem->set_element(i, i, 3. / 4 * ((N + 1) * i + 1));
-        for (std::size_t j(std::max(0, int(i) - int(k))); j < i; ++j) {
+        for (std::size_t j(std::max(0, static_cast<int>(i) - static_cast<int>(k))); j < i; ++j) {
             splines_linear_problem->set_element(i, j, -(1. / 4) / k * (N * i + j + 1));
         }
         for (std::size_t j(i + 1); j < std::min(N, i + k + 1); ++j) {
@@ -312,7 +312,7 @@ TEST_P(SplinesLinearProblemSizesFixture, NonSymmetric)
     // Build a non-symmetric full-rank band matrix
     for (std::size_t i(0); i < N; ++i) {
         splines_linear_problem->set_element(i, i, 3. / 4 * ((N + 1) * i + 1));
-        for (std::size_t j(std::max(0, int(i) - int(k))); j < i; ++j) {
+        for (std::size_t j(std::max(0, static_cast<int>(i) - static_cast<int>(k))); j < i; ++j) {
             splines_linear_problem->set_element(i, j, -(1. / 4) / k * (N * i + j + 1));
         }
         for (std::size_t j(i + 1); j < std::min(N, i + k + 1); ++j) {
@@ -333,7 +333,7 @@ TEST_P(SplinesLinearProblemSizesFixture, PositiveDefiniteSymmetric)
     // Build a positive-definite symmetric full-rank band matrix
     for (std::size_t i(0); i < N; ++i) {
         splines_linear_problem->set_element(i, i, 2.0 * k + 1);
-        for (std::size_t j(std::max(0, int(i) - int(k))); j < i; ++j) {
+        for (std::size_t j(std::max(0, static_cast<int>(i) - static_cast<int>(k))); j < i; ++j) {
             splines_linear_problem->set_element(i, j, -1.0);
         }
         for (std::size_t j(i + 1); j < std::min(N, i + k + 1); ++j) {
@@ -379,7 +379,7 @@ TEST_P(SplinesLinearProblemSizesFixture, 2x2Blocks)
     // Build a non-symmetric full-rank band matrix
     for (std::size_t i(0); i < N; ++i) {
         splines_linear_problem->set_element(i, i, 3. / 4 * ((N + 1) * i + 1));
-        for (std::size_t j(std::max(0, int(i) - int(k))); j < i; ++j) {
+        for (std::size_t j(std::max(0, static_cast<int>(i) - static_cast<int>(k))); j < i; ++j) {
             splines_linear_problem->set_element(i, j, -(1. / 4) / k * (N * i + j + 1));
         }
         for (std::size_t j(i + 1); j < std::min(N, i + k + 1); ++j) {
@@ -403,7 +403,7 @@ TEST_P(SplinesLinearProblemSizesFixture, 3x3Blocks)
     // Build a non-symmetric full-rank band matrix
     for (std::size_t i(0); i < N; ++i) {
         splines_linear_problem->set_element(i, i, 3. / 4 * ((N + 1) * i + 1));
-        for (std::size_t j(std::max(0, int(i) - int(k))); j < i; ++j) {
+        for (std::size_t j(std::max(0, static_cast<int>(i) - static_cast<int>(k))); j < i; ++j) {
             splines_linear_problem->set_element(i, j, -(1. / 4) / k * (N * i + j + 1));
         }
         for (std::size_t j(i + 1); j < std::min(N, i + k + 1); ++j) {

@@ -23,18 +23,18 @@ struct CosineEvaluator
         static constexpr double s_pi_2 = Kokkos::numbers::pi / 2;
 
     private:
-        double m_c0;
+        double m_coef0;
 
-        double m_c1;
+        double m_coef1;
 
     public:
         template <class Domain>
-        explicit Evaluator([[maybe_unused]] Domain domain) : m_c0(1.0)
-                                                           , m_c1(0.0)
+        explicit Evaluator([[maybe_unused]] Domain domain) : m_coef0(1.0)
+                                                           , m_coef1(0.0)
         {
         }
 
-        Evaluator(double c0, double c1) : m_c0(c0), m_c1(c1) {}
+        Evaluator(double coef0, double coef1) : m_coef0(coef0), m_coef1(coef1) {}
 
         KOKKOS_FUNCTION double operator()(double const x) const noexcept
         {
@@ -69,14 +69,14 @@ struct CosineEvaluator
 
         KOKKOS_FUNCTION double max_norm(int diff = 0) const
         {
-            return ddc::detail::ipow(s_2_pi * m_c0, diff);
+            return ddc::detail::ipow(s_2_pi * m_coef0, diff);
         }
 
     private:
         KOKKOS_FUNCTION double eval(double const x, int const derivative) const noexcept
         {
-            return ddc::detail::ipow(s_2_pi * m_c0, derivative)
-                   * Kokkos::cos(s_pi_2 * derivative + s_2_pi * (m_c0 * x + m_c1));
+            return ddc::detail::ipow(s_2_pi * m_coef0, derivative)
+                   * Kokkos::cos(s_pi_2 * derivative + s_2_pi * (m_coef0 * x + m_coef1));
         }
     };
 };

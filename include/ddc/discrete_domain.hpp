@@ -656,7 +656,7 @@ public:
 
     KOKKOS_FUNCTION constexpr DiscreteDomainIterator& operator+=(difference_type n)
     {
-        if (n >= difference_type(0)) {
+        if (n >= static_cast<difference_type>(0)) {
             m_value += static_cast<DiscreteElementType>(n);
         } else {
             m_value -= static_cast<DiscreteElementType>(-n);
@@ -666,7 +666,7 @@ public:
 
     KOKKOS_FUNCTION constexpr DiscreteDomainIterator& operator-=(difference_type n)
     {
-        if (n >= difference_type(0)) {
+        if (n >= static_cast<difference_type>(0)) {
             m_value -= static_cast<DiscreteElementType>(n);
         } else {
             m_value += static_cast<DiscreteElementType>(-n);

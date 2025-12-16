@@ -610,11 +610,11 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<CDim, D>::
         DDC_MDSPAN_ACCESS_OP(derivs, j, 0) = DDC_MDSPAN_ACCESS_OP(ndu, degree(), j);
     }
 
-    for (int r = 0; r < int(degree() + 1); ++r) {
+    for (int r = 0; r < static_cast<int>(degree() + 1); ++r) {
         int s1 = 0;
         int s2 = 1;
         DDC_MDSPAN_ACCESS_OP(a, 0, 0) = 1.0;
-        for (int k = 1; k < int(n + 1); ++k) {
+        for (int k = 1; k < static_cast<int>(n + 1); ++k) {
             double d = 0.0;
             int const rk = r - k;
             int const pk = degree() - k;
@@ -642,7 +642,7 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<CDim, D>::
     }
 
     int r = degree();
-    for (int k = 1; k < int(n + 1); ++k) {
+    for (int k = 1; k < static_cast<int>(n + 1); ++k) {
         for (std::size_t i = 0; i < derivs.extent(0); ++i) {
             DDC_MDSPAN_ACCESS_OP(derivs, i, k) *= r;
         }

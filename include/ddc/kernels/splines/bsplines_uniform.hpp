@@ -510,11 +510,11 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<CDim, D>::
         DDC_MDSPAN_ACCESS_OP(derivs, i, 0) = DDC_MDSPAN_ACCESS_OP(ndu, degree(), i);
     }
 
-    for (int r = 0; r < int(degree() + 1); ++r) {
+    for (int r = 0; r < static_cast<int>(degree() + 1); ++r) {
         int s1 = 0;
         int s2 = 1;
         DDC_MDSPAN_ACCESS_OP(a, 0, 0) = 1.0;
-        for (int k = 1; k < int(n + 1); ++k) {
+        for (int k = 1; k < static_cast<int>(n + 1); ++k) {
             double d = 0.0;
             int const rk = r - k;
             int const pk = degree() - k;
@@ -544,7 +544,7 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<CDim, D>::
     // k-th derivatives are normalized, hence they should be divided by dx^k
     double const inv_dx = inv_step();
     double d = degree() * inv_dx;
-    for (int k = 1; k < int(n + 1); ++k) {
+    for (int k = 1; k < static_cast<int>(n + 1); ++k) {
         for (std::size_t i = 0; i < derivs.extent(0); ++i) {
             DDC_MDSPAN_ACCESS_OP(derivs, i, k) *= d;
         }
@@ -578,7 +578,7 @@ KOKKOS_INLINE_FUNCTION void UniformBSplines<CDim, D>::Impl<DDim, MemorySpace>::g
 
         // When x is very close to xmax, round-off may cause the wrong answer
         // icell=ncells and x_offset=0, which we convert to the case x=xmax:
-        if (icell == int(ncells()) && offset == 0.0) {
+        if (icell == static_cast<int>(ncells()) && offset == 0.0) {
             icell = ncells() - 1;
             offset = 1.0;
         }

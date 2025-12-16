@@ -275,11 +275,11 @@ public:
             auto const b_buffer_chunk = Kokkos::
                     subview(b_buffer,
                             Kokkos::ALL,
-                            Kokkos::pair(std::size_t(0), subview_end - subview_begin));
+                            Kokkos::pair(static_cast<std::size_t>(0), subview_end - subview_begin));
             auto const x_chunk = Kokkos::
                     subview(x,
                             Kokkos::ALL,
-                            Kokkos::pair(std::size_t(0), subview_end - subview_begin));
+                            Kokkos::pair(static_cast<std::size_t>(0), subview_end - subview_begin));
 
             Kokkos::deep_copy(b_buffer_chunk, b_chunk);
             Kokkos::deep_copy(x_chunk, b_chunk);

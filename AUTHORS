@@ -26,6 +26,7 @@ Bourne Emily - CEA (emily.bourne@cea.fr)
 
 Gannay Paul - CEA (paul.gannay@cea.fr)
 * Functions to print ChunkSpans
+* Implementation of device_for_each and device_transform_reduce algorithms
 
 Kannan Hariprasad - CEA (hariprasad.kannan@cea.fr)
 * Implementation of 3d splines
@@ -34,10 +35,12 @@ Legouix Baptiste - CEA (baptiste.legouix@cea.fr)
 * FFT kernel
 * Performance portability of splines kernel, batching
 * Ginkgo and KokkosKernels backends for splines linear algebra
+* Implementation of device_for_each and device_transform_reduce algorithms
 
 Morvany Trévis - CEA (trevis.morvany@cea.fr)
 * Work on splines
 * Implementation of 3d splines
+* Implementation of n-th order derivatives of splines
 
 Padioleau Thomas - CEA (thomas.padioleau@cea.fr)
 * Maintainer

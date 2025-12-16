@@ -112,6 +112,7 @@ KOKKOS_FUNCTION T device_transform_reduce_serial(
 
 } // namespace detail
 
+#if defined(DDC_BUILD_DEPRECATED_CODE)
 /** A reduction over a nD domain in serial
  * @param[in] domain the range over which to apply the algorithm
  * @param[in] neutral the neutral element of the reduction operation
@@ -134,6 +135,7 @@ T transform_reduce(
             std::forward<BinaryReductionOp>(reduce),
             std::forward<UnaryTransformOp>(transform));
 }
+#endif
 
 /** A reduction over a nD domain in serial
  * @param[in] domain the range over which to apply the algorithm

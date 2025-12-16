@@ -402,7 +402,7 @@ $(document).ready(function(){initNavTree('sparse__discrete__domain_8hpp_source.h
 <div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>    <a class="code hl_friend" href="classddc_1_1SparseDiscreteDomain.html#adbf20e7b332f93bded029800e16d1743">KOKKOS_FUNCTION</a> <span class="keyword">constexpr</span> DiscreteElement&lt;DDims...&gt; <a class="code hl_function" href="classddc_1_1SparseDiscreteDomain.html#ac0a3a21cafe2273c2926437d6e61b268">operator</a>()(</div>
 <div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>            <a class="code hl_function" href="classddc_1_1DiscreteVector.html#a62e896bfa78045521042a0eab87c0acb">DiscreteVector</a>&lt;DDims...&gt; <span class="keyword">const</span>&amp; dvect) <span class="keyword">const</span> <span class="keyword">noexcept</span></div>
 <div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>    {</div>
-<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>        <span class="keywordflow">return</span> m_views(get&lt;DDims&gt;(dvect)...);</div>
+<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>        <span class="keywordflow">return</span> DiscreteElement&lt;DDims...&gt;(get&lt;DDims&gt;(m_views)(get&lt;DDims&gt;(dvect))...);</div>
 <div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>    }</div>
 <div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span> </div>
 <div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>    <span class="keyword">template</span> &lt;<span class="keyword">class</span>... DElems&gt;</div>

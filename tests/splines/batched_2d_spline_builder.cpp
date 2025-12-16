@@ -246,7 +246,7 @@ void TestBatched2dSpline()
                 ddc::DiscreteDomain<ddc::Deriv<I1>, DDimI2>(derivs_domain1, interpolation_domain2),
                 ddc::HostAllocator<double>());
         ddc::ChunkSpan const derivs_1d_lhs1_host = derivs_1d_lhs1_host_alloc.span_view();
-        ddc::for_each(
+        ddc::host_for_each(
                 derivs_1d_lhs1_host.domain(),
                 KOKKOS_LAMBDA(ddc::DiscreteElement<ddc::Deriv<I1>, DDimI2> const e) {
                     auto deriv_idx = ddc::DiscreteElement<ddc::Deriv<I1>>(e).uid();
@@ -274,7 +274,7 @@ void TestBatched2dSpline()
                 ddc::DiscreteDomain<ddc::Deriv<I1>, DDimI2>(derivs_domain1, interpolation_domain2),
                 ddc::HostAllocator<double>());
         ddc::ChunkSpan const derivs_1d_rhs1_host = derivs_1d_rhs1_host_alloc.span_view();
-        ddc::for_each(
+        ddc::host_for_each(
                 derivs_1d_rhs1_host.domain(),
                 KOKKOS_LAMBDA(ddc::DiscreteElement<ddc::Deriv<I1>, DDimI2> const e) {
                     auto deriv_idx = ddc::DiscreteElement<ddc::Deriv<I1>>(e).uid();
@@ -302,7 +302,7 @@ void TestBatched2dSpline()
                 ddc::DiscreteDomain<DDimI1, ddc::Deriv<I2>>(interpolation_domain1, derivs_domain2),
                 ddc::HostAllocator<double>());
         ddc::ChunkSpan const derivs2_lhs1_host = derivs2_lhs1_host_alloc.span_view();
-        ddc::for_each(
+        ddc::host_for_each(
                 derivs2_lhs1_host.domain(),
                 KOKKOS_LAMBDA(ddc::DiscreteElement<DDimI1, ddc::Deriv<I2>> const e) {
                     auto x1 = ddc::coordinate(ddc::DiscreteElement<DDimI1>(e));
@@ -329,7 +329,7 @@ void TestBatched2dSpline()
                 ddc::DiscreteDomain<DDimI1, ddc::Deriv<I2>>(interpolation_domain1, derivs_domain2),
                 ddc::HostAllocator<double>());
         ddc::ChunkSpan const derivs2_rhs1_host = derivs2_rhs1_host_alloc.span_view();
-        ddc::for_each(
+        ddc::host_for_each(
                 derivs2_rhs1_host.domain(),
                 KOKKOS_LAMBDA(ddc::DiscreteElement<DDimI1, ddc::Deriv<I2>> const e) {
                     auto x1 = ddc::coordinate(ddc::DiscreteElement<DDimI1>(e));

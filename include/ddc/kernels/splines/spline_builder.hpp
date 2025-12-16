@@ -739,7 +739,7 @@ void SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower,
             values_ptr.data());
 
     int start = interpolation_domain().front().uid();
-    ddc::for_each(interpolation_domain(), [&](auto ix) {
+    ddc::host_for_each(interpolation_domain(), [&](auto ix) {
         auto jmin = ddc::discrete_space<BSplines>().eval_basis(
                 values,
                 ddc::coordinate(ddc::DiscreteElement<interpolation_discrete_dimension_type>(ix)));
@@ -1156,7 +1156,7 @@ void SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower,
     }
     int n_points_in_cell = 0;
     auto current_cell_end_idx = ddc::discrete_space<BSplines>().break_point_domain().front() + 1;
-    ddc::for_each(interpolation_domain(), [&](auto idx) {
+    ddc::host_for_each(interpolation_domain(), [&](auto idx) {
         ddc::Coordinate<continuous_dimension_type> const point = ddc::coordinate(idx);
         if (point > ddc::coordinate(current_cell_end_idx)) {
             // Check the points found in the previous cell

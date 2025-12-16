@@ -273,7 +273,7 @@ public:
     KOKKOS_FUNCTION constexpr DiscreteElement<DDims...> operator()(
             DiscreteVector<DDims...> const& dvect) const noexcept
     {
-        return m_views(get<DDims>(dvect)...);
+        return DiscreteElement<DDims...>(get<DDims>(m_views)(get<DDims>(dvect))...);
     }
 
     template <class... DElems>

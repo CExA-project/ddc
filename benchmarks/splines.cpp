@@ -201,8 +201,8 @@ void characteristics_advection_unitary(benchmark::State& state)
     monitorFlag = false;
     monitorThread.join();
     state.SetBytesProcessed(
-            static_cast<int64_t>(state.iterations())
-            * static_cast<int64_t>(nx * ny * sizeof(double)));
+            static_cast<std::int64_t>(state.iterations())
+            * static_cast<std::int64_t>(nx * ny * sizeof(double)));
     state.counters["gpu_mem_occupancy"] = maxUsedMem - initUsedMem;
     ////////////////////////////////////////////////////
     /// --------------- HUGE WARNING --------------- ///

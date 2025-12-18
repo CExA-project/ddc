@@ -771,7 +771,7 @@ $(document).ready(function(){initNavTree('strided__discrete__domain_8hpp_source.
 <div class="line"><a id="l00642" name="l00642"></a><span class="lineno">  642</span> </div>
 <div class="line"><a id="l00643" name="l00643"></a><span class="lineno">  643</span>    <a class="code hl_friend" href="structddc_1_1StridedDiscreteDomainIterator.html#ae8138543e874a24b2b3268fff4badf93">KOKKOS_FUNCTION</a> <span class="keyword">constexpr</span> <a class="code hl_friend" href="structddc_1_1StridedDiscreteDomainIterator.html#ae8138543e874a24b2b3268fff4badf93">StridedDiscreteDomainIterator</a>&amp; <a class="code hl_function" href="structddc_1_1StridedDiscreteDomainIterator.html#a80ed5b5a34ff8f4e7eced2a43d630849">operator</a>+=(difference_type n)</div>
 <div class="line"><a id="l00644" name="l00644"></a><span class="lineno">  644</span>    {</div>
-<div class="line"><a id="l00645" name="l00645"></a><span class="lineno">  645</span>        <span class="keywordflow">if</span> (n &gt;= difference_type(0)) {</div>
+<div class="line"><a id="l00645" name="l00645"></a><span class="lineno">  645</span>        <span class="keywordflow">if</span> (n &gt;= <span class="keyword">static_cast</span>&lt;difference_type&gt;(0)) {</div>
 <div class="line"><a id="l00646" name="l00646"></a><span class="lineno">  646</span>            m_value += <span class="keyword">static_cast</span>&lt;DiscreteElementType&gt;(n) * m_stride;</div>
 <div class="line"><a id="l00647" name="l00647"></a><span class="lineno">  647</span>        } <span class="keywordflow">else</span> {</div>
 <div class="line"><a id="l00648" name="l00648"></a><span class="lineno">  648</span>            m_value -= <span class="keyword">static_cast</span>&lt;DiscreteElementType&gt;(-n) * m_stride;</div>
@@ -781,7 +781,7 @@ $(document).ready(function(){initNavTree('strided__discrete__domain_8hpp_source.
 <div class="line"><a id="l00652" name="l00652"></a><span class="lineno">  652</span> </div>
 <div class="line"><a id="l00653" name="l00653"></a><span class="lineno">  653</span>    <a class="code hl_friend" href="structddc_1_1StridedDiscreteDomainIterator.html#ae8138543e874a24b2b3268fff4badf93">KOKKOS_FUNCTION</a> <span class="keyword">constexpr</span> <a class="code hl_friend" href="structddc_1_1StridedDiscreteDomainIterator.html#ae8138543e874a24b2b3268fff4badf93">StridedDiscreteDomainIterator</a>&amp; <a class="code hl_function" href="structddc_1_1StridedDiscreteDomainIterator.html#a392ad637a78bfa0e963786c23aa83abc">operator</a>-=(difference_type n)</div>
 <div class="line"><a id="l00654" name="l00654"></a><span class="lineno">  654</span>    {</div>
-<div class="line"><a id="l00655" name="l00655"></a><span class="lineno">  655</span>        <span class="keywordflow">if</span> (n &gt;= difference_type(0)) {</div>
+<div class="line"><a id="l00655" name="l00655"></a><span class="lineno">  655</span>        <span class="keywordflow">if</span> (n &gt;= <span class="keyword">static_cast</span>&lt;difference_type&gt;(0)) {</div>
 <div class="line"><a id="l00656" name="l00656"></a><span class="lineno">  656</span>            m_value -= <span class="keyword">static_cast</span>&lt;DiscreteElementType&gt;(n) * m_stride;</div>
 <div class="line"><a id="l00657" name="l00657"></a><span class="lineno">  657</span>        } <span class="keywordflow">else</span> {</div>
 <div class="line"><a id="l00658" name="l00658"></a><span class="lineno">  658</span>            m_value += <span class="keyword">static_cast</span>&lt;DiscreteElementType&gt;(-n) * m_stride;</div>

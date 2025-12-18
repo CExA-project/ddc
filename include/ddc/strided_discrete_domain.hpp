@@ -642,7 +642,7 @@ public:
 
     KOKKOS_FUNCTION constexpr StridedDiscreteDomainIterator& operator+=(difference_type n)
     {
-        if (n >= difference_type(0)) {
+        if (n >= static_cast<difference_type>(0)) {
             m_value += static_cast<DiscreteElementType>(n) * m_stride;
         } else {
             m_value -= static_cast<DiscreteElementType>(-n) * m_stride;
@@ -652,7 +652,7 @@ public:
 
     KOKKOS_FUNCTION constexpr StridedDiscreteDomainIterator& operator-=(difference_type n)
     {
-        if (n >= difference_type(0)) {
+        if (n >= static_cast<difference_type>(0)) {
             m_value -= static_cast<DiscreteElementType>(n) * m_stride;
         } else {
             m_value += static_cast<DiscreteElementType>(-n) * m_stride;

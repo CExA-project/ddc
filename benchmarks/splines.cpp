@@ -66,7 +66,7 @@ void monitor_memory_async(std::mutex& mutex, bool& monitorFlag, std::size_t& max
         std::this_thread::sleep_for(std::chrono::microseconds(10)); // Adjust the interval as needed
 
         // Acquire a lock to ensure thread safety when accessing CUDA functions
-        std::lock_guard<std::mutex> const lock(mutex);
+        std::scoped_lock<std::mutex> const lock(mutex);
 
 #if defined(__CUDACC__)
         std::size_t freeMem = 0;
@@ -200,7 +200,9 @@ void characteristics_advection_unitary(benchmark::State& state)
     }
     monitorFlag = false;
     monitorThread.join();
-    state.SetBytesProcessed(int64_t(state.iterations()) * int64_t(nx * ny * sizeof(double)));
+    state.SetBytesProcessed(
+            static_cast<std::int64_t>(state.iterations())
+            * static_cast<std::int64_t>(nx * ny * sizeof(double)));
     state.counters["gpu_mem_occupancy"] = maxUsedMem - initUsedMem;
     ////////////////////////////////////////////////////
     /// --------------- HUGE WARNING --------------- ///
@@ -229,29 +231,29 @@ void characteristics_advection(benchmark::State& state)
     std::int64_t const non_uniform = 1;
     // Preallocate 12 unitary benchmarks for each combination of cpu/gpu execution space, uniform/non-uniform and spline degree we may want to benchmark (those are determined at compile-time, that's why we need to build explicitly 12 variants of the bench even if we call only one of them)
     std::map<std::array<std::int64_t, 3>, std::function<void(benchmark::State&)>> benchmarks;
-    benchmarks[std::array {host, uniform, std::int64_t(3)}]
+    benchmarks[std::array {host, uniform, static_cast<std::int64_t>(3)}]
             = characteristics_advection_unitary<Kokkos::DefaultHostExecutionSpace, false, 3>;
-    benchmarks[std::array {host, uniform, std::int64_t(4)}]
+    benchmarks[std::array {host, uniform, static_cast<std::int64_t>(4)}]
             = characteristics_advection_unitary<Kokkos::DefaultHostExecutionSpace, false, 4>;
-    benchmarks[std::array {host, uniform, std::int64_t(5)}]
+    benchmarks[std::array {host, uniform, static_cast<std::int64_t>(5)}]
             = characteristics_advection_unitary<Kokkos::DefaultHostExecutionSpace, false, 5>;
-    benchmarks[std::array {host, non_uniform, std::int64_t(3)}]
+    benchmarks[std::array {host, non_uniform, static_cast<std::int64_t>(3)}]
             = characteristics_advection_unitary<Kokkos::DefaultHostExecutionSpace, true, 3>;
-    benchmarks[std::array {host, non_uniform, std::int64_t(4)}]
+    benchmarks[std::array {host, non_uniform, static_cast<std::int64_t>(4)}]
             = characteristics_advection_unitary<Kokkos::DefaultHostExecutionSpace, true, 4>;
-    benchmarks[std::array {host, non_uniform, std::int64_t(5)}]
+    benchmarks[std::array {host, non_uniform, static_cast<std::int64_t>(5)}]
             = characteristics_advection_unitary<Kokkos::DefaultHostExecutionSpace, true, 5>;
-    benchmarks[std::array {dev, uniform, std::int64_t(3)}]
+    benchmarks[std::array {dev, uniform, static_cast<std::int64_t>(3)}]
             = characteristics_advection_unitary<Kokkos::DefaultExecutionSpace, false, 3>;
-    benchmarks[std::array {dev, uniform, std::int64_t(4)}]
+    benchmarks[std::array {dev, uniform, static_cast<std::int64_t>(4)}]
             = characteristics_advection_unitary<Kokkos::DefaultExecutionSpace, false, 4>;
-    benchmarks[std::array {dev, uniform, std::int64_t(5)}]
+    benchmarks[std::array {dev, uniform, static_cast<std::int64_t>(5)}]
             = characteristics_advection_unitary<Kokkos::DefaultExecutionSpace, false, 5>;
-    benchmarks[std::array {dev, non_uniform, std::int64_t(3)}]
+    benchmarks[std::array {dev, non_uniform, static_cast<std::int64_t>(3)}]
             = characteristics_advection_unitary<Kokkos::DefaultExecutionSpace, true, 3>;
-    benchmarks[std::array {dev, non_uniform, std::int64_t(4)}]
+    benchmarks[std::array {dev, non_uniform, static_cast<std::int64_t>(4)}]
             = characteristics_advection_unitary<Kokkos::DefaultExecutionSpace, true, 4>;
-    benchmarks[std::array {dev, non_uniform, std::int64_t(5)}]
+    benchmarks[std::array {dev, non_uniform, static_cast<std::int64_t>(5)}]
             = characteristics_advection_unitary<Kokkos::DefaultExecutionSpace, true, 5>;
 
     // Run the desired bench

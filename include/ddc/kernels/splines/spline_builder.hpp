@@ -1067,7 +1067,7 @@ SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower, BcUp
                 coefficients_derivs_xmin(i) *= ddc::detail::
                         ipow(dx_proxy,
                              static_cast<std::size_t>(get<bsplines_type>(
-                                     i - coefficients_derivs_xmin.domain().front() + 1)));
+                                     i - coefficients_derivs_xmin.domain().front() + s_odd)));
             });
     ddc::parallel_for_each(
             exec_space(),
@@ -1076,7 +1076,7 @@ SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower, BcUp
                 coefficients_derivs_xmax(i) *= ddc::detail::
                         ipow(dx_proxy,
                              static_cast<std::size_t>(get<bsplines_type>(
-                                     i - coefficients_derivs_xmax.domain().front() + 1)));
+                                     i - coefficients_derivs_xmax.domain().front() + s_odd)));
             });
 
     // Allocate Chunk on deriv_type and interpolation_discrete_dimension_type and copy quadrature coefficients into it

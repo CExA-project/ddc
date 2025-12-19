@@ -1059,14 +1059,13 @@ SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower, BcUp
     interpolation_domain_type const interpolation_domain_proxy = interpolation_domain();
 
     // Multiply derivatives coefficients by dx^n
+    auto const dx_proxy = m_dx;
     ddc::parallel_for_each(
             exec_space(),
             coefficients_derivs_xmin.domain(),
             KOKKOS_LAMBDA(ddc::DiscreteElement<bsplines_type> i) {
-                ddc::Coordinate<continuous_dimension_type> const dx
-                        = ddc::distance_at_right(interpolation_domain_proxy.front() + 1);
                 coefficients_derivs_xmin(i) *= ddc::detail::
-                        ipow(dx,
+                        ipow(dx_proxy,
                              static_cast<std::size_t>(get<bsplines_type>(
                                      i - coefficients_derivs_xmin.domain().front() + 1)));
             });
@@ -1074,10 +1073,8 @@ SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower, BcUp
             exec_space(),
             coefficients_derivs_xmax.domain(),
             KOKKOS_LAMBDA(ddc::DiscreteElement<bsplines_type> i) {
-                ddc::Coordinate<continuous_dimension_type> const dx
-                        = ddc::distance_at_left(interpolation_domain_proxy.back() - 1);
                 coefficients_derivs_xmax(i) *= ddc::detail::
-                        ipow(dx,
+                        ipow(dx_proxy,
                              static_cast<std::size_t>(get<bsplines_type>(
                                      i - coefficients_derivs_xmax.domain().front() + 1)));
             });

@@ -2,6 +2,7 @@
 //
 // SPDX-License-Identifier: MIT
 
+#include <sstream>
 #include <utility>
 
 #include <ddc/ddc.hpp>
@@ -110,4 +111,12 @@ TEST(TaggedVector, ConversionReorder)
     ddc::detail::TaggedVector<double, double, float> const b(a);
     EXPECT_EQ(b.get<float>(), 1.0);
     EXPECT_EQ(b.get<double>(), 2.0);
+}
+
+TEST(TaggedVector, StreamOperator)
+{
+    ddc::detail::TaggedVector<int, float, double> const a(1, 2);
+    std::stringstream ss;
+    ss << a;
+    EXPECT_EQ(ss.str(), "(1, 2)");
 }

@@ -230,14 +230,17 @@ public:
                                     DiscreteVectorElement const s) {
             return (i >= b) && (i < (b + (n - 1) * s + 1)) && ((i - b) % s == 0);
         };
-        // GCOVR_EXCL_BR_START
-        return (contains_1d(
-                        DiscreteElement<DDims>(take<DDims>(delems...)).uid(),
-                        DiscreteElement<DDims>(m_element_begin).uid(),
-                        DiscreteVector<DDims>(m_extents).value(),
-                        DiscreteVector<DDims>(m_strides).value())
-                && ...);
-        // GCOVR_EXCL_BR_STOP
+        DiscreteElement<DDims...> const delem(delems...);
+        for (std::size_t i = 0; i < rank(); ++i) {
+            if (!contains_1d(
+                        detail::array(delem)[i],
+                        detail::array(m_element_begin)[i],
+                        detail::array(m_extents)[i],
+                        detail::array(m_strides)[i])) {
+                return false;
+            }
+        }
+        return true;
     }
 
     template <class... DElems>

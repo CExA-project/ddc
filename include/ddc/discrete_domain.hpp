@@ -221,17 +221,14 @@ public:
                 sizeof...(DDims) == (0 + ... + DElems::size()),
                 "Invalid number of dimensions");
         static_assert((is_discrete_element_v<DElems> && ...), "Expected DiscreteElements");
-        // GCOVR_EXCL_BR_START
-        auto const test1
-                = ((DiscreteElement<DDims>(take<DDims>(delems...))
-                    >= DiscreteElement<DDims>(m_element_begin))
-                   && ...);
-        auto const test2
-                = ((DiscreteElement<DDims>(take<DDims>(delems...))
-                    < DiscreteElement<DDims>(m_element_end))
-                   && ...);
-        // GCOVR_EXCL_BR_STOP
-        return test1 && test2;
+        DiscreteElement<DDims...> const delem(delems...);
+        for (std::size_t i = 0; i < rank(); ++i) {
+            if ((detail::array(delem)[i] < detail::array(m_element_begin)[i])
+                || (detail::array(delem)[i] >= detail::array(m_element_end)[i])) {
+                return false;
+            }
+        }
+        return true;
     }
 
     template <class... DElems>

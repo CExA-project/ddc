@@ -1065,7 +1065,7 @@ SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower, BcUp
                 coefficients_derivs_xmin(i) *= ddc::detail::
                         ipow(dx_proxy,
                              static_cast<std::size_t>(get<bsplines_type>(
-                                     i - coefficients_derivs_xmin.domain().front() + s_odd)));
+                                     s_nbc_xmin + 1 - (i - coefficients_derivs_xmin.domain().front() + s_odd))));
             });
     ddc::parallel_for_each(
             exec_space(),

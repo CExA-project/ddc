@@ -236,7 +236,7 @@ void TestNonPeriodicSplineBuilderTestIdentity()
             KOKKOS_LAMBDA(
                     ddc::DiscreteElement<
                             ddc::Deriv<typename DDimX::continuous_dimension_type>> const ix) {
-                return quadrature_coefficients_derivs_xmin(ix) * derivs_lhs(ix);
+                return quadrature_coefficients_derivs_xmin(ix) * derivs_lhs(quadrature_coefficients_derivs_xmin.domain().back() - ix);
             });
 #else
     double const quadrature_integral_derivs_xmin = 0.;

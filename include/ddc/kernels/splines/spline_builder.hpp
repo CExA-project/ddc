@@ -903,7 +903,7 @@ operator()(
                         typename batch_domain_type<BatchedInterpolationDDom>::discrete_element_type
                                 j) {
                     for (int i = 0; i < s_nbc_xmax; ++i) {
-                        spline(ddc::DiscreteElement<bsplines_type>(nbasis_proxy - s_nbc_xmax - i),
+                        spline(ddc::DiscreteElement<bsplines_type>(nbasis_proxy - s_nbc_xmax + 1 - i),
                                j)
                                 = derivs_xmax_values(ddc::DiscreteElement<deriv_type>(i + 1), j)
                                   * ddc::detail::ipow(dx_proxy, i + s_odd);

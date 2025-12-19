@@ -859,7 +859,7 @@ operator()(
                                 j) {
                     for (int i = s_nbc_xmin; i > 0; --i) {
                         spline(ddc::DiscreteElement<bsplines_type>(s_nbc_xmin - i), j)
-                                = derivs_xmin_values(ddc::DiscreteElement<deriv_type>(i), j)
+                                = derivs_xmin_values(ddc::DiscreteElement<deriv_type>(i + s_odd - 1), j)
                                   * ddc::detail::ipow(dx_proxy, i + s_odd - 1);
                     }
                 });
@@ -905,7 +905,7 @@ operator()(
                     for (int i = 0; i < s_nbc_xmax; ++i) {
                         spline(ddc::DiscreteElement<bsplines_type>(nbasis_proxy - s_nbc_xmax + i),
                                j)
-                                = derivs_xmax_values(ddc::DiscreteElement<deriv_type>(i + 1), j)
+                                = derivs_xmax_values(ddc::DiscreteElement<deriv_type>(i + s_odd), j)
                                   * ddc::detail::ipow(dx_proxy, i + s_odd);
                     }
                 });
@@ -1048,8 +1048,11 @@ SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower, BcUp
                     ddc::DiscreteVector<bsplines_type>(s_nbc_xmin))];
     ddc::ChunkSpan const coefficients = integral_bsplines_without_periodic_additional_bsplines
             [spline_domain()
-                     .remove(ddc::DiscreteVector<bsplines_type>(s_nbc_xmin),
-                             ddc::DiscreteVector<bsplines_type>(s_nbc_xmax))];
+                     .remove_first(ddc::DiscreteVector<bsplines_type>(s_nbc_xmin))
+                     .take_first(
+                             ddc::DiscreteVector<bsplines_type>(
+                                     ddc::discrete_space<bsplines_type>().nbasis() - s_nbc_xmin
+                                     - s_nbc_xmax))];
     ddc::ChunkSpan const coefficients_derivs_xmax
             = integral_bsplines_without_periodic_additional_bsplines
                     [spline_domain()

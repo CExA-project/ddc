@@ -99,8 +99,9 @@ void TestNonPeriodicSplineBuilderTestIdentity()
     }
     ddc::DiscreteDomain<BSplinesX> const dom_bsplines_x(
             ddc::discrete_space<BSplinesX>().full_domain());
+    int const shift = s_degree_x % 2; // shift = 0 for even order, 1 for odd order
     ddc::DiscreteDomain<ddc::Deriv<DimX>> const derivs_domain(
-            ddc::DiscreteElement<ddc::Deriv<DimX>>(1),
+            ddc::DiscreteElement<ddc::Deriv<DimX>>(shift),
             ddc::DiscreteVector<ddc::Deriv<DimX>>(s_degree_x / 2));
 
     // 2. Create a Spline represented by a chunk over BSplines
@@ -130,7 +131,6 @@ void TestNonPeriodicSplineBuilderTestIdentity()
             yvals.domain(),
             KOKKOS_LAMBDA(DElemX const ix) { yvals(ix) = evaluator(ddc::coordinate(ix)); });
 
-    int const shift = s_degree_x % 2; // shift = 0 for even order, 1 for odd order
     ddc::Chunk derivs_lhs_alloc(derivs_domain, ddc::KokkosAllocator<double, memory_space>());
     ddc::ChunkSpan const derivs_lhs = derivs_lhs_alloc.span_view();
     if (s_bcl == ddc::BoundCond::HERMITE) {
@@ -138,7 +138,7 @@ void TestNonPeriodicSplineBuilderTestIdentity()
                 execution_space(),
                 derivs_domain,
                 KOKKOS_LAMBDA(ddc::DiscreteElement<ddc::Deriv<DimX>> const ii) {
-                    derivs_lhs(ii) = evaluator.deriv(x0, ii - derivs_domain.front() + shift);
+                    derivs_lhs(ii) = evaluator.deriv(x0, ii - ddc::DiscreteElement<ddc::Deriv<DimX>>(0));
                 });
     }
 
@@ -149,7 +149,7 @@ void TestNonPeriodicSplineBuilderTestIdentity()
                 execution_space(),
                 derivs_domain,
                 KOKKOS_LAMBDA(ddc::DiscreteElement<ddc::Deriv<DimX>> const ii) {
-                    derivs_rhs(ii) = evaluator.deriv(xN, ii - derivs_domain.front() + shift);
+                    derivs_rhs(ii) = evaluator.deriv(xN, ii - ddc::DiscreteElement<ddc::Deriv<DimX>>(0));
                 });
     }
 

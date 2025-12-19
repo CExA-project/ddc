@@ -831,13 +831,13 @@ operator()(
            == ddc::discrete_space<bsplines_type>().nbasis() - s_nbc_xmin - s_nbc_xmax);
 
     if constexpr (BcLower == BoundCond::HERMITE) {
-        assert(ddc::DiscreteElement<deriv_type>(derivs_xmin->domain().front()).uid() == 1);
+        assert(ddc::DiscreteElement<deriv_type>(derivs_xmin->domain().front()).uid() == s_odd);
         assert(derivs_xmin.has_value() || s_nbc_xmin == 0);
     } else {
         assert(!derivs_xmin.has_value() || derivs_xmin->template extent<deriv_type>() == 0);
     }
     if constexpr (BcUpper == BoundCond::HERMITE) {
-        assert(ddc::DiscreteElement<deriv_type>(derivs_xmax->domain().front()).uid() == 1);
+        assert(ddc::DiscreteElement<deriv_type>(derivs_xmax->domain().front()).uid() == s_odd);
         assert(derivs_xmax.has_value() || s_nbc_xmax == 0);
     } else {
         assert(!derivs_xmax.has_value() || derivs_xmax->template extent<deriv_type>() == 0);

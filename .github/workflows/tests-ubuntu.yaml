@@ -260,6 +260,19 @@ jobs:
         run: |
           docker load < ${{matrix.image}}_${{matrix.backend.name}}.tar
           rm ${{matrix.image}}_${{matrix.backend.name}}.tar
+      - name: Choose degree
+        run: |
+          FILES_CHANGED=$(gh pr diff ${{ github.event.pull_request.number }} --name-only)
+          if printf '%s\n' "$FILES_CHANGED" | grep -q '/splines/'
+          then
+            echo "DDC_SPLINES_TEST_DEGREE_MIN=1" >> $GITHUB_ENV
+            echo "DDC_SPLINES_TEST_DEGREE_MAX=5" >> $GITHUB_ENV
+          else
+            echo "DDC_SPLINES_TEST_DEGREE_MIN=3" >> $GITHUB_ENV
+            echo "DDC_SPLINES_TEST_DEGREE_MAX=3" >> $GITHUB_ENV
+          fi
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
       - name: Test
         id: test
         run: |
@@ -345,6 +358,8 @@ jobs:
               -D DDC_GTest_DEPENDENCY_POLICY=INSTALLED \
               -D DDC_Kokkos_DEPENDENCY_POLICY=INSTALLED \
               -D DDC_KokkosFFT_DEPENDENCY_POLICY=INSTALLED \
+              -D DDC_SPLINES_TEST_DEGREE_MIN=${DDC_SPLINES_TEST_DEGREE_MIN} \
+              -D DDC_SPLINES_TEST_DEGREE_MAX=${DDC_SPLINES_TEST_DEGREE_MAX} \
               -B build \
               -S /src
             cmake --build build

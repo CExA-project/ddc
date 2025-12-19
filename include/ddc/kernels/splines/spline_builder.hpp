@@ -1056,7 +1056,10 @@ SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower, BcUp
     ddc::ChunkSpan const coefficients_derivs_xmax
             = integral_bsplines_without_periodic_additional_bsplines
                     [spline_domain()
-                             .take_last(ddc::DiscreteVector<bsplines_type>(s_nbc_xmax))];
+                    .remove_first(
+                                     ddc::DiscreteVector<bsplines_type>(
+                                             s_nbc_xmin + coefficients.size()))
+                             .take_first(ddc::DiscreteVector<bsplines_type>(s_nbc_xmax))];
     interpolation_domain_type const interpolation_domain_proxy = interpolation_domain();
 
     // Multiply derivatives coefficients by dx^n

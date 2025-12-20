@@ -1060,7 +1060,6 @@ SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower, BcUp
                                      ddc::DiscreteVector<bsplines_type>(
                                              s_nbc_xmin + coefficients.size()))
                              .take_first(ddc::DiscreteVector<bsplines_type>(s_nbc_xmax))];
-    interpolation_domain_type const interpolation_domain_proxy = interpolation_domain();
 
     // Multiply derivatives coefficients by dx^n
     auto const dx_proxy = m_dx;

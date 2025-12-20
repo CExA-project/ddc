@@ -348,11 +348,11 @@ std::tuple<double, double, double, double> compute_evaluation_error(
         ddc::ChunkSpan const derivs_mixed_rhs_rhs1_host
                 = derivs_mixed_rhs_rhs1_host_alloc.span_view();
 
-        for (std::size_t ii = 1;
-             ii < static_cast<std::size_t>(derivs_domain.template extent<ddc::Deriv<I1>>()) + 1;
+        for (std::size_t ii = shift;
+             ii < static_cast<std::size_t>(derivs_domain.template extent<ddc::Deriv<I1>>()) + shift;
              ++ii) {
-            for (std::size_t jj = 1;
-                 jj < static_cast<std::size_t>(derivs_domain.template extent<ddc::Deriv<I2>>()) + 1;
+            for (std::size_t jj = shift;
+                 jj < static_cast<std::size_t>(derivs_domain.template extent<ddc::Deriv<I2>>()) + shift;
                  ++jj) {
                 derivs_mixed_lhs_lhs1_host(
                         typename decltype(derivs_domain)::discrete_element_type(ii, jj))

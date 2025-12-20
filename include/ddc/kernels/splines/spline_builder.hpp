@@ -1085,7 +1085,7 @@ SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower, BcUp
     // Allocate Chunk on deriv_type and interpolation_discrete_dimension_type and copy quadrature coefficients into it
     ddc::Chunk coefficients_derivs_xmin_out(
             ddc::DiscreteDomain<deriv_type>(
-                    ddc::DiscreteElement<deriv_type>{s_odd},
+                    ddc::DiscreteElement<deriv_type>{s_odd}, // These indices are wrong the order should be reversed
                     ddc::DiscreteVector<deriv_type>{s_nbc_xmin}),
             ddc::KokkosAllocator<double, OutMemorySpace>());
     ddc::Chunk coefficients_out(

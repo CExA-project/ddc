@@ -155,9 +155,10 @@ std::tuple<double, double, double> compute_evaluation_error(
     using I = typename DDimI::continuous_dimension_type;
 
 #if defined(BC_HERMITE)
+    int const shift = s_degree_x % 2; // shift = 0 for even order, 1 for odd order
     // Create the derivs domains
     ddc::DiscreteDomain<ddc::Deriv<I>> const
-            derivs_domain(DElem<ddc::Deriv<I>>(1), DVect<ddc::Deriv<I>>(s_degree_x / 2));
+            derivs_domain(DElem<ddc::Deriv<I>>(shift), DVect<ddc::Deriv<I>>(s_degree_x / 2));
     auto const dom_derivs = ddc::replace_dim_of<DDimI, ddc::Deriv<I>>(dom_vals, derivs_domain);
 #endif
 
@@ -182,7 +183,6 @@ std::tuple<double, double, double> compute_evaluation_error(
 
 #if defined(BC_HERMITE)
     // Allocate and fill a chunk containing derivs to be passed as input to spline_builder.
-    int const shift = s_degree_x % 2; // shift = 0 for even order, 1 for odd order
     ddc::Chunk derivs_lhs_alloc(dom_derivs, ddc::KokkosAllocator<double, MemorySpace>());
     ddc::ChunkSpan const derivs_lhs = derivs_lhs_alloc.span_view();
     if (s_bcl == ddc::BoundCond::HERMITE) {
@@ -192,7 +192,7 @@ std::tuple<double, double, double> compute_evaluation_error(
              ++ii) {
             derivs_lhs1_host(
                     typename decltype(derivs_lhs1_host.domain())::discrete_element_type(ii))
-                    = evaluator.deriv(x0<I>(), ii + shift - 1);
+                    = evaluator.deriv(x0<I>(), ii);
         }
         auto derivs_lhs1_alloc = ddc::create_mirror_view_and_copy(exec_space, derivs_lhs1_host);
         ddc::ChunkSpan const derivs_lhs1 = derivs_lhs1_alloc.span_view();
@@ -214,7 +214,7 @@ std::tuple<double, double, double> compute_evaluation_error(
              ++ii) {
             derivs_rhs1_host(
                     typename decltype(derivs_rhs1_host.domain())::discrete_element_type(ii))
-                    = evaluator.deriv(xn<I>(), ii + shift - 1);
+                    = evaluator.deriv(xn<I>(), ii);
         }
         auto derivs_rhs1_alloc = ddc::create_mirror_view_and_copy(exec_space, derivs_rhs1_host);
         ddc::ChunkSpan const derivs_rhs1 = derivs_rhs1_alloc.span_view();

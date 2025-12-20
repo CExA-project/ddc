@@ -182,11 +182,12 @@ void TestBatched2dSpline()
             dom_vals(dom_vals_tmp, interpolation_domain1, interpolation_domain2);
 
 #if defined(BC_HERMITE)
+    int const shift = s_degree % 2; // shift = 0 for even order, 1 for odd order
     // Create the derivs domain
     ddc::DiscreteDomain<ddc::Deriv<I1>> const
-            derivs_domain1(DElem<ddc::Deriv<I1>>(1), DVect<ddc::Deriv<I1>>(s_degree / 2));
+            derivs_domain1(DElem<ddc::Deriv<I1>>(shift), DVect<ddc::Deriv<I1>>(s_degree / 2));
     ddc::DiscreteDomain<ddc::Deriv<I2>> const
-            derivs_domain2(DElem<ddc::Deriv<I2>>(1), DVect<ddc::Deriv<I2>>(s_degree / 2));
+            derivs_domain2(DElem<ddc::Deriv<I2>>(shift), DVect<ddc::Deriv<I2>>(s_degree / 2));
     ddc::DiscreteDomain<ddc::Deriv<I1>, ddc::Deriv<I2>> const
             derivs_domain(derivs_domain1, derivs_domain2);
 
@@ -235,7 +236,6 @@ void TestBatched2dSpline()
 
 #if defined(BC_HERMITE)
     // Allocate and fill a chunk containing derivs to be passed as input to spline_builder.
-    int const shift = s_degree % 2; // shift = 0 for even order, 1 for odd order
     ddc::Chunk derivs_1d_lhs_alloc(dom_derivs_1d, ddc::KokkosAllocator<double, MemorySpace>());
     ddc::ChunkSpan const derivs_1d_lhs = derivs_1d_lhs_alloc.span_view();
     if (s_bcl == ddc::BoundCond::HERMITE) {
@@ -248,8 +248,7 @@ void TestBatched2dSpline()
                 KOKKOS_LAMBDA(ddc::DiscreteElement<ddc::Deriv<I1>, DDimI2> const e) {
                     auto deriv_idx = ddc::DiscreteElement<ddc::Deriv<I1>>(e).uid();
                     auto x2 = ddc::coordinate(ddc::DiscreteElement<DDimI2>(e));
-                    derivs_1d_lhs1_host(e)
-                            = evaluator.deriv(x0<I1>(), x2, deriv_idx + shift - 1, 0);
+                    derivs_1d_lhs1_host(e) = evaluator.deriv(x0<I1>(), x2, deriv_idx, 0);
                 });
         auto derivs_1d_lhs1_alloc
                 = ddc::create_mirror_view_and_copy(exec_space, derivs_1d_lhs1_host);
@@ -276,8 +275,7 @@ void TestBatched2dSpline()
                 KOKKOS_LAMBDA(ddc::DiscreteElement<ddc::Deriv<I1>, DDimI2> const e) {
                     auto deriv_idx = ddc::DiscreteElement<ddc::Deriv<I1>>(e).uid();
                     auto x2 = ddc::coordinate(ddc::DiscreteElement<DDimI2>(e));
-                    derivs_1d_rhs1_host(e)
-                            = evaluator.deriv(xn<I1>(), x2, deriv_idx + shift - 1, 0);
+                    derivs_1d_rhs1_host(e) = evaluator.deriv(xn<I1>(), x2, deriv_idx, 0);
                 });
         auto derivs_1d_rhs1_alloc
                 = ddc::create_mirror_view_and_copy(exec_space, derivs_1d_rhs1_host);
@@ -304,7 +302,7 @@ void TestBatched2dSpline()
                 KOKKOS_LAMBDA(ddc::DiscreteElement<DDimI1, ddc::Deriv<I2>> const e) {
                     auto x1 = ddc::coordinate(ddc::DiscreteElement<DDimI1>(e));
                     auto deriv_idx = ddc::DiscreteElement<ddc::Deriv<I2>>(e).uid();
-                    derivs2_lhs1_host(e) = evaluator.deriv(x1, x0<I2>(), 0, deriv_idx + shift - 1);
+                    derivs2_lhs1_host(e) = evaluator.deriv(x1, x0<I2>(), 0, deriv_idx);
                 });
 
         auto derivs2_lhs1_alloc = ddc::create_mirror_view_and_copy(exec_space, derivs2_lhs1_host);
@@ -331,7 +329,7 @@ void TestBatched2dSpline()
                 KOKKOS_LAMBDA(ddc::DiscreteElement<DDimI1, ddc::Deriv<I2>> const e) {
                     auto x1 = ddc::coordinate(ddc::DiscreteElement<DDimI1>(e));
                     auto deriv_idx = ddc::DiscreteElement<ddc::Deriv<I2>>(e).uid();
-                    derivs2_rhs1_host(e) = evaluator.deriv(x1, xn<I2>(), 0, deriv_idx + shift - 1);
+                    derivs2_rhs1_host(e) = evaluator.deriv(x1, xn<I2>(), 0, deriv_idx);
                 });
 
         auto derivs2_rhs1_alloc = ddc::create_mirror_view_and_copy(exec_space, derivs2_rhs1_host);
@@ -369,24 +367,25 @@ void TestBatched2dSpline()
         ddc::ChunkSpan const derivs_mixed_rhs_rhs1_host
                 = derivs_mixed_rhs_rhs1_host_alloc.span_view();
 
-        for (std::size_t ii = 1;
-             ii < static_cast<std::size_t>(derivs_domain.template extent<ddc::Deriv<I1>>()) + 1;
+        for (std::size_t ii = shift;
+             ii < static_cast<std::size_t>(derivs_domain.template extent<ddc::Deriv<I1>>()) + shift;
              ++ii) {
-            for (std::size_t jj = 1;
-                 jj < static_cast<std::size_t>(derivs_domain.template extent<ddc::Deriv<I2>>()) + 1;
+            for (std::size_t jj = shift;
+                 jj < static_cast<std::size_t>(derivs_domain.template extent<ddc::Deriv<I2>>())
+                              + shift;
                  ++jj) {
                 derivs_mixed_lhs_lhs1_host(
                         typename decltype(derivs_domain)::discrete_element_type(ii, jj))
-                        = evaluator.deriv(x0<I1>(), x0<I2>(), ii + shift - 1, jj + shift - 1);
+                        = evaluator.deriv(x0<I1>(), x0<I2>(), ii, jj);
                 derivs_mixed_rhs_lhs1_host(
                         typename decltype(derivs_domain)::discrete_element_type(ii, jj))
-                        = evaluator.deriv(xn<I1>(), x0<I2>(), ii + shift - 1, jj + shift - 1);
+                        = evaluator.deriv(xn<I1>(), x0<I2>(), ii, jj);
                 derivs_mixed_lhs_rhs1_host(
                         typename decltype(derivs_domain)::discrete_element_type(ii, jj))
-                        = evaluator.deriv(x0<I1>(), xn<I2>(), ii + shift - 1, jj + shift - 1);
+                        = evaluator.deriv(x0<I1>(), xn<I2>(), ii, jj);
                 derivs_mixed_rhs_rhs1_host(
                         typename decltype(derivs_domain)::discrete_element_type(ii, jj))
-                        = evaluator.deriv(xn<I1>(), xn<I2>(), ii + shift - 1, jj + shift - 1);
+                        = evaluator.deriv(xn<I1>(), xn<I2>(), ii, jj);
             }
         }
         auto derivs_mixed_lhs_lhs1_alloc

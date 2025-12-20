@@ -1085,8 +1085,8 @@ SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower, BcUp
     // Allocate Chunk on deriv_type and interpolation_discrete_dimension_type and copy quadrature coefficients into it
     ddc::Chunk coefficients_derivs_xmin_out(
             ddc::DiscreteDomain<deriv_type>(
-                    ddc::DiscreteElement<deriv_type>(1),
-                    ddc::DiscreteVector<deriv_type>(s_nbc_xmin)),
+                    ddc::DiscreteElement<deriv_type>{s_odd},
+                    ddc::DiscreteVector<deriv_type>{s_nbc_xmin}),
             ddc::KokkosAllocator<double, OutMemorySpace>());
     ddc::Chunk coefficients_out(
             interpolation_domain().take_first(
@@ -1095,8 +1095,8 @@ SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower, BcUp
             ddc::KokkosAllocator<double, OutMemorySpace>());
     ddc::Chunk coefficients_derivs_xmax_out(
             ddc::DiscreteDomain<deriv_type>(
-                    ddc::DiscreteElement<deriv_type>(1),
-                    ddc::DiscreteVector<deriv_type>(s_nbc_xmax)),
+                    ddc::DiscreteElement<deriv_type>{s_odd},
+                    ddc::DiscreteVector<deriv_type>{s_nbc_xmax}),
             ddc::KokkosAllocator<double, OutMemorySpace>());
     Kokkos::deep_copy(
             coefficients_derivs_xmin_out.allocation_kokkos_view(),

@@ -354,8 +354,8 @@ jobs:
             cmake --install build --prefix $KokkosKernels_ROOT
             rm -rf build
 
-            echo "${DDC_SPLINES_TEST_DEGREE_MIN}"
-            echo "${DDC_SPLINES_TEST_DEGREE_MAX}"
+            echo "${{ env.DDC_SPLINES_TEST_DEGREE_MIN }}"
+            echo "${{ env.DDC_SPLINES_TEST_DEGREE_MAX }}"
             cmake \
               -D CMAKE_CXX_FLAGS="-Werror -Wall -Wextra -Wpedantic -Wno-sign-compare -pedantic-errors ${{matrix.backend.ddc_extra_cxx_flags}}" \
               -D CMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
@@ -364,8 +364,8 @@ jobs:
               -D DDC_GTest_DEPENDENCY_POLICY=INSTALLED \
               -D DDC_Kokkos_DEPENDENCY_POLICY=INSTALLED \
               -D DDC_KokkosFFT_DEPENDENCY_POLICY=INSTALLED \
-              -D DDC_SPLINES_TEST_DEGREE_MIN=${DDC_SPLINES_TEST_DEGREE_MIN} \
-              -D DDC_SPLINES_TEST_DEGREE_MAX=${DDC_SPLINES_TEST_DEGREE_MAX} \
+              -D DDC_SPLINES_TEST_DEGREE_MIN=${{ env.DDC_SPLINES_TEST_DEGREE_MIN }} \
+              -D DDC_SPLINES_TEST_DEGREE_MAX=${{ env.DDC_SPLINES_TEST_DEGREE_MAX }} \
               -B build \
               -S /src
             cmake --build build

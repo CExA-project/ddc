@@ -265,9 +265,9 @@ jobs:
           FILES_CHANGED=$(gh pr diff ${{ github.event.pull_request.number }} --name-only)
           if printf '%s\n' "$FILES_CHANGED" | grep -q '/splines/'
           then
-            echo "DDC_SPLINES_TEST_DEGREE_MIN=1"
+            echo "DDC_SPLINES_TEST_DEGREE_MIN=2"
             echo "DDC_SPLINES_TEST_DEGREE_MAX=5"
-            echo "DDC_SPLINES_TEST_DEGREE_MIN=1" >> $GITHUB_ENV
+            echo "DDC_SPLINES_TEST_DEGREE_MIN=2" >> $GITHUB_ENV
             echo "DDC_SPLINES_TEST_DEGREE_MAX=5" >> $GITHUB_ENV
           else
             echo "DDC_SPLINES_TEST_DEGREE_MIN=3"

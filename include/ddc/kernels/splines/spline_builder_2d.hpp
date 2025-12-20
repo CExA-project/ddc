@@ -549,7 +549,7 @@ operator()(
             = ddc::replace_dim_of<interpolation_discrete_dimension_type2, deriv_type2>(
                     batched_interpolation_domain,
                     ddc::DiscreteDomain<deriv_type2>(
-                            ddc::DiscreteElement<deriv_type2>(1),
+                            ddc::DiscreteElement<deriv_type2>(builder_type2::s_odd),
                             ddc::DiscreteVector<deriv_type2>(bsplines_type2::degree() / 2)));
 
     ddc::Chunk spline1_deriv_min_alloc(

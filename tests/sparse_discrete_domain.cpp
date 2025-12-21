@@ -60,7 +60,11 @@ TEST(SparseDiscreteDomainTest, Constructor)
     EXPECT_EQ(dom_xy.distance_from_front(lbound_x + 2, lbound_y + 0), DVectXY(1, 0));
     EXPECT_EQ(dom_xy.distance_from_front(lbound_x + 2, lbound_y + 2), DVectXY(1, 1));
     EXPECT_EQ(dom_xy.distance_from_front(lbound_x + 2, lbound_y + 5), DVectXY(1, 2));
+    EXPECT_TRUE(dom_xy.contains(lbound_x + 0, lbound_y + 0));
     EXPECT_FALSE(dom_xy.contains(lbound_x + 1, lbound_y + 0));
+    EXPECT_FALSE(dom_xy.contains(lbound_x + 0, lbound_y + 1));
+    DDomXY const dom_xy_2(Kokkos::View<DElemX*, Kokkos::SharedSpace>("", 0), view_y);
+    EXPECT_FALSE(dom_xy_2.contains(lbound_x, lbound_y));
 }
 
 void TestDeviceForEachSparseDevice2D(

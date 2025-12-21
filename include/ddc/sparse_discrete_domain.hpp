@@ -283,12 +283,17 @@ public:
                 sizeof...(DDims) == (0 + ... + DElems::size()),
                 "Invalid number of dimensions");
         static_assert((is_discrete_element_v<DElems> && ...), "Expected DiscreteElements");
-        return (detail::binary_search(
-                        get<DDims>(m_views).data(),
-                        get<DDims>(m_views).data() + get<DDims>(m_views).size(),
-                        uid<DDims>(take<DDims>(delems...)),
-                        std::less {})
-                && ...);
+        DiscreteElement<DDims...> const delem(delems...);
+        for (std::size_t i = 0; i < rank(); ++i) {
+            if (!detail::binary_search(
+                        Kokkos::Experimental::begin(m_views[i]),
+                        Kokkos::Experimental::end(m_views[i]),
+                        detail::array(delem)[i],
+                        std::less {})) {
+                return false;
+            }
+        }
+        return true;
     }
 
     template <class... DElems>
@@ -302,11 +307,11 @@ public:
         KOKKOS_ASSERT(contains(delems...))
         return DiscreteVector<DDims...>(
                 (detail::lower_bound(
-                         get<DDims>(m_views).data(),
-                         get<DDims>(m_views).data() + get<DDims>(m_views).size(),
+                         Kokkos::Experimental::begin(get<DDims>(m_views)),
+                         Kokkos::Experimental::end(get<DDims>(m_views)),
                          uid<DDims>(take<DDims>(delems...)),
                          std::less {})
-                 - get<DDims>(m_views).data())...);
+                 - Kokkos::Experimental::begin(get<DDims>(m_views)))...);
     }
 
     KOKKOS_FUNCTION constexpr bool empty() const noexcept

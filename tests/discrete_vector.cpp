@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 #include <cstddef>
+#include <sstream>
 
 #include <ddc/ddc.hpp>
 
@@ -203,4 +204,15 @@ TEST(DiscreteVectorTest, ExternalBinaryOperatorMinus)
     EXPECT_EQ(ddc::get<DDimX>(result5), dv_x - dv2_x);
     EXPECT_EQ(ddc::get<DDimY>(result5), dv_y - dv2_y);
     EXPECT_EQ(ddc::get<DDimZ>(result5), dv_z - dv2_z);
+}
+
+TEST(DiscreteVectorTest, StreamOperator)
+{
+    ddc::DiscreteVectorElement const dv_x = 7;
+    ddc::DiscreteVectorElement const dv_y = -2;
+    ddc::DiscreteVectorElement const dv_z = 15;
+    DVectXYZ const dxyz(dv_x, dv_y, dv_z);
+    std::stringstream ss;
+    ss << dxyz;
+    EXPECT_EQ(ss.str(), "(7, -2, 15)");
 }

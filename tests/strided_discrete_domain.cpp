@@ -141,21 +141,44 @@ TEST(StridedDiscreteDomainTest, CompareSameDomains)
 TEST(StridedDiscreteDomainTest, CompareDifferentDomains)
 {
     DDomXY const dom_x_y_1(lbound_x_y + DVectXY(0, 1), DVectXY(1, 2), strides_x_y);
-    DDomXY const dom_x_y_2(lbound_x_y + DVectXY(2, 3), DVectXY(3, 4), strides_x_y);
+    DDomXY const dom_x_y_2(lbound_x_y + DVectXY(0, 1), DVectXY(3, 4), strides_x_y);
+    DDomXY const dom_x_y_3(lbound_x_y + DVectXY(2, 3), DVectXY(1, 2), strides_x_y);
+    DDomXY const dom_x_y_4(lbound_x_y + DVectXY(2, 3), DVectXY(1, 2), DVectXY(1, 2));
     EXPECT_FALSE(dom_x_y_1 == dom_x_y_2);
     EXPECT_FALSE(dom_x_y_1 == DDomYX(dom_x_y_2));
     EXPECT_TRUE(dom_x_y_1 != dom_x_y_2);
     EXPECT_TRUE(dom_x_y_1 != DDomYX(dom_x_y_2));
+
+    EXPECT_FALSE(dom_x_y_1 == dom_x_y_3);
+    EXPECT_FALSE(dom_x_y_1 == DDomYX(dom_x_y_3));
+    EXPECT_TRUE(dom_x_y_1 != dom_x_y_3);
+    EXPECT_TRUE(dom_x_y_1 != DDomYX(dom_x_y_3));
+
+    EXPECT_FALSE(dom_x_y_2 == dom_x_y_3);
+    EXPECT_FALSE(dom_x_y_2 == DDomYX(dom_x_y_3));
+    EXPECT_TRUE(dom_x_y_2 != dom_x_y_3);
+    EXPECT_TRUE(dom_x_y_2 != DDomYX(dom_x_y_3));
+
+    EXPECT_FALSE(dom_x_y_3 == dom_x_y_4);
+    EXPECT_FALSE(dom_x_y_3 == DDomYX(dom_x_y_4));
+    EXPECT_TRUE(dom_x_y_3 != dom_x_y_4);
+    EXPECT_TRUE(dom_x_y_3 != DDomYX(dom_x_y_4));
 }
 
 TEST(StridedDiscreteDomainTest, CompareEmptyDomains)
 {
     DDomXY const dom_x_y_1(lbound_x_y + DVectXY(4, 1), DVectXY(0, 0), strides_x_y);
     DDomXY const dom_x_y_2(lbound_x_y + DVectXY(3, 9), DVectXY(0, 0), strides_x_y);
+    DDomXY const dom_x_y_3(lbound_x_y, nelems_x_y, strides_x_y);
     EXPECT_TRUE(dom_x_y_1.empty());
     EXPECT_TRUE(dom_x_y_2.empty());
+    EXPECT_FALSE(dom_x_y_3.empty());
+
     EXPECT_TRUE(dom_x_y_1 == dom_x_y_2);
     EXPECT_FALSE(dom_x_y_1 != dom_x_y_2);
+
+    EXPECT_FALSE(dom_x_y_1 == dom_x_y_3);
+    EXPECT_TRUE(dom_x_y_1 != dom_x_y_3);
 }
 
 TEST(StridedDiscreteDomainTest, RangeFor)
@@ -251,9 +274,11 @@ TEST(StridedDiscreteDomainTest, Remove)
 
 TEST(StridedDiscreteDomainTest, Contains)
 {
-    DDomXY const dom_x_y(lbound_x_y, nelems_x_y, strides_x_y);
-    EXPECT_TRUE(dom_x_y.contains(lbound_x_y));
-    EXPECT_FALSE(dom_x_y.contains(lbound_x_y + DVectXY(1, 1)));
+    DDomXY const dom_x_y(lbound_x_y + DVectXY(1, 1), nelems_x_y, strides_x_y);
+    EXPECT_TRUE(dom_x_y.contains(dom_x_y.front()));
+    EXPECT_FALSE(dom_x_y.contains(dom_x_y.front() - DVectXY(1, 1)));
+    EXPECT_FALSE(dom_x_y.contains(dom_x_y.back() + DVectXY(1, 1)));
+    EXPECT_FALSE(dom_x_y.contains(dom_x_y.front() + DVectXY(1, 1)));
 }
 
 TEST(StridedDiscreteDomainTest, DistanceFromFront)

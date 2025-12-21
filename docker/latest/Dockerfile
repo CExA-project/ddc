@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: MIT
 
-FROM ubuntu:noble
+FROM ubuntu:noble@sha256:c35e29c9450151419d9448b0fd75374fec4fff364a27f176fb458d472dfc9e54
 
 LABEL "org.opencontainers.image.source"="https://github.com/CExA-project/ddc"
 
@@ -26,7 +26,6 @@ RUN chmod +x /bin/bash_run \
  && echo tzdata tzdata/Areas string Etc | debconf-set-selections \
  && echo tzdata tzdata/Zones/Etc string UTC | debconf-set-selections \
  && apt-get update -y \
- && apt-get upgrade -y \
  && apt-get install -y --no-install-recommends \
     apt-transport-https \
     apt-utils \
@@ -112,7 +111,7 @@ RUN chmod +x /bin/bash_run \
       # HIP_PATH needs to be set to avoid Ginkgo defining it (https://github.com/ginkgo-project/ginkgo/blob/develop/cmake/hip_path.cmake).
       # The Ginkgo heuristic does not seem to be compatible with the new HIP v6 directory layout.
       # This makes amdclang++ fail during cmake compiler test (https://releases.llvm.org/18.1.0/tools/clang/docs/HIPSupport.html#order-of-precedence-for-hip-path)
-      export HIP_PATH=`hipconfig --path` \
+      export HIP_PATH=$(hipconfig --path) \
       && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_HIP_ARCHITECTURES=gfx90a -DGINKGO_BUILD_HIP=ON -DGINKGO_BUILD_TESTS=OFF -DGINKGO_BUILD_EXAMPLES=OFF -DGINKGO_BUILD_BENCHMARKS=OFF -B ginkgo/build -S ginkgo \
  ;; esac \
  && cmake --build ginkgo/build \
@@ -138,5 +137,3 @@ WORKDIR /data
 
 ENTRYPOINT ["/bin/bash_run"]
 CMD ["/bin/bash", "-li"]
-
-

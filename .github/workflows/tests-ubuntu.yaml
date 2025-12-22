@@ -257,6 +257,23 @@ jobs:
         run: |
           docker load < ${{matrix.image}}_${{matrix.backend.name}}.tar
           rm ${{matrix.image}}_${{matrix.backend.name}}.tar
+      - name: Choose degree
+        run: |
+          FILES_CHANGED=$(gh pr diff ${{ github.event.pull_request.number }} --name-only)
+          if printf '%s\n' "$FILES_CHANGED" | grep -q '/splines/'
+          then
+            echo "DDC_SPLINES_TEST_DEGREE_MIN=2"
+            echo "DDC_SPLINES_TEST_DEGREE_MAX=5"
+            echo "DDC_SPLINES_TEST_DEGREE_MIN=2" >> $GITHUB_ENV
+            echo "DDC_SPLINES_TEST_DEGREE_MAX=5" >> $GITHUB_ENV
+          else
+            echo "DDC_SPLINES_TEST_DEGREE_MIN=3"
+            echo "DDC_SPLINES_TEST_DEGREE_MAX=3"
+            echo "DDC_SPLINES_TEST_DEGREE_MIN=3" >> $GITHUB_ENV
+            echo "DDC_SPLINES_TEST_DEGREE_MAX=3" >> $GITHUB_ENV
+          fi
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
       - name: Test
         id: test
         run: |
@@ -334,6 +351,8 @@ jobs:
             cmake --install build --prefix $KokkosKernels_ROOT
             rm -rf build
 
+            echo "${{ env.DDC_SPLINES_TEST_DEGREE_MIN }}"
+            echo "${{ env.DDC_SPLINES_TEST_DEGREE_MAX }}"
             cmake \
               -D CMAKE_CXX_FLAGS="-Werror -Wall -Wextra -Wpedantic -Wno-sign-compare -pedantic-errors ${{matrix.backend.ddc_extra_cxx_flags}}" \
               -D CMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
@@ -342,6 +361,8 @@ jobs:
               -D DDC_GTest_DEPENDENCY_POLICY=INSTALLED \
               -D DDC_Kokkos_DEPENDENCY_POLICY=INSTALLED \
               -D DDC_KokkosFFT_DEPENDENCY_POLICY=INSTALLED \
+              -D DDC_SPLINES_TEST_DEGREE_MIN=${{ env.DDC_SPLINES_TEST_DEGREE_MIN }} \
+              -D DDC_SPLINES_TEST_DEGREE_MAX=${{ env.DDC_SPLINES_TEST_DEGREE_MAX }} \
               -B build \
               -S /src
             cmake --build build

@@ -11,6 +11,7 @@
 #include <optional>
 #include <utility>
 
+#include "splines_linear_problem.hpp"
 #include "splines_linear_problem_2x2_blocks.hpp"
 #include "splines_linear_problem_3x3_blocks.hpp"
 #include "splines_linear_problem_band.hpp"

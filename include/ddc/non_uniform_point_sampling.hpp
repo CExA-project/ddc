@@ -8,6 +8,7 @@
 #include <cassert>
 #include <cstddef>
 #include <initializer_list>
+#include <iterator>
 #include <ostream>
 #include <stdexcept>
 #include <tuple>

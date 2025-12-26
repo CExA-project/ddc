@@ -14,12 +14,15 @@
 #include <string>
 #include <tuple>
 #include <type_traits>
+#include <typeinfo>
 #include <utility>
 
 #include <Kokkos_Core.hpp>
 
-#include "detail/dual_discretization.hpp"
+#include "detail/dual_discretization.hpp" // IWYU pragma: keep
 #include "detail/macros.hpp"
+
+// IWYU pragma: no_forward_declare Kokkos::HostSpace
 
 #if defined(KOKKOS_ENABLE_CUDA)
 #    include <sstream>

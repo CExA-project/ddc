@@ -10,8 +10,11 @@
 
 #include <ddc/ddc.hpp>
 
+#include <Kokkos_Core.hpp>
+
 #include "bsplines_non_uniform.hpp"
 #include "bsplines_uniform.hpp"
+#include "math_tools.hpp"
 
 namespace ddc {
 

@@ -2,12 +2,15 @@
 //
 // SPDX-License-Identifier: MIT
 
+#include <string>
 #include <type_traits>
 #include <utility>
 
 #include <ddc/ddc.hpp>
 
 #include <gtest/gtest.h>
+
+#include <Kokkos_Core.hpp>
 
 inline namespace anonymous_namespace_workaround_chunk_span_cpp {
 

@@ -9,6 +9,7 @@
 #include <tuple>
 #include <type_traits>
 
+#include <Kokkos_Assert.hpp>
 #include <Kokkos_Macros.hpp>
 
 #include "detail/type_seq.hpp"
@@ -22,7 +23,7 @@ template <class DDim>
 struct StridedDiscreteDomainIterator;
 
 template <class... DDims>
-class StridedDiscreteDomain;
+class StridedDiscreteDomain; // IWYU pragma: keep
 
 template <class T>
 struct is_strided_discrete_domain : std::false_type

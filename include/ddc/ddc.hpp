@@ -33,9 +33,12 @@ static_assert(false, "DDC requires option -DKokkos_ENABLE_SYCL_RELOCATABLE_DEVIC
 namespace ddc {
 }
 
+// IWYU pragma: begin_exports
 // Misc
 #include <ddc/config.hpp>
 
+#include "detail/dual_discretization.hpp"
+#include "detail/kokkos.hpp"
 #include "detail/macros.hpp"
 #include "detail/tagged_vector.hpp"
 #include "detail/type_seq.hpp"
@@ -47,11 +50,13 @@ namespace ddc {
 // Containers
 #include "aligned_allocator.hpp"
 #include "chunk.hpp"
+#include "chunk_common.hpp"
 #include "chunk_span.hpp"
 #include "chunk_traits.hpp"
 #include "kokkos_allocator.hpp"
 
 // Discretizations
+#include "coordinate.hpp"
 #include "discrete_domain.hpp"
 #include "discrete_element.hpp"
 #include "discrete_space.hpp"
@@ -75,3 +80,4 @@ namespace ddc {
 
 // Output
 #include "print.hpp"
+// IWYU pragma: end_exports

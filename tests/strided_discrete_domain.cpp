@@ -2,9 +2,14 @@
 //
 // SPDX-License-Identifier: MIT
 
+#include <string>
+
 #include <ddc/ddc.hpp>
 
 #include <gtest/gtest.h>
+
+#include <Kokkos_Core.hpp>
+#include <Kokkos_StdAlgorithms.hpp>
 
 inline namespace anonymous_namespace_workaround_strided_discrete_domain_cpp {
 

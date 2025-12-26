@@ -3,10 +3,11 @@
 // SPDX-License-Identifier: MIT
 
 #include <iomanip>
-#include <ios>
+#include <ios> // IWYU pragma: keep
 #include <sstream>
 #include <string>
 #include <type_traits>
+#include <typeinfo>
 
 #include <ddc/ddc.hpp>
 

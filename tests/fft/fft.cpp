@@ -4,6 +4,7 @@
 
 #include <cstddef>
 #include <stdexcept>
+#include <string>
 #include <type_traits>
 
 #include <ddc/ddc.hpp>
@@ -11,6 +12,7 @@
 
 #include <gtest/gtest.h>
 
+#include <KokkosFFT.hpp>
 #include <Kokkos_Core.hpp>
 
 #if !defined(KOKKOSFFT_ENABLE_SERIAL)
@@ -240,9 +242,15 @@ void test_fft_norm(ddc::FFT_Normalization const norm)
     EXPECT_NEAR(FFf(FFf.domain().back()), FFf_expected, epsilon);
 }
 
-struct RDimX;
-struct RDimY;
-struct RDimZ;
+struct RDimX
+{
+};
+struct RDimY
+{
+};
+struct RDimZ
+{
+};
 
 } // namespace anonymous_namespace_workaround_fft_cpp
 

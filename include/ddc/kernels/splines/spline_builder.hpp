@@ -4,11 +4,13 @@
 
 #pragma once
 
+#include <array>
 #include <cassert>
 #include <cstddef>
 #include <memory>
 #include <optional>
 #include <stdexcept>
+#include <string>
 #include <tuple>
 #include <type_traits>
 #include <utility>
@@ -21,7 +23,9 @@
 #include "integrals.hpp"
 #include "math_tools.hpp"
 #include "spline_boundary_conditions.hpp"
+#include "splines_linear_problem.hpp"
 #include "splines_linear_problem_maker.hpp"
+#include "view.hpp"
 
 namespace ddc {
 

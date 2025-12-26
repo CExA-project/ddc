@@ -4,7 +4,11 @@
 
 #pragma once
 
+#include <array>
+#include <cstddef>
 #include <utility>
+
+#include <Kokkos_Macros.hpp>
 
 #include "detail/macros.hpp"
 

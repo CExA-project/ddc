@@ -1,0 +1,6 @@
+[
+    {"symbol": ["KokkosBatched::SerialPbtrs", "private", "<KokkosBatched_Pbtrs.hpp>", "public"]},
+    {"symbol": ["KokkosBatched::SerialPttrs", "private", "<KokkosBatched_Pttrs.hpp>", "public"]},
+    {"symbol": ["KokkosBatched::Algo", "private", "<KokkosBatched_Util.hpp>", "public"]},
+    {"include": ["<KokkosBlas_util.hpp>", "public", "<KokkosBatched_Util.hpp>", "public"]}
+]

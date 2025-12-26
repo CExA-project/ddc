@@ -3,13 +3,13 @@
 // SPDX-License-Identifier: MIT
 
 #include <algorithm>
-#include <ostream>
 #include <vector>
 
 #include <ddc/ddc.hpp>
 
 #include <gtest/gtest.h>
 
+#include <Kokkos_Core.hpp>
 #include <Kokkos_StdAlgorithms.hpp>
 
 inline namespace anonymous_namespace_workaround_for_each_cpp {

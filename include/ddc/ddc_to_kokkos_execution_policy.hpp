@@ -4,14 +4,11 @@
 
 #pragma once
 
+#include <array>
 #include <cstddef>
-#include <type_traits>
 
 #include <Kokkos_Core.hpp>
 
-#include "detail/kokkos.hpp"
-
-#include "discrete_domain.hpp"
 #include "discrete_element.hpp"
 
 namespace ddc::detail {

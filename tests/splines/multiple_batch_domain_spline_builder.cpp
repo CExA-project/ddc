@@ -8,9 +8,6 @@
 #if defined(BC_HERMITE)
 #    include <optional>
 #endif
-#if defined(BSPLINES_TYPE_UNIFORM)
-#    include <type_traits>
-#endif
 #include <vector>
 
 #include <ddc/ddc.hpp>

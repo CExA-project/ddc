@@ -4,9 +4,13 @@
 
 #pragma once
 
+#include <tuple>
+#include <type_traits>
 #include <vector>
 
 #include <ddc/ddc.hpp>
+
+#include <Kokkos_Core.hpp>
 
 #include "bsplines_uniform.hpp"
 #include "knot_discrete_dimension_type.hpp"

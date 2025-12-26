@@ -9,6 +9,7 @@
 #include <tuple>
 #include <type_traits>
 
+#include <Kokkos_Assert.hpp>
 #include <Kokkos_Macros.hpp>
 
 #include "detail/type_seq.hpp"

@@ -2,6 +2,8 @@
 //
 // SPDX-License-Identifier: MIT
 
+#include <type_traits>
+
 #include <ddc/ddc.hpp>
 
 #include <gtest/gtest.h>

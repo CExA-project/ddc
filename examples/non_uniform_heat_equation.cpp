@@ -9,8 +9,10 @@
 #include <cstddef>
 #include <iomanip>
 #include <iostream>
+#include <iterator>
 #include <random>
 #include <string>
+#include <tuple>
 #include <utility>
 #include <vector>
 

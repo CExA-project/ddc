@@ -5,7 +5,7 @@
 #include <array>
 #include <list>
 #include <sstream>
-#include <string>
+#include <stdexcept>
 #include <utility>
 #include <vector>
 

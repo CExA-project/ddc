@@ -16,7 +16,9 @@
 
 #include "chunk_common.hpp"
 #include "chunk_span.hpp"
-#include "chunk_traits.hpp"
+#include "discrete_domain.hpp"
+#include "discrete_element.hpp"
+#include "discrete_vector.hpp"
 #include "kokkos_allocator.hpp"
 
 namespace ddc {

@@ -7,6 +7,7 @@
 #include <sstream>
 #include <string>
 #include <type_traits>
+#include <typeinfo>
 
 #include <ddc/ddc.hpp>
 

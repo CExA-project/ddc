@@ -11,6 +11,7 @@
 
 #include <gtest/gtest.h>
 
+#include <KokkosFFT.hpp>
 #include <Kokkos_Core.hpp>
 
 #if !defined(KOKKOSFFT_ENABLE_SERIAL)

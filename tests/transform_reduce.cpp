@@ -8,7 +8,7 @@
 
 #include <gtest/gtest.h>
 
-#include <Kokkos_StdAlgorithms.hpp>
+#include <Kokkos_Core.hpp>
 
 inline namespace anonymous_namespace_workaround_transform_reduce_cpp {
 

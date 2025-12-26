@@ -8,7 +8,7 @@
 #ifndef KOKKOSBATCHED_GETRS_HPP_
 #define KOKKOSBATCHED_GETRS_HPP_
 
-#include <KokkosBatched_Util.hpp>
+#include <Kokkos_Macros.hpp>
 
 /// \author Yuuichi Asahi (yuuichi.asahi@cea.fr)
 

@@ -8,7 +8,9 @@
 #include <iterator>
 #include <tuple>
 #include <type_traits>
+#include <utility>
 
+#include <Kokkos_Assert.hpp>
 #include <Kokkos_Macros.hpp>
 
 #include "detail/type_seq.hpp"

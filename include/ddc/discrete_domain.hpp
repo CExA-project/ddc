@@ -461,9 +461,7 @@ template <class... QueryDDims, class... DDims>
 KOKKOS_FUNCTION constexpr DiscreteDomain<QueryDDims...> select(
         DiscreteDomain<DDims...> const& domain)
 {
-    return DiscreteDomain<QueryDDims...>(
-            DiscreteElement<QueryDDims...>(domain.front()),
-            DiscreteVector<QueryDDims...>(domain.extents()));
+    return DiscreteDomain<QueryDDims...>(domain);
 }
 
 namespace detail {

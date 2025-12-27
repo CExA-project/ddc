@@ -305,6 +305,15 @@ TEST(StridedDiscreteDomainTest, Transpose3DConstructor)
     EXPECT_EQ(DElemZ(dom_x_y_z.back()), DElemZ(dom_z_y_x.back()));
 }
 
+TEST(StridedDiscreteDomainTest, Select)
+{
+    DDomX const dom_x(lbound_x, nelems_x, strides_x);
+    DDomY const dom_y(lbound_y, nelems_y, strides_y);
+    DDomXY const dom_x_y(dom_x, dom_y);
+    EXPECT_EQ(ddc::select<DDimX>(dom_x_y), dom_x);
+    EXPECT_EQ(ddc::select<DDimY>(dom_x_y), dom_y);
+}
+
 // TEST(StridedDiscreteDomainTest, CartesianProduct)
 // {
 //     EXPECT_TRUE((std::is_same_v<ddc::cartesian_prod_t<>, ddc::DiscreteDomain<>>));

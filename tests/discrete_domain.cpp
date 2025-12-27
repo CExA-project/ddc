@@ -328,3 +328,12 @@ TEST(DiscreteDomainTest, CartesianProduct)
     EXPECT_TRUE((std::is_same_v<ddc::cartesian_prod_t<DDomX, DDomY, DDomZ>, DDomXYZ>));
     EXPECT_TRUE((std::is_same_v<ddc::cartesian_prod_t<DDomZY, DDomX>, DDomZYX>));
 }
+
+TEST(DiscreteDomainTest, Select)
+{
+    DDomX const dom_x(lbound_x, nelems_x);
+    DDomY const dom_y(lbound_y, nelems_y);
+    DDomXY const dom_x_y(dom_x, dom_y);
+    EXPECT_EQ(ddc::select<DDimX>(dom_x_y), dom_x);
+    EXPECT_EQ(ddc::select<DDimY>(dom_x_y), dom_y);
+}

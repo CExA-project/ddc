@@ -516,9 +516,7 @@ template <class... QueryDDims, class... DDims>
 KOKKOS_FUNCTION constexpr SparseDiscreteDomain<QueryDDims...> select(
         SparseDiscreteDomain<DDims...> const& domain)
 {
-    return SparseDiscreteDomain<QueryDDims...>(
-            DiscreteElement<QueryDDims...>(domain.front()),
-            DiscreteElement<QueryDDims...>(domain.extents()));
+    return SparseDiscreteDomain<QueryDDims...>(domain);
 }
 
 namespace detail {

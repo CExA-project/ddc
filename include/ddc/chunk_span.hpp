@@ -308,7 +308,7 @@ public:
     template <
             class... QueryDDims,
             class SFINAESupportType = SupportType,
-            std::enable_if_t<is_discrete_domain_v<SFINAESupportType>, std::nullptr_t> = nullptr>
+            std::enable_if_t<is_discrete_domain_v<SFINAESupportType>, int> = 0>
     KOKKOS_FUNCTION constexpr auto operator[](DiscreteDomain<QueryDDims...> const& odomain) const
     {
         KOKKOS_ASSERT(

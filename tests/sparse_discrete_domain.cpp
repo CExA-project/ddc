@@ -70,6 +70,22 @@ TEST(SparseDiscreteDomainTest, Constructor)
     EXPECT_FALSE(dom_xy_2.contains(lbound_x, lbound_y));
 }
 
+TEST(SparseDiscreteDomainTest, Select)
+{
+    Kokkos::View<DElemX*, Kokkos::SharedSpace> const view_x("view_x", 2);
+    view_x(0) = lbound_x + 0;
+    view_x(1) = lbound_x + 2;
+    Kokkos::View<DElemY*, Kokkos::SharedSpace> const view_y("view_y", 3);
+    view_y(0) = lbound_y + 0;
+    view_y(1) = lbound_y + 2;
+    view_y(2) = lbound_y + 5;
+    DDomX const dom_x(view_x);
+    DDomY const dom_y(view_y);
+    DDomXY const dom_x_y(dom_x, dom_y);
+    EXPECT_EQ(ddc::select<DDimX>(dom_x_y), dom_x);
+    EXPECT_EQ(ddc::select<DDimY>(dom_x_y), dom_y);
+}
+
 void TestDeviceForEachSparseDevice2D(
         ddc::ChunkSpan<
                 int,

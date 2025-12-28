@@ -169,14 +169,20 @@ public:
     }
 
     /// Slice out some dimensions
-    template <class... QueryDDims>
+    template <
+            class... QueryDDims,
+            class SFINAESupportType = SupportType,
+            std::enable_if_t<is_discrete_domain_v<SFINAESupportType>, int> = 0>
     auto operator[](DiscreteDomain<QueryDDims...> const& odomain) const
     {
         return span_view()[odomain];
     }
 
     /// Slice out some dimensions
-    template <class... QueryDDims>
+    template <
+            class... QueryDDims,
+            class SFINAESupportType = SupportType,
+            std::enable_if_t<is_discrete_domain_v<SFINAESupportType>, int> = 0>
     auto operator[](DiscreteDomain<QueryDDims...> const& odomain)
     {
         return span_view()[odomain];

@@ -73,8 +73,8 @@ jobs:
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8  # v6.0.1
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8  # v6.0.1
         with:
-          repository: pdidev/pdi
-          ref: 1.9.2
+          repository: benoitmartin88/pdi
+          ref: multiple_find_package_pdi
           path: pdi
       - name: Install PDI+user code plugin and dependencies
         run: |

@@ -55,6 +55,7 @@ public:
             ddc::ChunkSpan<double const, ddc::DiscreteDomain<BSplines>, Layout, MemorySpace> const
                     spline_coef) const
     {
+        // Parameter `pos` is truly unused
         static_assert(in_tags_v<DimI, to_type_seq_t<CoordType>>);
 
         std::array<double, BSplines::degree() + 1> vals_ptr;

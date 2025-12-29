@@ -39,7 +39,7 @@ public:
     }
 
     template <std::size_t N = sizeof...(Idx), std::enable_if_t<(N == 0), bool> = true>
-    KOKKOS_FUNCTION void operator()([[maybe_unused]] index_type<0> unused_id) const
+    KOKKOS_FUNCTION void operator()(index_type<0> /*id*/) const
     {
         m_f(m_support(typename Support::discrete_vector_type()));
     }

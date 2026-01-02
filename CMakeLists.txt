@@ -160,6 +160,7 @@ target_sources(
                 include/ddc/parallel_deepcopy.hpp
                 include/ddc/parallel_fill.hpp
                 include/ddc/parallel_for_each.hpp
+                include/ddc/parallel_transform.hpp
                 include/ddc/parallel_transform_reduce.hpp
                 include/ddc/periodic_sampling.hpp
                 include/ddc/print.hpp

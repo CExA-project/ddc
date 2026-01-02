@@ -184,24 +184,25 @@ public:
     template <class... ODims>
     KOKKOS_FUNCTION constexpr bool operator==(SparseDiscreteDomain<ODims...> const& other) const
     {
-        if (empty() && other.empty()) {
+        if constexpr ((std::is_same_v<DDims, ODims> && ...)) {
+            if (empty() && other.empty()) {
+                return true;
+            }
+            for (std::size_t i = 0; i < m_views.size(); ++i) {
+                if (m_views[i].size() != other.m_views[i].size()) {
+                    return false;
+                }
+                if (!detail::
+                            equal(m_views[i].data(),
+                                  m_views[i].data() + m_views[i].size(),
+                                  other.m_views[i].data())) {
+                    return false;
+                }
+            }
             return true;
+        } else {
+            return *this == SparseDiscreteDomain(other);
         }
-        if (m_views.size() != other.m_views.size()) {
-            return false;
-        }
-        for (std::size_t i = 0; i < m_views.size(); ++i) {
-            if (m_views[i].size() != other.m_views[i].size()) {
-                return false;
-            }
-            if (!detail::
-                        equal(m_views[i].data(),
-                              m_views[i].data() + m_views[i].size(),
-                              other.m_views[i].data())) {
-                return false;
-            }
-        }
-        return true;
     }
 
 #if !defined(__cpp_impl_three_way_comparison) || __cpp_impl_three_way_comparison < 201902L

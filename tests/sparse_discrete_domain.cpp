@@ -70,6 +70,76 @@ TEST(SparseDiscreteDomainTest, Constructor)
     EXPECT_FALSE(dom_xy_2.contains(lbound_x, lbound_y));
 }
 
+TEST(SparseDiscreteDomainTest, CompareSameDomains)
+{
+    Kokkos::View<DElemX*, Kokkos::SharedSpace> const view_x("view_x", 2);
+    view_x(0) = lbound_x + 0;
+    view_x(1) = lbound_x + 2;
+    Kokkos::View<DElemY*, Kokkos::SharedSpace> const view_y("view_y", 3);
+    view_y(0) = lbound_y + 0;
+    view_y(1) = lbound_y + 2;
+    view_y(2) = lbound_y + 5;
+    DDomXY const dom_x_y_1(view_x, view_y);
+    EXPECT_TRUE(dom_x_y_1 == dom_x_y_1);
+    EXPECT_TRUE(dom_x_y_1 == DDomYX(dom_x_y_1));
+    EXPECT_FALSE(dom_x_y_1 != dom_x_y_1);
+    EXPECT_FALSE(dom_x_y_1 != DDomYX(dom_x_y_1));
+}
+
+TEST(SparseDiscreteDomainTest, CompareDifferentDomains)
+{
+    Kokkos::View<DElemX*, Kokkos::SharedSpace> const view_x_a("view_x", 2);
+    view_x_a(0) = lbound_x + 0;
+    view_x_a(1) = lbound_x + 2;
+    Kokkos::View<DElemX*, Kokkos::SharedSpace> const view_x_b("view_x", 2);
+    view_x_b(0) = lbound_x + 1;
+    view_x_b(1) = lbound_x + 2;
+    Kokkos::View<DElemX*, Kokkos::SharedSpace> const view_x_c("view_x", 1);
+    view_x_b(0) = lbound_x + 1;
+    Kokkos::View<DElemY*, Kokkos::SharedSpace> const view_y("view_y", 3);
+    view_y(0) = lbound_y + 0;
+    view_y(1) = lbound_y + 2;
+    view_y(2) = lbound_y + 5;
+    DDomXY const dom_x_y_1(view_x_a, view_y);
+    DDomXY const dom_x_y_2(view_x_b, view_y);
+    DDomXY const dom_x_y_3(view_x_c, view_y);
+    EXPECT_FALSE(dom_x_y_1 == dom_x_y_2);
+    EXPECT_FALSE(dom_x_y_1 == DDomYX(dom_x_y_2));
+    EXPECT_TRUE(dom_x_y_1 != dom_x_y_2);
+    EXPECT_TRUE(dom_x_y_1 != DDomYX(dom_x_y_2));
+
+    EXPECT_FALSE(dom_x_y_1 == dom_x_y_3);
+    EXPECT_FALSE(dom_x_y_1 == DDomYX(dom_x_y_3));
+    EXPECT_TRUE(dom_x_y_1 != dom_x_y_3);
+    EXPECT_TRUE(dom_x_y_1 != DDomYX(dom_x_y_3));
+
+    EXPECT_FALSE(dom_x_y_2 == dom_x_y_3);
+    EXPECT_FALSE(dom_x_y_2 == DDomYX(dom_x_y_3));
+    EXPECT_TRUE(dom_x_y_2 != dom_x_y_3);
+    EXPECT_TRUE(dom_x_y_2 != DDomYX(dom_x_y_3));
+}
+
+TEST(SparseDiscreteDomainTest, CompareEmptyDomains)
+{
+    Kokkos::View<DElemX*, Kokkos::SharedSpace> const view_x("view_x", 2);
+    view_x(0) = lbound_x + 0;
+    view_x(1) = lbound_x + 2;
+    Kokkos::View<DElemY*, Kokkos::SharedSpace> const view_y("view_y", 3);
+    view_y(0) = lbound_y + 0;
+    view_y(1) = lbound_y + 2;
+    view_y(2) = lbound_y + 5;
+    DDomXY const dom_x_y_1;
+    DDomXY const dom_x_y_2(view_x, view_y);
+    EXPECT_TRUE(dom_x_y_1.empty());
+    EXPECT_FALSE(dom_x_y_2.empty());
+
+    EXPECT_TRUE(dom_x_y_1 == dom_x_y_1);
+    EXPECT_FALSE(dom_x_y_1 != dom_x_y_1);
+
+    EXPECT_FALSE(dom_x_y_1 == dom_x_y_2);
+    EXPECT_TRUE(dom_x_y_1 != dom_x_y_2);
+}
+
 TEST(SparseDiscreteDomainTest, Select)
 {
     Kokkos::View<DElemX*, Kokkos::SharedSpace> const view_x("view_x", 2);

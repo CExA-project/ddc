@@ -139,10 +139,7 @@ public:
      */
     Chunk& operator=(Chunk&& other) noexcept
     {
-        if (this == &other) {
-            return *this;
-        }
-        if (this->m_allocation_mdspan.data_handle()) {
+        if (this->data_handle()) {
             m_allocator.deallocate(this->data_handle(), this->size());
         }
         static_cast<base_type&>(*this) = std::move(static_cast<base_type&>(other));

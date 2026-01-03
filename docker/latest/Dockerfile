@@ -62,7 +62,7 @@ RUN chmod +x /bin/bash_run \
     pkg-config \
     pipx \
     python3 \
- && python3 -m pipx install gcovr \
+ && python3 -m pipx install gcovr==8.3 \
  && python3 -m pipx ensurepath \
  && case "${BACKEND}" in \
     "cpu") \

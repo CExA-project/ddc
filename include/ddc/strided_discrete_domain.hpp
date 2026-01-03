@@ -341,7 +341,7 @@ public:
     // Construct a StridedDiscreteDomain from a reordered copy of `domain`
     template <class... ODDims>
     KOKKOS_FUNCTION constexpr explicit StridedDiscreteDomain(
-            [[maybe_unused]] StridedDiscreteDomain<ODDims...> const& domain)
+            StridedDiscreteDomain<ODDims...> const& /*domain*/)
     {
     }
 
@@ -351,9 +351,9 @@ public:
      * @param strides the step between two elements
      */
     KOKKOS_FUNCTION constexpr StridedDiscreteDomain(
-            [[maybe_unused]] discrete_element_type const& element_begin,
-            [[maybe_unused]] discrete_vector_type const& size,
-            [[maybe_unused]] discrete_vector_type const& strides)
+            discrete_element_type const& /*element_begin*/,
+            discrete_vector_type const& /*size*/,
+            discrete_vector_type const& /*strides*/)
     {
     }
 
@@ -368,8 +368,7 @@ public:
 
     KOKKOS_DEFAULTED_FUNCTION StridedDiscreteDomain& operator=(StridedDiscreteDomain&& x) = default;
 
-    KOKKOS_FUNCTION constexpr bool operator==(
-            [[maybe_unused]] StridedDiscreteDomain const& other) const
+    KOKKOS_FUNCTION constexpr bool operator==(StridedDiscreteDomain const& /*other*/) const
     {
         return true;
     }
@@ -402,39 +401,35 @@ public:
         return {};
     }
 
-    KOKKOS_FUNCTION constexpr StridedDiscreteDomain take_first(
-            [[maybe_unused]] discrete_vector_type n) const
+    KOKKOS_FUNCTION constexpr StridedDiscreteDomain take_first(discrete_vector_type /*n*/) const
     {
         return *this;
     }
 
-    KOKKOS_FUNCTION constexpr StridedDiscreteDomain take_last(
-            [[maybe_unused]] discrete_vector_type n) const
+    KOKKOS_FUNCTION constexpr StridedDiscreteDomain take_last(discrete_vector_type /*n*/) const
     {
         return *this;
     }
 
-    KOKKOS_FUNCTION constexpr StridedDiscreteDomain remove_first(
-            [[maybe_unused]] discrete_vector_type n) const
+    KOKKOS_FUNCTION constexpr StridedDiscreteDomain remove_first(discrete_vector_type /*n*/) const
     {
         return *this;
     }
 
-    KOKKOS_FUNCTION constexpr StridedDiscreteDomain remove_last(
-            [[maybe_unused]] discrete_vector_type n) const
+    KOKKOS_FUNCTION constexpr StridedDiscreteDomain remove_last(discrete_vector_type /*n*/) const
     {
         return *this;
     }
 
     KOKKOS_FUNCTION constexpr StridedDiscreteDomain remove(
-            [[maybe_unused]] discrete_vector_type n1,
-            [[maybe_unused]] discrete_vector_type n2) const
+            discrete_vector_type /*n1*/,
+            discrete_vector_type /*n2*/) const
     {
         return *this;
     }
 
     KOKKOS_FUNCTION constexpr DiscreteElement<> operator()(
-            DiscreteVector<> const& /* dvect */) const noexcept
+            DiscreteVector<> const& /*dvect*/) const noexcept
     {
         return {};
     }
@@ -498,7 +493,7 @@ using convert_type_seq_to_strided_discrete_domain_t =
 template <class... DDimsA, class... DDimsB>
 KOKKOS_FUNCTION constexpr auto remove_dims_of(
         StridedDiscreteDomain<DDimsA...> const& DDom_a,
-        [[maybe_unused]] StridedDiscreteDomain<DDimsB...> const& DDom_b) noexcept
+        StridedDiscreteDomain<DDimsB...> const& /*DDom_b*/) noexcept
 {
     using TagSeqA = detail::TypeSeq<DDimsA...>;
     using TagSeqB = detail::TypeSeq<DDimsB...>;
@@ -530,7 +525,7 @@ KOKKOS_FUNCTION constexpr std::conditional_t<
         ddc::StridedDiscreteDomain<DDim2>,
         ddc::StridedDiscreteDomain<DDimA>>
 replace_dim_of_1d(
-        StridedDiscreteDomain<DDimA> const& DDom_a,
+        [[maybe_unused]] StridedDiscreteDomain<DDimA> const& DDom_a,
         [[maybe_unused]] StridedDiscreteDomain<DDimsB...> const& DDom_b) noexcept
 {
     if constexpr (std::is_same_v<DDimA, DDim1>) {

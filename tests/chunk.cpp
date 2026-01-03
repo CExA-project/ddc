@@ -148,6 +148,15 @@ TEST(Chunk0DTest, MoveAssignment)
     EXPECT_DOUBLE_EQ(factor, chunk2());
 }
 
+TEST(Chunk0DTest, SelfMoveAssignment)
+{
+    EXPECT_NO_FATAL_FAILURE({
+        Chunk0D<double> chunk(dom_0d);
+        Chunk0D<double>& chunk_alias = chunk;
+        chunk_alias = std::move(chunk);
+    });
+}
+
 TEST(Chunk1DTest, MoveAssignment)
 {
     double const factor = 1.976;
@@ -163,6 +172,15 @@ TEST(Chunk1DTest, MoveAssignment)
         // we expect exact equality, not EXPECT_DOUBLE_EQ: this is the same ref twice
         EXPECT_EQ(factor * (ix - lbound_x), chunk2(ix));
     }
+}
+
+TEST(Chunk1DTest, SelfMoveAssignment)
+{
+    EXPECT_NO_FATAL_FAILURE({
+        ChunkX<double> chunk(dom_x);
+        ChunkX<double>& chunk_alias = chunk;
+        chunk_alias = std::move(chunk);
+    });
 }
 
 TEST(Chunk0DTest, Swap)

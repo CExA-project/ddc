@@ -28,6 +28,7 @@ add_executable(
     parallel_transform_reduce.cpp
     periodic_sampling.cpp
     print.cpp
+    reducer.cpp
     relocatable_device_code.cpp
     relocatable_device_code_initialization.cpp
     sparse_discrete_domain.cpp

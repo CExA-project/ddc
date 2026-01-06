@@ -6,7 +6,7 @@
 #include <memory>
 #include <ostream>
 
-#include <Kokkos_Macros.hpp>
+#include <Kokkos_Macros.hpp> // IWYU pragma: keep
 
 #include "discrete_vector.hpp"
 #include "print.hpp"

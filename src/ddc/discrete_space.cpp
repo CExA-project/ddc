@@ -7,8 +7,9 @@
 #include <optional>
 #include <ostream>
 #include <string>
+#include <utility>
 
-#include <Kokkos_Macros.hpp>
+#include <Kokkos_Macros.hpp> // IWYU pragma: keep
 
 #if defined(KOKKOS_ENABLE_CUDA)
 #    include <sstream>

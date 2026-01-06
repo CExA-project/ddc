@@ -131,10 +131,43 @@ target_link_libraries(ddc_core PUBLIC Kokkos::kokkos)
 target_sources(
     ddc_core
     PRIVATE
+        src/ddc/detail/dual_discretization.cpp
+        src/ddc/detail/kokkos.cpp
+        src/ddc/detail/macros.cpp
+        src/ddc/detail/tagged_vector.cpp
+        src/ddc/detail/type_seq.cpp
+        src/ddc/detail/utils.cpp
+        src/ddc/aligned_allocator.cpp
+        src/ddc/chunk.cpp
+        src/ddc/chunk_common.cpp
+        src/ddc/chunk_span.cpp
+        src/ddc/chunk_traits.cpp
+        src/ddc/coordinate.cpp
+        src/ddc/create_mirror.cpp
+        src/ddc/ddc.hpp
+        src/ddc/ddc_to_kokkos_execution_policy.cpp
+        src/ddc/discrete_domain.cpp
         src/ddc/discrete_element.cpp
         src/ddc/discrete_space.cpp
         src/ddc/discrete_vector.cpp
+        src/ddc/for_each.cpp
+        src/ddc/kokkos_allocator.cpp
+        src/ddc/non_uniform_point_sampling.cpp
+        src/ddc/parallel_deepcopy.cpp
+        src/ddc/parallel_fill.cpp
+        src/ddc/parallel_for_each.cpp
+        src/ddc/parallel_transform.cpp
+        src/ddc/parallel_transform_reduce.cpp
+        src/ddc/periodic_sampling.cpp
         src/ddc/print.cpp
+        src/ddc/real_type.cpp
+        src/ddc/reducer.cpp
+        src/ddc/scope_guard.cpp
+        src/ddc/sparse_discrete_domain.cpp
+        src/ddc/strided_discrete_domain.cpp
+        src/ddc/transform_reduce.cpp
+        src/ddc/trivial_space.cpp
+        src/ddc/uniform_point_sampling.cpp
     PUBLIC
         FILE_SET core_public
             TYPE HEADERS
@@ -227,8 +260,12 @@ if("${DDC_BUILD_KERNELS_FFT}")
     target_link_libraries(ddc_fft PUBLIC DDC::core Kokkos::kokkos KokkosFFT::fft)
     target_sources(
         ddc_fft
-        INTERFACE FILE_SET HEADERS BASE_DIRS src FILES src/ddc/kernels/fft.hpp
-        PRIVATE src/ddc/kernels/fft.cpp
+        PRIVATE
+            src/ddc/kernels/fft.cpp
+        INTERFACE
+            FILE_SET HEADERS
+                BASE_DIRS src
+                FILES src/ddc/kernels/fft.hpp
     )
 
     set_target_properties(
@@ -276,22 +313,41 @@ if("${DDC_BUILD_KERNELS_SPLINES}")
     target_compile_features(ddc_splines INTERFACE cxx_std_20)
     target_link_libraries(
         ddc_splines
-        INTERFACE DDC::core
         PRIVATE Ginkgo::ginkgo Kokkos::kokkoskernels LAPACKE::LAPACKE
-        PUBLIC Kokkos::kokkos
+        PUBLIC DDC::core Kokkos::kokkos
     )
     target_sources(
         ddc_splines
         PRIVATE
+            src/ddc/kernels/splines/bsplines_non_uniform.cpp
+            src/ddc/kernels/splines/bsplines_uniform.cpp
+            src/ddc/kernels/splines/constant_extrapolation_rule.cpp
+            src/ddc/kernels/splines/deriv.cpp
+            src/ddc/kernels/splines/greville_interpolation_points.cpp
+            src/ddc/kernels/splines/integrals.cpp
+            src/ddc/kernels/splines/knot_discrete_dimension_type.cpp
+            src/ddc/kernels/splines/knots_as_interpolation_points.cpp
+            src/ddc/kernels/splines/math_tools.cpp
+            src/ddc/kernels/splines/null_extrapolation_rule.cpp
+            src/ddc/kernels/splines/periodic_extrapolation_rule.cpp
             src/ddc/kernels/splines/spline_boundary_conditions.cpp
+            src/ddc/kernels/splines/spline_builder.cpp
+            src/ddc/kernels/splines/spline_builder_2d.cpp
+            src/ddc/kernels/splines/spline_builder_3d.cpp
+            src/ddc/kernels/splines/spline_evaluator.cpp
+            src/ddc/kernels/splines/spline_evaluator_2d.cpp
+            src/ddc/kernels/splines/spline_evaluator_3d.cpp
+            src/ddc/kernels/splines/spline_traits.cpp
             src/ddc/kernels/splines/splines_linear_problem.cpp
             src/ddc/kernels/splines/splines_linear_problem_2x2_blocks.cpp
             src/ddc/kernels/splines/splines_linear_problem_3x3_blocks.cpp
             src/ddc/kernels/splines/splines_linear_problem_band.cpp
             src/ddc/kernels/splines/splines_linear_problem_dense.cpp
+            src/ddc/kernels/splines/splines_linear_problem_maker.cpp
             src/ddc/kernels/splines/splines_linear_problem_pds_band.cpp
             src/ddc/kernels/splines/splines_linear_problem_pds_tridiag.cpp
             src/ddc/kernels/splines/splines_linear_problem_sparse.cpp
+            src/ddc/kernels/splines/view.cpp
         INTERFACE
             FILE_SET HEADERS
                 BASE_DIRS src

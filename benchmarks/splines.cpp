@@ -53,7 +53,9 @@ struct DDimX : GrevillePoints<IsNonUniform, DegreeX>::interpolation_discrete_dim
 {
 };
 
-struct Y;
+struct Y
+{
+};
 
 struct DDimY : ddc::UniformPointSampling<Y>
 {

@@ -1,0 +1,9 @@
+[
+    {"symbol": ["KokkosFFT::Normalization", "private", "<KokkosFFT.hpp>", "public"]},
+    {"symbol": ["KokkosFFT::axis_type", "private", "<KokkosFFT.hpp>", "public"]},
+    {"symbol": ["KokkosFFT::fftn", "private", "<KokkosFFT.hpp>", "public"]},
+    {"symbol": ["KokkosFFT::ifftn", "private", "<KokkosFFT.hpp>", "public"]},
+    {"symbol": ["KokkosFFT::irfftn", "private", "<KokkosFFT.hpp>", "public"]},
+    {"symbol": ["KokkosFFT::rfftn", "private", "<KokkosFFT.hpp>", "public"]},
+    {"symbol": ["KOKKOSFFT_ENABLE_TPL_FFTW", "private", "<KokkosFFT.hpp>", "public"]}
+]

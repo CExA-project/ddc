@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 #include <array>
+#include <string>
 
 #include <ddc/kernels/splines.hpp>
 

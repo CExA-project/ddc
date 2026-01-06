@@ -40,7 +40,7 @@ struct SerialGetrs {
 };
 }  // namespace KokkosBatched
 
-#include "KokkosBatched_Getrs_Serial_Impl.hpp"
+#include "KokkosBatched_Getrs_Serial_Impl.hpp" // IWYU pragma: export
 
 #endif  // KOKKOSBATCHED_GETRS_HPP_
 

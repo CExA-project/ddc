@@ -7,7 +7,6 @@
 #include <cstddef>
 #include <functional>
 #include <iterator>
-#include <string>
 #include <tuple>
 #include <type_traits>
 
@@ -21,11 +20,8 @@
 
 namespace ddc {
 
-template <class DDim>
-struct SparseDiscreteDomainIterator;
-
 template <class... DDims>
-class SparseDiscreteDomain;
+class SparseDiscreteDomain; // IWYU pragma: keep
 
 template <class T>
 struct is_sparse_discrete_domain : std::false_type

@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <cmath>
 #include <cstddef>
+#include <string>
 #include <tuple>
 #if defined(BSPLINES_TYPE_NON_UNIFORM)
 #    include <vector>

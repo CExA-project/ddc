@@ -13,8 +13,12 @@
 
 inline namespace anonymous_namespace_workaround_periodic_sampling_cpp {
 
-struct DimX;
-struct DimY;
+struct DimX
+{
+};
+struct DimY
+{
+};
 
 struct DDimX : ddc::PeriodicSampling<DimX>
 {

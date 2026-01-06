@@ -1,0 +1,14 @@
+[
+    {"symbol": ["std::nullptr_t", "private", "<cstddef>", "public"]},
+    {"symbol": ["std::tuple", "private", "<tuple>", "public"]},
+    {"symbol": ["std::tuple_element", "private", "<utility>", "public"]},
+    {"symbol": ["std::tuple_element_t", "private", "<utility>", "public"]},
+    {"symbol": ["std::tuple_element", "private", "<tuple>", "public"]},
+    {"symbol": ["std::tuple_element_t", "private", "<tuple>", "public"]},
+    {"symbol": ["std::hexfloat", "private", "<ios>", "public"]},
+    {"symbol": ["std::scientific", "private", "<ios>", "public"]},
+    { "ref": "iwyu-ginkgo.json" },
+    { "ref": "iwyu-kokkos.json" },
+    { "ref": "iwyu-kokkos-kernels.json" },
+    { "ref": "iwyu-kokkos-fft.json" }
+]

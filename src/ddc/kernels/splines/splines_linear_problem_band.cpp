@@ -12,7 +12,6 @@
 #include <string>
 
 #include <Kokkos_Core.hpp>
-#include <Kokkos_DualView.hpp>
 
 #if __has_include(<mkl_lapacke.h>)
 #    include <mkl_lapacke.h>

@@ -119,3 +119,14 @@ TEST(NonUniformPointSampling, Coordinate)
     EXPECT_EQ(ddc::coordinate(point_iy), point_ry);
     EXPECT_EQ(ddc::coordinate(point_ixy), point_rxy);
 }
+
+TEST(NonUniformPointSampling, Attributes)
+{
+    ddc::DiscreteDomain<DDimX> const ddom_x(point_ix, ddc::DiscreteVector<DDimX>(2));
+    ddc::init_discrete_space<DDimX>(DDimX::init<DDimX>(vector_points_x));
+    EXPECT_EQ(ddc::rmin(ddom_x), vector_points_x[2]);
+    EXPECT_EQ(ddc::rmax(ddom_x), vector_points_x[3]);
+    EXPECT_EQ(ddc::rlength(ddom_x), vector_points_x[3] - vector_points_x[2]);
+    EXPECT_EQ(ddc::distance_at_left(point_ix), vector_points_x[2] - vector_points_x[1]);
+    EXPECT_EQ(ddc::distance_at_right(point_ix), vector_points_x[3] - vector_points_x[2]);
+}

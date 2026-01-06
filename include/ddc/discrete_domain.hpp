@@ -325,7 +325,7 @@ public:
 
     /// Construct a DiscreteDomain by copies and merge of domains
     template <class... DDoms, class = std::enable_if_t<(is_discrete_domain_v<DDoms> && ...)>>
-    KOKKOS_FUNCTION constexpr explicit DiscreteDomain([[maybe_unused]] DDoms const&... domains)
+    KOKKOS_FUNCTION constexpr explicit DiscreteDomain(DDoms const&... /*domains*/)
     {
     }
 
@@ -334,8 +334,8 @@ public:
      * @param size the number of points in each direction
      */
     KOKKOS_FUNCTION constexpr DiscreteDomain(
-            [[maybe_unused]] discrete_element_type const& element_begin,
-            [[maybe_unused]] discrete_vector_type const& size)
+            discrete_element_type const& /*element_begin*/,
+            discrete_vector_type const& /*size*/)
     {
     }
 
@@ -349,7 +349,7 @@ public:
 
     KOKKOS_DEFAULTED_FUNCTION DiscreteDomain& operator=(DiscreteDomain&& x) = default;
 
-    KOKKOS_FUNCTION constexpr bool operator==([[maybe_unused]] DiscreteDomain const& other) const
+    KOKKOS_FUNCTION constexpr bool operator==(DiscreteDomain const& /*other*/) const
     {
         return true;
     }
@@ -382,46 +382,42 @@ public:
         return {};
     }
 
-    KOKKOS_FUNCTION constexpr DiscreteDomain take_first(
-            [[maybe_unused]] discrete_vector_type n) const
+    KOKKOS_FUNCTION constexpr DiscreteDomain take_first(discrete_vector_type /*n*/) const
     {
         return *this;
     }
 
-    KOKKOS_FUNCTION constexpr DiscreteDomain take_last(
-            [[maybe_unused]] discrete_vector_type n) const
+    KOKKOS_FUNCTION constexpr DiscreteDomain take_last(discrete_vector_type /*n*/) const
     {
         return *this;
     }
 
-    KOKKOS_FUNCTION constexpr DiscreteDomain remove_first(
-            [[maybe_unused]] discrete_vector_type n) const
+    KOKKOS_FUNCTION constexpr DiscreteDomain remove_first(discrete_vector_type /*n*/) const
     {
         return *this;
     }
 
-    KOKKOS_FUNCTION constexpr DiscreteDomain remove_last(
-            [[maybe_unused]] discrete_vector_type n) const
+    KOKKOS_FUNCTION constexpr DiscreteDomain remove_last(discrete_vector_type /*n*/) const
     {
         return *this;
     }
 
     KOKKOS_FUNCTION constexpr DiscreteDomain remove(
-            [[maybe_unused]] discrete_vector_type n1,
-            [[maybe_unused]] discrete_vector_type n2) const
+            discrete_vector_type /*n1*/,
+            discrete_vector_type /*n2*/) const
     {
         return *this;
     }
 
     KOKKOS_FUNCTION constexpr DiscreteElement<> operator()(
-            DiscreteVector<> const& /* dvect */) const noexcept
+            DiscreteVector<> const& /*dvect*/) const noexcept
     {
         return {};
     }
 
     template <class... ODims>
     KOKKOS_FUNCTION constexpr DiscreteDomain restrict_with(
-            DiscreteDomain<ODims...> const& /* odomain */) const
+            DiscreteDomain<ODims...> const& /*odomain*/) const
     {
         return *this;
     }
@@ -510,7 +506,7 @@ using cartesian_prod_t = typename cartesian_prod<DDoms...>::type;
 template <class... DDimsA, class... DDimsB>
 KOKKOS_FUNCTION constexpr auto remove_dims_of(
         DiscreteDomain<DDimsA...> const& DDom_a,
-        [[maybe_unused]] DiscreteDomain<DDimsB...> const& DDom_b) noexcept
+        DiscreteDomain<DDimsB...> const& /*DDom_b*/) noexcept
 {
     using TagSeqA = detail::TypeSeq<DDimsA...>;
     using TagSeqB = detail::TypeSeq<DDimsB...>;
@@ -545,7 +541,7 @@ KOKKOS_FUNCTION constexpr std::conditional_t<
         ddc::DiscreteDomain<DDim2>,
         ddc::DiscreteDomain<DDimA>>
 replace_dim_of_1d(
-        DiscreteDomain<DDimA> const& DDom_a,
+        [[maybe_unused]] DiscreteDomain<DDimA> const& DDom_a,
         [[maybe_unused]] DiscreteDomain<DDimsB...> const& DDom_b) noexcept
 {
     if constexpr (std::is_same_v<DDimA, DDim1>) {

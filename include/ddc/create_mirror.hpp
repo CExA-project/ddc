@@ -18,7 +18,7 @@ namespace ddc {
 /// @return a `Chunk` with the same support and layout as `src` allocated on the `Space::memory_space` memory space.
 template <class Space, class ElementType, class Support, class Layout, class MemorySpace>
 auto create_mirror(
-        [[maybe_unused]] Space const& space,
+        Space const& /*space*/,
         ChunkSpan<ElementType, Support, Layout, MemorySpace> const& src)
 {
     static_assert(

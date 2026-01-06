@@ -8,7 +8,6 @@
 #include <utility>
 
 #include <Kokkos_Core.hpp>
-#include <Kokkos_DualView.hpp>
 
 #include "splines_linear_problem.hpp"
 #include "splines_linear_problem_2x2_blocks.hpp"

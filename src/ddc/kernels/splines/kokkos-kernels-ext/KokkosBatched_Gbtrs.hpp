@@ -51,7 +51,7 @@ struct SerialGbtrs {
 };
 }  // namespace KokkosBatched
 
-#include "KokkosBatched_Gbtrs_Serial_Impl.hpp"
+#include "KokkosBatched_Gbtrs_Serial_Impl.hpp" // IWYU pragma: export
 
 #endif  // KOKKOSBATCHED_GBTRS_HPP_
 

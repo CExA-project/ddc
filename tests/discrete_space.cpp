@@ -4,14 +4,19 @@
 
 #include <sstream>
 #include <stdexcept>
+#include <string>
 
 #include <ddc/ddc.hpp>
 
 #include <gtest/gtest.h>
 
+#include <Kokkos_Macros.hpp>
+
 inline namespace anonymous_namespace_workaround_discrete_space_cpp {
 
-struct DimX;
+struct DimX
+{
+};
 struct DDimX : ddc::UniformPointSampling<DimX>
 {
 };

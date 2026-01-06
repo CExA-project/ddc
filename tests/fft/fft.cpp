@@ -4,6 +4,7 @@
 
 #include <cstddef>
 #include <stdexcept>
+#include <string>
 #include <type_traits>
 
 #include <ddc/ddc.hpp>
@@ -241,11 +242,40 @@ void test_fft_norm(ddc::FFT_Normalization const norm)
     EXPECT_NEAR(FFf(FFf.domain().back()), FFf_expected, epsilon);
 }
 
-struct RDimX;
-struct RDimY;
-struct RDimZ;
+struct RDimX
+{
+};
+struct RDimY
+{
+};
+struct RDimZ
+{
+};
 
 } // namespace anonymous_namespace_workaround_fft_cpp
+
+TEST(FourierTest, Normalization)
+{
+    EXPECT_EQ(
+            ddc::detail::fft::ddc_fft_normalization_to_kokkos_fft(ddc::FFT_Normalization::OFF),
+            KokkosFFT::Normalization::none);
+    EXPECT_EQ(
+            ddc::detail::fft::ddc_fft_normalization_to_kokkos_fft(ddc::FFT_Normalization::FULL),
+            KokkosFFT::Normalization::none);
+    EXPECT_EQ(
+            ddc::detail::fft::ddc_fft_normalization_to_kokkos_fft(ddc::FFT_Normalization::FORWARD),
+            KokkosFFT::Normalization::forward);
+    EXPECT_EQ(
+            ddc::detail::fft::ddc_fft_normalization_to_kokkos_fft(ddc::FFT_Normalization::BACKWARD),
+            KokkosFFT::Normalization::backward);
+    EXPECT_EQ(
+            ddc::detail::fft::ddc_fft_normalization_to_kokkos_fft(ddc::FFT_Normalization::ORTHO),
+            KokkosFFT::Normalization::ortho);
+    EXPECT_THROW(
+            ddc::detail::fft::ddc_fft_normalization_to_kokkos_fft(
+                    static_cast<ddc::FFT_Normalization>(-1)),
+            std::runtime_error);
+}
 
 TEST(FourierMesh, Extents)
 {

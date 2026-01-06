@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 #include <cstddef>
+#include <string>
 #include <tuple>
 #include <type_traits>
 #include <utility>
@@ -37,7 +38,9 @@ struct DDimY : ddc::NonUniformPointSampling<DimY>
 };
 
 template <typename T>
-struct BSplinesTraits;
+struct BSplinesTraits
+{
+};
 
 template <typename ExecSpace1, std::size_t D1, typename ExecSpace2, std::size_t D2>
 struct BSplinesTraits<std::tuple<

@@ -13,8 +13,12 @@
 
 inline namespace anonymous_namespace_workaround_uniform_point_sampling_cpp {
 
-struct DimX;
-struct DimY;
+struct DimX
+{
+};
+struct DimY
+{
+};
 
 struct DDimX : ddc::UniformPointSampling<DimX>
 {
@@ -60,4 +64,17 @@ TEST(UniformPointSamplingTest, Coordinate)
     EXPECT_EQ(ddc::coordinate(point_ix), point_rx);
     EXPECT_EQ(ddc::coordinate(point_iy), point_ry);
     EXPECT_EQ(ddc::coordinate(point_ixy), point_rxy);
+}
+
+TEST(UniformPointSamplingTest, Attributes)
+{
+    ddc::DiscreteDomain<DDimX> const ddom_x(point_ix, ddc::DiscreteVector<DDimX>(2));
+    ddc::init_discrete_space<DDimX>(origin, step);
+    EXPECT_EQ(ddc::origin<DDimX>(), origin);
+    EXPECT_EQ(ddc::step<DDimX>(), step);
+    EXPECT_EQ(ddc::rmin(ddom_x), point_rx);
+    EXPECT_EQ(ddc::rmax(ddom_x), point_rx + step);
+    EXPECT_EQ(ddc::rlength(ddom_x), step);
+    EXPECT_EQ(ddc::distance_at_left(point_ix), step);
+    EXPECT_EQ(ddc::distance_at_right(point_ix), step);
 }

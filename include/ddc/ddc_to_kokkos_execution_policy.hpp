@@ -11,6 +11,8 @@
 
 #include "discrete_element.hpp"
 
+// IWYU pragma: no_forward_declare Kokkos::IndexType
+
 namespace ddc::detail {
 
 template <class ExecSpace, class Support>

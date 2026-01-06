@@ -123,17 +123,61 @@ endif()
 
 ## The library itself
 
-add_library(ddc_core INTERFACE)
+add_library(ddc_core)
 add_library(DDC::core ALIAS ddc_core)
 set_target_properties(ddc_core PROPERTIES EXPORT_NAME core)
 configure_file(cmake/config.hpp.in generated/ddc/config.hpp NO_SOURCE_PERMISSIONS @ONLY)
 target_sources(
     ddc_core
-    INTERFACE
-        FILE_SET HEADERS
-            BASE_DIRS include ${CMAKE_CURRENT_BINARY_DIR}/generated
+    PRIVATE
+        include/ddc/detail/dual_discretization.cpp
+        include/ddc/detail/kokkos.cpp
+        include/ddc/detail/macros.cpp
+        include/ddc/detail/tagged_vector.cpp
+        include/ddc/detail/type_seq.cpp
+        include/ddc/detail/type_traits.cpp
+        include/ddc/detail/utils.cpp
+        include/ddc/aligned_allocator.cpp
+        include/ddc/chunk.cpp
+        include/ddc/chunk_common.cpp
+        include/ddc/chunk_span.cpp
+        include/ddc/chunk_traits.cpp
+        include/ddc/coordinate.cpp
+        include/ddc/create_mirror.cpp
+        include/ddc/ddc.hpp
+        include/ddc/ddc_to_kokkos_execution_policy.cpp
+        include/ddc/discrete_domain.cpp
+        include/ddc/discrete_element.cpp
+        include/ddc/discrete_space.cpp
+        include/ddc/discrete_vector.cpp
+        include/ddc/for_each.cpp
+        include/ddc/kokkos_allocator.cpp
+        include/ddc/non_uniform_point_sampling.cpp
+        include/ddc/parallel_deepcopy.cpp
+        include/ddc/parallel_fill.cpp
+        include/ddc/parallel_for_each.cpp
+        include/ddc/parallel_transform_reduce.cpp
+        include/ddc/periodic_sampling.cpp
+        include/ddc/print.cpp
+        include/ddc/real_type.cpp
+        include/ddc/reducer.cpp
+        include/ddc/scope_guard.cpp
+        include/ddc/sparse_discrete_domain.cpp
+        include/ddc/strided_discrete_domain.cpp
+        include/ddc/transform_reduce.cpp
+        include/ddc/trivial_space.cpp
+        include/ddc/uniform_point_sampling.cpp
+    PUBLIC
+        FILE_SET hEADERSPUBLIC
+            TYPE HEADERS
+            BASE_DIRS ${CMAKE_CURRENT_BINARY_DIR}/generated
             FILES
                 ${CMAKE_CURRENT_BINARY_DIR}/generated/ddc/config.hpp
+    INTERFACE
+        FILE_SET hEADERSINTERFACE
+            TYPE HEADERS
+            BASE_DIRS include
+            FILES
                 include/ddc/detail/dual_discretization.hpp
                 include/ddc/detail/kokkos.hpp
                 include/ddc/detail/macros.hpp
@@ -172,10 +216,10 @@ target_sources(
                 include/ddc/trivial_space.hpp
                 include/ddc/uniform_point_sampling.hpp
 )
-target_compile_features(ddc_core INTERFACE cxx_std_17)
-target_link_libraries(ddc_core INTERFACE Kokkos::kokkos)
+target_compile_features(ddc_core PUBLIC cxx_std_17)
+target_link_libraries(ddc_core PUBLIC Kokkos::kokkos)
 
-install(TARGETS ddc_core EXPORT DDCCoreTargets FILE_SET HEADERS)
+install(TARGETS ddc_core EXPORT DDCCoreTargets FILE_SET hEADERSINTERFACE FILE_SET hEADERSPUBLIC)
 
 # Link library to DDC
 
@@ -204,12 +248,14 @@ if("${DDC_BUILD_KERNELS_FFT}")
         find_package(KokkosFFT 0.3.0...<1 REQUIRED)
     endif()
 
-    add_library(ddc_fft INTERFACE)
+    add_library(ddc_fft)
     add_library(DDC::fft ALIAS ddc_fft)
     set_target_properties(ddc_fft PROPERTIES EXPORT_NAME fft)
-    target_link_libraries(ddc_fft INTERFACE DDC::core Kokkos::kokkos KokkosFFT::fft)
+    target_link_libraries(ddc_fft PUBLIC DDC::core Kokkos::kokkos KokkosFFT::fft)
     target_sources(
         ddc_fft
+        PRIVATE
+            include/ddc/kernels/fft.cpp
         INTERFACE
             FILE_SET HEADERS
                 BASE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include
@@ -250,20 +296,52 @@ if("${DDC_BUILD_KERNELS_SPLINES}")
         find_package(KokkosKernels 4.5.1...<6 REQUIRED)
     endif()
 
-    add_library(ddc_splines INTERFACE)
+    add_library(ddc_splines)
     add_library(DDC::splines ALIAS ddc_splines)
     set_target_properties(ddc_splines PROPERTIES EXPORT_NAME splines)
+    target_include_directories(ddc_splines SYSTEM PUBLIC ${LAPACKE_INCLUDE_DIRS})
     target_link_libraries(
         ddc_splines
-        INTERFACE DDC::core Ginkgo::ginkgo Kokkos::kokkos Kokkos::kokkoskernels LAPACKE::LAPACKE
+        PUBLIC DDC::core Ginkgo::ginkgo Kokkos::kokkos Kokkos::kokkoskernels LAPACKE::LAPACKE
     )
     target_sources(
         ddc_splines
+        PRIVATE
+            include/ddc/kernels/splines/bsplines_non_uniform.cpp
+            include/ddc/kernels/splines/bsplines_uniform.cpp
+            include/ddc/kernels/splines/constant_extrapolation_rule.cpp
+            include/ddc/kernels/splines/deriv.cpp
+            include/ddc/kernels/splines/greville_interpolation_points.cpp
+            include/ddc/kernels/splines/integrals.cpp
+            include/ddc/kernels/splines/knot_discrete_dimension_type.cpp
+            include/ddc/kernels/splines/knots_as_interpolation_points.cpp
+            include/ddc/kernels/splines/kokkos-kernels-ext/KokkosBatched_Gbtrs.cpp
+            include/ddc/kernels/splines/kokkos-kernels-ext/KokkosBatched_Getrs.cpp
+            include/ddc/kernels/splines/math_tools.cpp
+            include/ddc/kernels/splines/null_extrapolation_rule.cpp
+            include/ddc/kernels/splines/periodic_extrapolation_rule.cpp
+            include/ddc/kernels/splines/spline_boundary_conditions.cpp
+            include/ddc/kernels/splines/spline_builder.cpp
+            include/ddc/kernels/splines/spline_builder_2d.cpp
+            include/ddc/kernels/splines/spline_builder_3d.cpp
+            include/ddc/kernels/splines/spline_evaluator.cpp
+            include/ddc/kernels/splines/spline_evaluator_2d.cpp
+            include/ddc/kernels/splines/spline_evaluator_3d.cpp
+            include/ddc/kernels/splines/spline_traits.cpp
+            include/ddc/kernels/splines/splines_linear_problem.cpp
+            include/ddc/kernels/splines/splines_linear_problem_2x2_blocks.cpp
+            include/ddc/kernels/splines/splines_linear_problem_3x3_blocks.cpp
+            include/ddc/kernels/splines/splines_linear_problem_band.cpp
+            include/ddc/kernels/splines/splines_linear_problem_dense.cpp
+            include/ddc/kernels/splines/splines_linear_problem_maker.cpp
+            include/ddc/kernels/splines/splines_linear_problem_pds_band.cpp
+            include/ddc/kernels/splines/splines_linear_problem_pds_tridiag.cpp
+            include/ddc/kernels/splines/splines_linear_problem_sparse.cpp
+            include/ddc/kernels/splines/view.cpp
         INTERFACE
             FILE_SET HEADERS
                 BASE_DIRS include
                 FILES
-                    include/ddc/kernels/splines.hpp
                     include/ddc/kernels/splines/bsplines_non_uniform.hpp
                     include/ddc/kernels/splines/bsplines_uniform.hpp
                     include/ddc/kernels/splines/constant_extrapolation_rule.hpp
@@ -311,12 +389,12 @@ if("${DDC_BUILD_PDI_WRAPPER}")
         find_package(PDI 1.6...<2 REQUIRED COMPONENTS C)
     endif()
 
-    add_library(ddc_pdi INTERFACE)
+    add_library(ddc_pdi)
     add_library(DDC::pdi ALIAS ddc_pdi)
     set_target_properties(ddc_pdi PROPERTIES EXPORT_NAME pdi)
-    target_compile_features(ddc_pdi INTERFACE cxx_std_17)
-    target_link_libraries(ddc_pdi INTERFACE DDC::core PDI::PDI_C)
-    target_sources(ddc_pdi INTERFACE FILE_SET HEADERS BASE_DIRS include FILES include/ddc/pdi.hpp)
+    target_compile_features(ddc_pdi PUBLIC cxx_std_17)
+    target_link_libraries(ddc_pdi PUBLIC DDC::core PDI::PDI_C)
+    target_sources(ddc_pdi PRIVATE include/ddc/pdi.cpp INTERFACE FILE_SET HEADERS BASE_DIRS include FILES include/ddc/pdi.hpp)
 
     install(TARGETS ddc_pdi EXPORT DDCPdiTargets FILE_SET HEADERS)
     install(EXPORT DDCPdiTargets NAMESPACE DDC:: DESTINATION ${DDC_INSTALL_CMAKEDIR})

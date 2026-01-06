@@ -164,7 +164,7 @@ jobs:
 
             cmake \
               -D CMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
-              -D CMAKE_CXX_FLAGS="-DNDEBUG --coverage -fprofile-update=atomic" \
+              -D CMAKE_CXX_FLAGS="-DNDEBUG -DKOKKOSKERNELS_DEBUG_LEVEL=0 --coverage -fprofile-update=atomic" \
               -D DDC_BUILD_BENCHMARKS=OFF \
               -D DDC_BUILD_EXAMPLES=OFF \
               -D Kokkos_ENABLE_DEPRECATED_CODE_4=OFF \

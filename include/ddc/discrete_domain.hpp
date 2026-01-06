@@ -24,7 +24,7 @@ template <class DDim>
 struct DiscreteDomainIterator;
 
 template <class... DDims>
-class DiscreteDomain;
+class DiscreteDomain; // IWYU pragma: keep
 
 template <class T>
 struct is_discrete_domain : std::false_type

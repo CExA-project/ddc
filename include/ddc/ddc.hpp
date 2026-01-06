@@ -33,6 +33,7 @@ static_assert(false, "DDC requires option -DKokkos_ENABLE_SYCL_RELOCATABLE_DEVIC
 namespace ddc {
 }
 
+// IWYU pragma: begin_exports
 // Misc
 #include <ddc/config.hpp>
 
@@ -79,3 +80,4 @@ namespace ddc {
 
 // Output
 #include "print.hpp"
+// IWYU pragma: end_exports

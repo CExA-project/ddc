@@ -7,8 +7,9 @@
 #include <algorithm>
 #include <array>
 #include <cstdlib>
+#include <limits>
 #include <mutex>
-#include <ostream>
+#include <ostream> // IWYU pragma: keep
 #include <sstream>
 #include <type_traits>
 #include <typeinfo>

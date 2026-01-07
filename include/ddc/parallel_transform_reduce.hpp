@@ -12,7 +12,7 @@
 #include <Kokkos_Core.hpp>
 
 #include "ddc_to_kokkos_execution_policy.hpp"
-#include "discrete_element.hpp"
+#include "discrete_vector.hpp"
 #include "reducer.hpp"
 
 namespace ddc {
@@ -93,7 +93,7 @@ template <class Reducer, class Functor, class Support, std::size_t... Idx>
 class TransformReducerKokkosLambdaAdapter<Reducer, Functor, Support, std::index_sequence<Idx...>>
 {
     template <std::size_t I>
-    using index_type = DiscreteElementType;
+    using index_type = DiscreteVectorElement;
 
     Reducer m_reducer;
 
@@ -114,7 +114,7 @@ public:
             [[maybe_unused]] index_type<0> unused_id,
             typename Reducer::value_type& a) const
     {
-        a = m_reducer(a, m_functor(DiscreteElement<>()));
+        a = m_reducer(a, m_functor(m_support(typename Support::discrete_vector_type())));
     }
 
     template <std::size_t N = sizeof...(Idx), std::enable_if_t<(N > 0), bool> = true>
@@ -146,7 +146,7 @@ T transform_reduce_kokkos(
     T result = neutral;
     Kokkos::parallel_reduce(
             label,
-            ddc_to_kokkos_execution_policy(execution_space, domain),
+            ddc_to_kokkos_execution_policy(execution_space, detail::array(domain.extents())),
             TransformReducerKokkosLambdaAdapter<
                     BinaryReductionOp,
                     UnaryTransformOp,

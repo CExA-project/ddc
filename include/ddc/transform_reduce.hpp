@@ -12,7 +12,7 @@
 
 #include "detail/macros.hpp"
 
-#include "discrete_element.hpp"
+#include "discrete_vector.hpp"
 
 namespace ddc {
 
@@ -25,11 +25,10 @@ namespace detail {
  *            results of transform, the results of other reduce and neutral.
  * @param[in] transform a unary FunctionObject that will be applied to each element of the input
  *            range. The return type must be acceptable as input to reduce
- * @param[in] dcoords discrete elements from dimensions already in a loop
+ * @param[in] is indices from dimensions already in a loop
  */
 template <
         class Support,
-        class Element,
         std::size_t N,
         class T,
         class BinaryReductionOp,
@@ -37,7 +36,7 @@ template <
         class... Is>
 T host_transform_reduce_serial(
         Support const& domain,
-        std::array<Element, N> const& size,
+        std::array<DiscreteVectorElement, N> const& size,
         [[maybe_unused]] T const neutral,
         BinaryReductionOp const& reduce,
         UnaryTransformOp const& transform,
@@ -49,7 +48,7 @@ T host_transform_reduce_serial(
         return transform(domain(typename Support::discrete_vector_type(is...)));
     } else {
         T result = neutral;
-        for (Element ii = 0; ii < size[I]; ++ii) {
+        for (DiscreteVectorElement ii = 0; ii < size[I]; ++ii) {
             result = reduce(
                     host_transform_reduce_serial(
                             domain,
@@ -73,19 +72,18 @@ T host_transform_reduce_serial(
  *            results of transform, the results of other reduce and neutral.
  * @param[in] transform a unary FunctionObject that will be applied to each element of the input
  *            range. The return type must be acceptable as input to reduce
- * @param[in] dcoords discrete elements from dimensions already in a loop
+ * @param[in] is indices from dimensions already in a loop
  */
 template <
         class Support,
         class T,
-        class Element,
         std::size_t N,
         class BinaryReductionOp,
         class UnaryTransformOp,
         class... Is>
 KOKKOS_FUNCTION T device_transform_reduce_serial(
         Support const& domain,
-        std::array<Element, N> const& size,
+        std::array<DiscreteVectorElement, N> const& size,
         [[maybe_unused]] T const neutral,
         BinaryReductionOp const& reduce,
         UnaryTransformOp const& transform,
@@ -97,7 +95,7 @@ KOKKOS_FUNCTION T device_transform_reduce_serial(
         return transform(domain(typename Support::discrete_vector_type(is...)));
     } else {
         T result = neutral;
-        for (Element ii = 0; ii < size[I]; ++ii) {
+        for (DiscreteVectorElement ii = 0; ii < size[I]; ++ii) {
             result = reduce(
                     device_transform_reduce_serial(
                             domain,

@@ -15,6 +15,7 @@ add_executable(
     chunk.cpp
     chunk_span.cpp
     create_mirror.cpp
+    details.cpp
     discrete_domain.cpp
     discrete_element.cpp
     discrete_space.cpp

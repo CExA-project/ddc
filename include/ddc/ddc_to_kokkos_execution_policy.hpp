@@ -9,37 +9,36 @@
 
 #include <Kokkos_Core.hpp>
 
-#include "discrete_element.hpp"
+#include "discrete_vector.hpp"
 
 namespace ddc::detail {
 
-template <class ExecSpace, class Support>
-auto ddc_to_kokkos_execution_policy(ExecSpace const& execution_space, Support const& domain)
+template <class ExecSpace, std::size_t N>
+auto ddc_to_kokkos_execution_policy(
+        ExecSpace const& execution_space,
+        std::array<DiscreteVectorElement, N> const& size)
 {
     using work_tag = void;
-    using index_type = Kokkos::IndexType<DiscreteElementType>;
-    if constexpr (Support::rank() == 0) {
+    using index_type = Kokkos::IndexType<DiscreteVectorElement>;
+    if constexpr (N == 0) {
         return Kokkos::RangePolicy<ExecSpace, work_tag, index_type>(execution_space, 0, 1);
     } else {
-        if constexpr (Support::rank() == 1) {
-            return Kokkos::RangePolicy<
-                    ExecSpace,
-                    work_tag,
-                    index_type>(execution_space, 0, domain.extents().value());
+        if constexpr (N == 1) {
+            return Kokkos::
+                    RangePolicy<ExecSpace, work_tag, index_type>(execution_space, 0, size[0]);
         } else {
             using iteration_pattern
-                    = Kokkos::Rank<Support::rank(), Kokkos::Iterate::Right, Kokkos::Iterate::Right>;
-            Kokkos::Array<std::size_t, Support::rank()> const begin {};
-            std::array const end = detail::array(domain.extents());
-            Kokkos::Array<std::size_t, Support::rank()> end2;
-            for (int i = 0; i < Support::rank(); ++i) {
-                end2[i] = end[i];
+                    = Kokkos::Rank<N, Kokkos::Iterate::Right, Kokkos::Iterate::Right>;
+            Kokkos::Array<DiscreteVectorElement, N> const begin {};
+            Kokkos::Array<DiscreteVectorElement, N> end;
+            for (std::size_t i = 0; i < N; ++i) {
+                end[i] = size[i];
             }
             return Kokkos::MDRangePolicy<
                     ExecSpace,
                     iteration_pattern,
                     work_tag,
-                    index_type>(execution_space, begin, end2);
+                    index_type>(execution_space, begin, end);
         }
     }
 }

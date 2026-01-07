@@ -126,26 +126,20 @@ inline KokkosFFT::Normalization ddc_fft_normalization_to_kokkos_fft(
     throw std::runtime_error("ddc::FFT_Normalization not handled");
 }
 
-template <
-        typename ExecSpace,
-        typename ElementType,
-        typename DDom,
-        typename Layout,
-        typename MemorySpace,
-        typename T>
-void rescale(
-        ExecSpace const& exec_space,
-        ddc::ChunkSpan<ElementType, DDom, Layout, MemorySpace> const& chunk_span,
-        T const& value)
+template <class T>
+class ScaleFn
 {
-    ddc::parallel_for_each(
-            "ddc_fft_normalization",
-            exec_space,
-            chunk_span.domain(),
-            KOKKOS_LAMBDA(typename DDom::discrete_element_type const i) {
-                chunk_span(i) *= value;
-            });
-}
+    T m_coef;
+
+public:
+    explicit ScaleFn(T coef) noexcept : m_coef(std::move(coef)) {}
+
+    template <class U>
+    [[nodiscard]] KOKKOS_FUNCTION U operator()(U const& value) const noexcept
+    {
+        return m_coef * value;
+    }
+};
 
 template <class DDim>
 Real forward_full_norm_coef(DiscreteDomain<DDim> const& ddom) noexcept
@@ -248,7 +242,7 @@ void impl(
             norm_coef = (backward_full_norm_coef(DiscreteDomain<DDimOut>(ddom_out)) * ...);
         }
 
-        rescale(exec_space, out, static_cast<real_type_t<Tout>>(norm_coef));
+        ddc::parallel_transform(exec_space, out, ScaleFn<real_type_t<Tout>>(norm_coef));
     }
 }
 

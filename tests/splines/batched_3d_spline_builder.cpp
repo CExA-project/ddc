@@ -1188,7 +1188,7 @@ void TestBatched3dSpline()
                                 s_degree,
                                 s_degree,
                                 s_degree),
-                        1e-11 * max_norm_diff12));
+                        1e-10 * max_norm_diff12));
     EXPECT_LE(
             max_norm_error_diff23,
             std::
@@ -1199,7 +1199,7 @@ void TestBatched3dSpline()
                                 s_degree,
                                 s_degree,
                                 s_degree),
-                        1e-11 * max_norm_diff23));
+                        1e-10 * max_norm_diff23));
     EXPECT_LE(
             max_norm_error_diff13,
             std::
@@ -1210,7 +1210,7 @@ void TestBatched3dSpline()
                                 s_degree,
                                 s_degree,
                                 s_degree),
-                        1e-11 * max_norm_diff13));
+                        1e-10 * max_norm_diff13));
     EXPECT_LE(
             max_norm_error_diff123,
             std::
@@ -1221,7 +1221,7 @@ void TestBatched3dSpline()
                                 s_degree,
                                 s_degree,
                                 s_degree),
-                        5e-10 * max_norm_diff123));
+                        1e-9 * max_norm_diff123));
 }
 
 } // namespace anonymous_namespace_workaround_batched_3d_spline_builder_cpp

@@ -850,6 +850,7 @@ operator()(
         assert(derivs_xmin->template extent<deriv_type>() == s_nbc_xmin);
         auto derivs_xmin_values = *derivs_xmin;
         auto const dx_proxy = m_dx;
+        auto const odd_proxy = s_odd;
         ddc::parallel_for_each(
                 "ddc_splines_hermite_compute_lower_coefficients",
                 exec_space(),
@@ -859,8 +860,8 @@ operator()(
                                 j) {
                     for (int i = s_nbc_xmin; i > 0; --i) {
                         spline(ddc::DiscreteElement<bsplines_type>(s_nbc_xmin - i), j)
-                                = derivs_xmin_values(ddc::DiscreteElement<deriv_type>(i + s_odd - 1), j)
-                                  * ddc::detail::ipow(dx_proxy, i + s_odd - 1);
+                                = derivs_xmin_values(ddc::DiscreteElement<deriv_type>(i + odd_proxy - 1), j)
+                                  * ddc::detail::ipow(dx_proxy, i + odd_proxy - 1);
                     }
                 });
     }
@@ -895,6 +896,7 @@ operator()(
         assert(derivs_xmax->template extent<deriv_type>() == s_nbc_xmax);
         auto derivs_xmax_values = *derivs_xmax;
         auto const dx_proxy = m_dx;
+        auto const odd_proxy = s_odd;
         ddc::parallel_for_each(
                 "ddc_splines_hermite_compute_upper_coefficients",
                 exec_space(),
@@ -905,8 +907,8 @@ operator()(
                     for (int i = 0; i < s_nbc_xmax; ++i) {
                         spline(ddc::DiscreteElement<bsplines_type>(nbasis_proxy - s_nbc_xmax + i),
                                j)
-                                = derivs_xmax_values(ddc::DiscreteElement<deriv_type>(i + s_odd), j)
-                                  * ddc::detail::ipow(dx_proxy, i + s_odd);
+                                = derivs_xmax_values(ddc::DiscreteElement<deriv_type>(i + odd_proxy), j)
+                                  * ddc::detail::ipow(dx_proxy, i + odd_proxy);
                     }
                 });
     }
@@ -1063,6 +1065,7 @@ SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower, BcUp
 
     // Multiply derivatives coefficients by dx^n
     auto const dx_proxy = m_dx;
+    auto const odd_proxy = s_odd;
     ddc::parallel_for_each(
             exec_space(),
             coefficients_derivs_xmin.domain(),
@@ -1070,7 +1073,7 @@ SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower, BcUp
                 coefficients_derivs_xmin(i) *= ddc::detail::
                         ipow(dx_proxy,
                              static_cast<std::size_t>(get<bsplines_type>(
-                                     s_nbc_xmin + s_odd - 1 - (i - coefficients_derivs_xmin.domain().front()))));
+                                     s_nbc_xmin + odd_proxy - 1 - (i - coefficients_derivs_xmin.domain().front()))));
             });
     ddc::parallel_for_each(
             exec_space(),
@@ -1079,7 +1082,7 @@ SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower, BcUp
                 coefficients_derivs_xmax(i) *= ddc::detail::
                         ipow(dx_proxy,
                              static_cast<std::size_t>(get<bsplines_type>(
-                                     i - coefficients_derivs_xmax.domain().front() + s_odd)));
+                                     i - coefficients_derivs_xmax.domain().front() + odd_proxy)));
             });
 
     // Allocate Chunk on deriv_type and interpolation_discrete_dimension_type and copy quadrature coefficients into it

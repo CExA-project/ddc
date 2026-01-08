@@ -138,7 +138,8 @@ void TestNonPeriodicSplineBuilderTestIdentity()
                 execution_space(),
                 derivs_domain,
                 KOKKOS_LAMBDA(ddc::DiscreteElement<ddc::Deriv<DimX>> const ii) {
-                    derivs_lhs(ii) = evaluator.deriv(x0, ii - ddc::DiscreteElement<ddc::Deriv<DimX>>(0));
+                    derivs_lhs(ii)
+                            = evaluator.deriv(x0, ii - ddc::DiscreteElement<ddc::Deriv<DimX>>(0));
                 });
     }
 
@@ -149,7 +150,8 @@ void TestNonPeriodicSplineBuilderTestIdentity()
                 execution_space(),
                 derivs_domain,
                 KOKKOS_LAMBDA(ddc::DiscreteElement<ddc::Deriv<DimX>> const ii) {
-                    derivs_rhs(ii) = evaluator.deriv(xN, ii - ddc::DiscreteElement<ddc::Deriv<DimX>>(0));
+                    derivs_rhs(ii)
+                            = evaluator.deriv(xN, ii - ddc::DiscreteElement<ddc::Deriv<DimX>>(0));
                 });
     }
 
@@ -233,9 +235,9 @@ void TestNonPeriodicSplineBuilderTestIdentity()
             quadrature_coefficients_derivs_xmin.domain(),
             0.0,
             ddc::reducer::sum<double>(),
-            KOKKOS_LAMBDA(
-                    ddc::DiscreteElement<ddc::Deriv<DimX>> const ix) {
-                return quadrature_coefficients_derivs_xmin(ix) * derivs_lhs(quadrature_coefficients_derivs_xmin.domain().back() - ix);
+            KOKKOS_LAMBDA(ddc::DiscreteElement<ddc::Deriv<DimX>> const ix) {
+                return quadrature_coefficients_derivs_xmin(ix)
+                       * derivs_lhs(quadrature_coefficients_derivs_xmin.domain().back() - ix);
             });
 #else
     double const quadrature_integral_derivs_xmin = 0.;
@@ -256,8 +258,7 @@ void TestNonPeriodicSplineBuilderTestIdentity()
             quadrature_coefficients_derivs_xmax.domain(),
             0.0,
             ddc::reducer::sum<double>(),
-            KOKKOS_LAMBDA(
-                    ddc::DiscreteElement<ddc::Deriv<DimX>> const ix) {
+            KOKKOS_LAMBDA(ddc::DiscreteElement<ddc::Deriv<DimX>> const ix) {
                 return quadrature_coefficients_derivs_xmax(ix) * derivs_rhs(ix);
             });
 #else

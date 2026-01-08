@@ -227,8 +227,7 @@ std::tuple<double, double, double, double> compute_evaluation_error(
                 KOKKOS_LAMBDA(ddc::DiscreteElement<ddc::Deriv<I1>, DDimI2> const e) {
                     auto deriv_idx = ddc::DiscreteElement<ddc::Deriv<I1>>(e).uid();
                     auto x2 = ddc::coordinate(ddc::DiscreteElement<DDimI2>(e));
-                    derivs_1d_lhs1_host(e)
-                            = evaluator.deriv(x0<I1>(), x2, deriv_idx, 0);
+                    derivs_1d_lhs1_host(e) = evaluator.deriv(x0<I1>(), x2, deriv_idx, 0);
                 });
         auto derivs_1d_lhs1_alloc
                 = ddc::create_mirror_view_and_copy(exec_space, derivs_1d_lhs1_host);
@@ -255,8 +254,7 @@ std::tuple<double, double, double, double> compute_evaluation_error(
                 KOKKOS_LAMBDA(ddc::DiscreteElement<ddc::Deriv<I1>, DDimI2> const e) {
                     auto deriv_idx = ddc::DiscreteElement<ddc::Deriv<I1>>(e).uid();
                     auto x2 = ddc::coordinate(ddc::DiscreteElement<DDimI2>(e));
-                    derivs_1d_rhs1_host(e)
-                            = evaluator.deriv(xn<I1>(), x2, deriv_idx, 0);
+                    derivs_1d_rhs1_host(e) = evaluator.deriv(xn<I1>(), x2, deriv_idx, 0);
                 });
         auto derivs_1d_rhs1_alloc
                 = ddc::create_mirror_view_and_copy(exec_space, derivs_1d_rhs1_host);
@@ -352,7 +350,8 @@ std::tuple<double, double, double, double> compute_evaluation_error(
              ii < static_cast<std::size_t>(derivs_domain.template extent<ddc::Deriv<I1>>()) + shift;
              ++ii) {
             for (std::size_t jj = shift;
-                 jj < static_cast<std::size_t>(derivs_domain.template extent<ddc::Deriv<I2>>()) + shift;
+                 jj < static_cast<std::size_t>(derivs_domain.template extent<ddc::Deriv<I2>>())
+                              + shift;
                  ++jj) {
                 derivs_mixed_lhs_lhs1_host(
                         typename decltype(derivs_domain)::discrete_element_type(ii, jj))

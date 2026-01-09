@@ -726,13 +726,15 @@ void SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower,
             }
         }
 
-        // iterate only to deg as last bspline is 0
-        for (std::size_t i = 0; i < s_nbc_xmin; ++i) {
-            for (std::size_t j = 0; j < bsplines_type::degree(); ++j) {
-                m_matrix->set_element(
-                        i,
-                        j,
-                        DDC_MDSPAN_ACCESS_OP(derivs, j, s_nbc_xmin - i - 1 + s_odd));
+        if constexpr (s_nbc_xmin > 0) {
+            // iterate only to deg as last bspline is 0
+            for (std::size_t i = 0; i < s_nbc_xmin; ++i) {
+                for (std::size_t j = 0; j < bsplines_type::degree(); ++j) {
+                    m_matrix->set_element(
+                            i,
+                            j,
+                            DDC_MDSPAN_ACCESS_OP(derivs, j, s_nbc_xmin - i - 1 + s_odd));
+                }
             }
         }
     }
@@ -782,14 +784,16 @@ void SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower,
             }
         }
 
-        int const i0 = ddc::discrete_space<BSplines>().nbasis() - s_nbc_xmax;
-        int const j0 = ddc::discrete_space<BSplines>().nbasis() - bsplines_type::degree();
-        for (std::size_t j = 0; j < bsplines_type::degree(); ++j) {
-            for (std::size_t i = 0; i < s_nbc_xmax; ++i) {
-                m_matrix->set_element(
-                        i0 + i,
-                        j0 + j,
-                        DDC_MDSPAN_ACCESS_OP(derivs, j + 1, i + s_odd));
+        if constexpr (s_nbc_xmax > 0) {
+            int const i0 = ddc::discrete_space<BSplines>().nbasis() - s_nbc_xmax;
+            int const j0 = ddc::discrete_space<BSplines>().nbasis() - bsplines_type::degree();
+            for (std::size_t j = 0; j < bsplines_type::degree(); ++j) {
+                for (std::size_t i = 0; i < s_nbc_xmax; ++i) {
+                    m_matrix->set_element(
+                            i0 + i,
+                            j0 + j,
+                            DDC_MDSPAN_ACCESS_OP(derivs, j + 1, i + s_odd));
+                }
             }
         }
     }
@@ -1096,12 +1100,12 @@ SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower, BcUp
                                      i - coefficients_derivs_xmax.domain().front() + odd_proxy)));
             });
 
+    ddc::DiscreteElement<deriv_type> const first_deriv(s_odd);
     // Allocate Chunk on deriv_type and interpolation_discrete_dimension_type and copy quadrature coefficients into it
     ddc::Chunk coefficients_derivs_xmin_out(
             ddc::DiscreteDomain<deriv_type>(
-                    ddc::DiscreteElement<deriv_type> {
-                            s_odd}, // These indices are wrong the order should be reversed
-                    ddc::DiscreteVector<deriv_type> {s_nbc_xmin}),
+                    first_deriv, // These indices are wrong the order should be reversed
+                    ddc::DiscreteVector<deriv_type>(s_nbc_xmin)),
             ddc::KokkosAllocator<double, OutMemorySpace>());
     ddc::Chunk coefficients_out(
             interpolation_domain().take_first(
@@ -1109,9 +1113,8 @@ SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower, BcUp
                             coefficients.size())),
             ddc::KokkosAllocator<double, OutMemorySpace>());
     ddc::Chunk coefficients_derivs_xmax_out(
-            ddc::DiscreteDomain<deriv_type>(
-                    ddc::DiscreteElement<deriv_type> {s_odd},
-                    ddc::DiscreteVector<deriv_type> {s_nbc_xmax}),
+            ddc::DiscreteDomain<
+                    deriv_type>(first_deriv, ddc::DiscreteVector<deriv_type>(s_nbc_xmax)),
             ddc::KokkosAllocator<double, OutMemorySpace>());
     Kokkos::deep_copy(
             coefficients_derivs_xmin_out.allocation_kokkos_view(),

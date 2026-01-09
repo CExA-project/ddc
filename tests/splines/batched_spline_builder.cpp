@@ -202,12 +202,8 @@ void TestBatchedSpline()
     if (s_bcl == ddc::BoundCond::HERMITE) {
         ddc::Chunk derivs_lhs1_host_alloc(derivs_domain, ddc::HostAllocator<double>());
         ddc::ChunkSpan const derivs_lhs1_host = derivs_lhs1_host_alloc.span_view();
-        for (int ii = shift;
-             ii < derivs_lhs1_host.domain().template extent<ddc::Deriv<I>>() + shift;
-             ++ii) {
-            derivs_lhs1_host(
-                    typename decltype(derivs_lhs1_host.domain())::discrete_element_type(ii))
-                    = evaluator.deriv(x0<I>(), ii);
+        for (ddc::DiscreteElement<ddc::Deriv<I>> const ei : derivs_domain) {
+            derivs_lhs1_host(ei) = evaluator.deriv(x0<I>(), ei.uid());
         }
         auto derivs_lhs1_alloc = ddc::create_mirror_view_and_copy(exec_space, derivs_lhs1_host);
         ddc::ChunkSpan const derivs_lhs1 = derivs_lhs1_alloc.span_view();
@@ -225,12 +221,8 @@ void TestBatchedSpline()
     if (s_bcr == ddc::BoundCond::HERMITE) {
         ddc::Chunk derivs_rhs1_host_alloc(derivs_domain, ddc::HostAllocator<double>());
         ddc::ChunkSpan const derivs_rhs1_host = derivs_rhs1_host_alloc.span_view();
-        for (int ii = shift;
-             ii < derivs_rhs1_host.domain().template extent<ddc::Deriv<I>>() + shift;
-             ++ii) {
-            derivs_rhs1_host(
-                    typename decltype(derivs_rhs1_host.domain())::discrete_element_type(ii))
-                    = evaluator.deriv(xn<I>(), ii);
+        for (ddc::DiscreteElement<ddc::Deriv<I>> const ei : derivs_domain) {
+            derivs_rhs1_host(ei) = evaluator.deriv(xn<I>(), ei.uid());
         }
         auto derivs_rhs1_alloc = ddc::create_mirror_view_and_copy(exec_space, derivs_rhs1_host);
         ddc::ChunkSpan const derivs_rhs1 = derivs_rhs1_alloc.span_view();

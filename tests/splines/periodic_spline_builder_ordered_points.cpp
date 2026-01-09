@@ -10,6 +10,8 @@
 
 #include <gtest/gtest.h>
 
+#include <Kokkos_Core.hpp>
+
 struct DimX
 {
     static constexpr bool PERIODIC = true;

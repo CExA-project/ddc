@@ -5,6 +5,9 @@
 #pragma once
 
 #include <cassert>
+#if !defined(NDEBUG)
+#    include <cmath>
+#endif
 #include <cstddef>
 #include <stdexcept>
 #include <string>

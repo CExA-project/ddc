@@ -16,7 +16,9 @@
 
 #include "chunk_common.hpp"
 #include "chunk_span.hpp"
-#include "chunk_traits.hpp"
+#include "discrete_domain.hpp"
+#include "discrete_element.hpp"
+#include "discrete_vector.hpp"
 #include "kokkos_allocator.hpp"
 
 namespace ddc {
@@ -137,10 +139,7 @@ public:
      */
     Chunk& operator=(Chunk&& other) noexcept
     {
-        if (this == &other) {
-            return *this;
-        }
-        if (this->m_allocation_mdspan.data_handle()) {
+        if (this->data_handle()) {
             m_allocator.deallocate(this->data_handle(), this->size());
         }
         static_cast<base_type&>(*this) = std::move(static_cast<base_type&>(other));
@@ -167,14 +166,20 @@ public:
     }
 
     /// Slice out some dimensions
-    template <class... QueryDDims>
+    template <
+            class... QueryDDims,
+            class SFINAESupportType = SupportType,
+            std::enable_if_t<is_discrete_domain_v<SFINAESupportType>, int> = 0>
     auto operator[](DiscreteDomain<QueryDDims...> const& odomain) const
     {
         return span_view()[odomain];
     }
 
     /// Slice out some dimensions
-    template <class... QueryDDims>
+    template <
+            class... QueryDDims,
+            class SFINAESupportType = SupportType,
+            std::enable_if_t<is_discrete_domain_v<SFINAESupportType>, int> = 0>
     auto operator[](DiscreteDomain<QueryDDims...> const& odomain)
     {
         return span_view()[odomain];

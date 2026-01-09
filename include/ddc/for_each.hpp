@@ -8,6 +8,8 @@
 #include <cstddef>
 #include <utility>
 
+#include <Kokkos_Macros.hpp>
+
 #include "discrete_element.hpp"
 #include "discrete_vector.hpp"
 

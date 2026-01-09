@@ -11,6 +11,7 @@
 
 #include <gtest/gtest.h>
 
+#include <KokkosFFT.hpp>
 #include <Kokkos_Core.hpp>
 
 #if !defined(KOKKOSFFT_ENABLE_SERIAL)
@@ -245,6 +246,29 @@ struct RDimY;
 struct RDimZ;
 
 } // namespace anonymous_namespace_workaround_fft_cpp
+
+TEST(FourierTest, Normalization)
+{
+    EXPECT_EQ(
+            ddc::detail::fft::ddc_fft_normalization_to_kokkos_fft(ddc::FFT_Normalization::OFF),
+            KokkosFFT::Normalization::none);
+    EXPECT_EQ(
+            ddc::detail::fft::ddc_fft_normalization_to_kokkos_fft(ddc::FFT_Normalization::FULL),
+            KokkosFFT::Normalization::none);
+    EXPECT_EQ(
+            ddc::detail::fft::ddc_fft_normalization_to_kokkos_fft(ddc::FFT_Normalization::FORWARD),
+            KokkosFFT::Normalization::forward);
+    EXPECT_EQ(
+            ddc::detail::fft::ddc_fft_normalization_to_kokkos_fft(ddc::FFT_Normalization::BACKWARD),
+            KokkosFFT::Normalization::backward);
+    EXPECT_EQ(
+            ddc::detail::fft::ddc_fft_normalization_to_kokkos_fft(ddc::FFT_Normalization::ORTHO),
+            KokkosFFT::Normalization::ortho);
+    EXPECT_THROW(
+            ddc::detail::fft::ddc_fft_normalization_to_kokkos_fft(
+                    static_cast<ddc::FFT_Normalization>(-1)),
+            std::runtime_error);
+}
 
 TEST(FourierMesh, Extents)
 {

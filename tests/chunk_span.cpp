@@ -9,6 +9,8 @@
 
 #include <gtest/gtest.h>
 
+#include <Kokkos_Core.hpp>
+
 inline namespace anonymous_namespace_workaround_chunk_span_cpp {
 
 struct DDimX

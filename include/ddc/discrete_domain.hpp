@@ -8,7 +8,9 @@
 #include <iterator>
 #include <tuple>
 #include <type_traits>
+#include <utility>
 
+#include <Kokkos_Assert.hpp>
 #include <Kokkos_Macros.hpp>
 
 #include "detail/type_seq.hpp"
@@ -221,12 +223,14 @@ public:
                 sizeof...(DDims) == (0 + ... + DElems::size()),
                 "Invalid number of dimensions");
         static_assert((is_discrete_element_v<DElems> && ...), "Expected DiscreteElements");
-        return (((DiscreteElement<DDims>(take<DDims>(delems...))
-                  >= DiscreteElement<DDims>(m_element_begin))
-                 && ...)
-                && ((DiscreteElement<DDims>(take<DDims>(delems...))
-                     < DiscreteElement<DDims>(m_element_end))
-                    && ...));
+        DiscreteElement<DDims...> const delem(delems...);
+        for (std::size_t i = 0; i < rank(); ++i) {
+            if ((detail::array(delem)[i] < detail::array(m_element_begin)[i])
+                || (detail::array(delem)[i] >= detail::array(m_element_end)[i])) {
+                return false;
+            }
+        }
+        return true;
     }
 
     template <class... DElems>
@@ -457,9 +461,7 @@ template <class... QueryDDims, class... DDims>
 KOKKOS_FUNCTION constexpr DiscreteDomain<QueryDDims...> select(
         DiscreteDomain<DDims...> const& domain)
 {
-    return DiscreteDomain<QueryDDims...>(
-            DiscreteElement<QueryDDims...>(domain.front()),
-            DiscreteVector<QueryDDims...>(domain.extents()));
+    return DiscreteDomain<QueryDDims...>(domain);
 }
 
 namespace detail {

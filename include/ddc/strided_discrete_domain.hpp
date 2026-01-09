@@ -9,6 +9,7 @@
 #include <tuple>
 #include <type_traits>
 
+#include <Kokkos_Assert.hpp>
 #include <Kokkos_Macros.hpp>
 
 #include "detail/type_seq.hpp"
@@ -224,22 +225,23 @@ public:
                 sizeof...(DDims) == (0 + ... + DElems::size()),
                 "Invalid number of dimensions");
         static_assert((is_discrete_element_v<DElems> && ...), "Expected DiscreteElements");
-        auto const test1
-                = ((DiscreteElement<DDims>(take<DDims>(delems...))
-                    >= DiscreteElement<DDims>(m_element_begin))
-                   && ...);
-        auto const test2
-                = ((DiscreteElement<DDims>(take<DDims>(delems...))
-                    < (DiscreteElement<DDims>(m_element_begin)
-                       + DiscreteVector<DDims>(m_extents) * DiscreteVector<DDims>(m_strides)))
-                   && ...);
-        auto const test3
-                = ((((DiscreteElement<DDims>(take<DDims>(delems...))
-                      - DiscreteElement<DDims>(m_element_begin))
-                     % DiscreteVector<DDims>(m_strides))
-                    == 0)
-                   && ...);
-        return test1 && test2 && test3;
+        auto const contains_1d = [](DiscreteElementType const i,
+                                    DiscreteElementType const b,
+                                    DiscreteVectorElement const n,
+                                    DiscreteVectorElement const s) {
+            return (i >= b) && (i < (b + (n - 1) * s + 1)) && ((i - b) % s == 0);
+        };
+        DiscreteElement<DDims...> const delem(delems...);
+        for (std::size_t i = 0; i < rank(); ++i) {
+            if (!contains_1d(
+                        detail::array(delem)[i],
+                        detail::array(m_element_begin)[i],
+                        detail::array(m_extents)[i],
+                        detail::array(m_strides)[i])) {
+                return false;
+            }
+        }
+        return true;
     }
 
     template <class... DElems>
@@ -472,10 +474,7 @@ template <class... QueryDDims, class... DDims>
 KOKKOS_FUNCTION constexpr StridedDiscreteDomain<QueryDDims...> select(
         StridedDiscreteDomain<DDims...> const& domain)
 {
-    return StridedDiscreteDomain<QueryDDims...>(
-            DiscreteElement<QueryDDims...>(domain.front()),
-            DiscreteVector<QueryDDims...>(domain.extents()),
-            DiscreteVector<QueryDDims...>(domain.strides()));
+    return StridedDiscreteDomain<QueryDDims...>(domain);
 }
 
 namespace detail {

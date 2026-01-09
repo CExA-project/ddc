@@ -1,8 +1,10 @@
-FROM ubuntu:noble
-
 # Copyright (C) The DDC development team, see COPYRIGHT.md file
 #
 # SPDX-License-Identifier: MIT
+
+FROM ubuntu:noble@sha256:c35e29c9450151419d9448b0fd75374fec4fff364a27f176fb458d472dfc9e54
+
+LABEL "org.opencontainers.image.source"="https://github.com/CExA-project/ddc"
 
 ARG CMAKE_VERSION=3.25.3
 
@@ -17,7 +19,6 @@ RUN chmod +x /bin/bash_run \
  && echo tzdata tzdata/Areas string Etc | debconf-set-selections \
  && echo tzdata tzdata/Zones/Etc string UTC | debconf-set-selections \
  && apt-get update -y \
- && apt-get upgrade -y \
  && apt-get install -y --no-install-recommends \
     apt-transport-https \
     apt-utils \

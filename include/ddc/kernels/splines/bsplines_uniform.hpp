@@ -6,12 +6,14 @@
 
 #include <array>
 #include <cassert>
-#include <memory>
+#include <cstddef>
 #include <tuple>
+#include <type_traits>
 
 #include <ddc/ddc.hpp>
 
-#include "math_tools.hpp"
+#include <Kokkos_Core.hpp>
+
 #include "view.hpp"
 
 namespace ddc {

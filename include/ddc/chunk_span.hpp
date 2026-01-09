@@ -4,7 +4,6 @@
 
 #pragma once
 
-#include <array>
 #include <cstddef>
 #include <type_traits>
 #include <utility>
@@ -12,12 +11,14 @@
 #include <Kokkos_Core.hpp>
 
 #include "detail/kokkos.hpp"
+#include "detail/macros.hpp"
 #include "detail/type_seq.hpp"
 #include "detail/type_traits.hpp"
 
 #include "chunk_common.hpp"
 #include "discrete_domain.hpp"
 #include "discrete_element.hpp"
+#include "discrete_vector.hpp"
 
 namespace ddc {
 
@@ -307,7 +308,7 @@ public:
     template <
             class... QueryDDims,
             class SFINAESupportType = SupportType,
-            std::enable_if_t<is_discrete_domain_v<SFINAESupportType>, std::nullptr_t> = nullptr>
+            std::enable_if_t<is_discrete_domain_v<SFINAESupportType>, int> = 0>
     KOKKOS_FUNCTION constexpr auto operator[](DiscreteDomain<QueryDDims...> const& odomain) const
     {
         KOKKOS_ASSERT(

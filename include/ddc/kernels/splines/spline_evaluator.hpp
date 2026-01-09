@@ -10,8 +10,7 @@
 
 #include <ddc/ddc.hpp>
 
-#include <Kokkos_Macros.hpp>
-#include <Kokkos_MathematicalFunctions.hpp>
+#include <Kokkos_Core.hpp>
 
 #include "deriv.hpp"
 #include "integrals.hpp"

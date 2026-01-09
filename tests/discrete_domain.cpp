@@ -2,6 +2,8 @@
 //
 // SPDX-License-Identifier: MIT
 
+#include <type_traits>
+
 #include <ddc/ddc.hpp>
 
 #include <gtest/gtest.h>
@@ -132,21 +134,38 @@ TEST(DiscreteDomainTest, CompareSameDomains)
 TEST(DiscreteDomainTest, CompareDifferentDomains)
 {
     DDomXY const dom_x_y_1(lbound_x_y + DVectXY(0, 1), DVectXY(1, 2));
-    DDomXY const dom_x_y_2(lbound_x_y + DVectXY(2, 3), DVectXY(3, 4));
+    DDomXY const dom_x_y_2(lbound_x_y + DVectXY(0, 1), DVectXY(3, 4));
+    DDomXY const dom_x_y_3(lbound_x_y + DVectXY(2, 3), DVectXY(1, 2));
     EXPECT_FALSE(dom_x_y_1 == dom_x_y_2);
     EXPECT_FALSE(dom_x_y_1 == DDomYX(dom_x_y_2));
     EXPECT_TRUE(dom_x_y_1 != dom_x_y_2);
     EXPECT_TRUE(dom_x_y_1 != DDomYX(dom_x_y_2));
+
+    EXPECT_FALSE(dom_x_y_1 == dom_x_y_3);
+    EXPECT_FALSE(dom_x_y_1 == DDomYX(dom_x_y_3));
+    EXPECT_TRUE(dom_x_y_1 != dom_x_y_3);
+    EXPECT_TRUE(dom_x_y_1 != DDomYX(dom_x_y_3));
+
+    EXPECT_FALSE(dom_x_y_2 == dom_x_y_3);
+    EXPECT_FALSE(dom_x_y_2 == DDomYX(dom_x_y_3));
+    EXPECT_TRUE(dom_x_y_2 != dom_x_y_3);
+    EXPECT_TRUE(dom_x_y_2 != DDomYX(dom_x_y_3));
 }
 
 TEST(DiscreteDomainTest, CompareEmptyDomains)
 {
     DDomXY const dom_x_y_1(lbound_x_y + DVectXY(4, 1), DVectXY(0, 0));
     DDomXY const dom_x_y_2(lbound_x_y + DVectXY(3, 9), DVectXY(0, 0));
+    DDomXY const dom_x_y_3(lbound_x_y, nelems_x_y);
     EXPECT_TRUE(dom_x_y_1.empty());
     EXPECT_TRUE(dom_x_y_2.empty());
+    EXPECT_FALSE(dom_x_y_3.empty());
+
     EXPECT_TRUE(dom_x_y_1 == dom_x_y_2);
     EXPECT_FALSE(dom_x_y_1 != dom_x_y_2);
+
+    EXPECT_FALSE(dom_x_y_1 == dom_x_y_3);
+    EXPECT_TRUE(dom_x_y_1 != dom_x_y_3);
 }
 
 TEST(DiscreteDomainTest, Subdomain)
@@ -247,9 +266,10 @@ TEST(DiscreteDomainTest, Remove)
 
 TEST(DiscreteDomainTest, Contains)
 {
-    DDomXY const dom_x_y(lbound_x_y, nelems_x_y);
-    EXPECT_TRUE(dom_x_y.contains(lbound_x_y));
-    EXPECT_FALSE(dom_x_y.contains(lbound_x_y + nelems_x_y));
+    DDomXY const dom_x_y(lbound_x_y + DVectXY(1, 1), nelems_x_y);
+    EXPECT_TRUE(dom_x_y.contains(dom_x_y.front()));
+    EXPECT_FALSE(dom_x_y.contains(dom_x_y.front() - DVectXY(1, 1)));
+    EXPECT_FALSE(dom_x_y.contains(dom_x_y.back() + DVectXY(1, 1)));
 }
 
 TEST(DiscreteDomainTest, DistanceFromFront)
@@ -307,4 +327,13 @@ TEST(DiscreteDomainTest, CartesianProduct)
     EXPECT_TRUE((std::is_same_v<ddc::cartesian_prod_t<DDomX>, DDomX>));
     EXPECT_TRUE((std::is_same_v<ddc::cartesian_prod_t<DDomX, DDomY, DDomZ>, DDomXYZ>));
     EXPECT_TRUE((std::is_same_v<ddc::cartesian_prod_t<DDomZY, DDomX>, DDomZYX>));
+}
+
+TEST(DiscreteDomainTest, Select)
+{
+    DDomX const dom_x(lbound_x, nelems_x);
+    DDomY const dom_y(lbound_y, nelems_y);
+    DDomXY const dom_x_y(dom_x, dom_y);
+    EXPECT_EQ(ddc::select<DDimX>(dom_x_y), dom_x);
+    EXPECT_EQ(ddc::select<DDimY>(dom_x_y), dom_y);
 }

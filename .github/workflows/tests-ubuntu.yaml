@@ -128,6 +128,7 @@ jobs:
             c_compiler: 'gcc'
             cxx_compiler: 'g++'
         cxx_version: ['17']
+        cmake_build_type: ['None']
     runs-on: ubuntu-latest
     needs: [docker-build, id_repo]
     steps:
@@ -163,7 +164,7 @@ jobs:
 
             cmake \
               -D CMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
-              -D CMAKE_CXX_FLAGS="-DNDEBUG --coverage -fprofile-update=atomic" \
+              -D CMAKE_CXX_FLAGS="-DNDEBUG -DKOKKOSKERNELS_DEBUG_LEVEL=0 --coverage -fprofile-update=atomic" \
               -D DDC_BUILD_BENCHMARKS=OFF \
               -D DDC_BUILD_EXAMPLES=OFF \
               -D Kokkos_ENABLE_DEPRECATED_CODE_4=OFF \
@@ -179,6 +180,8 @@ jobs:
               --lcov coverage.lcov \
               --merge-mode-functions=merge-use-line-0 \
               build
+
+            rm -rf build
           EOF
 
           docker run \
@@ -399,7 +402,7 @@ jobs:
           else echo "with_report=false" >> "$GITHUB_OUTPUT"
           fi
       - name: Publish Test Report
-        uses: mikepenz/action-junit-report@e08919a3b1fb83a78393dfb775a9c37f17d8eea6  # v6.0.1
+        uses: mikepenz/action-junit-report@a294a61c909bd8a4b563024a2faa28897fd53ebc  # v6.1.0
         if: ( success() || failure() ) && steps.test.outputs.with_report == 'true'  # always run even if the previous step fails
         with:
           annotate_only: true  # forked repo cannot write to checks so just do annotations
@@ -500,7 +503,7 @@ jobs:
           else echo "with_report=false" >> "$GITHUB_OUTPUT"
           fi
       - name: Publish Test Report
-        uses: mikepenz/action-junit-report@e08919a3b1fb83a78393dfb775a9c37f17d8eea6  # v6.0.1
+        uses: mikepenz/action-junit-report@a294a61c909bd8a4b563024a2faa28897fd53ebc  # v6.1.0
         if: ( success() || failure() ) && steps.test.outputs.with_report == 'true'  # always run even if the previous step fails
         with:
           annotate_only: true  # forked repo cannot write to checks so just do annotations

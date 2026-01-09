@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: MIT
 
-FROM ubuntu:jammy
+FROM ubuntu:jammy@sha256:104ae83764a5119017b8e8d6218fa0832b09df65aae7d5a6de29a85d813da2fb
 
 LABEL "org.opencontainers.image.source"="https://github.com/CExA-project/ddc"
 
@@ -25,7 +25,6 @@ RUN chmod +x /bin/bash_run \
  && echo tzdata tzdata/Areas string Etc | debconf-set-selections \
  && echo tzdata tzdata/Zones/Etc string UTC | debconf-set-selections \
  && apt-get update -y \
- && apt-get upgrade -y \
  && apt-get install -y --no-install-recommends \
     apt-transport-https \
     apt-utils \
@@ -120,5 +119,3 @@ WORKDIR /data
 
 ENTRYPOINT ["/bin/bash_run"]
 CMD ["/bin/bash", "-li"]
-
-

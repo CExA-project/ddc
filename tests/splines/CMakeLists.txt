@@ -159,7 +159,11 @@ foreach(BC "BC_PERIODIC" "BC_GREVILLE" "BC_HERMITE")
                 target_compile_features("${test_name}" PUBLIC cxx_std_17)
                 target_link_libraries("${test_name}" PUBLIC DDC::core DDC::splines GTest::gtest)
                 math(EXPR timeout "${DEGREE} * ${DEGREE} * 2")
-                gtest_discover_tests("${test_name}" DISCOVERY_MODE PRE_TEST DISCOVERY_TIMEOUT ${timeout})
+                gtest_discover_tests(
+                    "${test_name}"
+                    DISCOVERY_MODE PRE_TEST
+                    DISCOVERY_TIMEOUT ${timeout}
+                )
             endforeach()
         endforeach()
     endforeach()
@@ -245,7 +249,11 @@ foreach(DEGREE RANGE "${DDC_SPLINES_TEST_DEGREE_MIN}" "${DDC_SPLINES_TEST_DEGREE
             target_compile_features("${test_name}" PUBLIC cxx_std_17)
             target_link_libraries("${test_name}" PUBLIC DDC::core DDC::splines GTest::gtest)
             math(EXPR timeout "${DEGREE} * ${DEGREE} * 5")
-            gtest_discover_tests("${test_name}" DISCOVERY_MODE PRE_TEST DISCOVERY_TIMEOUT ${timeout})
+            gtest_discover_tests(
+                "${test_name}"
+                DISCOVERY_MODE PRE_TEST
+                DISCOVERY_TIMEOUT ${timeout}
+            )
         endforeach()
     endforeach()
 endforeach()

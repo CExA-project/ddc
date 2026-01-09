@@ -385,7 +385,7 @@ void TestBatchedSpline()
 #    define SUFFIX_DEGREE(name, degree) name##Ginkgo##Hermite##NonUniform##Degree##degree
 #endif
 #define SUFFIX_DEGREE_MACRO_EXP(name, degree) SUFFIX_DEGREE(name, degree)
-#define SUFFIX(name) SUFFIX_DEGREE_MACRO_EXP(name, DEGREE)
+#define SUFFIX(name) SUFFIX_DEGREE_MACRO_EXP(name, DEGREE_X)
 
 TEST(SUFFIX(BatchedSplineHost), 1DX)
 {

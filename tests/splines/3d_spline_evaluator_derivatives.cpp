@@ -440,22 +440,24 @@ void TestSplineEvaluator3dDerivatives()
 } // namespace anonymous_namespace_workaround_3d_spline_evaluator_derivatives_cpp
 
 #if defined(SPLINE_EVALUATOR_3D_DERIV_TEST_1) && defined(BSPLINES_TYPE_UNIFORM)
-#    define SUFFIX(name) name##Periodic##Uniform1
+#    define SUFFIX_DEGREE(name, degree) name##Periodic##Uniform1##Degree##degree
 #elif defined(SPLINE_EVALUATOR_3D_DERIV_TEST_1) && defined(BSPLINES_TYPE_NON_UNIFORM)
-#    define SUFFIX(name) name##Periodic##NonUniform1
+#    define SUFFIX_DEGREE(name, degree) name##Periodic##NonUniform1##Degree##degree
 #elif defined(SPLINE_EVALUATOR_3D_DERIV_TEST_2) && defined(BSPLINES_TYPE_UNIFORM)
-#    define SUFFIX(name) name##Periodic##Uniform2
+#    define SUFFIX_DEGREE(name, degree) name##Periodic##Uniform2##Degree##degree
 #elif defined(SPLINE_EVALUATOR_3D_DERIV_TEST_2) && defined(BSPLINES_TYPE_NON_UNIFORM)
-#    define SUFFIX(name) name##Periodic##NonUniform2
+#    define SUFFIX_DEGREE(name, degree) name##Periodic##NonUniform2##Degree##degree
 #elif defined(SPLINE_EVALUATOR_3D_DERIV_TEST_3) && defined(BSPLINES_TYPE_UNIFORM)
-#    define SUFFIX(name) name##Periodic##Uniform3
+#    define SUFFIX_DEGREE(name, degree) name##Periodic##Uniform3##Degree##degree
 #elif defined(SPLINE_EVALUATOR_3D_DERIV_TEST_3) && defined(BSPLINES_TYPE_NON_UNIFORM)
-#    define SUFFIX(name) name##Periodic##NonUniform3
+#    define SUFFIX_DEGREE(name, degree) name##Periodic##NonUniform3##Degree##degree
 #elif defined(SPLINE_EVALUATOR_3D_DERIV_TEST_4) && defined(BSPLINES_TYPE_UNIFORM)
-#    define SUFFIX(name) name##Periodic##Uniform4
+#    define SUFFIX_DEGREE(name, degree) name##Periodic##Uniform4##Degree##degree
 #elif defined(SPLINE_EVALUATOR_3D_DERIV_TEST_4) && defined(BSPLINES_TYPE_NON_UNIFORM)
-#    define SUFFIX(name) name##Periodic##NonUniform4
+#    define SUFFIX_DEGREE(name, degree) name##Periodic##NonUniform4##Degree##degree
 #endif
+#define SUFFIX_DEGREE_MACRO_EXP(name, degree) SUFFIX_DEGREE(name, degree)
+#define SUFFIX(name) SUFFIX_DEGREE_MACRO_EXP(name, DEGREE)
 
 TEST(SUFFIX(SplineEvaluator3dDerivativesHost), 3DXYZ)
 {

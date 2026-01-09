@@ -334,22 +334,24 @@ void TestExtrapolationRuleSpline()
 } // namespace anonymous_namespace_workaround_extrapolation_rule_cpp
 
 #if defined(ER_NULL) && defined(BC_PERIODIC) && defined(BSPLINES_TYPE_UNIFORM)
-#    define SUFFIX(name) name##Null##Periodic##Uniform
+#    define SUFFIX_DEGREE(name, degree) name##Null##Periodic##Uniform##Degree##degree
 #elif defined(ER_NULL) && defined(BC_PERIODIC) && defined(BSPLINES_TYPE_NON_UNIFORM)
-#    define SUFFIX(name) name##Null##Periodic##NonUniform
+#    define SUFFIX_DEGREE(name, degree) name##Null##Periodic##NonUniform##Degree##degree
 #elif defined(ER_NULL) && defined(BC_GREVILLE) && defined(BSPLINES_TYPE_UNIFORM)
-#    define SUFFIX(name) name##Null##Greville##Uniform
+#    define SUFFIX_DEGREE(name, degree) name##Null##Greville##Uniform##Degree##degree
 #elif defined(ER_NULL) && defined(BC_GREVILLE) && defined(BSPLINES_TYPE_NON_UNIFORM)
-#    define SUFFIX(name) name##Null##Greville##NonUniform
+#    define SUFFIX_DEGREE(name, degree) name##Null##Greville##NonUniform##Degree##degree
 #elif defined(ER_CONSTANT) && defined(BC_PERIODIC) && defined(BSPLINES_TYPE_UNIFORM)
-#    define SUFFIX(name) name##Constant##Periodic##Uniform
+#    define SUFFIX_DEGREE(name, degree) name##Constant##Periodic##Uniform##Degree##degree
 #elif defined(ER_CONSTANT) && defined(BC_PERIODIC) && defined(BSPLINES_TYPE_NON_UNIFORM)
-#    define SUFFIX(name) name##Constant##Periodic##NonUniform
+#    define SUFFIX_DEGREE(name, degree) name##Constant##Periodic##NonUniform##Degree##degree
 #elif defined(ER_CONSTANT) && defined(BC_GREVILLE) && defined(BSPLINES_TYPE_UNIFORM)
-#    define SUFFIX(name) name##Constant##Greville##Uniform
+#    define SUFFIX_DEGREE(name, degree) name##Constant##Greville##Uniform##Degree##degree
 #elif defined(ER_CONSTANT) && defined(BC_GREVILLE) && defined(BSPLINES_TYPE_NON_UNIFORM)
-#    define SUFFIX(name) name##Constant##Greville##NonUniform
+#    define SUFFIX_DEGREE(name, degree) name##Constant##Greville##NonUniform##Degree##degree
 #endif
+#define SUFFIX_DEGREE_MACRO_EXP(name, degree) SUFFIX_DEGREE(name, degree)
+#define SUFFIX(name) SUFFIX_DEGREE_MACRO_EXP(name, DEGREE)
 
 TEST(SUFFIX(ExtrapolationRuleSplineHost), 2DXY)
 {

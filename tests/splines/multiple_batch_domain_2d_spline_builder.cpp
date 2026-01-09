@@ -690,18 +690,20 @@ void TestMultipleBatchDomain2dSpline()
 } // namespace anonymous_namespace_workaround_batched_2d_spline_builder_cpp
 
 #if defined(BC_PERIODIC) && defined(BSPLINES_TYPE_UNIFORM)
-#    define SUFFIX(name) name##Periodic##Uniform
+#    define SUFFIX_DEGREE(name, degree) name##Periodic##Uniform##Degree##degree
 #elif defined(BC_PERIODIC) && defined(BSPLINES_TYPE_NON_UNIFORM)
-#    define SUFFIX(name) name##Periodic##NonUniform
+#    define SUFFIX_DEGREE(name, degree) name##Periodic##NonUniform##Degree##degree
 #elif defined(BC_GREVILLE) && defined(BSPLINES_TYPE_UNIFORM)
-#    define SUFFIX(name) name##Greville##Uniform
+#    define SUFFIX_DEGREE(name, degree) name##Greville##Uniform##Degree##degree
 #elif defined(BC_GREVILLE) && defined(BSPLINES_TYPE_NON_UNIFORM)
-#    define SUFFIX(name) name##Greville##NonUniform
+#    define SUFFIX_DEGREE(name, degree) name##Greville##NonUniform##Degree##degree
 #elif defined(BC_HERMITE) && defined(BSPLINES_TYPE_UNIFORM)
-#    define SUFFIX(name) name##Hermite##Uniform
+#    define SUFFIX_DEGREE(name, degree) name##Hermite##Uniform##Degree##degree
 #elif defined(BC_HERMITE) && defined(BSPLINES_TYPE_NON_UNIFORM)
-#    define SUFFIX(name) name##Hermite##NonUniform
+#    define SUFFIX_DEGREE(name, degree) name##Hermite##NonUniform##Degree##degree
 #endif
+#define SUFFIX_DEGREE_MACRO_EXP(name, degree) SUFFIX_DEGREE(name, degree)
+#define SUFFIX(name) SUFFIX_DEGREE_MACRO_EXP(name, DEGREE)
 
 TEST(SUFFIX(MultipleBatchDomain2dSpline), 2DXY)
 {

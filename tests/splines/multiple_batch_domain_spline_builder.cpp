@@ -430,30 +430,32 @@ void TestMultipleBatchDomainSpline()
 } // namespace anonymous_namespace_workaround_batched_spline_builder_cpp
 
 #if defined(BC_PERIODIC) && defined(BSPLINES_TYPE_UNIFORM) && defined(SOLVER_LAPACK)
-#    define SUFFIX(name) name##Lapack##Periodic##Uniform
+#    define SUFFIX_DEGREE(name, degree) name##Lapack##Periodic##Uniform##Degree##degree
 #elif defined(BC_PERIODIC) && defined(BSPLINES_TYPE_NON_UNIFORM) && defined(SOLVER_LAPACK)
-#    define SUFFIX(name) name##Lapack##Periodic##NonUniform
+#    define SUFFIX_DEGREE(name, degree) name##Lapack##Periodic##NonUniform##Degree##degree
 #elif defined(BC_GREVILLE) && defined(BSPLINES_TYPE_UNIFORM) && defined(SOLVER_LAPACK)
-#    define SUFFIX(name) name##Lapack##Greville##Uniform
+#    define SUFFIX_DEGREE(name, degree) name##Lapack##Greville##Uniform##Degree##degree
 #elif defined(BC_GREVILLE) && defined(BSPLINES_TYPE_NON_UNIFORM) && defined(SOLVER_LAPACK)
-#    define SUFFIX(name) name##Lapack##Greville##NonUniform
+#    define SUFFIX_DEGREE(name, degree) name##Lapack##Greville##NonUniform##Degree##degree
 #elif defined(BC_HERMITE) && defined(BSPLINES_TYPE_UNIFORM) && defined(SOLVER_LAPACK)
-#    define SUFFIX(name) name##Lapack##Hermite##Uniform
+#    define SUFFIX_DEGREE(name, degree) name##Lapack##Hermite##Uniform##Degree##degree
 #elif defined(BC_HERMITE) && defined(BSPLINES_TYPE_NON_UNIFORM) && defined(SOLVER_LAPACK)
-#    define SUFFIX(name) name##Lapack##Hermite##NonUniform
+#    define SUFFIX_DEGREE(name, degree) name##Lapack##Hermite##NonUniform##Degree##degree
 #elif defined(BC_PERIODIC) && defined(BSPLINES_TYPE_UNIFORM) && defined(SOLVER_GINKGO)
-#    define SUFFIX(name) name##Ginkgo##Periodic##Uniform
+#    define SUFFIX_DEGREE(name, degree) name##Ginkgo##Periodic##Uniform##Degree##degree
 #elif defined(BC_PERIODIC) && defined(BSPLINES_TYPE_NON_UNIFORM) && defined(SOLVER_GINKGO)
-#    define SUFFIX(name) name##Ginkgo##Periodic##NonUniform
+#    define SUFFIX_DEGREE(name, degree) name##Ginkgo##Periodic##NonUniform##Degree##degree
 #elif defined(BC_GREVILLE) && defined(BSPLINES_TYPE_UNIFORM) && defined(SOLVER_GINKGO)
-#    define SUFFIX(name) name##Ginkgo##Greville##Uniform
+#    define SUFFIX_DEGREE(name, degree) name##Ginkgo##Greville##Uniform##Degree##degree
 #elif defined(BC_GREVILLE) && defined(BSPLINES_TYPE_NON_UNIFORM) && defined(SOLVER_GINKGO)
-#    define SUFFIX(name) name##Ginkgo##Greville##NonUniform
+#    define SUFFIX_DEGREE(name, degree) name##Ginkgo##Greville##NonUniform##Degree##degree
 #elif defined(BC_HERMITE) && defined(BSPLINES_TYPE_UNIFORM) && defined(SOLVER_GINKGO)
-#    define SUFFIX(name) name##Ginkgo##Hermite##Uniform
+#    define SUFFIX_DEGREE(name, degree) name##Ginkgo##Hermite##Uniform##Degree##degree
 #elif defined(BC_HERMITE) && defined(BSPLINES_TYPE_NON_UNIFORM) && defined(SOLVER_GINKGO)
-#    define SUFFIX(name) name##Ginkgo##Hermite##NonUniform
+#    define SUFFIX_DEGREE(name, degree) name##Ginkgo##Hermite##NonUniform##Degree##degree
 #endif
+#define SUFFIX_DEGREE_MACRO_EXP(name, degree) SUFFIX_DEGREE(name, degree)
+#define SUFFIX(name) SUFFIX_DEGREE_MACRO_EXP(name, DEGREE)
 
 TEST(SUFFIX(MultipleBatchDomainSpline), 1DX)
 {

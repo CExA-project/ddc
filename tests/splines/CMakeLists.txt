@@ -162,7 +162,7 @@ foreach(BC "BC_PERIODIC" "BC_GREVILLE" "BC_HERMITE")
                 gtest_discover_tests(
                     "${test_name}"
                     DISCOVERY_MODE PRE_TEST
-                    TEST_SUFFIX "_Degree_${DEGREE}"
+                    TEST_SUFFIX "Degree${DEGREE}"
                     PROPERTIES TIMEOUT ${timeout}
                 )
             endforeach()
@@ -253,7 +253,7 @@ foreach(DEGREE RANGE "${DDC_SPLINES_TEST_DEGREE_MIN}" "${DDC_SPLINES_TEST_DEGREE
             gtest_discover_tests(
                 "${test_name}"
                 DISCOVERY_MODE PRE_TEST
-                TEST_SUFFIX "_Degree_${DEGREE}"
+                TEST_SUFFIX "Degree${DEGREE}"
                 PROPERTIES TIMEOUT ${timeout}
             )
         endforeach()

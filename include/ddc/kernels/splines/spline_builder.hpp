@@ -826,6 +826,12 @@ operator()(
     auto const batched_interpolation_domain = vals.domain();
 
     assert(interpolation_domain() == interpolation_domain_type(batched_interpolation_domain));
+    assert(batch_domain_type<BatchedInterpolationDDom>(batched_interpolation_domain)
+           == batch_domain_type<BatchedInterpolationDDom>(spline.domain()));
+
+    if (batch_domain(batched_interpolation_domain).empty()) {
+        return;
+    }
 
     assert(vals.template extent<interpolation_discrete_dimension_type>()
            == ddc::discrete_space<bsplines_type>().nbasis() - s_nbc_xmin - s_nbc_xmax);

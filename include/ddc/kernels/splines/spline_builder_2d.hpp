@@ -541,6 +541,12 @@ operator()(
     auto const batched_interpolation_domain = vals.domain();
 
     assert(interpolation_domain() == interpolation_domain_type(batched_interpolation_domain));
+    assert(batch_domain_type<BatchedInterpolationDDom>(batched_interpolation_domain)
+           == batch_domain_type<BatchedInterpolationDDom>(spline.domain()));
+
+    if (batch_domain(batched_interpolation_domain).empty()) {
+        return;
+    }
 
     // TODO: perform computations along dimension 1 on different streams ?
     // Spline1-approximate derivs_min2 (to spline1_deriv_min)

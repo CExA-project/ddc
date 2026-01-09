@@ -794,43 +794,28 @@ void TestBatched3dSpline()
         ddc::ChunkSpan const derivs_mixed_rhs1_rhs2_rhs3_host
                 = derivs_mixed_rhs1_rhs2_rhs3_host_alloc.span_view();
 
-        for (std::size_t ii = shift;
-             ii < static_cast<std::size_t>(derivs_domain_all.template extent<ddc::Deriv<I1>>())
-                          + shift;
-             ++ii) {
-            for (std::size_t jj = shift;
-                 jj < static_cast<std::size_t>(derivs_domain_all.template extent<ddc::Deriv<I2>>())
-                              + shift;
-                 ++jj) {
-                for (std::size_t kk = shift;
-                     kk
-                     < static_cast<std::size_t>(derivs_domain_all.template extent<ddc::Deriv<I3>>())
-                               + shift;
-                     ++kk) {
-                    derivs_mixed_lhs1_lhs2_lhs3_host(
-                            typename decltype(derivs_domain_all)::discrete_element_type(ii, jj, kk))
-                            = evaluator.deriv(x0<I1>(), x0<I2>(), x0<I3>(), ii, jj, kk);
-                    derivs_mixed_rhs1_lhs2_lhs3_host(
-                            typename decltype(derivs_domain_all)::discrete_element_type(ii, jj, kk))
-                            = evaluator.deriv(xn<I1>(), x0<I2>(), x0<I3>(), ii, jj, kk);
-                    derivs_mixed_lhs1_rhs2_lhs3_host(
-                            typename decltype(derivs_domain_all)::discrete_element_type(ii, jj, kk))
-                            = evaluator.deriv(x0<I1>(), xn<I2>(), x0<I3>(), ii, jj, kk);
-                    derivs_mixed_rhs1_rhs2_lhs3_host(
-                            typename decltype(derivs_domain_all)::discrete_element_type(ii, jj, kk))
-                            = evaluator.deriv(xn<I1>(), xn<I2>(), x0<I3>(), ii, jj, kk);
-                    derivs_mixed_lhs1_lhs2_rhs3_host(
-                            typename decltype(derivs_domain_all)::discrete_element_type(ii, jj, kk))
-                            = evaluator.deriv(x0<I1>(), x0<I2>(), xn<I3>(), ii, jj, kk);
-                    derivs_mixed_rhs1_lhs2_rhs3_host(
-                            typename decltype(derivs_domain_all)::discrete_element_type(ii, jj, kk))
-                            = evaluator.deriv(xn<I1>(), x0<I2>(), xn<I3>(), ii, jj, kk);
-                    derivs_mixed_lhs1_rhs2_rhs3_host(
-                            typename decltype(derivs_domain_all)::discrete_element_type(ii, jj, kk))
-                            = evaluator.deriv(x0<I1>(), xn<I2>(), xn<I3>(), ii, jj, kk);
-                    derivs_mixed_rhs1_rhs2_rhs3_host(
-                            typename decltype(derivs_domain_all)::discrete_element_type(ii, jj, kk))
-                            = evaluator.deriv(xn<I1>(), xn<I2>(), xn<I3>(), ii, jj, kk);
+        for (ddc::DiscreteElement<ddc::Deriv<I1>> const ii : derivs_domain1) {
+            for (ddc::DiscreteElement<ddc::Deriv<I2>> const jj : derivs_domain2) {
+                for (ddc::DiscreteElement<ddc::Deriv<I3>> const kk : derivs_domain3) {
+                    int const i = ii.uid();
+                    int const j = jj.uid();
+                    int const k = kk.uid();
+                    derivs_mixed_lhs1_lhs2_lhs3_host(ii, jj, kk)
+                            = evaluator.deriv(x0<I1>(), x0<I2>(), x0<I3>(), i, j, k);
+                    derivs_mixed_rhs1_lhs2_lhs3_host(ii, jj, kk)
+                            = evaluator.deriv(xn<I1>(), x0<I2>(), x0<I3>(), i, j, k);
+                    derivs_mixed_lhs1_rhs2_lhs3_host(ii, jj, kk)
+                            = evaluator.deriv(x0<I1>(), xn<I2>(), x0<I3>(), i, j, k);
+                    derivs_mixed_rhs1_rhs2_lhs3_host(ii, jj, kk)
+                            = evaluator.deriv(xn<I1>(), xn<I2>(), x0<I3>(), i, j, k);
+                    derivs_mixed_lhs1_lhs2_rhs3_host(ii, jj, kk)
+                            = evaluator.deriv(x0<I1>(), x0<I2>(), xn<I3>(), i, j, k);
+                    derivs_mixed_rhs1_lhs2_rhs3_host(ii, jj, kk)
+                            = evaluator.deriv(xn<I1>(), x0<I2>(), xn<I3>(), i, j, k);
+                    derivs_mixed_lhs1_rhs2_rhs3_host(ii, jj, kk)
+                            = evaluator.deriv(x0<I1>(), xn<I2>(), xn<I3>(), i, j, k);
+                    derivs_mixed_rhs1_rhs2_rhs3_host(ii, jj, kk)
+                            = evaluator.deriv(xn<I1>(), xn<I2>(), xn<I3>(), i, j, k);
                 }
             }
         }

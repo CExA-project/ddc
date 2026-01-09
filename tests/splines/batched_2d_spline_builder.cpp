@@ -367,25 +367,14 @@ void TestBatched2dSpline()
         ddc::ChunkSpan const derivs_mixed_rhs_rhs1_host
                 = derivs_mixed_rhs_rhs1_host_alloc.span_view();
 
-        for (std::size_t ii = shift;
-             ii < static_cast<std::size_t>(derivs_domain.template extent<ddc::Deriv<I1>>()) + shift;
-             ++ii) {
-            for (std::size_t jj = shift;
-                 jj < static_cast<std::size_t>(derivs_domain.template extent<ddc::Deriv<I2>>())
-                              + shift;
-                 ++jj) {
-                derivs_mixed_lhs_lhs1_host(
-                        typename decltype(derivs_domain)::discrete_element_type(ii, jj))
-                        = evaluator.deriv(x0<I1>(), x0<I2>(), ii, jj);
-                derivs_mixed_rhs_lhs1_host(
-                        typename decltype(derivs_domain)::discrete_element_type(ii, jj))
-                        = evaluator.deriv(xn<I1>(), x0<I2>(), ii, jj);
-                derivs_mixed_lhs_rhs1_host(
-                        typename decltype(derivs_domain)::discrete_element_type(ii, jj))
-                        = evaluator.deriv(x0<I1>(), xn<I2>(), ii, jj);
-                derivs_mixed_rhs_rhs1_host(
-                        typename decltype(derivs_domain)::discrete_element_type(ii, jj))
-                        = evaluator.deriv(xn<I1>(), xn<I2>(), ii, jj);
+        for (ddc::DiscreteElement<ddc::Deriv<I1>> const ei : derivs_domain1) {
+            for (ddc::DiscreteElement<ddc::Deriv<I2>> const ej : derivs_domain2) {
+                int const i = ei.uid();
+                int const j = ej.uid();
+                derivs_mixed_lhs_lhs1_host(ei, ej) = evaluator.deriv(x0<I1>(), x0<I2>(), i, j);
+                derivs_mixed_rhs_lhs1_host(ei, ej) = evaluator.deriv(xn<I1>(), x0<I2>(), i, j);
+                derivs_mixed_lhs_rhs1_host(ei, ej) = evaluator.deriv(x0<I1>(), xn<I2>(), i, j);
+                derivs_mixed_rhs_rhs1_host(ei, ej) = evaluator.deriv(xn<I1>(), xn<I2>(), i, j);
             }
         }
         auto derivs_mixed_lhs_lhs1_alloc

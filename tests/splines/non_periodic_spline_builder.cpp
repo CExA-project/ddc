@@ -137,9 +137,8 @@ void TestNonPeriodicSplineBuilderTestIdentity()
         ddc::parallel_for_each(
                 execution_space(),
                 derivs_domain,
-                KOKKOS_LAMBDA(ddc::DiscreteElement<ddc::Deriv<DimX>> const ii) {
-                    derivs_lhs(ii)
-                            = evaluator.deriv(x0, ii - ddc::DiscreteElement<ddc::Deriv<DimX>>(0));
+                KOKKOS_LAMBDA(ddc::DiscreteElement<ddc::Deriv<DimX>> const ei) {
+                    derivs_lhs(ei) = evaluator.deriv(x0, ei.uid());
                 });
     }
 
@@ -149,9 +148,8 @@ void TestNonPeriodicSplineBuilderTestIdentity()
         ddc::parallel_for_each(
                 execution_space(),
                 derivs_domain,
-                KOKKOS_LAMBDA(ddc::DiscreteElement<ddc::Deriv<DimX>> const ii) {
-                    derivs_rhs(ii)
-                            = evaluator.deriv(xN, ii - ddc::DiscreteElement<ddc::Deriv<DimX>>(0));
+                KOKKOS_LAMBDA(ddc::DiscreteElement<ddc::Deriv<DimX>> const ei) {
+                    derivs_rhs(ei) = evaluator.deriv(xN, ei.uid());
                 });
     }
 

@@ -726,13 +726,15 @@ void SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower,
             }
         }
 
-        // iterate only to deg as last bspline is 0
-        for (std::size_t i = 0; i < s_nbc_xmin; ++i) {
-            for (std::size_t j = 0; j < bsplines_type::degree(); ++j) {
-                m_matrix->set_element(
-                        i,
-                        j,
-                        DDC_MDSPAN_ACCESS_OP(derivs, j, s_nbc_xmin - i - 1 + s_odd));
+        if constexpr (s_nbc_xmin > 0) {
+            // iterate only to deg as last bspline is 0
+            for (std::size_t i = 0; i < s_nbc_xmin; ++i) {
+                for (std::size_t j = 0; j < bsplines_type::degree(); ++j) {
+                    m_matrix->set_element(
+                            i,
+                            j,
+                            DDC_MDSPAN_ACCESS_OP(derivs, j, s_nbc_xmin - i - 1 + s_odd));
+                }
             }
         }
     }
@@ -782,14 +784,16 @@ void SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower,
             }
         }
 
-        int const i0 = ddc::discrete_space<BSplines>().nbasis() - s_nbc_xmax;
-        int const j0 = ddc::discrete_space<BSplines>().nbasis() - bsplines_type::degree();
-        for (std::size_t j = 0; j < bsplines_type::degree(); ++j) {
-            for (std::size_t i = 0; i < s_nbc_xmax; ++i) {
-                m_matrix->set_element(
-                        i0 + i,
-                        j0 + j,
-                        DDC_MDSPAN_ACCESS_OP(derivs, j + 1, i + s_odd));
+        if constexpr (s_nbc_xmax > 0) {
+            int const i0 = ddc::discrete_space<BSplines>().nbasis() - s_nbc_xmax;
+            int const j0 = ddc::discrete_space<BSplines>().nbasis() - bsplines_type::degree();
+            for (std::size_t j = 0; j < bsplines_type::degree(); ++j) {
+                for (std::size_t i = 0; i < s_nbc_xmax; ++i) {
+                    m_matrix->set_element(
+                            i0 + i,
+                            j0 + j,
+                            DDC_MDSPAN_ACCESS_OP(derivs, j + 1, i + s_odd));
+                }
             }
         }
     }
@@ -826,19 +830,27 @@ operator()(
     auto const batched_interpolation_domain = vals.domain();
 
     assert(interpolation_domain() == interpolation_domain_type(batched_interpolation_domain));
+    assert(batch_domain_type<BatchedInterpolationDDom>(batched_interpolation_domain)
+           == batch_domain_type<BatchedInterpolationDDom>(spline.domain()));
+
+    if (batch_domain(batched_interpolation_domain).empty()) {
+        return;
+    }
 
     assert(vals.template extent<interpolation_discrete_dimension_type>()
            == ddc::discrete_space<bsplines_type>().nbasis() - s_nbc_xmin - s_nbc_xmax);
 
-    assert((BcLower == ddc::BoundCond::HERMITE)
-           != (!derivs_xmin.has_value() || derivs_xmin->template extent<deriv_type>() == 0));
-    assert((BcUpper == ddc::BoundCond::HERMITE)
-           != (!derivs_xmax.has_value() || derivs_xmax->template extent<deriv_type>() == 0));
     if constexpr (BcLower == BoundCond::HERMITE) {
-        assert(ddc::DiscreteElement<deriv_type>(derivs_xmin->domain().front()).uid() == 1);
+        assert(ddc::DiscreteElement<deriv_type>(derivs_xmin->domain().front()).uid() == s_odd);
+        assert(derivs_xmin.has_value() || s_nbc_xmin == 0);
+    } else {
+        assert(!derivs_xmin.has_value() || derivs_xmin->template extent<deriv_type>() == 0);
     }
     if constexpr (BcUpper == BoundCond::HERMITE) {
-        assert(ddc::DiscreteElement<deriv_type>(derivs_xmax->domain().front()).uid() == 1);
+        assert(ddc::DiscreteElement<deriv_type>(derivs_xmax->domain().front()).uid() == s_odd);
+        assert(derivs_xmax.has_value() || s_nbc_xmax == 0);
+    } else {
+        assert(!derivs_xmax.has_value() || derivs_xmax->template extent<deriv_type>() == 0);
     }
 
     // Hermite boundary conditions at xmin, if any
@@ -848,6 +860,7 @@ operator()(
         assert(derivs_xmin->template extent<deriv_type>() == s_nbc_xmin);
         auto derivs_xmin_values = *derivs_xmin;
         auto const dx_proxy = m_dx;
+        auto const odd_proxy = s_odd;
         ddc::parallel_for_each(
                 "ddc_splines_hermite_compute_lower_coefficients",
                 exec_space(),
@@ -857,8 +870,10 @@ operator()(
                                 j) {
                     for (int i = s_nbc_xmin; i > 0; --i) {
                         spline(ddc::DiscreteElement<bsplines_type>(s_nbc_xmin - i), j)
-                                = derivs_xmin_values(ddc::DiscreteElement<deriv_type>(i), j)
-                                  * ddc::detail::ipow(dx_proxy, i + s_odd - 1);
+                                = derivs_xmin_values(
+                                          ddc::DiscreteElement<deriv_type>(i + odd_proxy - 1),
+                                          j)
+                                  * ddc::detail::ipow(dx_proxy, i + odd_proxy - 1);
                     }
                 });
     }
@@ -893,6 +908,7 @@ operator()(
         assert(derivs_xmax->template extent<deriv_type>() == s_nbc_xmax);
         auto derivs_xmax_values = *derivs_xmax;
         auto const dx_proxy = m_dx;
+        auto const odd_proxy = s_odd;
         ddc::parallel_for_each(
                 "ddc_splines_hermite_compute_upper_coefficients",
                 exec_space(),
@@ -901,10 +917,12 @@ operator()(
                         typename batch_domain_type<BatchedInterpolationDDom>::discrete_element_type
                                 j) {
                     for (int i = 0; i < s_nbc_xmax; ++i) {
-                        spline(ddc::DiscreteElement<bsplines_type>(nbasis_proxy - s_nbc_xmax - i),
+                        spline(ddc::DiscreteElement<bsplines_type>(nbasis_proxy - s_nbc_xmax + i),
                                j)
-                                = derivs_xmax_values(ddc::DiscreteElement<deriv_type>(i + 1), j)
-                                  * ddc::detail::ipow(dx_proxy, i + s_odd);
+                                = derivs_xmax_values(
+                                          ddc::DiscreteElement<deriv_type>(i + odd_proxy),
+                                          j)
+                                  * ddc::detail::ipow(dx_proxy, i + odd_proxy);
                     }
                 });
     }
@@ -1058,36 +1076,35 @@ SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower, BcUp
                                      ddc::DiscreteVector<bsplines_type>(
                                              s_nbc_xmin + coefficients.size()))
                              .take_first(ddc::DiscreteVector<bsplines_type>(s_nbc_xmax))];
-    interpolation_domain_type const interpolation_domain_proxy = interpolation_domain();
 
     // Multiply derivatives coefficients by dx^n
+    auto const dx_proxy = m_dx;
+    auto const odd_proxy = s_odd;
     ddc::parallel_for_each(
             exec_space(),
             coefficients_derivs_xmin.domain(),
             KOKKOS_LAMBDA(ddc::DiscreteElement<bsplines_type> i) {
-                ddc::Coordinate<continuous_dimension_type> const dx
-                        = ddc::distance_at_right(interpolation_domain_proxy.front() + 1);
                 coefficients_derivs_xmin(i) *= ddc::detail::
-                        ipow(dx,
+                        ipow(dx_proxy,
                              static_cast<std::size_t>(get<bsplines_type>(
-                                     i - coefficients_derivs_xmin.domain().front() + 1)));
+                                     s_nbc_xmin + odd_proxy - 1
+                                     - (i - coefficients_derivs_xmin.domain().front()))));
             });
     ddc::parallel_for_each(
             exec_space(),
             coefficients_derivs_xmax.domain(),
             KOKKOS_LAMBDA(ddc::DiscreteElement<bsplines_type> i) {
-                ddc::Coordinate<continuous_dimension_type> const dx
-                        = ddc::distance_at_left(interpolation_domain_proxy.back() - 1);
                 coefficients_derivs_xmax(i) *= ddc::detail::
-                        ipow(dx,
+                        ipow(dx_proxy,
                              static_cast<std::size_t>(get<bsplines_type>(
-                                     i - coefficients_derivs_xmax.domain().front() + 1)));
+                                     i - coefficients_derivs_xmax.domain().front() + odd_proxy)));
             });
 
+    ddc::DiscreteElement<deriv_type> const first_deriv(s_odd);
     // Allocate Chunk on deriv_type and interpolation_discrete_dimension_type and copy quadrature coefficients into it
     ddc::Chunk coefficients_derivs_xmin_out(
             ddc::DiscreteDomain<deriv_type>(
-                    ddc::DiscreteElement<deriv_type>(1),
+                    first_deriv, // These indices are wrong the order should be reversed
                     ddc::DiscreteVector<deriv_type>(s_nbc_xmin)),
             ddc::KokkosAllocator<double, OutMemorySpace>());
     ddc::Chunk coefficients_out(
@@ -1096,9 +1113,8 @@ SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower, BcUp
                             coefficients.size())),
             ddc::KokkosAllocator<double, OutMemorySpace>());
     ddc::Chunk coefficients_derivs_xmax_out(
-            ddc::DiscreteDomain<deriv_type>(
-                    ddc::DiscreteElement<deriv_type>(1),
-                    ddc::DiscreteVector<deriv_type>(s_nbc_xmax)),
+            ddc::DiscreteDomain<
+                    deriv_type>(first_deriv, ddc::DiscreteVector<deriv_type>(s_nbc_xmax)),
             ddc::KokkosAllocator<double, OutMemorySpace>());
     Kokkos::deep_copy(
             coefficients_derivs_xmin_out.allocation_kokkos_view(),

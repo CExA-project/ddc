@@ -171,23 +171,7 @@ void test_deriv(
                         1e-11 * max_norm_diff));
 }
 
-template <typename I1, typename I2, std::size_t Order1, std::size_t Order2>
-auto make_deriv_order_delem()
-{
-    if constexpr (Order1 == 0 && Order2 == 0) {
-        return ddc::DiscreteElement<>();
-    } else if constexpr (Order1 == 0 && Order2 >= 1) {
-        return ddc::DiscreteElement<ddc::Deriv<I2>>(Order2);
-    } else if constexpr (Order1 >= 1 && Order2 == 0) {
-        return ddc::DiscreteElement<ddc::Deriv<I1>>(Order1);
-    } else {
-        return ddc::DiscreteElement<ddc::Deriv<I1>, ddc::Deriv<I2>>(Order1, Order2);
-    }
-}
-
 template <
-        std::size_t Order1 = 0,
-        std::size_t Order2 = 0,
         class DDimI1,
         class DDimI2,
         class ExecSpace,
@@ -206,11 +190,8 @@ void launch_deriv_tests(
 {
     using I1 = typename DDimI1::continuous_dimension_type;
     using I2 = typename DDimI2::continuous_dimension_type;
-    constexpr std::size_t max_deriv_deg1 = BSplines<I1>::degree();
-    constexpr std::size_t max_deriv_deg2 = BSplines<I2>::degree();
-    if constexpr (Order1 > max_deriv_deg1 || Order2 > max_deriv_deg2) {
-        return;
-    } else {
+
+    auto const local_test_deriv = [&](auto deriv_order) {
         test_deriv(
                 exec_space,
                 spline_evaluator,
@@ -218,19 +199,28 @@ void launch_deriv_tests(
                 coef,
                 spline_eval_deriv,
                 evaluator,
-                make_deriv_order_delem<I1, I2, Order1, Order2>(),
+                deriv_order,
                 ncells);
+    };
 
-        constexpr std::size_t next_order1 = Order1 + Order2 / max_deriv_deg2;
-        constexpr std::size_t next_order2 = (Order2 + 1) % (max_deriv_deg2 + 1);
-        launch_deriv_tests<next_order1, next_order2>(
-                exec_space,
-                spline_evaluator,
-                coords_eval,
-                coef,
-                spline_eval_deriv,
-                evaluator,
-                ncells);
+    ddc::DiscreteDomain<ddc::Deriv<I1>> const
+            deriv1(ddc::DiscreteElement<ddc::Deriv<I1>>(1),
+                   ddc::DiscreteVector<ddc::Deriv<I1>>(BSplines<I1>::degree()));
+    ddc::DiscreteDomain<ddc::Deriv<I2>> const
+            deriv2(ddc::DiscreteElement<ddc::Deriv<I2>>(1),
+                   ddc::DiscreteVector<ddc::Deriv<I2>>(BSplines<I2>::degree()));
+
+    local_test_deriv(ddc::DiscreteElement<>());
+    for (ddc::DiscreteElement<ddc::Deriv<I1>> const order1 : deriv1) {
+        local_test_deriv(order1);
+    }
+    for (ddc::DiscreteElement<ddc::Deriv<I2>> const order2 : deriv2) {
+        local_test_deriv(order2);
+    }
+    for (ddc::DiscreteElement<ddc::Deriv<I1>> const order1 : deriv1) {
+        for (ddc::DiscreteElement<ddc::Deriv<I2>> const order2 : deriv2) {
+            local_test_deriv(ddc::DiscreteElement<ddc::Deriv<I1>, ddc::Deriv<I2>>(order1, order2));
+        }
     }
 }
 

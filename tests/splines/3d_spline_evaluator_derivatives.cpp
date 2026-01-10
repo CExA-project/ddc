@@ -184,40 +184,6 @@ void test_deriv(
 }
 
 template <
-        typename I1,
-        typename I2,
-        typename I3,
-        std::size_t Order1,
-        std::size_t Order2,
-        std::size_t Order3>
-auto make_deriv_order_delem()
-{
-    if constexpr (Order1 == 0 && Order2 == 0 && Order3 == 0) {
-        return ddc::DiscreteElement<>();
-    } else if constexpr (Order1 == 0 && Order2 == 0 && Order3 >= 1) {
-        return ddc::DiscreteElement<ddc::Deriv<I3>>(Order3);
-    } else if constexpr (Order1 == 0 && Order2 >= 1 && Order3 == 0) {
-        return ddc::DiscreteElement<ddc::Deriv<I2>>(Order2);
-    } else if constexpr (Order1 == 0 && Order2 >= 1 && Order3 >= 1) {
-        return ddc::DiscreteElement<ddc::Deriv<I2>, ddc::Deriv<I3>>(Order2, Order3);
-    } else if constexpr (Order1 >= 1 && Order2 == 0 && Order3 == 0) {
-        return ddc::DiscreteElement<ddc::Deriv<I1>>(Order1);
-    } else if constexpr (Order1 >= 1 && Order2 == 0 && Order3 >= 1) {
-        return ddc::DiscreteElement<ddc::Deriv<I1>, ddc::Deriv<I3>>(Order1, Order3);
-    } else if constexpr (Order1 >= 1 && Order2 >= 1 && Order3 == 0) {
-        return ddc::DiscreteElement<ddc::Deriv<I1>, ddc::Deriv<I2>>(Order1, Order2);
-    } else {
-        return ddc::DiscreteElement<
-                ddc::Deriv<I1>,
-                ddc::Deriv<I2>,
-                ddc::Deriv<I3>>(Order1, Order2, Order3);
-    }
-}
-
-template <
-        std::size_t Order1 = 0,
-        std::size_t Order2 = 0,
-        std::size_t Order3 = 0,
         class DDimI1,
         class DDimI2,
         class DDimI3,
@@ -238,55 +204,64 @@ void launch_deriv_tests(
     using I1 = typename DDimI1::continuous_dimension_type;
     using I2 = typename DDimI2::continuous_dimension_type;
     using I3 = typename DDimI3::continuous_dimension_type;
-    constexpr std::size_t max_deriv_deg1 = BSplines<I1>::degree();
-    constexpr std::size_t max_deriv_deg2 = BSplines<I2>::degree();
-    constexpr std::size_t max_deriv_deg3 = BSplines<I3>::degree();
 
-    if constexpr (Order1 > max_deriv_deg1 || Order2 > max_deriv_deg2 || Order3 > max_deriv_deg3) {
-        return;
-    } else {
-        // This is used to distribute the work between the 4 test executables.
-        // For max deriv degrees (3,3,3), TEST1 will evaluate (0,0,0), TEST2 (0,0,1),
-        // TEST3 (0,0,2), TEST4 (0,0,3), TEST1 (0,1,0), etc.
-        static constexpr std::size_t test_idx =
-#if defined(SPLINE_EVALUATOR_3D_DERIV_TEST_1)
-                0;
-#elif defined(SPLINE_EVALUATOR_3D_DERIV_TEST_2)
-                1;
-#elif defined(SPLINE_EVALUATOR_3D_DERIV_TEST_3)
-                2;
-#elif defined(SPLINE_EVALUATOR_3D_DERIV_TEST_4)
-                3;
-#endif
-
-        constexpr std::size_t idx = Order1 * (max_deriv_deg2 + 1) * (max_deriv_deg3 + 1)
-                                    + Order2 * (max_deriv_deg3 + 1) + Order3;
-
-        if constexpr (idx % 4 == test_idx) {
-            test_deriv(
-                    exec_space,
-                    spline_evaluator,
-                    coords_eval,
-                    coef,
-                    spline_eval_deriv,
-                    evaluator,
-                    make_deriv_order_delem<I1, I2, I3, Order1, Order2, Order3>(),
-                    ncells);
-        }
-
-        constexpr std::size_t next_order1
-                = Order1 + (Order2 + Order3) / (max_deriv_deg2 + max_deriv_deg3);
-        constexpr std::size_t next_order2
-                = (Order2 + Order3 / max_deriv_deg3) % (max_deriv_deg2 + 1);
-        constexpr std::size_t next_order3 = (Order3 + 1) % (max_deriv_deg3 + 1);
-        launch_deriv_tests<next_order1, next_order2, next_order3>(
+    auto const local_test_deriv = [&](auto deriv_order) {
+        test_deriv(
                 exec_space,
                 spline_evaluator,
                 coords_eval,
                 coef,
                 spline_eval_deriv,
                 evaluator,
+                deriv_order,
                 ncells);
+    };
+
+    ddc::DiscreteDomain<ddc::Deriv<I1>> const
+            deriv1(ddc::DiscreteElement<ddc::Deriv<I1>>(1),
+                   ddc::DiscreteVector<ddc::Deriv<I1>>(BSplines<I1>::degree()));
+    ddc::DiscreteDomain<ddc::Deriv<I2>> const
+            deriv2(ddc::DiscreteElement<ddc::Deriv<I2>>(1),
+                   ddc::DiscreteVector<ddc::Deriv<I2>>(BSplines<I2>::degree()));
+    ddc::DiscreteDomain<ddc::Deriv<I3>> const
+            deriv3(ddc::DiscreteElement<ddc::Deriv<I3>>(1),
+                   ddc::DiscreteVector<ddc::Deriv<I3>>(BSplines<I3>::degree()));
+
+    local_test_deriv(ddc::DiscreteElement<>());
+    for (ddc::DiscreteElement<ddc::Deriv<I1>> const order1 : deriv1) {
+        local_test_deriv(order1);
+    }
+    for (ddc::DiscreteElement<ddc::Deriv<I2>> const order2 : deriv2) {
+        local_test_deriv(order2);
+    }
+    for (ddc::DiscreteElement<ddc::Deriv<I3>> const order3 : deriv3) {
+        local_test_deriv(order3);
+    }
+    for (ddc::DiscreteElement<ddc::Deriv<I1>> const order1 : deriv1) {
+        for (ddc::DiscreteElement<ddc::Deriv<I2>> const order2 : deriv2) {
+            local_test_deriv(ddc::DiscreteElement<ddc::Deriv<I1>, ddc::Deriv<I2>>(order1, order2));
+        }
+    }
+    for (ddc::DiscreteElement<ddc::Deriv<I2>> const order2 : deriv2) {
+        for (ddc::DiscreteElement<ddc::Deriv<I3>> const order3 : deriv3) {
+            local_test_deriv(ddc::DiscreteElement<ddc::Deriv<I2>, ddc::Deriv<I3>>(order2, order3));
+        }
+    }
+    for (ddc::DiscreteElement<ddc::Deriv<I3>> const order3 : deriv3) {
+        for (ddc::DiscreteElement<ddc::Deriv<I1>> const order1 : deriv1) {
+            local_test_deriv(ddc::DiscreteElement<ddc::Deriv<I3>, ddc::Deriv<I1>>(order3, order1));
+        }
+    }
+    for (ddc::DiscreteElement<ddc::Deriv<I1>> const order1 : deriv1) {
+        for (ddc::DiscreteElement<ddc::Deriv<I2>> const order2 : deriv2) {
+            for (ddc::DiscreteElement<ddc::Deriv<I3>> const order3 : deriv3) {
+                local_test_deriv(
+                        ddc::DiscreteElement<
+                                ddc::Deriv<I1>,
+                                ddc::Deriv<I2>,
+                                ddc::Deriv<I3>>(order1, order2, order3));
+            }
+        }
     }
 }
 
@@ -439,22 +414,10 @@ void TestSplineEvaluator3dDerivatives()
 
 } // namespace anonymous_namespace_workaround_3d_spline_evaluator_derivatives_cpp
 
-#if defined(SPLINE_EVALUATOR_3D_DERIV_TEST_1) && defined(BSPLINES_TYPE_UNIFORM)
-#    define SUFFIX_DEGREE(name, degree) name##Periodic##Uniform1##Degree##degree
-#elif defined(SPLINE_EVALUATOR_3D_DERIV_TEST_1) && defined(BSPLINES_TYPE_NON_UNIFORM)
-#    define SUFFIX_DEGREE(name, degree) name##Periodic##NonUniform1##Degree##degree
-#elif defined(SPLINE_EVALUATOR_3D_DERIV_TEST_2) && defined(BSPLINES_TYPE_UNIFORM)
-#    define SUFFIX_DEGREE(name, degree) name##Periodic##Uniform2##Degree##degree
-#elif defined(SPLINE_EVALUATOR_3D_DERIV_TEST_2) && defined(BSPLINES_TYPE_NON_UNIFORM)
-#    define SUFFIX_DEGREE(name, degree) name##Periodic##NonUniform2##Degree##degree
-#elif defined(SPLINE_EVALUATOR_3D_DERIV_TEST_3) && defined(BSPLINES_TYPE_UNIFORM)
-#    define SUFFIX_DEGREE(name, degree) name##Periodic##Uniform3##Degree##degree
-#elif defined(SPLINE_EVALUATOR_3D_DERIV_TEST_3) && defined(BSPLINES_TYPE_NON_UNIFORM)
-#    define SUFFIX_DEGREE(name, degree) name##Periodic##NonUniform3##Degree##degree
-#elif defined(SPLINE_EVALUATOR_3D_DERIV_TEST_4) && defined(BSPLINES_TYPE_UNIFORM)
-#    define SUFFIX_DEGREE(name, degree) name##Periodic##Uniform4##Degree##degree
-#elif defined(SPLINE_EVALUATOR_3D_DERIV_TEST_4) && defined(BSPLINES_TYPE_NON_UNIFORM)
-#    define SUFFIX_DEGREE(name, degree) name##Periodic##NonUniform4##Degree##degree
+#if defined(BSPLINES_TYPE_UNIFORM)
+#    define SUFFIX_DEGREE(name, degree) name##Periodic##Uniform##Degree##degree
+#elif defined(BSPLINES_TYPE_NON_UNIFORM)
+#    define SUFFIX_DEGREE(name, degree) name##Periodic##NonUniform##Degree##degree
 #endif
 #define SUFFIX_DEGREE_MACRO_EXP(name, degree) SUFFIX_DEGREE(name, degree)
 #define SUFFIX(name) SUFFIX_DEGREE_MACRO_EXP(name, DEGREE)

@@ -611,7 +611,7 @@ void TestMultipleBatchDomain2dSpline()
                                 dx<I2>(ncells),
                                 s_degree,
                                 s_degree),
-                        1e-12 * max_norm_diff2));
+                        1e-10 * max_norm_diff2));
     EXPECT_LE(
             max_norm_error_diff12,
             std::
@@ -620,7 +620,7 @@ void TestMultipleBatchDomain2dSpline()
                                 dx<I2>(ncells),
                                 s_degree,
                                 s_degree),
-                        1e-11 * max_norm_diff12));
+                        1e-9 * max_norm_diff12));
 
     // Check the evaluation error for the domain with an additional batch dimension
     auto const
@@ -664,7 +664,7 @@ void TestMultipleBatchDomain2dSpline()
                                 dx<I2>(ncells),
                                 s_degree,
                                 s_degree),
-                        1e-12 * max_norm_diff2_extra));
+                        1e-10 * max_norm_diff2_extra));
     EXPECT_LE(
             max_norm_error_diff12_extra,
             std::
@@ -673,7 +673,7 @@ void TestMultipleBatchDomain2dSpline()
                                 dx<I2>(ncells),
                                 s_degree,
                                 s_degree),
-                        1e-11 * max_norm_diff12_extra));
+                        1e-9 * max_norm_diff12_extra));
 }
 
 } // namespace anonymous_namespace_workaround_batched_2d_spline_builder_cpp

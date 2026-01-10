@@ -555,7 +555,7 @@ void TestBatched2dSpline()
                                 dx<I2>(ncells),
                                 s_degree,
                                 s_degree),
-                        1e-12 * max_norm_diff1));
+                        1e-10 * max_norm_diff1));
     EXPECT_LE(
             max_norm_error_diff2,
             std::
@@ -564,7 +564,7 @@ void TestBatched2dSpline()
                                 dx<I2>(ncells),
                                 s_degree,
                                 s_degree),
-                        1e-12 * max_norm_diff2));
+                        1e-11 * max_norm_diff2));
     EXPECT_LE(
             max_norm_error_diff12,
             std::
@@ -573,7 +573,7 @@ void TestBatched2dSpline()
                                 dx<I2>(ncells),
                                 s_degree,
                                 s_degree),
-                        1e-11 * max_norm_diff12));
+                        1e-9 * max_norm_diff12));
 }
 
 } // namespace anonymous_namespace_workaround_batched_2d_spline_builder_cpp

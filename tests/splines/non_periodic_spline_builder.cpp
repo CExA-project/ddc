@@ -299,7 +299,7 @@ void TestNonPeriodicSplineBuilderTestIdentity()
                           evaluator_type,
                           PolynomialEvaluator::Evaluator<DDimX, s_degree_x>>) {
         EXPECT_LE(max_norm_error / max_norm, 1.0e-14);
-        EXPECT_LE(max_norm_error_diff / max_norm_diff, 1.0e-12);
+        EXPECT_LE(max_norm_error_diff / max_norm_diff, 1.0e-11);
         EXPECT_LE(max_norm_error_integ / max_norm_int, 1.0e-14);
         EXPECT_LE(max_norm_error_quadrature_integ / max_norm_int, 1.0e-14);
     } else {

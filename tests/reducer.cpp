@@ -2,7 +2,6 @@
 //
 // SPDX-License-Identifier: MIT
 
-#include <bitset>
 #include <utility>
 
 #include <ddc/ddc.hpp>
@@ -43,23 +42,23 @@ TEST(Reducer, LOr)
 
 TEST(Reducer, BAnd)
 {
-    ddc::reducer::band<std::bitset<4>> const reducer;
-    EXPECT_EQ(reducer(std::bitset<4>("1100"), std::bitset<4>("1010")), std::bitset<4>("1000"));
-    EXPECT_EQ(reducer(std::bitset<4>("1010"), std::bitset<4>("1100")), std::bitset<4>("1000"));
+    ddc::reducer::band<unsigned> const reducer;
+    EXPECT_EQ(reducer(0b1100U, 0b1010U), 0b1000U);
+    EXPECT_EQ(reducer(0b1010U, 0b1100U), 0b1000U);
 }
 
 TEST(Reducer, BOr)
 {
-    ddc::reducer::bor<std::bitset<4>> const reducer;
-    EXPECT_EQ(reducer(std::bitset<4>("1100"), std::bitset<4>("1010")), std::bitset<4>("1110"));
-    EXPECT_EQ(reducer(std::bitset<4>("1010"), std::bitset<4>("1100")), std::bitset<4>("1110"));
+    ddc::reducer::bor<unsigned> const reducer;
+    EXPECT_EQ(reducer(0b1100U, 0b1010U), 0b1110U);
+    EXPECT_EQ(reducer(0b1010U, 0b1100U), 0b1110U);
 }
 
 TEST(Reducer, BXOr)
 {
-    ddc::reducer::bxor<std::bitset<4>> const reducer;
-    EXPECT_EQ(reducer(std::bitset<4>("1100"), std::bitset<4>("1010")), std::bitset<4>("0110"));
-    EXPECT_EQ(reducer(std::bitset<4>("1010"), std::bitset<4>("1100")), std::bitset<4>("0110"));
+    ddc::reducer::bxor<unsigned> const reducer;
+    EXPECT_EQ(reducer(0b1100U, 0b1010U), 0b0110U);
+    EXPECT_EQ(reducer(0b1010U, 0b1100U), 0b0110U);
 }
 
 TEST(Reducer, Min)

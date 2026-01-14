@@ -12,7 +12,7 @@
 #include <Kokkos_Core.hpp>
 
 #include "ddc_to_kokkos_execution_policy.hpp"
-#include "discrete_element.hpp"
+#include "discrete_vector.hpp"
 
 namespace ddc {
 
@@ -25,7 +25,7 @@ template <class F, class Support, std::size_t... Idx>
 class ForEachKokkosLambdaAdapter<F, Support, std::index_sequence<Idx...>>
 {
     template <std::size_t I>
-    using index_type = DiscreteElementType;
+    using index_type = DiscreteVectorElement;
 
     F m_f;
 
@@ -41,7 +41,7 @@ public:
     template <std::size_t N = sizeof...(Idx), std::enable_if_t<(N == 0), bool> = true>
     KOKKOS_FUNCTION void operator()([[maybe_unused]] index_type<0> unused_id) const
     {
-        m_f(DiscreteElement<>());
+        m_f(m_support(typename Support::discrete_vector_type()));
     }
 
     template <std::size_t N = sizeof...(Idx), std::enable_if_t<(N > 0), bool> = true>
@@ -60,7 +60,7 @@ void for_each_kokkos(
 {
     Kokkos::parallel_for(
             label,
-            ddc_to_kokkos_execution_policy(execution_space, domain),
+            ddc_to_kokkos_execution_policy(execution_space, detail::array(domain.extents())),
             ForEachKokkosLambdaAdapter<
                     Functor,
                     Support,

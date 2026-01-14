@@ -10,17 +10,16 @@
 
 #include <Kokkos_Macros.hpp>
 
-#include "discrete_element.hpp"
 #include "discrete_vector.hpp"
 
 namespace ddc {
 
 namespace detail {
 
-template <class Support, class Element, std::size_t N, class Functor, class... Is>
+template <class Support, std::size_t N, class Functor, class... Is>
 void host_for_each_serial(
         Support const& domain,
-        std::array<Element, N> const& size,
+        std::array<DiscreteVectorElement, N> const& size,
         Functor const& f,
         Is const&... is) noexcept
 {
@@ -28,16 +27,16 @@ void host_for_each_serial(
     if constexpr (I == N) {
         f(domain(typename Support::discrete_vector_type(is...)));
     } else {
-        for (Element ii = 0; ii < size[I]; ++ii) {
+        for (DiscreteVectorElement ii = 0; ii < size[I]; ++ii) {
             host_for_each_serial(domain, size, f, is..., ii);
         }
     }
 }
 
-template <class Support, class Element, std::size_t N, class Functor, class... Is>
+template <class Support, std::size_t N, class Functor, class... Is>
 KOKKOS_FUNCTION void device_for_each_serial(
         Support const& domain,
-        std::array<Element, N> const& size,
+        std::array<DiscreteVectorElement, N> const& size,
         Functor const& f,
         Is const&... is) noexcept
 {
@@ -45,7 +44,7 @@ KOKKOS_FUNCTION void device_for_each_serial(
     if constexpr (I == N) {
         f(domain(typename Support::discrete_vector_type(is...)));
     } else {
-        for (Element ii = 0; ii < size[I]; ++ii) {
+        for (DiscreteVectorElement ii = 0; ii < size[I]; ++ii) {
             device_for_each_serial(domain, size, f, is..., ii);
         }
     }

@@ -141,7 +141,7 @@ $(document).ready(function(){initNavTree('parallel__transform__reduce_8hpp_sourc
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="preprocessor">&lt;</span><span class="preprocessor">Kokkos_Core</span><span class="preprocessor">.</span><span class="preprocessor">hpp</span><span class="preprocessor">&gt;</span></div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="stringliteral">&quot;ddc_to_kokkos_execution_policy.hpp&quot;</span></div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="stringliteral">&quot;discrete_element.hpp&quot;</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="stringliteral">&quot;discrete_vector.hpp&quot;</span></div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="stringliteral">&quot;reducer.hpp&quot;</span></div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="keyword">namespace</span> <a class="code hl_namespace" href="namespaceddc.html">ddc</a> {</div>
@@ -222,7 +222,7 @@ $(document).ready(function(){initNavTree('parallel__transform__reduce_8hpp_sourc
 <div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span><span class="keyword">class</span> TransformReducerKokkosLambdaAdapter&lt;Reducer, Functor, Support, std::index_sequence&lt;Idx...&gt;&gt;</div>
 <div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>{</div>
 <div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    <span class="keyword">template</span> &lt;std::size_t I&gt;</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    <span class="keyword">using</span> index_type = DiscreteElementType;</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    <span class="keyword">using</span> index_type = DiscreteVectorElement;</div>
 <div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span> </div>
 <div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>    Reducer m_reducer;</div>
 <div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span> </div>
@@ -243,7 +243,7 @@ $(document).ready(function(){initNavTree('parallel__transform__reduce_8hpp_sourc
 <div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>            [[maybe_unused]] index_type&lt;0&gt; unused_id,</div>
 <div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>            <span class="keyword">typename</span> Reducer::value_type&amp; a) <span class="keyword">const</span></div>
 <div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    {</div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>        a = m_reducer(a, m_functor(DiscreteElement<a class="code hl_function" href="classddc_1_1DiscreteElement.html#aae48d441289e8e21b6584903647e9c77">&lt;</a><a class="code hl_function" href="classddc_1_1DiscreteElement.html#aae48d441289e8e21b6584903647e9c77">&gt;</a><a class="code hl_function" href="classddc_1_1DiscreteElement.html#aae48d441289e8e21b6584903647e9c77">(</a><a class="code hl_function" href="classddc_1_1DiscreteElement.html#aae48d441289e8e21b6584903647e9c77">)</a>));</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>        a = m_reducer(a, m_functor(m_support(<span class="keyword">typename</span> Support::discrete_vector_type())));</div>
 <div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>    }</div>
 <div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span> </div>
 <div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>    <span class="keyword">template</span> &lt;std::size_t N = <span class="keyword">sizeof</span>...(Idx), std::enable_if_t&lt;(N &gt; 0), <span class="keywordtype">bool</span>&gt; = <span class="keyword">true</span>&gt;</div>
@@ -275,7 +275,7 @@ $(document).ready(function(){initNavTree('parallel__transform__reduce_8hpp_sourc
 <div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>    T result = neutral;</div>
 <div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>    Kokkos::parallel_reduce(</div>
 <div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>            label,</div>
-<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>            ddc_to_kokkos_execution_policy(execution_space, domain),</div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>            ddc_to_kokkos_execution_policy(execution_space, detail::array(domain.extents())),</div>
 <div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>            TransformReducerKokkosLambdaAdapter&lt;</div>
 <div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>                    BinaryReductionOp,</div>
 <div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>                    UnaryTransformOp,</div>
@@ -392,7 +392,6 @@ $(document).ready(function(){initNavTree('parallel__transform__reduce_8hpp_sourc
 <div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>}</div>
 <div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span> </div>
 <div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>} <span class="comment">// namespace ddc</span></div>
-<div class="ttc" id="aclassddc_1_1DiscreteElement_html_aae48d441289e8e21b6584903647e9c77"><div class="ttname"><a href="classddc_1_1DiscreteElement.html#aae48d441289e8e21b6584903647e9c77">ddc::DiscreteElement::DiscreteElement</a></div><div class="ttdeci">KOKKOS_DEFAULTED_FUNCTION constexpr DiscreteElement()=default</div></div>
 <div class="ttc" id="anamespaceddc_1_1reducer_html"><div class="ttname"><a href="namespaceddc_1_1reducer.html">ddc::reducer</a></div><div class="ttdef"><b>Definition</b> <a href="reducer_8hpp_source.html#l00011">reducer.hpp:11</a></div></div>
 <div class="ttc" id="anamespaceddc_html"><div class="ttname"><a href="namespaceddc.html">ddc</a></div><div class="ttdoc">The top-level namespace of DDC.</div><div class="ttdef"><b>Definition</b> <a href="aligned__allocator_8hpp_source.html#l00011">aligned_allocator.hpp:11</a></div></div>
 <div class="ttc" id="anamespaceddc_html_a3141ff839615992a3c9c144bda702653"><div class="ttname"><a href="namespaceddc.html#a3141ff839615992a3c9c144bda702653">ddc::parallel_transform_reduce</a></div><div class="ttdeci">T parallel_transform_reduce(Support const &amp;domain, T neutral, BinaryReductionOp &amp;&amp;reduce, UnaryTransformOp &amp;&amp;transform) noexcept</div><div class="ttdoc">A reduction over a nD domain using the Kokkos default execution space.</div><div class="ttdef"><b>Definition</b> <a href="parallel__transform__reduce_8hpp_source.html#l00250">parallel_transform_reduce.hpp:250</a></div></div>

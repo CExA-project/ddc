@@ -141,7 +141,7 @@ $(document).ready(function(){initNavTree('parallel__for__each_8hpp_source.html',
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="preprocessor">&lt;</span><span class="preprocessor">Kokkos_Core</span><span class="preprocessor">.</span><span class="preprocessor">hpp</span><span class="preprocessor">&gt;</span></div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="stringliteral">&quot;ddc_to_kokkos_execution_policy.hpp&quot;</span></div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="stringliteral">&quot;discrete_element.hpp&quot;</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="stringliteral">&quot;discrete_vector.hpp&quot;</span></div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="keyword">namespace</span> <a class="code hl_namespace" href="namespaceddc.html">ddc</a> {</div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
@@ -154,7 +154,7 @@ $(document).ready(function(){initNavTree('parallel__for__each_8hpp_source.html',
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="keyword">class</span> ForEachKokkosLambdaAdapter&lt;F, Support, std::index_sequence&lt;Idx...&gt;&gt;</div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>{</div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    <span class="keyword">template</span> &lt;std::size_t I&gt;</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    <span class="keyword">using</span> index_type = DiscreteElementType;</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    <span class="keyword">using</span> index_type = DiscreteVectorElement;</div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    F m_f;</div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
@@ -170,7 +170,7 @@ $(document).ready(function(){initNavTree('parallel__for__each_8hpp_source.html',
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="keyword">template</span> &lt;std::size_t N = <span class="keyword">sizeof</span>...(Idx), std::enable_if_t&lt;(N == 0), <span class="keywordtype">bool</span>&gt; = <span class="keyword">true</span>&gt;</div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    KOKKOS_FUNCTION <span class="keywordtype">void</span> operator()([[maybe_unused]] index_type&lt;0&gt; unused_id) <span class="keyword">const</span></div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    {</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>        m_f(DiscreteElement<a class="code hl_function" href="classddc_1_1DiscreteElement.html#aae48d441289e8e21b6584903647e9c77">&lt;</a><a class="code hl_function" href="classddc_1_1DiscreteElement.html#aae48d441289e8e21b6584903647e9c77">&gt;</a><a class="code hl_function" href="classddc_1_1DiscreteElement.html#aae48d441289e8e21b6584903647e9c77">(</a><a class="code hl_function" href="classddc_1_1DiscreteElement.html#aae48d441289e8e21b6584903647e9c77">)</a>);</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>        m_f(m_support(<span class="keyword">typename</span> Support::discrete_vector_type()));</div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    }</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="keyword">template</span> &lt;std::size_t N = <span class="keyword">sizeof</span>...(Idx), std::enable_if_t&lt;(N &gt; 0), <span class="keywordtype">bool</span>&gt; = <span class="keyword">true</span>&gt;</div>
@@ -189,7 +189,7 @@ $(document).ready(function(){initNavTree('parallel__for__each_8hpp_source.html',
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>{</div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    Kokkos::parallel_for(</div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>            label,</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>            ddc_to_kokkos_execution_policy(execution_space, domain),</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>            ddc_to_kokkos_execution_policy(execution_space, detail::array(domain.extents())),</div>
 <div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>            ForEachKokkosLambdaAdapter&lt;</div>
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>                    Functor,</div>
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>                    Support,</div>
@@ -258,7 +258,6 @@ $(document).ready(function(){initNavTree('parallel__for__each_8hpp_source.html',
 <div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>}</div>
 <div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span> </div>
 <div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>} <span class="comment">// namespace ddc</span></div>
-<div class="ttc" id="aclassddc_1_1DiscreteElement_html_aae48d441289e8e21b6584903647e9c77"><div class="ttname"><a href="classddc_1_1DiscreteElement.html#aae48d441289e8e21b6584903647e9c77">ddc::DiscreteElement::DiscreteElement</a></div><div class="ttdeci">KOKKOS_DEFAULTED_FUNCTION constexpr DiscreteElement()=default</div></div>
 <div class="ttc" id="anamespaceddc_html"><div class="ttname"><a href="namespaceddc.html">ddc</a></div><div class="ttdoc">The top-level namespace of DDC.</div><div class="ttdef"><b>Definition</b> <a href="aligned__allocator_8hpp_source.html#l00011">aligned_allocator.hpp:11</a></div></div>
 <div class="ttc" id="anamespaceddc_html_a384e61079897673703217e03dad9dd84"><div class="ttname"><a href="namespaceddc.html#a384e61079897673703217e03dad9dd84">ddc::parallel_for_each</a></div><div class="ttdeci">void parallel_for_each(std::string const &amp;label, Support const &amp;domain, Functor &amp;&amp;f) noexcept</div><div class="ttdoc">iterates over a nD domain using the Kokkos default execution space</div><div class="ttdef"><b>Definition</b> <a href="parallel__for__each_8hpp_source.html#l00112">parallel_for_each.hpp:112</a></div></div>
 <div class="ttc" id="anamespaceddc_html_a38c84b63c494b0e01a5fcf79e41f95cc"><div class="ttname"><a href="namespaceddc.html#a38c84b63c494b0e01a5fcf79e41f95cc">ddc::parallel_for_each</a></div><div class="ttdeci">void parallel_for_each(Support const &amp;domain, Functor &amp;&amp;f) noexcept</div><div class="ttdoc">iterates over a nD domain using the Kokkos default execution space</div><div class="ttdef"><b>Definition</b> <a href="parallel__for__each_8hpp_source.html#l00122">parallel_for_each.hpp:122</a></div></div>

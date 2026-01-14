@@ -2,15 +2,14 @@
 //
 // SPDX-License-Identifier: MIT
 
-#include <algorithm>
-#include <cstddef>
-#include <vector>
+#include <utility>
 
 #include <ddc/ddc.hpp>
 
 #include <gtest/gtest.h>
 
 #include <Kokkos_Core.hpp>
+#include <Kokkos_StdAlgorithms.hpp>
 
 inline namespace anonymous_namespace_workaround_parallel_for_each_cpp {
 
@@ -45,134 +44,108 @@ DVectY constexpr nelems_y(12);
 DElemXY constexpr lbound_x_y(lbound_x, lbound_y);
 DVectXY constexpr nelems_x_y(nelems_x, nelems_y);
 
+template <typename Support, typename Layout, typename MemorySpace>
+class IncrementFn
+{
+    ddc::ChunkSpan<int, Support, Layout, MemorySpace> m_chunk_span;
+
+public:
+    explicit IncrementFn(ddc::ChunkSpan<int, Support, Layout, MemorySpace> chunk_span) noexcept
+        : m_chunk_span(std::move(chunk_span))
+    {
+    }
+
+    KOKKOS_FUNCTION void operator()(
+            typename Support::discrete_element_type const& delem) const noexcept
+    {
+        m_chunk_span(delem) += 1;
+    }
+};
+
 } // namespace anonymous_namespace_workaround_parallel_for_each_cpp
 
 TEST(ParallelForEachParallelHost, ZeroDimension)
 {
     DDom0D const dom;
-    std::vector<int> storage(DDom0D::size(), 0);
-    ddc::ChunkSpan<int, DDom0D> const view(storage.data(), dom);
-    ddc::parallel_for_each(Kokkos::DefaultHostExecutionSpace(), dom, [=](DElem0D const i) {
-        view(i) += 1;
-    });
-    EXPECT_EQ(std::count(storage.begin(), storage.end(), 1), DDom0D::size());
+    Kokkos::View<int, Kokkos::HostSpace> const storage("storage");
+    ddc::ChunkSpan const view(storage, dom);
+
+    ddc::parallel_for_each(Kokkos::DefaultHostExecutionSpace(), dom, IncrementFn(view));
+    EXPECT_EQ(
+            Kokkos::Experimental::
+                    count(Kokkos::DefaultHostExecutionSpace(),
+                          Kokkos::View<int*, Kokkos::HostSpace>(storage.data(), 1),
+                          1),
+            DDom0D::size());
 }
 
 TEST(ParallelForEachParallelHost, OneDimension)
 {
     DDomX const dom(lbound_x, nelems_x);
-    std::vector<int> storage(dom.size(), 0);
-    ddc::ChunkSpan<int, DDomX> const view(storage.data(), dom);
-    ddc::parallel_for_each(Kokkos::DefaultHostExecutionSpace(), dom, [=](DElemX const ix) {
-        view(ix) += 1;
-    });
-    EXPECT_EQ(std::count(storage.begin(), storage.end(), 1), dom.size());
+    Kokkos::View<int*, Kokkos::HostSpace> const storage("storage", dom.size());
+    ddc::ChunkSpan const view(storage, dom);
+
+    ddc::parallel_for_each(Kokkos::DefaultHostExecutionSpace(), dom, IncrementFn(view));
+    EXPECT_EQ(
+            Kokkos::Experimental::count(Kokkos::DefaultHostExecutionSpace(), storage, 1),
+            dom.size());
 }
 
 TEST(ParallelForEachParallelHost, TwoDimensions)
 {
     DDomXY const dom(lbound_x_y, nelems_x_y);
-    std::vector<int> storage(dom.size(), 0);
-    ddc::ChunkSpan<int, DDomXY> const view(storage.data(), dom);
-    ddc::parallel_for_each(Kokkos::DefaultHostExecutionSpace(), dom, [=](DElemXY const ixy) {
-        view(ixy) += 1;
-    });
-    EXPECT_EQ(std::count(storage.begin(), storage.end(), 1), dom.size());
+    Kokkos::View<int*, Kokkos::HostSpace> const storage("storage", dom.size());
+    ddc::ChunkSpan const
+            view(Kokkos::View<int**, Kokkos::HostSpace>(storage.data(), nelems_x, nelems_y), dom);
+
+    ddc::parallel_for_each(Kokkos::DefaultHostExecutionSpace(), dom, IncrementFn(view));
+    EXPECT_EQ(
+            Kokkos::Experimental::count(Kokkos::DefaultHostExecutionSpace(), storage, 1),
+            dom.size());
 }
-
-inline namespace anonymous_namespace_workaround_parallel_for_each_cpp {
-
-void TestParallelForEachParallelDeviceZeroDimension()
-{
-    DDom0D const dom;
-    ddc::Chunk<int, DDom0D, ddc::DeviceAllocator<int>> storage(dom);
-    Kokkos::deep_copy(storage.allocation_kokkos_view(), 0);
-    ddc::ChunkSpan const view(storage.span_view());
-    ddc::parallel_for_each(dom, KOKKOS_LAMBDA(DElem0D const i) { view(i) += 1; });
-    int const* const ptr = storage.data_handle();
-    int sum;
-    Kokkos::parallel_reduce(
-            DDom0D::size(),
-            KOKKOS_LAMBDA(std::size_t i, int& local_sum) { local_sum += ptr[i]; },
-            Kokkos::Sum<int>(sum));
-    EXPECT_EQ(sum, DDom0D::size());
-}
-
-} // namespace anonymous_namespace_workaround_parallel_for_each_cpp
 
 TEST(ParallelForEachParallelDevice, ZeroDimension)
 {
-    TestParallelForEachParallelDeviceZeroDimension();
+    DDom0D const dom;
+    Kokkos::View<int> const storage("storage");
+    ddc::ChunkSpan const view(storage, dom);
+
+    ddc::parallel_for_each(dom, IncrementFn(view));
+    EXPECT_EQ(
+            Kokkos::Experimental::
+                    count(Kokkos::DefaultExecutionSpace(),
+                          Kokkos::View<int*>(storage.data(), 1),
+                          1),
+            DDom0D::size());
 }
-
-inline namespace anonymous_namespace_workaround_parallel_for_each_cpp {
-
-void TestParallelForEachParallelDeviceOneDimension()
-{
-    DDomX const dom(lbound_x, nelems_x);
-    ddc::Chunk<int, DDomX, ddc::DeviceAllocator<int>> storage(dom);
-    Kokkos::deep_copy(storage.allocation_kokkos_view(), 0);
-    ddc::ChunkSpan const view(storage.span_view());
-    ddc::parallel_for_each(dom, KOKKOS_LAMBDA(DElemX const ix) { view(ix) += 1; });
-    int const* const ptr = storage.data_handle();
-    int sum;
-    Kokkos::parallel_reduce(
-            dom.size(),
-            KOKKOS_LAMBDA(std::size_t i, int& local_sum) { local_sum += ptr[i]; },
-            Kokkos::Sum<int>(sum));
-    EXPECT_EQ(sum, dom.size());
-}
-
-} // namespace anonymous_namespace_workaround_parallel_for_each_cpp
 
 TEST(ParallelForEachParallelDevice, OneDimension)
 {
-    TestParallelForEachParallelDeviceOneDimension();
+    DDomX const dom(lbound_x, nelems_x);
+    Kokkos::View<int*> const storage("storage", dom.size());
+    ddc::ChunkSpan const view(storage, dom);
+
+    ddc::parallel_for_each(dom, IncrementFn(view));
+    EXPECT_EQ(Kokkos::Experimental::count(Kokkos::DefaultExecutionSpace(), storage, 1), dom.size());
 }
-
-inline namespace anonymous_namespace_workaround_parallel_for_each_cpp {
-
-void TestParallelForEachParallelDeviceTwoDimensions()
-{
-    DDomXY const dom(lbound_x_y, nelems_x_y);
-    ddc::Chunk<int, DDomXY, ddc::DeviceAllocator<int>> storage(dom);
-    Kokkos::deep_copy(storage.allocation_kokkos_view(), 0);
-    ddc::ChunkSpan const view(storage.span_view());
-    ddc::parallel_for_each(dom, KOKKOS_LAMBDA(DElemXY const ixy) { view(ixy) += 1; });
-    int const* const ptr = storage.data_handle();
-    int sum;
-    Kokkos::parallel_reduce(
-            dom.size(),
-            KOKKOS_LAMBDA(std::size_t i, int& local_sum) { local_sum += ptr[i]; },
-            Kokkos::Sum<int>(sum));
-    EXPECT_EQ(sum, dom.size());
-}
-
-} // namespace anonymous_namespace_workaround_parallel_for_each_cpp
 
 TEST(ParallelForEachParallelDevice, TwoDimensions)
 {
-    TestParallelForEachParallelDeviceTwoDimensions();
-}
+    DDomXY const dom(lbound_x_y, nelems_x_y);
+    Kokkos::View<int*> const storage("storage", dom.size());
+    ddc::ChunkSpan const view(Kokkos::View<int**>(storage.data(), nelems_x, nelems_y), dom);
 
-void TestParallelForEachParallelDeviceTwoDimensionsStrided()
-{
-    using DDomXY = ddc::StridedDiscreteDomain<DDimX, DDimY>;
-    DDomXY const dom(lbound_x_y, nelems_x_y, DVectXY(3, 3));
-    ddc::Chunk<int, DDomXY, ddc::DeviceAllocator<int>> storage(dom);
-    Kokkos::deep_copy(storage.allocation_kokkos_view(), 0);
-    ddc::ChunkSpan const view(storage.span_view());
-    ddc::parallel_for_each(dom, KOKKOS_LAMBDA(DElemXY const ixy) { view(ixy) += 1; });
-    int const* const ptr = storage.data_handle();
-    int sum;
-    Kokkos::parallel_reduce(
-            dom.size(),
-            KOKKOS_LAMBDA(std::size_t i, int& local_sum) { local_sum += ptr[i]; },
-            Kokkos::Sum<int>(sum));
-    EXPECT_EQ(sum, dom.size());
+    ddc::parallel_for_each(dom, IncrementFn(view));
+    EXPECT_EQ(Kokkos::Experimental::count(Kokkos::DefaultExecutionSpace(), storage, 1), dom.size());
 }
 
 TEST(ParallelForEachParallelDevice, TwoDimensionsStrided)
 {
-    TestParallelForEachParallelDeviceTwoDimensionsStrided();
+    using DDomXY = ddc::StridedDiscreteDomain<DDimX, DDimY>;
+    DDomXY const dom(lbound_x_y, nelems_x_y, DVectXY(3, 3));
+    Kokkos::View<int*> const storage("storage", dom.size());
+    ddc::ChunkSpan const view(Kokkos::View<int**>(storage.data(), nelems_x, nelems_y), dom);
+
+    ddc::parallel_for_each(dom, IncrementFn(view));
+    EXPECT_EQ(Kokkos::Experimental::count(Kokkos::DefaultExecutionSpace(), storage, 1), dom.size());
 }

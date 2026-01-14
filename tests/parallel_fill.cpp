@@ -2,14 +2,12 @@
 //
 // SPDX-License-Identifier: MIT
 
-#include <algorithm>
-#include <vector>
-
 #include <ddc/ddc.hpp>
 
 #include <gtest/gtest.h>
 
 #include <Kokkos_Core.hpp>
+#include <Kokkos_StdAlgorithms.hpp>
 
 inline namespace anonymous_namespace_workaround_parallel_fill_cpp {
 
@@ -45,39 +43,41 @@ DVectXY constexpr nelems_x_y(nelems_x, nelems_y);
 TEST(ParallelFill, OneDimension)
 {
     DDomX const dom(lbound_x, nelems_x);
-    std::vector<int> storage(dom.size(), 0);
-    ddc::ChunkSpan<int, DDomX> const view(storage.data(), dom);
+    Kokkos::View<int*> const storage("storage", dom.size());
+    ddc::ChunkSpan const view(storage, dom);
+
     ddc::parallel_fill(view, 1);
-    EXPECT_EQ(std::count(storage.begin(), storage.end(), 1), dom.size());
+    EXPECT_EQ(Kokkos::Experimental::count(Kokkos::DefaultExecutionSpace(), storage, 1), dom.size());
 }
 
 TEST(ParallelFill, TwoDimensions)
 {
     DDomXY const dom(lbound_x_y, nelems_x_y);
-    std::vector<int> storage(dom.size(), 0);
-    ddc::ChunkSpan<int, DDomXY> const view(storage.data(), dom);
+    Kokkos::View<int*> const storage("storage", dom.size());
+    ddc::ChunkSpan const view(Kokkos::View<int**>(storage.data(), nelems_x, nelems_y), dom);
+
     ddc::parallel_fill(view, 1);
-    EXPECT_EQ(std::count(storage.begin(), storage.end(), 1), dom.size());
+    EXPECT_EQ(Kokkos::Experimental::count(Kokkos::DefaultExecutionSpace(), storage, 1), dom.size());
 }
 
 TEST(ParallelFill, OneDimensionWithExecutionSpace)
 {
+    Kokkos::DefaultExecutionSpace const exec_space;
     DDomX const dom(lbound_x, nelems_x);
-    std::vector<int> storage(dom.size(), 0);
-    ddc::ChunkSpan<int, DDomX> const view(storage.data(), dom);
-    Kokkos::DefaultHostExecutionSpace const exec_space;
+    Kokkos::View<int*> const storage(Kokkos::view_alloc("storage", exec_space), dom.size());
+    ddc::ChunkSpan const view(storage, dom);
+
     ddc::parallel_fill(exec_space, view, 1);
-    exec_space.fence();
-    EXPECT_EQ(std::count(storage.begin(), storage.end(), 1), dom.size());
+    EXPECT_EQ(Kokkos::Experimental::count(exec_space, storage, 1), dom.size());
 }
 
 TEST(ParallelFill, TwoDimensionsWithExecutionSpace)
 {
+    Kokkos::DefaultExecutionSpace const exec_space;
     DDomXY const dom(lbound_x_y, nelems_x_y);
-    std::vector<int> storage(dom.size(), 0);
-    ddc::ChunkSpan<int, DDomXY> const view(storage.data(), dom);
-    Kokkos::DefaultHostExecutionSpace const exec_space;
+    Kokkos::View<int*> const storage(Kokkos::view_alloc("storage", exec_space), dom.size());
+    ddc::ChunkSpan const view(Kokkos::View<int**>(storage.data(), nelems_x, nelems_y), dom);
+
     ddc::parallel_fill(exec_space, view, 1);
-    exec_space.fence();
-    EXPECT_EQ(std::count(storage.begin(), storage.end(), 1), dom.size());
+    EXPECT_EQ(Kokkos::Experimental::count(exec_space, storage, 1), dom.size());
 }

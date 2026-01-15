@@ -2,13 +2,12 @@
 //
 // SPDX-License-Identifier: MIT
 
-#include <vector>
-
 #include <ddc/ddc.hpp>
 
 #include <gtest/gtest.h>
 
 #include <Kokkos_Core.hpp>
+#include <Kokkos_StdAlgorithms.hpp>
 
 inline namespace anonymous_namespace_workaround_parallel_transform_reduce_cpp {
 
@@ -48,124 +47,84 @@ DVectXY constexpr nelems_x_y(nelems_x, nelems_y);
 TEST(ParallelTransformReduceHost, ZeroDimension)
 {
     DDom0D const dom;
-    std::vector<int> storage(DDom0D::size(), 0);
-    ddc::ChunkSpan<int, DDom0D> const chunk(storage.data(), dom);
-    int count = 0;
-    ddc::host_for_each(dom, [&](DElem0D const i) { chunk(i) = count++; });
-    EXPECT_EQ(
-            ddc::parallel_transform_reduce(
-                    Kokkos::DefaultHostExecutionSpace(),
-                    dom,
-                    0,
-                    ddc::reducer::sum<int>(),
-                    chunk),
-            dom.size() * (dom.size() - 1) / 2);
+    Kokkos::View<int, Kokkos::HostSpace> const storage("storage");
+    ddc::ChunkSpan const view(storage, dom);
+
+    ddc::parallel_fill(view, 1);
+    int const sum = ddc::parallel_transform_reduce(
+            Kokkos::DefaultHostExecutionSpace(),
+            dom,
+            0,
+            ddc::reducer::sum<int>(),
+            view.span_cview());
+    EXPECT_EQ(sum, dom.size());
 }
 
 TEST(ParallelTransformReduceHost, OneDimension)
 {
     DDomX const dom(lbound_x, nelems_x);
-    std::vector<int> storage(dom.size(), 0);
-    ddc::ChunkSpan<int, DDomX> const chunk(storage.data(), dom);
-    int count = 0;
-    ddc::host_for_each(dom, [&](DElemX const ix) { chunk(ix) = count++; });
-    EXPECT_EQ(
-            ddc::parallel_transform_reduce(
-                    Kokkos::DefaultHostExecutionSpace(),
-                    dom,
-                    0,
-                    ddc::reducer::sum<int>(),
-                    chunk),
-            dom.size() * (dom.size() - 1) / 2);
+    Kokkos::View<int*, Kokkos::HostSpace> const storage("storage", dom.size());
+    ddc::ChunkSpan const view(storage, dom);
+
+    ddc::parallel_fill(view, 1);
+    int const sum = ddc::parallel_transform_reduce(
+            Kokkos::DefaultHostExecutionSpace(),
+            dom,
+            0,
+            ddc::reducer::sum<int>(),
+            view.span_cview());
+    EXPECT_EQ(sum, dom.size());
 }
 
 TEST(ParallelTransformReduceHost, TwoDimensions)
 {
     DDomXY const dom(lbound_x_y, nelems_x_y);
-    std::vector<int> storage(dom.size(), 0);
-    ddc::ChunkSpan<int, DDomXY> const chunk(storage.data(), dom);
-    int count = 0;
-    ddc::host_for_each(dom, [&](DElemXY const ixy) { chunk(ixy) = count++; });
-    EXPECT_EQ(
-            ddc::parallel_transform_reduce(
-                    Kokkos::DefaultHostExecutionSpace(),
-                    dom,
-                    0,
-                    ddc::reducer::sum<int>(),
-                    chunk),
-            dom.size() * (dom.size() - 1) / 2);
-}
+    Kokkos::View<int*, Kokkos::HostSpace> const storage("storage", dom.size());
+    ddc::ChunkSpan const
+            view(Kokkos::View<int**, Kokkos::HostSpace>(storage.data(), nelems_x, nelems_y), dom);
 
-inline namespace anonymous_namespace_workaround_parallel_transform_reduce_cpp {
-
-void TestParallelTransformReduceDeviceZeroDimension()
-{
-    DDom0D const dom;
-    ddc::Chunk<int, DDom0D, ddc::DeviceAllocator<int>> storage(dom);
-    ddc::ChunkSpan const chunk(storage.span_view());
-    Kokkos::View<int> const count("count");
-    Kokkos::deep_copy(count, 0);
-    ddc::parallel_for_each(
+    ddc::parallel_fill(view, 1);
+    int const sum = ddc::parallel_transform_reduce(
+            Kokkos::DefaultHostExecutionSpace(),
             dom,
-            KOKKOS_LAMBDA(DElem0D const i) { chunk(i) = Kokkos::atomic_fetch_add(&count(), 1); });
-    EXPECT_EQ(
-            ddc::parallel_transform_reduce(dom, 0, ddc::reducer::sum<int>(), chunk),
-            dom.size() * (dom.size() - 1) / 2);
+            0,
+            ddc::reducer::sum<int>(),
+            view.span_cview());
+    EXPECT_EQ(sum, dom.size());
 }
-
-} // namespace anonymous_namespace_workaround_parallel_transform_reduce_cpp
 
 TEST(ParallelTransformReduceDevice, ZeroDimension)
 {
-    TestParallelTransformReduceDeviceZeroDimension();
+    DDom0D const dom;
+    Kokkos::View<int> const storage("storage");
+    ddc::ChunkSpan const view(storage, dom);
+
+    ddc::parallel_fill(view, 1);
+    int const sum
+            = ddc::parallel_transform_reduce(dom, 0, ddc::reducer::sum<int>(), view.span_cview());
+    EXPECT_EQ(sum, dom.size());
 }
-
-inline namespace anonymous_namespace_workaround_parallel_transform_reduce_cpp {
-
-void TestParallelTransformReduceDeviceOneDimension()
-{
-    DDomX const dom(lbound_x, nelems_x);
-    ddc::Chunk<int, DDomX, ddc::DeviceAllocator<int>> storage(dom);
-    ddc::ChunkSpan const chunk(storage.span_view());
-    Kokkos::View<int> const count("count");
-    Kokkos::deep_copy(count, 0);
-    ddc::parallel_for_each(
-            dom,
-            KOKKOS_LAMBDA(DElemX const ix) { chunk(ix) = Kokkos::atomic_fetch_add(&count(), 1); });
-    EXPECT_EQ(
-            ddc::parallel_transform_reduce(dom, 0, ddc::reducer::sum<int>(), chunk),
-            dom.size() * (dom.size() - 1) / 2);
-}
-
-} // namespace anonymous_namespace_workaround_parallel_transform_reduce_cpp
 
 TEST(ParallelTransformReduceDevice, OneDimension)
 {
-    TestParallelTransformReduceDeviceOneDimension();
+    DDomX const dom(lbound_x, nelems_x);
+    Kokkos::View<int*> const storage("storage", dom.size());
+    ddc::ChunkSpan const view(storage, dom);
+
+    ddc::parallel_fill(view, 1);
+    int const sum
+            = ddc::parallel_transform_reduce(dom, 0, ddc::reducer::sum<int>(), view.span_cview());
+    EXPECT_EQ(sum, dom.size());
 }
-
-inline namespace anonymous_namespace_workaround_parallel_transform_reduce_cpp {
-
-void TestParallelTransformReduceDeviceTwoDimensions()
-{
-    DDomXY const dom(lbound_x_y, nelems_x_y);
-    ddc::Chunk<int, DDomXY, ddc::DeviceAllocator<int>> storage(dom);
-    ddc::ChunkSpan const chunk(storage.span_view());
-    Kokkos::View<int> const count("count");
-    Kokkos::deep_copy(count, 0);
-    ddc::parallel_for_each(
-            dom,
-            KOKKOS_LAMBDA(DElemXY const ixy) {
-                chunk(ixy) = Kokkos::atomic_fetch_add(&count(), 1);
-            });
-    EXPECT_EQ(
-            ddc::parallel_transform_reduce(dom, 0, ddc::reducer::sum<int>(), chunk),
-            dom.size() * (dom.size() - 1) / 2);
-}
-
-} // namespace anonymous_namespace_workaround_parallel_transform_reduce_cpp
 
 TEST(ParallelTransformReduceDevice, TwoDimensions)
 {
-    TestParallelTransformReduceDeviceTwoDimensions();
+    DDomXY const dom(lbound_x_y, nelems_x_y);
+    Kokkos::View<int*> const storage("storage", dom.size());
+    ddc::ChunkSpan const view(Kokkos::View<int**>(storage.data(), nelems_x, nelems_y), dom);
+
+    ddc::parallel_fill(view, 1);
+    int const sum
+            = ddc::parallel_transform_reduce(dom, 0, ddc::reducer::sum<int>(), view.span_cview());
+    EXPECT_EQ(sum, dom.size());
 }

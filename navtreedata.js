@@ -118,8 +118,8 @@ var NAVTREEINDEX =
 "classddc_1_1SplineBuilder3D.html#a302c715f12851b09c304dcdb7719e3bc",
 "classddc_1_1SplineEvaluator3D.html#a7da4b254329b357322b2943ccae8f923",
 "classddc_1_1UniformPointSampling_1_1Impl.html#ab0ae79ae8ffb7aebe902a522d819ddbf",
-"namespaceddc.html#a91da31335c65fa4b0776ca4c6c44160b",
-"structddc_1_1is__strided__discrete__domain.html"
+"namespaceddc.html#a90a3ae31ee9a0b37dfd96a2d942b300f",
+"structddc_1_1is__spline__evaluator_3_01SplineEvaluator_3_01ExecSpace_00_01MemorySpace_00_01BSpli9c02ad999c3c97f462f5c25d3036992e.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

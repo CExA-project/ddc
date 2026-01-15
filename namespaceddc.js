@@ -220,6 +220,8 @@ var namespaceddc =
     [ "parallel_for_each", "namespaceddc.html#a8810239a0c359ab4612e79fadc7fbdab", null ],
     [ "parallel_for_each", "namespaceddc.html#a384e61079897673703217e03dad9dd84", null ],
     [ "parallel_for_each", "namespaceddc.html#a38c84b63c494b0e01a5fcf79e41f95cc", null ],
+    [ "parallel_transform", "namespaceddc.html#af073e85da1748eeb4dc695fcdabc2975", null ],
+    [ "parallel_transform", "namespaceddc.html#a1845837cc6071bd76ae20ca0ccf609c7", null ],
     [ "parallel_transform_reduce", "namespaceddc.html#a35958049c996ae6af7dc9bbeaeb8a05a", null ],
     [ "parallel_transform_reduce", "namespaceddc.html#ae07fd7890a84aa49971a4fccf63ff2cf", null ],
     [ "parallel_transform_reduce", "namespaceddc.html#ad1b2be9f0994282dd8bffdc235165d4b", null ],

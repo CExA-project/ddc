@@ -18,6 +18,7 @@
 #include <ddc/ddc.hpp>
 
 #include <Kokkos_Core.hpp>
+#include <Kokkos_StdAlgorithms.hpp>
 
 #include "deriv.hpp"
 #include "integrals.hpp"
@@ -1103,9 +1104,8 @@ SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower, BcUp
     ddc::DiscreteElement<deriv_type> const first_deriv(s_odd);
     // Allocate Chunk on deriv_type and interpolation_discrete_dimension_type and copy quadrature coefficients into it
     ddc::Chunk coefficients_derivs_xmin_out(
-            ddc::DiscreteDomain<deriv_type>(
-                    first_deriv, // These indices are wrong the order should be reversed
-                    ddc::DiscreteVector<deriv_type>(s_nbc_xmin)),
+            ddc::DiscreteDomain<
+                    deriv_type>(first_deriv, ddc::DiscreteVector<deriv_type>(s_nbc_xmin)),
             ddc::KokkosAllocator<double, OutMemorySpace>());
     ddc::Chunk coefficients_out(
             interpolation_domain().take_first(
@@ -1116,9 +1116,10 @@ SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower, BcUp
             ddc::DiscreteDomain<
                     deriv_type>(first_deriv, ddc::DiscreteVector<deriv_type>(s_nbc_xmax)),
             ddc::KokkosAllocator<double, OutMemorySpace>());
-    Kokkos::deep_copy(
-            coefficients_derivs_xmin_out.allocation_kokkos_view(),
-            coefficients_derivs_xmin.allocation_kokkos_view());
+    Kokkos::Experimental::reverse_copy(
+            Kokkos::DefaultExecutionSpace(),
+            coefficients_derivs_xmin.allocation_kokkos_view(),
+            coefficients_derivs_xmin_out.allocation_kokkos_view());
     Kokkos::deep_copy(
             coefficients_out.allocation_kokkos_view(),
             coefficients.allocation_kokkos_view());

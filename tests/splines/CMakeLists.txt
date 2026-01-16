@@ -2,8 +2,6 @@
 #
 # SPDX-License-Identifier: MIT
 
-cmake_minimum_required(VERSION 3.25)
-
 include(GoogleTest)
 
 set(DDC_SPLINES_TEST_DEGREE_MIN 3 CACHE STRING "Minimum degree to test splines.")

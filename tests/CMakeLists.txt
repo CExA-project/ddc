@@ -2,8 +2,6 @@
 #
 # SPDX-License-Identifier: MIT
 
-cmake_minimum_required(VERSION 3.25)
-
 include(GoogleTest)
 
 add_subdirectory(discrete_space)

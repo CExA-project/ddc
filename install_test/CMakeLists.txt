@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: MIT
 
 cmake_minimum_required(VERSION 3.25)
+
 project(test-installed-ddc LANGUAGES CXX)
 
 # Test whether `find_package(DDC)` can be called multiple times

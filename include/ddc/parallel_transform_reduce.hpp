@@ -110,9 +110,7 @@ public:
     }
 
     template <std::size_t N = sizeof...(Idx), std::enable_if_t<(N == 0), bool> = true>
-    KOKKOS_FUNCTION void operator()(
-            [[maybe_unused]] index_type<0> unused_id,
-            typename Reducer::value_type& a) const
+    KOKKOS_FUNCTION void operator()(index_type<0> /*id*/, typename Reducer::value_type& a) const
     {
         a = m_reducer(a, m_functor(m_support(typename Support::discrete_vector_type())));
     }

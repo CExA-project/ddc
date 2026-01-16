@@ -166,18 +166,7 @@ void test_deriv(
                         1e-11 * max_norm_diff));
 }
 
-template <typename I, std::size_t Order>
-auto make_deriv_order_delem()
-{
-    if constexpr (Order == 0) {
-        return ddc::DiscreteElement<>();
-    } else {
-        return ddc::DiscreteElement<ddc::Deriv<I>>(Order);
-    }
-}
-
 template <
-        std::size_t Order = 0,
         class DDimI,
         class ExecSpace,
         class SplineEvaluator,
@@ -194,9 +183,8 @@ void launch_deriv_tests(
         std::size_t const ncells)
 {
     using I = typename DDimI::continuous_dimension_type;
-    if constexpr (Order > BSplines<I>::degree()) {
-        return;
-    } else {
+
+    auto const local_test_deriv = [&](auto deriv_order) {
         test_deriv(
                 exec_space,
                 spline_evaluator,
@@ -204,17 +192,17 @@ void launch_deriv_tests(
                 coef,
                 spline_eval_deriv,
                 evaluator,
-                make_deriv_order_delem<I, Order>(),
+                deriv_order,
                 ncells);
+    };
 
-        launch_deriv_tests<Order + 1>(
-                exec_space,
-                spline_evaluator,
-                coords_eval,
-                coef,
-                spline_eval_deriv,
-                evaluator,
-                ncells);
+    ddc::DiscreteDomain<ddc::Deriv<I>> const
+            deriv(ddc::DiscreteElement<ddc::Deriv<I>>(1),
+                  ddc::DiscreteVector<ddc::Deriv<I>>(BSplines<I>::degree()));
+
+    local_test_deriv(ddc::DiscreteElement<>());
+    for (ddc::DiscreteElement<ddc::Deriv<I>> const order : deriv) {
+        local_test_deriv(order);
     }
 }
 
@@ -316,10 +304,12 @@ void TestSplineEvaluator1dDerivatives()
 } // namespace anonymous_namespace_workaround_1d_spline_evaluator_derivatives_cpp
 
 #if defined(BSPLINES_TYPE_UNIFORM)
-#    define SUFFIX(name) name##Periodic##Uniform
+#    define SUFFIX_DEGREE(name, degree) name##Periodic##Uniform##Degree##degree
 #elif defined(BSPLINES_TYPE_NON_UNIFORM)
-#    define SUFFIX(name) name##Periodic##NonUniform
+#    define SUFFIX_DEGREE(name, degree) name##Periodic##NonUniform##Degree##degree
 #endif
+#define SUFFIX_DEGREE_MACRO_EXP(name, degree) SUFFIX_DEGREE(name, degree)
+#define SUFFIX(name) SUFFIX_DEGREE_MACRO_EXP(name, DEGREE_X)
 
 TEST(SUFFIX(SplineEvaluator1dDerivativesHost), 1DX)
 {

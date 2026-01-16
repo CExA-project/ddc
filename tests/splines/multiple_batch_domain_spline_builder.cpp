@@ -155,9 +155,10 @@ std::tuple<double, double, double> compute_evaluation_error(
     using I = typename DDimI::continuous_dimension_type;
 
 #if defined(BC_HERMITE)
+    int const shift = s_degree_x % 2; // shift = 0 for even order, 1 for odd order
     // Create the derivs domains
     ddc::DiscreteDomain<ddc::Deriv<I>> const
-            derivs_domain(DElem<ddc::Deriv<I>>(1), DVect<ddc::Deriv<I>>(s_degree_x / 2));
+            derivs_domain(DElem<ddc::Deriv<I>>(shift), DVect<ddc::Deriv<I>>(s_degree_x / 2));
     auto const dom_derivs = ddc::replace_dim_of<DDimI, ddc::Deriv<I>>(dom_vals, derivs_domain);
 #endif
 
@@ -182,17 +183,13 @@ std::tuple<double, double, double> compute_evaluation_error(
 
 #if defined(BC_HERMITE)
     // Allocate and fill a chunk containing derivs to be passed as input to spline_builder.
-    int const shift = s_degree_x % 2; // shift = 0 for even order, 1 for odd order
     ddc::Chunk derivs_lhs_alloc(dom_derivs, ddc::KokkosAllocator<double, MemorySpace>());
     ddc::ChunkSpan const derivs_lhs = derivs_lhs_alloc.span_view();
     if (s_bcl == ddc::BoundCond::HERMITE) {
         ddc::Chunk derivs_lhs1_host_alloc(derivs_domain, ddc::HostAllocator<double>());
         ddc::ChunkSpan const derivs_lhs1_host = derivs_lhs1_host_alloc.span_view();
-        for (int ii = 1; ii < derivs_lhs1_host.domain().template extent<ddc::Deriv<I>>() + 1;
-             ++ii) {
-            derivs_lhs1_host(
-                    typename decltype(derivs_lhs1_host.domain())::discrete_element_type(ii))
-                    = evaluator.deriv(x0<I>(), ii + shift - 1);
+        for (ddc::DiscreteElement<ddc::Deriv<I>> const ii : derivs_domain) {
+            derivs_lhs1_host(ii) = evaluator.deriv(x0<I>(), ii.uid());
         }
         auto derivs_lhs1_alloc = ddc::create_mirror_view_and_copy(exec_space, derivs_lhs1_host);
         ddc::ChunkSpan const derivs_lhs1 = derivs_lhs1_alloc.span_view();
@@ -210,11 +207,8 @@ std::tuple<double, double, double> compute_evaluation_error(
     if (s_bcr == ddc::BoundCond::HERMITE) {
         ddc::Chunk derivs_rhs1_host_alloc(derivs_domain, ddc::HostAllocator<double>());
         ddc::ChunkSpan const derivs_rhs1_host = derivs_rhs1_host_alloc.span_view();
-        for (int ii = 1; ii < derivs_rhs1_host.domain().template extent<ddc::Deriv<I>>() + 1;
-             ++ii) {
-            derivs_rhs1_host(
-                    typename decltype(derivs_rhs1_host.domain())::discrete_element_type(ii))
-                    = evaluator.deriv(xn<I>(), ii + shift - 1);
+        for (ddc::DiscreteElement<ddc::Deriv<I>> const ii : derivs_domain) {
+            derivs_rhs1_host(ii) = evaluator.deriv(xn<I>(), ii.uid());
         }
         auto derivs_rhs1_alloc = ddc::create_mirror_view_and_copy(exec_space, derivs_rhs1_host);
         ddc::ChunkSpan const derivs_rhs1 = derivs_rhs1_alloc.span_view();
@@ -427,30 +421,32 @@ void TestMultipleBatchDomainSpline()
 } // namespace anonymous_namespace_workaround_batched_spline_builder_cpp
 
 #if defined(BC_PERIODIC) && defined(BSPLINES_TYPE_UNIFORM) && defined(SOLVER_LAPACK)
-#    define SUFFIX(name) name##Lapack##Periodic##Uniform
+#    define SUFFIX_DEGREE(name, degree) name##Lapack##Periodic##Uniform##Degree##degree
 #elif defined(BC_PERIODIC) && defined(BSPLINES_TYPE_NON_UNIFORM) && defined(SOLVER_LAPACK)
-#    define SUFFIX(name) name##Lapack##Periodic##NonUniform
+#    define SUFFIX_DEGREE(name, degree) name##Lapack##Periodic##NonUniform##Degree##degree
 #elif defined(BC_GREVILLE) && defined(BSPLINES_TYPE_UNIFORM) && defined(SOLVER_LAPACK)
-#    define SUFFIX(name) name##Lapack##Greville##Uniform
+#    define SUFFIX_DEGREE(name, degree) name##Lapack##Greville##Uniform##Degree##degree
 #elif defined(BC_GREVILLE) && defined(BSPLINES_TYPE_NON_UNIFORM) && defined(SOLVER_LAPACK)
-#    define SUFFIX(name) name##Lapack##Greville##NonUniform
+#    define SUFFIX_DEGREE(name, degree) name##Lapack##Greville##NonUniform##Degree##degree
 #elif defined(BC_HERMITE) && defined(BSPLINES_TYPE_UNIFORM) && defined(SOLVER_LAPACK)
-#    define SUFFIX(name) name##Lapack##Hermite##Uniform
+#    define SUFFIX_DEGREE(name, degree) name##Lapack##Hermite##Uniform##Degree##degree
 #elif defined(BC_HERMITE) && defined(BSPLINES_TYPE_NON_UNIFORM) && defined(SOLVER_LAPACK)
-#    define SUFFIX(name) name##Lapack##Hermite##NonUniform
+#    define SUFFIX_DEGREE(name, degree) name##Lapack##Hermite##NonUniform##Degree##degree
 #elif defined(BC_PERIODIC) && defined(BSPLINES_TYPE_UNIFORM) && defined(SOLVER_GINKGO)
-#    define SUFFIX(name) name##Ginkgo##Periodic##Uniform
+#    define SUFFIX_DEGREE(name, degree) name##Ginkgo##Periodic##Uniform##Degree##degree
 #elif defined(BC_PERIODIC) && defined(BSPLINES_TYPE_NON_UNIFORM) && defined(SOLVER_GINKGO)
-#    define SUFFIX(name) name##Ginkgo##Periodic##NonUniform
+#    define SUFFIX_DEGREE(name, degree) name##Ginkgo##Periodic##NonUniform##Degree##degree
 #elif defined(BC_GREVILLE) && defined(BSPLINES_TYPE_UNIFORM) && defined(SOLVER_GINKGO)
-#    define SUFFIX(name) name##Ginkgo##Greville##Uniform
+#    define SUFFIX_DEGREE(name, degree) name##Ginkgo##Greville##Uniform##Degree##degree
 #elif defined(BC_GREVILLE) && defined(BSPLINES_TYPE_NON_UNIFORM) && defined(SOLVER_GINKGO)
-#    define SUFFIX(name) name##Ginkgo##Greville##NonUniform
+#    define SUFFIX_DEGREE(name, degree) name##Ginkgo##Greville##NonUniform##Degree##degree
 #elif defined(BC_HERMITE) && defined(BSPLINES_TYPE_UNIFORM) && defined(SOLVER_GINKGO)
-#    define SUFFIX(name) name##Ginkgo##Hermite##Uniform
+#    define SUFFIX_DEGREE(name, degree) name##Ginkgo##Hermite##Uniform##Degree##degree
 #elif defined(BC_HERMITE) && defined(BSPLINES_TYPE_NON_UNIFORM) && defined(SOLVER_GINKGO)
-#    define SUFFIX(name) name##Ginkgo##Hermite##NonUniform
+#    define SUFFIX_DEGREE(name, degree) name##Ginkgo##Hermite##NonUniform##Degree##degree
 #endif
+#define SUFFIX_DEGREE_MACRO_EXP(name, degree) SUFFIX_DEGREE(name, degree)
+#define SUFFIX(name) SUFFIX_DEGREE_MACRO_EXP(name, DEGREE_X)
 
 TEST(SUFFIX(MultipleBatchDomainSpline), 1DX)
 {

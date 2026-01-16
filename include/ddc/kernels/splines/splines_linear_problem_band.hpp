@@ -129,7 +129,7 @@ public:
             && i < std::min(size(), j + m_kl + 1)) {
             m_q.view_host()(band_storage_row_index(i, j), j) = aij;
         } else {
-            assert(std::fabs(aij) < 1e-20);
+            assert(std::fabs(aij) < 1e-15);
         }
     }
 

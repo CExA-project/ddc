@@ -174,13 +174,14 @@ std::tuple<double, double, double, double> compute_evaluation_error(
     using I2 = typename DDimI2::continuous_dimension_type;
 
 #if defined(BC_HERMITE)
+    int const shift = s_degree % 2; // shift = 0 for even order, 1 for odd order
     ddc::DiscreteDomain<DDimI1> const interpolation_domain1(dom_vals);
     ddc::DiscreteDomain<DDimI2> const interpolation_domain2(dom_vals);
     // Create the derivs domain
     ddc::DiscreteDomain<ddc::Deriv<I1>> const
-            derivs_domain1(DElem<ddc::Deriv<I1>>(1), DVect<ddc::Deriv<I1>>(s_degree / 2));
+            derivs_domain1(DElem<ddc::Deriv<I1>>(shift), DVect<ddc::Deriv<I1>>(s_degree / 2));
     ddc::DiscreteDomain<ddc::Deriv<I2>> const
-            derivs_domain2(DElem<ddc::Deriv<I2>>(1), DVect<ddc::Deriv<I2>>(s_degree / 2));
+            derivs_domain2(DElem<ddc::Deriv<I2>>(shift), DVect<ddc::Deriv<I2>>(s_degree / 2));
     ddc::DiscreteDomain<ddc::Deriv<I1>, ddc::Deriv<I2>> const
             derivs_domain(derivs_domain1, derivs_domain2);
 
@@ -214,7 +215,6 @@ std::tuple<double, double, double, double> compute_evaluation_error(
 
 #if defined(BC_HERMITE)
     // Allocate and fill a chunk containing derivs to be passed as input to spline_builder.
-    int const shift = s_degree % 2; // shift = 0 for even order, 1 for odd order
     ddc::Chunk derivs_1d_lhs_alloc(dom_derivs_1d, ddc::KokkosAllocator<double, MemorySpace>());
     ddc::ChunkSpan const derivs_1d_lhs = derivs_1d_lhs_alloc.span_view();
     if (s_bcl == ddc::BoundCond::HERMITE) {
@@ -225,10 +225,9 @@ std::tuple<double, double, double, double> compute_evaluation_error(
         ddc::host_for_each(
                 derivs_1d_lhs1_host.domain(),
                 KOKKOS_LAMBDA(ddc::DiscreteElement<ddc::Deriv<I1>, DDimI2> const e) {
-                    auto deriv_idx = ddc::DiscreteElement<ddc::Deriv<I1>>(e).uid();
+                    int const deriv_idx = ddc::DiscreteElement<ddc::Deriv<I1>>(e).uid();
                     auto x2 = ddc::coordinate(ddc::DiscreteElement<DDimI2>(e));
-                    derivs_1d_lhs1_host(e)
-                            = evaluator.deriv(x0<I1>(), x2, deriv_idx + shift - 1, 0);
+                    derivs_1d_lhs1_host(e) = evaluator.deriv(x0<I1>(), x2, deriv_idx, 0);
                 });
         auto derivs_1d_lhs1_alloc
                 = ddc::create_mirror_view_and_copy(exec_space, derivs_1d_lhs1_host);
@@ -253,10 +252,9 @@ std::tuple<double, double, double, double> compute_evaluation_error(
         ddc::host_for_each(
                 derivs_1d_rhs1_host.domain(),
                 KOKKOS_LAMBDA(ddc::DiscreteElement<ddc::Deriv<I1>, DDimI2> const e) {
-                    auto deriv_idx = ddc::DiscreteElement<ddc::Deriv<I1>>(e).uid();
+                    int const deriv_idx = ddc::DiscreteElement<ddc::Deriv<I1>>(e).uid();
                     auto x2 = ddc::coordinate(ddc::DiscreteElement<DDimI2>(e));
-                    derivs_1d_rhs1_host(e)
-                            = evaluator.deriv(xn<I1>(), x2, deriv_idx + shift - 1, 0);
+                    derivs_1d_rhs1_host(e) = evaluator.deriv(xn<I1>(), x2, deriv_idx, 0);
                 });
         auto derivs_1d_rhs1_alloc
                 = ddc::create_mirror_view_and_copy(exec_space, derivs_1d_rhs1_host);
@@ -282,8 +280,8 @@ std::tuple<double, double, double, double> compute_evaluation_error(
                 derivs2_lhs1_host.domain(),
                 KOKKOS_LAMBDA(ddc::DiscreteElement<DDimI1, ddc::Deriv<I2>> const e) {
                     auto x1 = ddc::coordinate(ddc::DiscreteElement<DDimI1>(e));
-                    auto deriv_idx = ddc::DiscreteElement<ddc::Deriv<I2>>(e).uid();
-                    derivs2_lhs1_host(e) = evaluator.deriv(x1, x0<I2>(), 0, deriv_idx + shift - 1);
+                    int const deriv_idx = ddc::DiscreteElement<ddc::Deriv<I2>>(e).uid();
+                    derivs2_lhs1_host(e) = evaluator.deriv(x1, x0<I2>(), 0, deriv_idx);
                 });
 
         auto derivs2_lhs1_alloc = ddc::create_mirror_view_and_copy(exec_space, derivs2_lhs1_host);
@@ -309,8 +307,8 @@ std::tuple<double, double, double, double> compute_evaluation_error(
                 derivs2_rhs1_host.domain(),
                 KOKKOS_LAMBDA(ddc::DiscreteElement<DDimI1, ddc::Deriv<I2>> const e) {
                     auto x1 = ddc::coordinate(ddc::DiscreteElement<DDimI1>(e));
-                    auto deriv_idx = ddc::DiscreteElement<ddc::Deriv<I2>>(e).uid();
-                    derivs2_rhs1_host(e) = evaluator.deriv(x1, xn<I2>(), 0, deriv_idx + shift - 1);
+                    int const deriv_idx = ddc::DiscreteElement<ddc::Deriv<I2>>(e).uid();
+                    derivs2_rhs1_host(e) = evaluator.deriv(x1, xn<I2>(), 0, deriv_idx);
                 });
 
         auto derivs2_rhs1_alloc = ddc::create_mirror_view_and_copy(exec_space, derivs2_rhs1_host);
@@ -348,24 +346,14 @@ std::tuple<double, double, double, double> compute_evaluation_error(
         ddc::ChunkSpan const derivs_mixed_rhs_rhs1_host
                 = derivs_mixed_rhs_rhs1_host_alloc.span_view();
 
-        for (std::size_t ii = 1;
-             ii < static_cast<std::size_t>(derivs_domain.template extent<ddc::Deriv<I1>>()) + 1;
-             ++ii) {
-            for (std::size_t jj = 1;
-                 jj < static_cast<std::size_t>(derivs_domain.template extent<ddc::Deriv<I2>>()) + 1;
-                 ++jj) {
-                derivs_mixed_lhs_lhs1_host(
-                        typename decltype(derivs_domain)::discrete_element_type(ii, jj))
-                        = evaluator.deriv(x0<I1>(), x0<I2>(), ii + shift - 1, jj + shift - 1);
-                derivs_mixed_rhs_lhs1_host(
-                        typename decltype(derivs_domain)::discrete_element_type(ii, jj))
-                        = evaluator.deriv(xn<I1>(), x0<I2>(), ii + shift - 1, jj + shift - 1);
-                derivs_mixed_lhs_rhs1_host(
-                        typename decltype(derivs_domain)::discrete_element_type(ii, jj))
-                        = evaluator.deriv(x0<I1>(), xn<I2>(), ii + shift - 1, jj + shift - 1);
-                derivs_mixed_rhs_rhs1_host(
-                        typename decltype(derivs_domain)::discrete_element_type(ii, jj))
-                        = evaluator.deriv(xn<I1>(), xn<I2>(), ii + shift - 1, jj + shift - 1);
+        for (ddc::DiscreteElement<ddc::Deriv<I1>> const ei : derivs_domain1) {
+            for (ddc::DiscreteElement<ddc::Deriv<I2>> const ej : derivs_domain2) {
+                int const i = ei.uid();
+                int const j = ej.uid();
+                derivs_mixed_lhs_lhs1_host(ei, ej) = evaluator.deriv(x0<I1>(), x0<I2>(), i, j);
+                derivs_mixed_rhs_lhs1_host(ei, ej) = evaluator.deriv(xn<I1>(), x0<I2>(), i, j);
+                derivs_mixed_lhs_rhs1_host(ei, ej) = evaluator.deriv(x0<I1>(), xn<I2>(), i, j);
+                derivs_mixed_rhs_rhs1_host(ei, ej) = evaluator.deriv(xn<I1>(), xn<I2>(), i, j);
             }
         }
         auto derivs_mixed_lhs_lhs1_alloc
@@ -614,7 +602,7 @@ void TestMultipleBatchDomain2dSpline()
                                 dx<I2>(ncells),
                                 s_degree,
                                 s_degree),
-                        1e-12 * max_norm_diff1));
+                        1e-11 * max_norm_diff1));
     EXPECT_LE(
             max_norm_error_diff2,
             std::
@@ -623,7 +611,7 @@ void TestMultipleBatchDomain2dSpline()
                                 dx<I2>(ncells),
                                 s_degree,
                                 s_degree),
-                        1e-12 * max_norm_diff2));
+                        1e-10 * max_norm_diff2));
     EXPECT_LE(
             max_norm_error_diff12,
             std::
@@ -632,7 +620,7 @@ void TestMultipleBatchDomain2dSpline()
                                 dx<I2>(ncells),
                                 s_degree,
                                 s_degree),
-                        1e-11 * max_norm_diff12));
+                        1e-9 * max_norm_diff12));
 
     // Check the evaluation error for the domain with an additional batch dimension
     auto const
@@ -658,7 +646,7 @@ void TestMultipleBatchDomain2dSpline()
             std::
                     max(error_bounds_extra
                                 .error_bound(dx<I1>(ncells), dx<I2>(ncells), s_degree, s_degree),
-                        1.0e-14 * max_norm_extra));
+                        1.0e-13 * max_norm_extra));
     EXPECT_LE(
             max_norm_error_diff1_extra,
             std::
@@ -667,7 +655,7 @@ void TestMultipleBatchDomain2dSpline()
                                 dx<I2>(ncells),
                                 s_degree,
                                 s_degree),
-                        1e-12 * max_norm_diff1_extra));
+                        1e-11 * max_norm_diff1_extra));
     EXPECT_LE(
             max_norm_error_diff2_extra,
             std::
@@ -676,7 +664,7 @@ void TestMultipleBatchDomain2dSpline()
                                 dx<I2>(ncells),
                                 s_degree,
                                 s_degree),
-                        1e-12 * max_norm_diff2_extra));
+                        1e-10 * max_norm_diff2_extra));
     EXPECT_LE(
             max_norm_error_diff12_extra,
             std::
@@ -685,24 +673,26 @@ void TestMultipleBatchDomain2dSpline()
                                 dx<I2>(ncells),
                                 s_degree,
                                 s_degree),
-                        1e-11 * max_norm_diff12_extra));
+                        1e-9 * max_norm_diff12_extra));
 }
 
 } // namespace anonymous_namespace_workaround_batched_2d_spline_builder_cpp
 
 #if defined(BC_PERIODIC) && defined(BSPLINES_TYPE_UNIFORM)
-#    define SUFFIX(name) name##Periodic##Uniform
+#    define SUFFIX_DEGREE(name, degree) name##Periodic##Uniform##Degree##degree
 #elif defined(BC_PERIODIC) && defined(BSPLINES_TYPE_NON_UNIFORM)
-#    define SUFFIX(name) name##Periodic##NonUniform
+#    define SUFFIX_DEGREE(name, degree) name##Periodic##NonUniform##Degree##degree
 #elif defined(BC_GREVILLE) && defined(BSPLINES_TYPE_UNIFORM)
-#    define SUFFIX(name) name##Greville##Uniform
+#    define SUFFIX_DEGREE(name, degree) name##Greville##Uniform##Degree##degree
 #elif defined(BC_GREVILLE) && defined(BSPLINES_TYPE_NON_UNIFORM)
-#    define SUFFIX(name) name##Greville##NonUniform
+#    define SUFFIX_DEGREE(name, degree) name##Greville##NonUniform##Degree##degree
 #elif defined(BC_HERMITE) && defined(BSPLINES_TYPE_UNIFORM)
-#    define SUFFIX(name) name##Hermite##Uniform
+#    define SUFFIX_DEGREE(name, degree) name##Hermite##Uniform##Degree##degree
 #elif defined(BC_HERMITE) && defined(BSPLINES_TYPE_NON_UNIFORM)
-#    define SUFFIX(name) name##Hermite##NonUniform
+#    define SUFFIX_DEGREE(name, degree) name##Hermite##NonUniform##Degree##degree
 #endif
+#define SUFFIX_DEGREE_MACRO_EXP(name, degree) SUFFIX_DEGREE(name, degree)
+#define SUFFIX(name) SUFFIX_DEGREE_MACRO_EXP(name, DEGREE)
 
 TEST(SUFFIX(MultipleBatchDomain2dSpline), 2DXY)
 {

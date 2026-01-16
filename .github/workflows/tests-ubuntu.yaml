@@ -244,7 +244,8 @@ jobs:
     steps:
       - name: Free Disk Space (Ubuntu)
         uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be  # v1.3.1
-        with: {tool-cache: true, large-packages: false}
+        with:
+          tool-cache: true
       - name: Checkout built branch
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8  # v6.0.1
         with:
@@ -260,6 +261,23 @@ jobs:
         run: |
           docker load < ${{matrix.image}}_${{matrix.backend.name}}.tar
           rm ${{matrix.image}}_${{matrix.backend.name}}.tar
+      - name: Choose degree
+        run: |
+          FILES_CHANGED=$(gh pr diff ${{github.event.pull_request.number}} --name-only)
+          if printf '%s\n' "$FILES_CHANGED" | grep -q '/splines/'
+          then
+            echo "DDC_SPLINES_TEST_DEGREE_MIN=1"
+            echo "DDC_SPLINES_TEST_DEGREE_MAX=5"
+            echo "DDC_SPLINES_TEST_DEGREE_MIN=1" >> $GITHUB_ENV
+            echo "DDC_SPLINES_TEST_DEGREE_MAX=5" >> $GITHUB_ENV
+          else
+            echo "DDC_SPLINES_TEST_DEGREE_MIN=3"
+            echo "DDC_SPLINES_TEST_DEGREE_MAX=3"
+            echo "DDC_SPLINES_TEST_DEGREE_MIN=3" >> $GITHUB_ENV
+            echo "DDC_SPLINES_TEST_DEGREE_MAX=3" >> $GITHUB_ENV
+          fi
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
       - name: Test
         id: test
         run: |
@@ -345,6 +363,8 @@ jobs:
               -D DDC_GTest_DEPENDENCY_POLICY=INSTALLED \
               -D DDC_Kokkos_DEPENDENCY_POLICY=INSTALLED \
               -D DDC_KokkosFFT_DEPENDENCY_POLICY=INSTALLED \
+              -D DDC_SPLINES_TEST_DEGREE_MIN=${{env.DDC_SPLINES_TEST_DEGREE_MIN}} \
+              -D DDC_SPLINES_TEST_DEGREE_MAX=${{env.DDC_SPLINES_TEST_DEGREE_MAX}} \
               -B build \
               -S /src
             cmake --build build

@@ -898,13 +898,19 @@ operator()(
     auto const batched_interpolation_domain = vals.domain();
 
     assert(interpolation_domain() == interpolation_domain_type(batched_interpolation_domain));
+    assert(batch_domain_type<BatchedInterpolationDDom>(batched_interpolation_domain)
+           == batch_domain_type<BatchedInterpolationDDom>(spline.domain()));
+
+    if (batch_domain(batched_interpolation_domain).empty()) {
+        return;
+    }
 
     // Build the derivatives along the second dimension
     auto const batched_interpolation_deriv_domain2
             = ddc::replace_dim_of<interpolation_discrete_dimension_type2, deriv_type2>(
                     batched_interpolation_domain,
                     ddc::DiscreteDomain<deriv_type2>(
-                            ddc::DiscreteElement<deriv_type2>(1),
+                            ddc::DiscreteElement<deriv_type2>(BSpline2::degree() % 2),
                             ddc::DiscreteVector<deriv_type2>(bsplines_type2::degree() / 2)));
 
     ddc::Chunk spline_derivs_min2_alloc(
@@ -942,7 +948,7 @@ operator()(
             = ddc::replace_dim_of<interpolation_discrete_dimension_type3, deriv_type3>(
                     batched_interpolation_domain,
                     ddc::DiscreteDomain<deriv_type3>(
-                            ddc::DiscreteElement<deriv_type3>(1),
+                            ddc::DiscreteElement<deriv_type3>(BSpline3::degree() % 2),
                             ddc::DiscreteVector<deriv_type3>(bsplines_type3::degree() / 2)));
 
     ddc::Chunk spline_derivs_min3_alloc(
@@ -980,7 +986,7 @@ operator()(
             = ddc::replace_dim_of<interpolation_discrete_dimension_type3, deriv_type3>(
                     batched_interpolation_deriv_domain2,
                     ddc::DiscreteDomain<deriv_type3>(
-                            ddc::DiscreteElement<deriv_type3>(1),
+                            ddc::DiscreteElement<deriv_type3>(BSpline3::degree() % 2),
                             ddc::DiscreteVector<deriv_type3>(bsplines_type3::degree() / 2)));
 
     ddc::Chunk spline_derivs_min2_min3_alloc(

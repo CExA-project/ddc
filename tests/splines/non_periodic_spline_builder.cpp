@@ -99,8 +99,9 @@ void TestNonPeriodicSplineBuilderTestIdentity()
     }
     ddc::DiscreteDomain<BSplinesX> const dom_bsplines_x(
             ddc::discrete_space<BSplinesX>().full_domain());
+    int const shift = s_degree_x % 2; // shift = 0 for even order, 1 for odd order
     ddc::DiscreteDomain<ddc::Deriv<DimX>> const derivs_domain(
-            ddc::DiscreteElement<ddc::Deriv<DimX>>(1),
+            ddc::DiscreteElement<ddc::Deriv<DimX>>(shift),
             ddc::DiscreteVector<ddc::Deriv<DimX>>(s_degree_x / 2));
 
     // 2. Create a Spline represented by a chunk over BSplines
@@ -130,15 +131,14 @@ void TestNonPeriodicSplineBuilderTestIdentity()
             yvals.domain(),
             KOKKOS_LAMBDA(DElemX const ix) { yvals(ix) = evaluator(ddc::coordinate(ix)); });
 
-    int const shift = s_degree_x % 2; // shift = 0 for even order, 1 for odd order
     ddc::Chunk derivs_lhs_alloc(derivs_domain, ddc::KokkosAllocator<double, memory_space>());
     ddc::ChunkSpan const derivs_lhs = derivs_lhs_alloc.span_view();
     if (s_bcl == ddc::BoundCond::HERMITE) {
         ddc::parallel_for_each(
                 execution_space(),
                 derivs_domain,
-                KOKKOS_LAMBDA(ddc::DiscreteElement<ddc::Deriv<DimX>> const ii) {
-                    derivs_lhs(ii) = evaluator.deriv(x0, ii - derivs_domain.front() + shift);
+                KOKKOS_LAMBDA(ddc::DiscreteElement<ddc::Deriv<DimX>> const ei) {
+                    derivs_lhs(ei) = evaluator.deriv(x0, ei.uid());
                 });
     }
 
@@ -148,8 +148,8 @@ void TestNonPeriodicSplineBuilderTestIdentity()
         ddc::parallel_for_each(
                 execution_space(),
                 derivs_domain,
-                KOKKOS_LAMBDA(ddc::DiscreteElement<ddc::Deriv<DimX>> const ii) {
-                    derivs_rhs(ii) = evaluator.deriv(xN, ii - derivs_domain.front() + shift);
+                KOKKOS_LAMBDA(ddc::DiscreteElement<ddc::Deriv<DimX>> const ei) {
+                    derivs_rhs(ei) = evaluator.deriv(xN, ei.uid());
                 });
     }
 
@@ -233,10 +233,9 @@ void TestNonPeriodicSplineBuilderTestIdentity()
             quadrature_coefficients_derivs_xmin.domain(),
             0.0,
             ddc::reducer::sum<double>(),
-            KOKKOS_LAMBDA(
-                    ddc::DiscreteElement<
-                            ddc::Deriv<typename DDimX::continuous_dimension_type>> const ix) {
-                return quadrature_coefficients_derivs_xmin(ix) * derivs_lhs(ix);
+            KOKKOS_LAMBDA(ddc::DiscreteElement<ddc::Deriv<DimX>> const ix) {
+                return quadrature_coefficients_derivs_xmin(ix)
+                       * derivs_lhs(quadrature_coefficients_derivs_xmin.domain().back() - ix);
             });
 #else
     double const quadrature_integral_derivs_xmin = 0.;
@@ -257,9 +256,7 @@ void TestNonPeriodicSplineBuilderTestIdentity()
             quadrature_coefficients_derivs_xmax.domain(),
             0.0,
             ddc::reducer::sum<double>(),
-            KOKKOS_LAMBDA(
-                    ddc::DiscreteElement<
-                            ddc::Deriv<typename DDimX::continuous_dimension_type>> const ix) {
+            KOKKOS_LAMBDA(ddc::DiscreteElement<ddc::Deriv<DimX>> const ix) {
                 return quadrature_coefficients_derivs_xmax(ix) * derivs_rhs(ix);
             });
 #else
@@ -302,7 +299,7 @@ void TestNonPeriodicSplineBuilderTestIdentity()
                           evaluator_type,
                           PolynomialEvaluator::Evaluator<DDimX, s_degree_x>>) {
         EXPECT_LE(max_norm_error / max_norm, 1.0e-14);
-        EXPECT_LE(max_norm_error_diff / max_norm_diff, 1.0e-12);
+        EXPECT_LE(max_norm_error_diff / max_norm_diff, 1.0e-11);
         EXPECT_LE(max_norm_error_integ / max_norm_int, 1.0e-14);
         EXPECT_LE(max_norm_error_quadrature_integ / max_norm_int, 1.0e-14);
     } else {

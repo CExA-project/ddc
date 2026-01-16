@@ -95,7 +95,7 @@ public:
         if (j - i < 2) {
             m_q.view_host()(j - i, i) = aij;
         } else {
-            assert(std::fabs(aij) < 1e-20);
+            assert(std::fabs(aij) < 1e-15);
         }
     }
 

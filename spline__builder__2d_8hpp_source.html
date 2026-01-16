@@ -670,61 +670,67 @@ $(document).ready(function(){initNavTree('spline__builder__2d_8hpp_source.html',
 <div class="line"><a id="l00541" name="l00541"></a><span class="lineno">  541</span>    <span class="keyword">auto</span> <span class="keyword">const</span> batched_interpolation_domain = vals.domain();</div>
 <div class="line"><a id="l00542" name="l00542"></a><span class="lineno">  542</span> </div>
 <div class="line"><a id="l00543" name="l00543"></a><span class="lineno">  543</span>    assert(interpolation_domain() == interpolation_domain_type(batched_interpolation_domain));</div>
-<div class="line"><a id="l00544" name="l00544"></a><span class="lineno">  544</span> </div>
-<div class="line"><a id="l00545" name="l00545"></a><span class="lineno">  545</span>    <span class="comment">// TODO: perform computations along dimension 1 on different streams ?</span></div>
-<div class="line"><a id="l00546" name="l00546"></a><span class="lineno">  546</span>    <span class="comment">// Spline1-approximate derivs_min2 (to spline1_deriv_min)</span></div>
-<div class="line"><a id="l00547" name="l00547"></a><span class="lineno">  547</span> </div>
-<div class="line"><a id="l00548" name="l00548"></a><span class="lineno">  548</span>    <span class="keyword">auto</span> <span class="keyword">const</span> batched_interpolation_deriv_domain</div>
-<div class="line"><a id="l00549" name="l00549"></a><span class="lineno">  549</span>            = <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::replace_dim_of&lt;interpolation_discrete_dimension_type2, deriv_type2&gt;(</div>
-<div class="line"><a id="l00550" name="l00550"></a><span class="lineno">  550</span>                    batched_interpolation_domain,</div>
-<div class="line"><a id="l00551" name="l00551"></a><span class="lineno">  551</span>                    <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1DiscreteDomain.html#a5cdbd7cda4dd9c4369a8810c88cf3bed">DiscreteDomain</a>&lt;deriv_type2&gt;(</div>
-<div class="line"><a id="l00552" name="l00552"></a><span class="lineno">  552</span>                            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::DiscreteElement&lt;deriv_type2&gt;(1),</div>
-<div class="line"><a id="l00553" name="l00553"></a><span class="lineno">  553</span>                            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_function" href="classddc_1_1DiscreteVector.html#a62e896bfa78045521042a0eab87c0acb">DiscreteVector</a>&lt;deriv_type2&gt;(bsplines_type2::degree() / 2)));</div>
-<div class="line"><a id="l00554" name="l00554"></a><span class="lineno">  554</span> </div>
-<div class="line"><a id="l00555" name="l00555"></a><span class="lineno">  555</span>    <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1Chunk.html#aa299fb96adef4e448d8d35a354e71806">Chunk</a> spline1_deriv_min_alloc(</div>
-<div class="line"><a id="l00556" name="l00556"></a><span class="lineno">  556</span>            m_spline_builder_deriv1.batched_spline_domain(batched_interpolation_deriv_domain),</div>
-<div class="line"><a id="l00557" name="l00557"></a><span class="lineno">  557</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_class" href="classddc_1_1KokkosAllocator.html">KokkosAllocator</a>&lt;<span class="keywordtype">double</span>, MemorySpace&gt;());</div>
-<div class="line"><a id="l00558" name="l00558"></a><span class="lineno">  558</span>    <span class="keyword">auto</span> spline1_deriv_min = spline1_deriv_min_alloc.span_view();</div>
-<div class="line"><a id="l00559" name="l00559"></a><span class="lineno">  559</span>    <span class="keyword">auto</span> spline1_deriv_min_opt = std::optional(spline1_deriv_min.span_cview());</div>
-<div class="line"><a id="l00560" name="l00560"></a><span class="lineno">  560</span>    <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (BcLower2 == <a class="code hl_namespace" href="namespaceddc.html">ddc</a><a class="code hl_enumvalue" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744aad85d6eb1a93601cc83dc87ac66dfb75e">::</a><a class="code hl_enumeration" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744a">BoundCond</a><a class="code hl_enumvalue" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744aad85d6eb1a93601cc83dc87ac66dfb75e">::</a><a class="code hl_enumvalue" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744aad85d6eb1a93601cc83dc87ac66dfb75e">HERMITE</a>) {</div>
-<div class="line"><a id="l00561" name="l00561"></a><span class="lineno">  561</span>        m_spline_builder_deriv1(</div>
-<div class="line"><a id="l00562" name="l00562"></a><span class="lineno">  562</span>                spline1_deriv_min,</div>
-<div class="line"><a id="l00563" name="l00563"></a><span class="lineno">  563</span>                *derivs_min2,</div>
-<div class="line"><a id="l00564" name="l00564"></a><span class="lineno">  564</span>                mixed_derivs_min1_min2,</div>
-<div class="line"><a id="l00565" name="l00565"></a><span class="lineno">  565</span>                mixed_derivs_max1_min2);</div>
-<div class="line"><a id="l00566" name="l00566"></a><span class="lineno">  566</span>    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00567" name="l00567"></a><span class="lineno">  567</span>        spline1_deriv_min_opt = std::nullopt;</div>
-<div class="line"><a id="l00568" name="l00568"></a><span class="lineno">  568</span>    }</div>
-<div class="line"><a id="l00569" name="l00569"></a><span class="lineno">  569</span> </div>
-<div class="line"><a id="l00570" name="l00570"></a><span class="lineno">  570</span>    <span class="comment">// Spline1-approximate vals (to spline1)</span></div>
-<div class="line"><a id="l00571" name="l00571"></a><span class="lineno">  571</span>    <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1Chunk.html#aa299fb96adef4e448d8d35a354e71806">Chunk</a> spline1_alloc(</div>
-<div class="line"><a id="l00572" name="l00572"></a><span class="lineno">  572</span>            m_spline_builder1.batched_spline_domain(batched_interpolation_domain),</div>
-<div class="line"><a id="l00573" name="l00573"></a><span class="lineno">  573</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_class" href="classddc_1_1KokkosAllocator.html">KokkosAllocator</a>&lt;<span class="keywordtype">double</span>, MemorySpace&gt;());</div>
-<div class="line"><a id="l00574" name="l00574"></a><span class="lineno">  574</span>    <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1ChunkCommon.html#a0214c802aca8ce0770988bb2784f104a">ChunkSpan</a> <span class="keyword">const</span> spline1 = spline1_alloc.span_view();</div>
+<div class="line"><a id="l00544" name="l00544"></a><span class="lineno">  544</span>    assert(batch_domain_type&lt;BatchedInterpolationDDom&gt;(batched_interpolation_domain)</div>
+<div class="line"><a id="l00545" name="l00545"></a><span class="lineno">  545</span>           == batch_domain_type&lt;BatchedInterpolationDDom&gt;(spline.domain()));</div>
+<div class="line"><a id="l00546" name="l00546"></a><span class="lineno">  546</span> </div>
+<div class="line"><a id="l00547" name="l00547"></a><span class="lineno">  547</span>    <span class="keywordflow">if</span> (batch_domain(batched_interpolation_domain).empty()) {</div>
+<div class="line"><a id="l00548" name="l00548"></a><span class="lineno">  548</span>        <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00549" name="l00549"></a><span class="lineno">  549</span>    }</div>
+<div class="line"><a id="l00550" name="l00550"></a><span class="lineno">  550</span> </div>
+<div class="line"><a id="l00551" name="l00551"></a><span class="lineno">  551</span>    <span class="comment">// TODO: perform computations along dimension 1 on different streams ?</span></div>
+<div class="line"><a id="l00552" name="l00552"></a><span class="lineno">  552</span>    <span class="comment">// Spline1-approximate derivs_min2 (to spline1_deriv_min)</span></div>
+<div class="line"><a id="l00553" name="l00553"></a><span class="lineno">  553</span> </div>
+<div class="line"><a id="l00554" name="l00554"></a><span class="lineno">  554</span>    <span class="keyword">auto</span> <span class="keyword">const</span> batched_interpolation_deriv_domain</div>
+<div class="line"><a id="l00555" name="l00555"></a><span class="lineno">  555</span>            = <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::replace_dim_of&lt;interpolation_discrete_dimension_type2, deriv_type2&gt;(</div>
+<div class="line"><a id="l00556" name="l00556"></a><span class="lineno">  556</span>                    batched_interpolation_domain,</div>
+<div class="line"><a id="l00557" name="l00557"></a><span class="lineno">  557</span>                    <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1DiscreteDomain.html#a5cdbd7cda4dd9c4369a8810c88cf3bed">DiscreteDomain</a>&lt;deriv_type2&gt;(</div>
+<div class="line"><a id="l00558" name="l00558"></a><span class="lineno">  558</span>                            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::DiscreteElement&lt;deriv_type2&gt;(builder_type2::s_odd),</div>
+<div class="line"><a id="l00559" name="l00559"></a><span class="lineno">  559</span>                            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_function" href="classddc_1_1DiscreteVector.html#a62e896bfa78045521042a0eab87c0acb">DiscreteVector</a>&lt;deriv_type2&gt;(bsplines_type2::degree() / 2)));</div>
+<div class="line"><a id="l00560" name="l00560"></a><span class="lineno">  560</span> </div>
+<div class="line"><a id="l00561" name="l00561"></a><span class="lineno">  561</span>    <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1Chunk.html#aa299fb96adef4e448d8d35a354e71806">Chunk</a> spline1_deriv_min_alloc(</div>
+<div class="line"><a id="l00562" name="l00562"></a><span class="lineno">  562</span>            m_spline_builder_deriv1.batched_spline_domain(batched_interpolation_deriv_domain),</div>
+<div class="line"><a id="l00563" name="l00563"></a><span class="lineno">  563</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_class" href="classddc_1_1KokkosAllocator.html">KokkosAllocator</a>&lt;<span class="keywordtype">double</span>, MemorySpace&gt;());</div>
+<div class="line"><a id="l00564" name="l00564"></a><span class="lineno">  564</span>    <span class="keyword">auto</span> spline1_deriv_min = spline1_deriv_min_alloc.span_view();</div>
+<div class="line"><a id="l00565" name="l00565"></a><span class="lineno">  565</span>    <span class="keyword">auto</span> spline1_deriv_min_opt = std::optional(spline1_deriv_min.span_cview());</div>
+<div class="line"><a id="l00566" name="l00566"></a><span class="lineno">  566</span>    <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (BcLower2 == <a class="code hl_namespace" href="namespaceddc.html">ddc</a><a class="code hl_enumvalue" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744aad85d6eb1a93601cc83dc87ac66dfb75e">::</a><a class="code hl_enumeration" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744a">BoundCond</a><a class="code hl_enumvalue" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744aad85d6eb1a93601cc83dc87ac66dfb75e">::</a><a class="code hl_enumvalue" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744aad85d6eb1a93601cc83dc87ac66dfb75e">HERMITE</a>) {</div>
+<div class="line"><a id="l00567" name="l00567"></a><span class="lineno">  567</span>        m_spline_builder_deriv1(</div>
+<div class="line"><a id="l00568" name="l00568"></a><span class="lineno">  568</span>                spline1_deriv_min,</div>
+<div class="line"><a id="l00569" name="l00569"></a><span class="lineno">  569</span>                *derivs_min2,</div>
+<div class="line"><a id="l00570" name="l00570"></a><span class="lineno">  570</span>                mixed_derivs_min1_min2,</div>
+<div class="line"><a id="l00571" name="l00571"></a><span class="lineno">  571</span>                mixed_derivs_max1_min2);</div>
+<div class="line"><a id="l00572" name="l00572"></a><span class="lineno">  572</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00573" name="l00573"></a><span class="lineno">  573</span>        spline1_deriv_min_opt = std::nullopt;</div>
+<div class="line"><a id="l00574" name="l00574"></a><span class="lineno">  574</span>    }</div>
 <div class="line"><a id="l00575" name="l00575"></a><span class="lineno">  575</span> </div>
-<div class="line"><a id="l00576" name="l00576"></a><span class="lineno">  576</span>    m_spline_builder1(spline1, vals, derivs_min1, derivs_max1);</div>
-<div class="line"><a id="l00577" name="l00577"></a><span class="lineno">  577</span> </div>
-<div class="line"><a id="l00578" name="l00578"></a><span class="lineno">  578</span>    <span class="comment">// Spline1-approximate derivs_max2 (to spline1_deriv_max)</span></div>
-<div class="line"><a id="l00579" name="l00579"></a><span class="lineno">  579</span>    <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1Chunk.html#aa299fb96adef4e448d8d35a354e71806">Chunk</a> spline1_deriv_max_alloc(</div>
-<div class="line"><a id="l00580" name="l00580"></a><span class="lineno">  580</span>            m_spline_builder_deriv1.batched_spline_domain(batched_interpolation_deriv_domain),</div>
-<div class="line"><a id="l00581" name="l00581"></a><span class="lineno">  581</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_class" href="classddc_1_1KokkosAllocator.html">KokkosAllocator</a>&lt;<span class="keywordtype">double</span>, MemorySpace&gt;());</div>
-<div class="line"><a id="l00582" name="l00582"></a><span class="lineno">  582</span>    <span class="keyword">auto</span> spline1_deriv_max = spline1_deriv_max_alloc.span_view();</div>
-<div class="line"><a id="l00583" name="l00583"></a><span class="lineno">  583</span>    <span class="keyword">auto</span> spline1_deriv_max_opt = std::optional(spline1_deriv_max.span_cview());</div>
-<div class="line"><a id="l00584" name="l00584"></a><span class="lineno">  584</span>    <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (BcUpper2 == <a class="code hl_namespace" href="namespaceddc.html">ddc</a><a class="code hl_enumvalue" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744aad85d6eb1a93601cc83dc87ac66dfb75e">::</a><a class="code hl_enumeration" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744a">BoundCond</a><a class="code hl_enumvalue" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744aad85d6eb1a93601cc83dc87ac66dfb75e">::</a><a class="code hl_enumvalue" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744aad85d6eb1a93601cc83dc87ac66dfb75e">HERMITE</a>) {</div>
-<div class="line"><a id="l00585" name="l00585"></a><span class="lineno">  585</span>        m_spline_builder_deriv1(</div>
-<div class="line"><a id="l00586" name="l00586"></a><span class="lineno">  586</span>                spline1_deriv_max,</div>
-<div class="line"><a id="l00587" name="l00587"></a><span class="lineno">  587</span>                *derivs_max2,</div>
-<div class="line"><a id="l00588" name="l00588"></a><span class="lineno">  588</span>                mixed_derivs_min1_max2,</div>
-<div class="line"><a id="l00589" name="l00589"></a><span class="lineno">  589</span>                mixed_derivs_max1_max2);</div>
-<div class="line"><a id="l00590" name="l00590"></a><span class="lineno">  590</span>    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00591" name="l00591"></a><span class="lineno">  591</span>        spline1_deriv_max_opt = std::nullopt;</div>
-<div class="line"><a id="l00592" name="l00592"></a><span class="lineno">  592</span>    }</div>
-<div class="line"><a id="l00593" name="l00593"></a><span class="lineno">  593</span> </div>
-<div class="line"><a id="l00594" name="l00594"></a><span class="lineno">  594</span>    <span class="comment">// Spline2-approximate spline1</span></div>
-<div class="line"><a id="l00595" name="l00595"></a><span class="lineno">  595</span>    m_spline_builder2(spline, spline1.span_cview(), spline1_deriv_min_opt, spline1_deriv_max_opt);</div>
-<div class="line"><a id="l00596" name="l00596"></a><span class="lineno">  596</span>}</div>
-<div class="line"><a id="l00597" name="l00597"></a><span class="lineno">  597</span> </div>
-<div class="line"><a id="l00598" name="l00598"></a><span class="lineno">  598</span>} <span class="comment">// namespace ddc</span></div>
+<div class="line"><a id="l00576" name="l00576"></a><span class="lineno">  576</span>    <span class="comment">// Spline1-approximate vals (to spline1)</span></div>
+<div class="line"><a id="l00577" name="l00577"></a><span class="lineno">  577</span>    <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1Chunk.html#aa299fb96adef4e448d8d35a354e71806">Chunk</a> spline1_alloc(</div>
+<div class="line"><a id="l00578" name="l00578"></a><span class="lineno">  578</span>            m_spline_builder1.batched_spline_domain(batched_interpolation_domain),</div>
+<div class="line"><a id="l00579" name="l00579"></a><span class="lineno">  579</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_class" href="classddc_1_1KokkosAllocator.html">KokkosAllocator</a>&lt;<span class="keywordtype">double</span>, MemorySpace&gt;());</div>
+<div class="line"><a id="l00580" name="l00580"></a><span class="lineno">  580</span>    <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1ChunkCommon.html#a0214c802aca8ce0770988bb2784f104a">ChunkSpan</a> <span class="keyword">const</span> spline1 = spline1_alloc.span_view();</div>
+<div class="line"><a id="l00581" name="l00581"></a><span class="lineno">  581</span> </div>
+<div class="line"><a id="l00582" name="l00582"></a><span class="lineno">  582</span>    m_spline_builder1(spline1, vals, derivs_min1, derivs_max1);</div>
+<div class="line"><a id="l00583" name="l00583"></a><span class="lineno">  583</span> </div>
+<div class="line"><a id="l00584" name="l00584"></a><span class="lineno">  584</span>    <span class="comment">// Spline1-approximate derivs_max2 (to spline1_deriv_max)</span></div>
+<div class="line"><a id="l00585" name="l00585"></a><span class="lineno">  585</span>    <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1Chunk.html#aa299fb96adef4e448d8d35a354e71806">Chunk</a> spline1_deriv_max_alloc(</div>
+<div class="line"><a id="l00586" name="l00586"></a><span class="lineno">  586</span>            m_spline_builder_deriv1.batched_spline_domain(batched_interpolation_deriv_domain),</div>
+<div class="line"><a id="l00587" name="l00587"></a><span class="lineno">  587</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_class" href="classddc_1_1KokkosAllocator.html">KokkosAllocator</a>&lt;<span class="keywordtype">double</span>, MemorySpace&gt;());</div>
+<div class="line"><a id="l00588" name="l00588"></a><span class="lineno">  588</span>    <span class="keyword">auto</span> spline1_deriv_max = spline1_deriv_max_alloc.span_view();</div>
+<div class="line"><a id="l00589" name="l00589"></a><span class="lineno">  589</span>    <span class="keyword">auto</span> spline1_deriv_max_opt = std::optional(spline1_deriv_max.span_cview());</div>
+<div class="line"><a id="l00590" name="l00590"></a><span class="lineno">  590</span>    <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (BcUpper2 == <a class="code hl_namespace" href="namespaceddc.html">ddc</a><a class="code hl_enumvalue" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744aad85d6eb1a93601cc83dc87ac66dfb75e">::</a><a class="code hl_enumeration" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744a">BoundCond</a><a class="code hl_enumvalue" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744aad85d6eb1a93601cc83dc87ac66dfb75e">::</a><a class="code hl_enumvalue" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744aad85d6eb1a93601cc83dc87ac66dfb75e">HERMITE</a>) {</div>
+<div class="line"><a id="l00591" name="l00591"></a><span class="lineno">  591</span>        m_spline_builder_deriv1(</div>
+<div class="line"><a id="l00592" name="l00592"></a><span class="lineno">  592</span>                spline1_deriv_max,</div>
+<div class="line"><a id="l00593" name="l00593"></a><span class="lineno">  593</span>                *derivs_max2,</div>
+<div class="line"><a id="l00594" name="l00594"></a><span class="lineno">  594</span>                mixed_derivs_min1_max2,</div>
+<div class="line"><a id="l00595" name="l00595"></a><span class="lineno">  595</span>                mixed_derivs_max1_max2);</div>
+<div class="line"><a id="l00596" name="l00596"></a><span class="lineno">  596</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00597" name="l00597"></a><span class="lineno">  597</span>        spline1_deriv_max_opt = std::nullopt;</div>
+<div class="line"><a id="l00598" name="l00598"></a><span class="lineno">  598</span>    }</div>
+<div class="line"><a id="l00599" name="l00599"></a><span class="lineno">  599</span> </div>
+<div class="line"><a id="l00600" name="l00600"></a><span class="lineno">  600</span>    <span class="comment">// Spline2-approximate spline1</span></div>
+<div class="line"><a id="l00601" name="l00601"></a><span class="lineno">  601</span>    m_spline_builder2(spline, spline1.span_cview(), spline1_deriv_min_opt, spline1_deriv_max_opt);</div>
+<div class="line"><a id="l00602" name="l00602"></a><span class="lineno">  602</span>}</div>
+<div class="line"><a id="l00603" name="l00603"></a><span class="lineno">  603</span> </div>
+<div class="line"><a id="l00604" name="l00604"></a><span class="lineno">  604</span>} <span class="comment">// namespace ddc</span></div>
 <div class="ttc" id="aclassddc_1_1ChunkCommon_html_a0214c802aca8ce0770988bb2784f104a"><div class="ttname"><a href="classddc_1_1ChunkCommon.html#a0214c802aca8ce0770988bb2784f104a">ddc::ChunkCommon::ChunkSpan</a></div><div class="ttdeci">friend class ChunkSpan</div><div class="ttdef"><b>Definition</b> <a href="chunk__common_8hpp_source.html#l00076">chunk_common.hpp:76</a></div></div>
 <div class="ttc" id="aclassddc_1_1Chunk_html_aa299fb96adef4e448d8d35a354e71806"><div class="ttname"><a href="classddc_1_1Chunk.html#aa299fb96adef4e448d8d35a354e71806">ddc::Chunk::Chunk</a></div><div class="ttdeci">friend class Chunk</div><div class="ttdef"><b>Definition</b> <a href="chunk_8hpp_source.html#l00083">chunk.hpp:83</a></div></div>
 <div class="ttc" id="aclassddc_1_1DiscreteDomain_html_a5cdbd7cda4dd9c4369a8810c88cf3bed"><div class="ttname"><a href="classddc_1_1DiscreteDomain.html#a5cdbd7cda4dd9c4369a8810c88cf3bed">ddc::DiscreteDomain::DiscreteDomain</a></div><div class="ttdeci">friend class DiscreteDomain</div><div class="ttdef"><b>Definition</b> <a href="discrete__domain_8hpp_source.html#l00066">discrete_domain.hpp:66</a></div></div>

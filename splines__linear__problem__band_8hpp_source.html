@@ -258,7 +258,7 @@ $(document).ready(function(){initNavTree('splines__linear__problem__band_8hpp_so
 <div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>            &amp;&amp; i &lt; std::min(size(), j + m_kl + 1)) {</div>
 <div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>            m_q.view_host()(band_storage_row_index(i, j), j) = aij;</div>
 <div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>            assert(std::fabs(aij) &lt; 1e-20);</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>            assert(std::fabs(aij) &lt; 1e-15);</div>
 <div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>        }</div>
 <div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>    }</div>
 <div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span> </div>

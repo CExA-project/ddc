@@ -1,0 +1,267 @@
+// Copyright (C) The DDC development team, see COPYRIGHT.md file
+//
+// SPDX-License-Identifier: MIT
+
+#include <algorithm>
+#include <cassert>
+#include <cstddef>
+#include <memory>
+#include <optional>
+#include <stdexcept>
+#include <type_traits>
+
+#include <ginkgo/extensions/kokkos.hpp>
+#include <ginkgo/ginkgo.hpp>
+
+#include <Kokkos_Core.hpp>
+
+#include "splines_linear_problem.hpp"
+#include "splines_linear_problem_sparse.hpp"
+
+namespace ddc::detail {
+
+/**
+ * @brief Convert KokkosView to Ginkgo Dense matrix.
+ *
+ * @param[in] gko_exec A Ginkgo executor that has access to the Kokkos::View memory space
+ * @param[in] view A 2-D Kokkos::View with unit stride in the second dimension
+ * @return A Ginkgo Dense matrix view over the Kokkos::View data
+ */
+template <class KokkosViewType>
+auto to_gko_dense(std::shared_ptr<gko::Executor const> const& gko_exec, KokkosViewType const& view)
+{
+    static_assert(Kokkos::is_view_v<KokkosViewType> && KokkosViewType::rank == 2);
+    using value_type = typename KokkosViewType::traits::value_type;
+
+    if (view.stride(1) != 1) {
+        throw std::runtime_error("The view needs to be contiguous in the second dimension");
+    }
+
+    return gko::matrix::Dense<value_type>::
+            create(gko_exec,
+                   gko::dim<2>(view.extent(0), view.extent(1)),
+                   gko::array<value_type>::view(gko_exec, view.span(), view.data()),
+                   view.stride(0));
+}
+
+/**
+ * @brief Return the default value of the parameter cols_per_chunk for a given Kokkos::ExecutionSpace.
+ *
+ * The values are hardware-specific (but they can be overridden in the constructor of SplinesLinearProblemSparse).
+ * They have been tuned on the basis of ddc/benchmarks/splines.cpp results on 4xIntel 6230 + Nvidia V100.
+ *
+ * @tparam ExecSpace The Kokkos::ExecutionSpace type.
+ * @return The default value for the parameter cols_per_chunk.
+ */
+template <class ExecSpace>
+std::size_t default_cols_per_chunk() noexcept
+{
+#if defined(KOKKOS_ENABLE_SERIAL)
+    if (std::is_same_v<ExecSpace, Kokkos::Serial>) {
+        return 8192;
+    }
+#endif
+#if defined(KOKKOS_ENABLE_OPENMP)
+    if (std::is_same_v<ExecSpace, Kokkos::OpenMP>) {
+        return 8192;
+    }
+#endif
+#if defined(KOKKOS_ENABLE_CUDA)
+    if (std::is_same_v<ExecSpace, Kokkos::Cuda>) {
+        return 65535;
+    }
+#endif
+#if defined(KOKKOS_ENABLE_HIP)
+    if (std::is_same_v<ExecSpace, Kokkos::HIP>) {
+        return 65535;
+    }
+#endif
+#if defined(KOKKOS_ENABLE_SYCL)
+    if (std::is_same_v<ExecSpace, Kokkos::SYCL>) {
+        return 65535;
+    }
+#endif
+    return 1;
+}
+
+/**
+ * @brief Return the default value of the parameter preconditioner_max_block_size for a given Kokkos::ExecutionSpace.
+ *
+ * The values are hardware-specific (but they can be overridden in the constructor of SplinesLinearProblemSparse).
+ * They have been tuned on the basis of ddc/benchmarks/splines.cpp results on 4xIntel 6230 + Nvidia V100.
+ *
+ * @tparam ExecSpace The Kokkos::ExecutionSpace type.
+ * @return The default value for the parameter preconditioner_max_block_size.
+ */
+template <class ExecSpace>
+unsigned int default_preconditioner_max_block_size() noexcept
+{
+#if defined(KOKKOS_ENABLE_SERIAL)
+    if (std::is_same_v<ExecSpace, Kokkos::Serial>) {
+        return 32U;
+    }
+#endif
+#if defined(KOKKOS_ENABLE_OPENMP)
+    if (std::is_same_v<ExecSpace, Kokkos::OpenMP>) {
+        return 1U;
+    }
+#endif
+#if defined(KOKKOS_ENABLE_CUDA)
+    if (std::is_same_v<ExecSpace, Kokkos::Cuda>) {
+        return 1U;
+    }
+#endif
+#if defined(KOKKOS_ENABLE_HIP)
+    if (std::is_same_v<ExecSpace, Kokkos::HIP>) {
+        return 1U;
+    }
+#endif
+#if defined(KOKKOS_ENABLE_SYCL)
+    if (std::is_same_v<ExecSpace, Kokkos::SYCL>) {
+        return 1U;
+    }
+#endif
+    return 1U;
+}
+
+template <class ExecSpace>
+SplinesLinearProblemSparse<ExecSpace>::SplinesLinearProblemSparse(
+        std::size_t const mat_size,
+        std::optional<std::size_t> cols_per_chunk,
+        std::optional<unsigned int> preconditioner_max_block_size)
+    : SplinesLinearProblem<ExecSpace>(mat_size)
+    , m_cols_per_chunk(cols_per_chunk.value_or(default_cols_per_chunk<ExecSpace>()))
+    , m_preconditioner_max_block_size(preconditioner_max_block_size.value_or(
+              default_preconditioner_max_block_size<ExecSpace>()))
+{
+    std::shared_ptr const gko_exec = gko::ext::kokkos::create_executor(ExecSpace());
+    m_matrix_dense = gko::matrix::Dense<
+            double>::create(gko_exec->get_master(), gko::dim<2>(mat_size, mat_size));
+    m_matrix_dense->fill(0);
+    m_matrix_sparse = matrix_sparse_type::create(gko_exec, gko::dim<2>(mat_size, mat_size));
+}
+
+template <class ExecSpace>
+SplinesLinearProblemSparse<ExecSpace>::~SplinesLinearProblemSparse() = default;
+
+template <class ExecSpace>
+double SplinesLinearProblemSparse<ExecSpace>::get_element(std::size_t i, std::size_t j) const
+{
+    return m_matrix_dense->at(i, j);
+}
+
+template <class ExecSpace>
+void SplinesLinearProblemSparse<ExecSpace>::set_element(std::size_t i, std::size_t j, double aij)
+{
+    m_matrix_dense->at(i, j) = aij;
+}
+
+template <class ExecSpace>
+void SplinesLinearProblemSparse<ExecSpace>::setup_solver()
+{
+    // Remove zeros
+    gko::matrix_data<double> matrix_data(gko::dim<2>(size(), size()));
+    m_matrix_dense->write(matrix_data);
+    m_matrix_dense.reset();
+    matrix_data.remove_zeros();
+    m_matrix_sparse->read(matrix_data);
+    std::shared_ptr const gko_exec = m_matrix_sparse->get_executor();
+
+    // Create the solver factory
+    std::shared_ptr const residual_criterion
+            = gko::stop::ResidualNorm<double>::build().with_reduction_factor(1e-15).on(gko_exec);
+
+    std::shared_ptr const iterations_criterion
+            = gko::stop::Iteration::build().with_max_iters(1000U).on(gko_exec);
+
+    std::shared_ptr const preconditioner
+            = gko::preconditioner::Jacobi<double>::build()
+                      .with_max_block_size(m_preconditioner_max_block_size)
+                      .on(gko_exec);
+
+    std::unique_ptr const solver_factory
+            = solver_type::build()
+                      .with_preconditioner(preconditioner)
+                      .with_criteria(residual_criterion, iterations_criterion)
+                      .on(gko_exec);
+
+    m_solver = solver_factory->generate(m_matrix_sparse);
+    m_solver_tr = m_solver->transpose();
+    gko_exec->synchronize();
+}
+
+template <class ExecSpace>
+void SplinesLinearProblemSparse<ExecSpace>::solve(MultiRHS const b, bool const transpose) const
+{
+    assert(b.extent(0) == size());
+
+    std::shared_ptr const gko_exec = m_solver->get_executor();
+    std::shared_ptr const convergence_logger = gko::log::Convergence<double>::create();
+
+    std::size_t const main_chunk_size = std::min(m_cols_per_chunk, b.extent(1));
+
+    Kokkos::View<double**, Kokkos::LayoutRight, ExecSpace> const
+            b_buffer("ddc_sparse_b_buffer", size(), main_chunk_size);
+    Kokkos::View<double**, Kokkos::LayoutRight, ExecSpace> const
+            x("ddc_sparse_x", size(), main_chunk_size);
+
+    std::size_t const iend = (b.extent(1) + main_chunk_size - 1) / main_chunk_size;
+    for (std::size_t i = 0; i < iend; ++i) {
+        std::size_t const subview_begin = i * main_chunk_size;
+        std::size_t const subview_end
+                = (i + 1 == iend) ? b.extent(1) : (subview_begin + main_chunk_size);
+
+        auto const b_chunk
+                = Kokkos::subview(b, Kokkos::ALL, Kokkos::pair(subview_begin, subview_end));
+        auto const b_buffer_chunk = Kokkos::
+                subview(b_buffer,
+                        Kokkos::ALL,
+                        Kokkos::pair(static_cast<std::size_t>(0), subview_end - subview_begin));
+        auto const x_chunk = Kokkos::
+                subview(x,
+                        Kokkos::ALL,
+                        Kokkos::pair(static_cast<std::size_t>(0), subview_end - subview_begin));
+
+        Kokkos::deep_copy(b_buffer_chunk, b_chunk);
+        Kokkos::deep_copy(x_chunk, b_chunk);
+
+        if (!transpose) {
+            m_solver->add_logger(convergence_logger);
+            m_solver
+                    ->apply(to_gko_dense(gko_exec, b_buffer_chunk),
+                            to_gko_dense(gko_exec, x_chunk));
+            m_solver->remove_logger(convergence_logger);
+        } else {
+            m_solver_tr->add_logger(convergence_logger);
+            m_solver_tr
+                    ->apply(to_gko_dense(gko_exec, b_buffer_chunk),
+                            to_gko_dense(gko_exec, x_chunk));
+            m_solver_tr->remove_logger(convergence_logger);
+        }
+
+        if (!convergence_logger->has_converged()) {
+            throw std::runtime_error(
+                    "Ginkgo did not converged in ddc::detail::SplinesLinearProblemSparse");
+        }
+
+        Kokkos::deep_copy(b_chunk, x_chunk);
+    }
+}
+
+#if defined(KOKKOS_ENABLE_SERIAL)
+template class SplinesLinearProblemSparse<Kokkos::Serial>;
+#endif
+#if defined(KOKKOS_ENABLE_OPENMP)
+template class SplinesLinearProblemSparse<Kokkos::OpenMP>;
+#endif
+#if defined(KOKKOS_ENABLE_CUDA)
+template class SplinesLinearProblemSparse<Kokkos::Cuda>;
+#endif
+#if defined(KOKKOS_ENABLE_HIP)
+template class SplinesLinearProblemSparse<Kokkos::HIP>;
+#endif
+#if defined(KOKKOS_ENABLE_SYCL)
+template class SplinesLinearProblemSparse<Kokkos::SYCL>;
+#endif
+
+} // namespace ddc::detail

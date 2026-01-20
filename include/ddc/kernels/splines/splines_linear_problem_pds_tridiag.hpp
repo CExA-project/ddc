@@ -59,66 +59,28 @@ public:
      *
      * @param mat_size The size of one of the dimensions of the square matrix.
      */
-    explicit SplinesLinearProblemPDSTridiag(std::size_t const mat_size)
-        : SplinesLinearProblem<ExecSpace>(mat_size)
-        , m_q("q", 2, mat_size)
-    {
-        Kokkos::deep_copy(m_q.view_host(), 0.);
-    }
+    explicit SplinesLinearProblemPDSTridiag(std::size_t mat_size);
 
-    double get_element(std::size_t i, std::size_t j) const override
-    {
-        assert(i < size());
-        assert(j < size());
+    SplinesLinearProblemPDSTridiag(SplinesLinearProblemPDSTridiag const& rhs) = delete;
 
-        // Indices are swapped for an element on subdiagonal
-        if (i > j) {
-            std::swap(i, j);
-        }
+    SplinesLinearProblemPDSTridiag(SplinesLinearProblemPDSTridiag&& rhs) = delete;
 
-        if (j - i < 2) {
-            return m_q.view_host()(j - i, i);
-        }
+    ~SplinesLinearProblemPDSTridiag() override;
 
-        return 0.0;
-    }
+    SplinesLinearProblemPDSTridiag& operator=(SplinesLinearProblemPDSTridiag const& rhs) = delete;
 
-    void set_element(std::size_t i, std::size_t j, double const aij) override
-    {
-        assert(i < size());
-        assert(j < size());
+    SplinesLinearProblemPDSTridiag& operator=(SplinesLinearProblemPDSTridiag&& rhs) = delete;
 
-        // Indices are swapped for an element on subdiagonal
-        if (i > j) {
-            std::swap(i, j);
-        }
-        if (j - i < 2) {
-            m_q.view_host()(j - i, i) = aij;
-        } else {
-            assert(std::fabs(aij) < 1e-15);
-        }
-    }
+    double get_element(std::size_t i, std::size_t j) const override;
+
+    void set_element(std::size_t i, std::size_t j, double aij) override;
 
     /**
      * @brief Perform a pre-process operation on the solver. Must be called after filling the matrix.
      *
      * LU-factorize the matrix A and store the pivots using the LAPACK dpttrf() implementation.
      */
-    void setup_solver() override
-    {
-        int const info = LAPACKE_dpttrf(
-                size(),
-                m_q.view_host().data(),
-                m_q.view_host().data() + m_q.view_host().stride(0));
-        if (info != 0) {
-            throw std::runtime_error(
-                    "LAPACKE_dpttrf failed with error code " + std::to_string(info));
-        }
-
-        // Push on device
-        m_q.modify_host();
-        m_q.sync_device();
-    }
+    void setup_solver() override;
 
     /**
      * @brief Solve the multiple right-hand sides linear problem Ax=b or its transposed version A^tx=b inplace.
@@ -128,24 +90,23 @@ public:
      * @param[in, out] b A 2D Kokkos::View storing the multiple right-hand sides of the problem and receiving the corresponding solution.
      * @param transpose Choose between the direct or transposed version of the linear problem (unused for a symmetric problem).
      */
-    void solve(MultiRHS const b, bool const) const override
-    {
-        assert(b.extent(0) == size());
-        auto q_device = m_q.view_device();
-        auto d = Kokkos::subview(q_device, 0, Kokkos::ALL);
-        auto e = Kokkos::
-                subview(q_device, 1, Kokkos::pair<int, int>(0, q_device.extent_int(1) - 1));
-        Kokkos::RangePolicy<ExecSpace> const policy(0, b.extent(1));
-        Kokkos::parallel_for(
-                "pttrs",
-                policy,
-                KOKKOS_LAMBDA(int const i) {
-                    auto sub_b = Kokkos::subview(b, Kokkos::ALL, i);
-                    KokkosBatched::SerialPttrs<
-                            KokkosBatched::Uplo::Lower,
-                            KokkosBatched::Algo::Pttrs::Unblocked>::invoke(d, e, sub_b);
-                });
-    }
+    void solve(MultiRHS b, bool transpose) const override;
 };
+
+#if defined(KOKKOS_ENABLE_SERIAL)
+extern template class SplinesLinearProblemPDSTridiag<Kokkos::Serial>;
+#endif
+#if defined(KOKKOS_ENABLE_OPENMP)
+extern template class SplinesLinearProblemPDSTridiag<Kokkos::OpenMP>;
+#endif
+#if defined(KOKKOS_ENABLE_CUDA)
+extern template class SplinesLinearProblemPDSTridiag<Kokkos::Cuda>;
+#endif
+#if defined(KOKKOS_ENABLE_HIP)
+extern template class SplinesLinearProblemPDSTridiag<Kokkos::HIP>;
+#endif
+#if defined(KOKKOS_ENABLE_SYCL)
+extern template class SplinesLinearProblemPDSTridiag<Kokkos::SYCL>;
+#endif
 
 } // namespace ddc::detail

@@ -55,7 +55,7 @@ TEST(SplineBuilder, ShortInterpolationGrid)
                     DDimX,
                     ddc::BoundCond::PERIODIC,
                     ddc::BoundCond::PERIODIC,
-                    ddc::SplineSolver::GINKGO>(interpolation_domain)),
+                    ddc::SplineSolver::LAPACK>(interpolation_domain)),
             std::runtime_error);
 }
 
@@ -81,7 +81,7 @@ TEST(SplineBuilder, LongInterpolationGrid)
                     DDimX,
                     ddc::BoundCond::PERIODIC,
                     ddc::BoundCond::PERIODIC,
-                    ddc::SplineSolver::GINKGO>(interpolation_domain)),
+                    ddc::SplineSolver::LAPACK>(interpolation_domain)),
             std::runtime_error);
 }
 
@@ -107,7 +107,7 @@ TEST(SplineBuilder, BadShapeInterpolationGrid)
                     DDimX,
                     ddc::BoundCond::PERIODIC,
                     ddc::BoundCond::PERIODIC,
-                    ddc::SplineSolver::GINKGO>(interpolation_domain)),
+                    ddc::SplineSolver::LAPACK>(interpolation_domain)),
             std::runtime_error);
 }
 
@@ -131,5 +131,5 @@ TEST(SplineBuilder, CorrectInterpolationGrid)
                      DDimX,
                      ddc::BoundCond::PERIODIC,
                      ddc::BoundCond::PERIODIC,
-                     ddc::SplineSolver::GINKGO>(interpolation_domain)));
+                     ddc::SplineSolver::LAPACK>(interpolation_domain)));
 }

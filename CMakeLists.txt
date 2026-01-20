@@ -251,15 +251,24 @@ if("${DDC_BUILD_KERNELS_SPLINES}")
         find_package(KokkosKernels 4.5.1...<6 REQUIRED)
     endif()
 
-    add_library(ddc_splines INTERFACE)
+    add_library(ddc_splines)
     add_library(DDC::splines ALIAS ddc_splines)
     set_target_properties(ddc_splines PROPERTIES EXPORT_NAME splines)
     target_link_libraries(
         ddc_splines
-        INTERFACE DDC::core Ginkgo::ginkgo Kokkos::kokkos Kokkos::kokkoskernels LAPACKE::LAPACKE
+        PUBLIC DDC::core Ginkgo::ginkgo Kokkos::kokkos Kokkos::kokkoskernels LAPACKE::LAPACKE
     )
     target_sources(
         ddc_splines
+        PRIVATE
+            include/ddc/kernels/splines/splines_linear_problem.cpp
+            include/ddc/kernels/splines/splines_linear_problem_band.cpp
+            include/ddc/kernels/splines/splines_linear_problem_dense.cpp
+            include/ddc/kernels/splines/splines_linear_problem_sparse.cpp
+            include/ddc/kernels/splines/splines_linear_problem_2x2_blocks.cpp
+            include/ddc/kernels/splines/splines_linear_problem_3x3_blocks.cpp
+            include/ddc/kernels/splines/splines_linear_problem_pds_band.cpp
+            include/ddc/kernels/splines/splines_linear_problem_pds_tridiag.cpp
         INTERFACE
             FILE_SET HEADERS
                 BASE_DIRS include

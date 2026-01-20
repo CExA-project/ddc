@@ -199,7 +199,7 @@ private:
     double m_dx; // average cell size for normalization of derivatives
 
     // interpolator specific
-    std::unique_ptr<ddc::detail::SplinesLinearProblem<exec_space>> m_matrix;
+    std::unique_ptr<ddc::detail::SplinesLinearProblem> m_matrix;
 
     /// Calculate offset so that the matrix is diagonally dominant
     void compute_offset(interpolation_domain_type const& interpolation_domain, int& offset);
@@ -666,15 +666,14 @@ void SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower,
             upper_band_width = bsplines_type::degree() - 1;
         }
         if constexpr (bsplines_type::is_periodic()) {
-            m_matrix = ddc::detail::SplinesLinearProblemMaker::make_new_periodic_band_matrix<
-                    ExecSpace>(
+            m_matrix = ddc::detail::SplinesLinearProblemMaker::make_new_periodic_band_matrix(
                     ddc::discrete_space<BSplines>().nbasis(),
                     upper_band_width,
                     upper_band_width,
                     bsplines_type::is_uniform());
         } else {
             m_matrix = ddc::detail::SplinesLinearProblemMaker::
-                    make_new_block_matrix_with_band_main_block<ExecSpace>(
+                    make_new_block_matrix_with_band_main_block(
                             ddc::discrete_space<BSplines>().nbasis(),
                             upper_band_width,
                             upper_band_width,
@@ -683,7 +682,7 @@ void SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower,
                             upper_block_size);
         }
     } else if constexpr (Solver == ddc::SplineSolver::GINKGO) {
-        m_matrix = ddc::detail::SplinesLinearProblemMaker::make_new_sparse<ExecSpace>(
+        m_matrix = ddc::detail::SplinesLinearProblemMaker::make_new_sparse(
                 ddc::discrete_space<BSplines>().nbasis(),
                 cols_per_chunk,
                 preconditioner_max_block_size);

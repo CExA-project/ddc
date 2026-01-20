@@ -190,7 +190,7 @@ void TestExtrapolationRuleSpline()
             s_bcr1,
             s_bcl2,
             s_bcr2,
-            ddc::SplineSolver::GINKGO> const spline_builder(interpolation_domain);
+            ddc::SplineSolver::LAPACK> const spline_builder(interpolation_domain);
 
     // Compute useful domains (dom_interpolation, dom_batch, dom_bsplines and dom_spline)
     ddc::DiscreteDomain<DDimI1, DDimI2> const dom_interpolation

@@ -544,7 +544,7 @@ void TestMultipleBatchDomain2dSpline()
             s_bcr,
             s_bcl,
             s_bcr,
-            ddc::SplineSolver::GINKGO> const spline_builder(interpolation_domain);
+            ddc::SplineSolver::LAPACK> const spline_builder(interpolation_domain);
 
     evaluator_type<DDimI1, DDimI2> const evaluator(spline_builder.interpolation_domain());
 

@@ -4,10 +4,8 @@
 
 #pragma once
 
-#include <cassert>
 #include <cstddef>
-#include <iomanip>
-#include <ostream>
+#include <iosfwd>
 
 #include <Kokkos_Core.hpp>
 
@@ -19,18 +17,17 @@ namespace ddc::detail {
  * Store a square matrix and provide method to solve a multiple right-hand sides linear problem.
  * Implementations may have different storage formats, filling methods and multiple right-hand sides linear solvers.
  */
-template <class ExecSpace>
 class SplinesLinearProblem
 {
 public:
     /// @brief The type of a Kokkos::View storing multiple right-hand sides.
-    using MultiRHS = Kokkos::View<double**, Kokkos::LayoutRight, ExecSpace>;
+    using MultiRHS = Kokkos::View<double**, Kokkos::LayoutRight, Kokkos::Serial>;
 
 private:
     std::size_t m_size;
 
 protected:
-    explicit SplinesLinearProblem(std::size_t const size) : m_size(size) {}
+    explicit SplinesLinearProblem(std::size_t size);
 
 public:
     SplinesLinearProblem(SplinesLinearProblem const& x) = delete;
@@ -38,7 +35,7 @@ public:
     SplinesLinearProblem(SplinesLinearProblem&& x) = delete;
 
     /// @brief Destruct
-    virtual ~SplinesLinearProblem() = default;
+    virtual ~SplinesLinearProblem();
 
     SplinesLinearProblem& operator=(SplinesLinearProblem const& x) = delete;
 
@@ -81,10 +78,7 @@ public:
      *
      * @return The size of the matrix in one of its dimensions.
      */
-    std::size_t size() const
-    {
-        return m_size;
-    }
+    std::size_t size() const;
 
     /**
      * @brief Get the required number of rows of the multi-rhs view passed to solve().
@@ -93,18 +87,10 @@ public:
      *
      * @return The required number of rows of the multi-rhs view. It is guaranteed to be greater or equal to `size`.
      */
-    std::size_t required_number_of_rhs_rows() const
-    {
-        std::size_t const nrows = impl_required_number_of_rhs_rows();
-        assert(nrows >= size());
-        return nrows;
-    }
+    std::size_t required_number_of_rhs_rows() const;
 
 private:
-    virtual std::size_t impl_required_number_of_rhs_rows() const
-    {
-        return m_size;
-    }
+    virtual std::size_t impl_required_number_of_rhs_rows() const;
 };
 
 /**
@@ -115,18 +101,6 @@ private:
  *
  * @return The stream in which the matrix is printed.
 **/
-template <class ExecSpace>
-std::ostream& operator<<(std::ostream& os, SplinesLinearProblem<ExecSpace> const& linear_problem)
-{
-    std::size_t const n = linear_problem.size();
-    for (std::size_t i = 0; i < n; ++i) {
-        for (std::size_t j = 0; j < n; ++j) {
-            os << std::fixed << std::setprecision(3) << std::setw(10)
-               << linear_problem.get_element(i, j);
-        }
-        os << "\n";
-    }
-    return os;
-}
+std::ostream& operator<<(std::ostream& os, SplinesLinearProblem const& linear_problem);
 
 } // namespace ddc::detail

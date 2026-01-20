@@ -68,7 +68,7 @@ using DVect = ddc::DiscreteVector<DDimX...>;
 template <typename... X>
 using Coord = ddc::Coordinate<X...>;
 
-constexpr ddc::SplineSolver s_spline_solver = ddc::SplineSolver::GINKGO;
+constexpr ddc::SplineSolver s_spline_solver = ddc::SplineSolver::LAPACK;
 
 // Templated function giving first coordinate of the mesh in given dimension.
 template <typename X>

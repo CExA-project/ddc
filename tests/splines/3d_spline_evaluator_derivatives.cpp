@@ -324,7 +324,7 @@ void TestSplineEvaluator3dDerivatives()
             s_bcr,
             s_bcl,
             s_bcr,
-            ddc::SplineSolver::GINKGO> const spline_builder(interpolation_domain);
+            ddc::SplineSolver::LAPACK> const spline_builder(interpolation_domain);
 
     // Compute useful domains (dom_interpolation, dom_batch, dom_bsplines and dom_spline)
     ddc::DiscreteDomain<DDimI1, DDimI2, DDimI3> const dom_interpolation

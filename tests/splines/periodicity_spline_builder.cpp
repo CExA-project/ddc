@@ -131,7 +131,7 @@ void TestPeriodicitySplineBuilder()
             DDim<X>,
             ddc::BoundCond::PERIODIC,
             ddc::BoundCond::PERIODIC,
-            ddc::SplineSolver::GINKGO> const spline_builder(dom_vals);
+            ddc::SplineSolver::LAPACK> const spline_builder(dom_vals);
 
     // Compute useful domains (dom_interpolation, dom_batch, dom_bsplines and dom_spline)
     ddc::DiscreteDomain<BSplines<X>> const dom_bsplines = spline_builder.spline_domain();

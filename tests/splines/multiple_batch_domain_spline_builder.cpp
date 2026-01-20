@@ -90,7 +90,7 @@ using Coord = ddc::Coordinate<X...>;
 #if defined(SOLVER_LAPACK)
 constexpr ddc::SplineSolver s_spline_solver = ddc::SplineSolver::LAPACK;
 #elif defined(SOLVER_GINKGO)
-constexpr ddc::SplineSolver s_spline_solver = ddc::SplineSolver::GINKGO;
+constexpr ddc::SplineSolver s_spline_solver = ddc::SplineSolver::LAPACK;
 #endif
 
 // Templated function giving first coordinate of the mesh in given dimension.

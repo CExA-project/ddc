@@ -36,10 +36,9 @@ public:
      *
      * @return The SplinesLinearProblem instance.
      */
-    template <typename ExecSpace>
-    static std::unique_ptr<SplinesLinearProblem<ExecSpace>> make_new_dense(int const n)
+    static std::unique_ptr<SplinesLinearProblem> make_new_dense(int const n)
     {
-        return std::make_unique<SplinesLinearProblemDense<ExecSpace>>(n);
+        return std::make_unique<SplinesLinearProblemDense>(n);
     }
 
     /**
@@ -53,26 +52,25 @@ public:
      *
      * @return The SplinesLinearProblem instance.
      */
-    template <typename ExecSpace>
-    static std::unique_ptr<SplinesLinearProblem<ExecSpace>> make_new_band(
+    static std::unique_ptr<SplinesLinearProblem> make_new_band(
             int const n,
             int const kl,
             int const ku,
             bool const pds)
     {
         if (kl == ku && kl == 1 && pds) {
-            return std::make_unique<SplinesLinearProblemPDSTridiag<ExecSpace>>(n);
+            return std::make_unique<SplinesLinearProblemPDSTridiag>(n);
         }
 
         if (kl == ku && pds) {
-            return std::make_unique<SplinesLinearProblemPDSBand<ExecSpace>>(n, kl);
+            return std::make_unique<SplinesLinearProblemPDSBand>(n, kl);
         }
 
         if (2 * kl + ku + 1 >= n) {
-            return std::make_unique<SplinesLinearProblemDense<ExecSpace>>(n);
+            return std::make_unique<SplinesLinearProblemDense>(n);
         }
 
-        return std::make_unique<SplinesLinearProblemBand<ExecSpace>>(n, kl, ku);
+        return std::make_unique<SplinesLinearProblemBand>(n, kl, ku);
     }
 
     /**
@@ -89,9 +87,7 @@ public:
      *
      * @return The SplinesLinearProblem instance.
      */
-    template <typename ExecSpace>
-    static std::unique_ptr<SplinesLinearProblem<ExecSpace>>
-    make_new_block_matrix_with_band_main_block(
+    static std::unique_ptr<SplinesLinearProblem> make_new_block_matrix_with_band_main_block(
             int const n,
             int const kl,
             int const ku,
@@ -100,14 +96,12 @@ public:
             int const top_left_size = 0)
     {
         int const main_size = n - top_left_size - bottom_right_size;
-        std::unique_ptr<SplinesLinearProblem<ExecSpace>> main_block
-                = make_new_band<ExecSpace>(main_size, kl, ku, pds);
+        std::unique_ptr<SplinesLinearProblem> main_block = make_new_band(main_size, kl, ku, pds);
         if (top_left_size == 0) {
-            return std::make_unique<
-                    SplinesLinearProblem2x2Blocks<ExecSpace>>(n, std::move(main_block));
+            return std::make_unique<SplinesLinearProblem2x2Blocks>(n, std::move(main_block));
         }
         return std::make_unique<
-                SplinesLinearProblem3x3Blocks<ExecSpace>>(n, top_left_size, std::move(main_block));
+                SplinesLinearProblem3x3Blocks>(n, top_left_size, std::move(main_block));
     }
 
     /**
@@ -126,8 +120,7 @@ public:
      *
      * @return The SplinesLinearProblem instance.
      */
-    template <typename ExecSpace>
-    static std::unique_ptr<SplinesLinearProblem<ExecSpace>> make_new_periodic_band_matrix(
+    static std::unique_ptr<SplinesLinearProblem> make_new_periodic_band_matrix(
             int const n,
             int const kl,
             int const ku,
@@ -139,10 +132,10 @@ public:
         int const top_size = n - bottom_size;
 
         if (bottom_size * (n + top_size) + (2 * kl + ku + 1) * top_size >= n * n) {
-            return std::make_unique<SplinesLinearProblemDense<ExecSpace>>(n);
+            return std::make_unique<SplinesLinearProblemDense>(n);
         }
 
-        return make_new_block_matrix_with_band_main_block<ExecSpace>(n, kl, ku, pds, bottom_size);
+        return make_new_block_matrix_with_band_main_block(n, kl, ku, pds, bottom_size);
     }
 
     /**
@@ -161,14 +154,13 @@ public:
      *
      * @return The SplinesLinearProblem instance.
      */
-    template <typename ExecSpace>
-    static std::unique_ptr<SplinesLinearProblem<ExecSpace>> make_new_sparse(
+    static std::unique_ptr<SplinesLinearProblem> make_new_sparse(
             int const n,
             std::optional<std::size_t> cols_per_chunk = std::nullopt,
             std::optional<unsigned int> preconditioner_max_block_size = std::nullopt)
     {
-        return std::make_unique<SplinesLinearProblemSparse<
-                ExecSpace>>(n, cols_per_chunk, preconditioner_max_block_size);
+        return std::make_unique<
+                SplinesLinearProblemSparse>(n, cols_per_chunk, preconditioner_max_block_size);
     }
 };
 

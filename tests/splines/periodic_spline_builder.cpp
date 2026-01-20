@@ -94,7 +94,7 @@ void TestPeriodicSplineBuilderTestIdentity()
             DDimX,
             ddc::BoundCond::PERIODIC,
             ddc::BoundCond::PERIODIC,
-            ddc::SplineSolver::GINKGO> const spline_builder(interpolation_domain);
+            ddc::SplineSolver::LAPACK> const spline_builder(interpolation_domain);
 
     // 5. Allocate and fill a chunk over the interpolation domain
     ddc::Chunk yvals_alloc(interpolation_domain, ddc::KokkosAllocator<double, memory_space>());

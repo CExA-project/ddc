@@ -66,106 +66,32 @@ public:
      * @param kl The number of subdiagonals of the matrix.
      * @param ku The number of superdiagonals of the matrix.
      */
-    explicit SplinesLinearProblemBand(
-            std::size_t const mat_size,
-            std::size_t const kl,
-            std::size_t const ku)
-        : SplinesLinearProblem<ExecSpace>(mat_size)
-        , m_kl(kl)
-        , m_ku(ku)
-        /*
-         * The matrix itself stored in band format requires a (kl + ku + 1)*mat_size
-         * allocation, but the LU-factorization requires an additional kl*mat_size block
-         */
-        , m_q("q", 2 * kl + ku + 1, mat_size)
-        , m_ipiv("ipiv", mat_size)
-    {
-        assert(m_kl <= mat_size);
-        assert(m_ku <= mat_size);
+    explicit SplinesLinearProblemBand(std::size_t mat_size, std::size_t kl, std::size_t ku);
 
-        Kokkos::deep_copy(m_q.view_host(), 0.);
-    }
+    SplinesLinearProblemBand(SplinesLinearProblemBand const& rhs) = delete;
+
+    SplinesLinearProblemBand(SplinesLinearProblemBand&& rhs) = delete;
+
+    ~SplinesLinearProblemBand() override;
+
+    SplinesLinearProblemBand& operator=(SplinesLinearProblemBand const& rhs) = delete;
+
+    SplinesLinearProblemBand& operator=(SplinesLinearProblemBand&& rhs) = delete;
 
 private:
-    std::size_t band_storage_row_index(std::size_t const i, std::size_t const j) const
-    {
-        return m_kl + m_ku + i - j;
-    }
+    std::size_t band_storage_row_index(std::size_t i, std::size_t j) const;
 
 public:
-    double get_element(std::size_t const i, std::size_t const j) const override
-    {
-        assert(i < size());
-        assert(j < size());
-        /*
-         * The "row index" of the band format storage identify the (sub/super)-diagonal
-         * while the column index is actually the column index of the matrix. Two layouts
-         * are supported by LAPACKE. The m_kl first lines are irrelevant for the storage of
-         * the matrix itself but required for the storage of its LU factorization.
-         */
-        if (i >= std::
-                            max(static_cast<std::ptrdiff_t>(0),
-                                static_cast<std::ptrdiff_t>(j) - static_cast<std::ptrdiff_t>(m_ku))
-            && i < std::min(size(), j + m_kl + 1)) {
-            return m_q.view_host()(band_storage_row_index(i, j), j);
-        }
+    double get_element(std::size_t i, std::size_t j) const override;
 
-        return 0.0;
-    }
-
-    void set_element(std::size_t const i, std::size_t const j, double const aij) override
-    {
-        assert(i < size());
-        assert(j < size());
-        /*
-         * The "row index" of the band format storage identify the (sub/super)-diagonal
-         * while the column index is actually the column index of the matrix. Two layouts
-         * are supported by LAPACKE. The m_kl first lines are irrelevant for the storage of
-         * the matrix itself but required for the storage of its LU factorization.
-         */
-        if (i >= std::
-                            max(static_cast<std::ptrdiff_t>(0),
-                                static_cast<std::ptrdiff_t>(j) - static_cast<std::ptrdiff_t>(m_ku))
-            && i < std::min(size(), j + m_kl + 1)) {
-            m_q.view_host()(band_storage_row_index(i, j), j) = aij;
-        } else {
-            assert(std::fabs(aij) < 1e-15);
-        }
-    }
+    void set_element(std::size_t i, std::size_t j, double aij) override;
 
     /**
      * @brief Perform a pre-process operation on the solver. Must be called after filling the matrix.
      *
      * LU-factorize the matrix A and store the pivots using the LAPACK dgbtrf() implementation.
      */
-    void setup_solver() override
-    {
-        int const info = LAPACKE_dgbtrf(
-                LAPACK_ROW_MAJOR,
-                size(),
-                size(),
-                m_kl,
-                m_ku,
-                m_q.view_host().data(),
-                m_q.view_host().stride(
-                        0), // m_q.view_host().stride(0) if LAPACK_ROW_MAJOR, m_q.view_host().stride(1) if LAPACK_COL_MAJOR
-                m_ipiv.view_host().data());
-        if (info != 0) {
-            throw std::runtime_error(
-                    "LAPACKE_dgbtrf failed with error code " + std::to_string(info));
-        }
-
-        // Convert 1-based index to 0-based index
-        for (std::size_t i = 0; i < size(); ++i) {
-            m_ipiv.view_host()(i) -= 1;
-        }
-
-        // Push on device
-        m_q.modify_host();
-        m_q.sync_device();
-        m_ipiv.modify_host();
-        m_ipiv.sync_device();
-    }
+    void setup_solver() override;
 
     /**
      * @brief Solve the multiple right-hand sides linear problem Ax=b or its transposed version A^tx=b inplace.
@@ -175,39 +101,23 @@ public:
      * @param[in, out] b A 2D Kokkos::View storing the multiple right-hand sides of the problem and receiving the corresponding solution.
      * @param transpose Choose between the direct or transposed version of the linear problem.
      */
-    void solve(MultiRHS const b, bool const transpose) const override
-    {
-        assert(b.extent(0) == size());
-
-        std::size_t const kl_proxy = m_kl;
-        std::size_t const ku_proxy = m_ku;
-        auto q_device = m_q.view_device();
-        auto ipiv_device = m_ipiv.view_device();
-        Kokkos::RangePolicy<ExecSpace> const policy(0, b.extent(1));
-        if (transpose) {
-            Kokkos::parallel_for(
-                    "gbtrs",
-                    policy,
-                    KOKKOS_LAMBDA(int const i) {
-                        auto sub_b = Kokkos::subview(b, Kokkos::ALL, i);
-                        KokkosBatched::SerialGbtrs<
-                                KokkosBatched::Trans::Transpose,
-                                KokkosBatched::Algo::Level3::Unblocked>::
-                                invoke(q_device, sub_b, ipiv_device, kl_proxy, ku_proxy);
-                    });
-        } else {
-            Kokkos::parallel_for(
-                    "gbtrs",
-                    policy,
-                    KOKKOS_LAMBDA(int const i) {
-                        auto sub_b = Kokkos::subview(b, Kokkos::ALL, i);
-                        KokkosBatched::SerialGbtrs<
-                                KokkosBatched::Trans::NoTranspose,
-                                KokkosBatched::Algo::Level3::Unblocked>::
-                                invoke(q_device, sub_b, ipiv_device, kl_proxy, ku_proxy);
-                    });
-        }
-    }
+    void solve(MultiRHS b, bool transpose) const override;
 };
+
+#if defined(KOKKOS_ENABLE_SERIAL)
+extern template class SplinesLinearProblemBand<Kokkos::Serial>;
+#endif
+#if defined(KOKKOS_ENABLE_OPENMP)
+extern template class SplinesLinearProblemBand<Kokkos::OpenMP>;
+#endif
+#if defined(KOKKOS_ENABLE_CUDA)
+extern template class SplinesLinearProblemBand<Kokkos::Cuda>;
+#endif
+#if defined(KOKKOS_ENABLE_HIP)
+extern template class SplinesLinearProblemBand<Kokkos::HIP>;
+#endif
+#if defined(KOKKOS_ENABLE_SYCL)
+extern template class SplinesLinearProblemBand<Kokkos::SYCL>;
+#endif
 
 } // namespace ddc::detail

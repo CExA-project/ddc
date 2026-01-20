@@ -18,7 +18,6 @@
 #include <ddc/ddc.hpp>
 
 #include <Kokkos_Core.hpp>
-#include <Kokkos_StdAlgorithms.hpp>
 
 #include "deriv.hpp"
 #include "integrals.hpp"
@@ -731,10 +730,7 @@ void SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower,
             // iterate only to deg as last bspline is 0
             for (std::size_t i = 0; i < s_nbc_xmin; ++i) {
                 for (std::size_t j = 0; j < bsplines_type::degree(); ++j) {
-                    m_matrix->set_element(
-                            i,
-                            j,
-                            DDC_MDSPAN_ACCESS_OP(derivs, j, s_nbc_xmin - i - 1 + s_odd));
+                    m_matrix->set_element(i, j, DDC_MDSPAN_ACCESS_OP(derivs, j, i + s_odd));
                 }
             }
         }
@@ -869,12 +865,12 @@ operator()(
                 KOKKOS_LAMBDA(
                         typename batch_domain_type<BatchedInterpolationDDom>::discrete_element_type
                                 j) {
-                    for (int i = s_nbc_xmin; i > 0; --i) {
-                        spline(ddc::DiscreteElement<bsplines_type>(s_nbc_xmin - i), j)
+                    for (int i = 0; i < s_nbc_xmin; ++i) {
+                        spline(ddc::DiscreteElement<bsplines_type>(i), j)
                                 = derivs_xmin_values(
-                                          ddc::DiscreteElement<deriv_type>(i + odd_proxy - 1),
+                                          ddc::DiscreteElement<deriv_type>(i + odd_proxy),
                                           j)
-                                  * ddc::detail::ipow(dx_proxy, i + odd_proxy - 1);
+                                  * ddc::detail::ipow(dx_proxy, i + odd_proxy);
                     }
                 });
     }
@@ -1088,8 +1084,7 @@ SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower, BcUp
                 coefficients_derivs_xmin(i) *= ddc::detail::
                         ipow(dx_proxy,
                              static_cast<std::size_t>(get<bsplines_type>(
-                                     s_nbc_xmin + odd_proxy - 1
-                                     - (i - coefficients_derivs_xmin.domain().front()))));
+                                     (i - coefficients_derivs_xmin.domain().front()) + odd_proxy)));
             });
     ddc::parallel_for_each(
             exec_space(),
@@ -1098,7 +1093,7 @@ SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower, BcUp
                 coefficients_derivs_xmax(i) *= ddc::detail::
                         ipow(dx_proxy,
                              static_cast<std::size_t>(get<bsplines_type>(
-                                     i - coefficients_derivs_xmax.domain().front() + odd_proxy)));
+                                     (i - coefficients_derivs_xmax.domain().front()) + odd_proxy)));
             });
 
     ddc::DiscreteElement<deriv_type> const first_deriv(s_odd);
@@ -1116,10 +1111,9 @@ SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower, BcUp
             ddc::DiscreteDomain<
                     deriv_type>(first_deriv, ddc::DiscreteVector<deriv_type>(s_nbc_xmax)),
             ddc::KokkosAllocator<double, OutMemorySpace>());
-    Kokkos::Experimental::reverse_copy(
-            Kokkos::DefaultExecutionSpace(),
-            coefficients_derivs_xmin.allocation_kokkos_view(),
-            coefficients_derivs_xmin_out.allocation_kokkos_view());
+    Kokkos::deep_copy(
+            coefficients_derivs_xmin_out.allocation_kokkos_view(),
+            coefficients_derivs_xmin.allocation_kokkos_view());
     Kokkos::deep_copy(
             coefficients_out.allocation_kokkos_view(),
             coefficients.allocation_kokkos_view());

@@ -56,6 +56,16 @@ public:
             std::size_t top_size,
             std::unique_ptr<SplinesLinearProblem<ExecSpace>> center_block);
 
+    SplinesLinearProblem3x3Blocks(SplinesLinearProblem3x3Blocks const& rhs) = delete;
+
+    SplinesLinearProblem3x3Blocks(SplinesLinearProblem3x3Blocks&& rhs) = delete;
+
+    ~SplinesLinearProblem3x3Blocks() override;
+
+    SplinesLinearProblem3x3Blocks& operator=(SplinesLinearProblem3x3Blocks const& rhs) = delete;
+
+    SplinesLinearProblem3x3Blocks& operator=(SplinesLinearProblem3x3Blocks&& rhs) = delete;
+
 private:
     /// @brief Adjust indices, governs the row & columns interchanges to restructure the 3x3-blocks matrix into a 2x2-blocks matrix.
     void adjust_indices(std::size_t& i, std::size_t& j) const;

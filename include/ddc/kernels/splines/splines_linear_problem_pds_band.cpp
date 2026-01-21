@@ -41,6 +41,9 @@ SplinesLinearProblemPDSBand<ExecSpace>::SplinesLinearProblemPDSBand(
 }
 
 template <class ExecSpace>
+SplinesLinearProblemPDSBand<ExecSpace>::~SplinesLinearProblemPDSBand() = default;
+
+template <class ExecSpace>
 double SplinesLinearProblemPDSBand<ExecSpace>::get_element(std::size_t i, std::size_t j) const
 {
     assert(i < size());

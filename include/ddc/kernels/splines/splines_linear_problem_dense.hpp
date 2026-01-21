@@ -39,6 +39,16 @@ public:
      */
     explicit SplinesLinearProblemDense(std::size_t mat_size);
 
+    SplinesLinearProblemDense(SplinesLinearProblemDense const& rhs) = delete;
+
+    SplinesLinearProblemDense(SplinesLinearProblemDense&& rhs) = delete;
+
+    ~SplinesLinearProblemDense() override;
+
+    SplinesLinearProblemDense& operator=(SplinesLinearProblemDense const& rhs) = delete;
+
+    SplinesLinearProblemDense& operator=(SplinesLinearProblemDense&& rhs) = delete;
+
     double get_element(std::size_t i, std::size_t j) const override;
 
     void set_element(std::size_t i, std::size_t j, double aij) override;

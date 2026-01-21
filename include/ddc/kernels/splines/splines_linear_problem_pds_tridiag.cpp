@@ -38,6 +38,9 @@ SplinesLinearProblemPDSTridiag<ExecSpace>::SplinesLinearProblemPDSTridiag(
 }
 
 template <class ExecSpace>
+SplinesLinearProblemPDSTridiag<ExecSpace>::~SplinesLinearProblemPDSTridiag() = default;
+
+template <class ExecSpace>
 double SplinesLinearProblemPDSTridiag<ExecSpace>::get_element(std::size_t i, std::size_t j) const
 {
     assert(i < size());

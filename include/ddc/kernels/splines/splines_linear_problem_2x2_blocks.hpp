@@ -62,7 +62,15 @@ public:
             std::size_t mat_size,
             std::unique_ptr<SplinesLinearProblem<ExecSpace>> top_left_block);
 
+    SplinesLinearProblem2x2Blocks(SplinesLinearProblem2x2Blocks const& rhs) = delete;
+
+    SplinesLinearProblem2x2Blocks(SplinesLinearProblem2x2Blocks&& rhs) = delete;
+
     ~SplinesLinearProblem2x2Blocks() override;
+
+    SplinesLinearProblem2x2Blocks& operator=(SplinesLinearProblem2x2Blocks const& rhs) = delete;
+
+    SplinesLinearProblem2x2Blocks& operator=(SplinesLinearProblem2x2Blocks&& rhs) = delete;
 
     double get_element(std::size_t i, std::size_t j) const override;
 

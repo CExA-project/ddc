@@ -51,6 +51,9 @@ SplinesLinearProblemBand<ExecSpace>::SplinesLinearProblemBand(
 }
 
 template <class ExecSpace>
+SplinesLinearProblemBand<ExecSpace>::~SplinesLinearProblemBand() = default;
+
+template <class ExecSpace>
 std::size_t SplinesLinearProblemBand<ExecSpace>::band_storage_row_index(
         std::size_t const i,
         std::size_t const j) const

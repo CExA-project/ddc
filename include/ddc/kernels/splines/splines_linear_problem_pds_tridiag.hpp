@@ -45,6 +45,16 @@ public:
      */
     explicit SplinesLinearProblemPDSTridiag(std::size_t mat_size);
 
+    SplinesLinearProblemPDSTridiag(SplinesLinearProblemPDSTridiag const& rhs) = delete;
+
+    SplinesLinearProblemPDSTridiag(SplinesLinearProblemPDSTridiag&& rhs) = delete;
+
+    ~SplinesLinearProblemPDSTridiag() override;
+
+    SplinesLinearProblemPDSTridiag& operator=(SplinesLinearProblemPDSTridiag const& rhs) = delete;
+
+    SplinesLinearProblemPDSTridiag& operator=(SplinesLinearProblemPDSTridiag&& rhs) = delete;
+
     double get_element(std::size_t i, std::size_t j) const override;
 
     void set_element(std::size_t i, std::size_t j, double aij) override;

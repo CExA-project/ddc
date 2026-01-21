@@ -35,6 +35,9 @@ SplinesLinearProblemDense<ExecSpace>::SplinesLinearProblemDense(std::size_t cons
 }
 
 template <class ExecSpace>
+SplinesLinearProblemDense<ExecSpace>::~SplinesLinearProblemDense() = default;
+
+template <class ExecSpace>
 double SplinesLinearProblemDense<ExecSpace>::get_element(std::size_t const i, std::size_t const j)
         const
 {

@@ -51,6 +51,16 @@ public:
      */
     explicit SplinesLinearProblemBand(std::size_t mat_size, std::size_t kl, std::size_t ku);
 
+    SplinesLinearProblemBand(SplinesLinearProblemBand const& rhs) = delete;
+
+    SplinesLinearProblemBand(SplinesLinearProblemBand&& rhs) = delete;
+
+    ~SplinesLinearProblemBand() override;
+
+    SplinesLinearProblemBand& operator=(SplinesLinearProblemBand const& rhs) = delete;
+
+    SplinesLinearProblemBand& operator=(SplinesLinearProblemBand&& rhs) = delete;
+
 private:
     std::size_t band_storage_row_index(std::size_t i, std::size_t j) const;
 

@@ -46,6 +46,16 @@ public:
      */
     explicit SplinesLinearProblemPDSBand(std::size_t mat_size, std::size_t kd);
 
+    SplinesLinearProblemPDSBand(SplinesLinearProblemPDSBand const& rhs) = delete;
+
+    SplinesLinearProblemPDSBand(SplinesLinearProblemPDSBand&& rhs) = delete;
+
+    ~SplinesLinearProblemPDSBand() override;
+
+    SplinesLinearProblemPDSBand& operator=(SplinesLinearProblemPDSBand const& rhs) = delete;
+
+    SplinesLinearProblemPDSBand& operator=(SplinesLinearProblemPDSBand&& rhs) = delete;
+
     double get_element(std::size_t i, std::size_t j) const override;
 
     void set_element(std::size_t i, std::size_t j, double aij) override;

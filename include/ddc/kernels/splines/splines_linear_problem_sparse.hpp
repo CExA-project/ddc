@@ -48,7 +48,15 @@ public:
             std::optional<std::size_t> cols_per_chunk = std::nullopt,
             std::optional<unsigned int> preconditioner_max_block_size = std::nullopt);
 
+    SplinesLinearProblemSparse(SplinesLinearProblemSparse const& rhs) = delete;
+
+    SplinesLinearProblemSparse(SplinesLinearProblemSparse&& rhs) = delete;
+
     ~SplinesLinearProblemSparse() override;
+
+    SplinesLinearProblemSparse& operator=(SplinesLinearProblemSparse const& rhs) = delete;
+
+    SplinesLinearProblemSparse& operator=(SplinesLinearProblemSparse&& rhs) = delete;
 
     double get_element(std::size_t i, std::size_t j) const override;
 

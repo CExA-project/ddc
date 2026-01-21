@@ -26,6 +26,9 @@ SplinesLinearProblem3x3Blocks<ExecSpace>::SplinesLinearProblem3x3Blocks(
 }
 
 template <class ExecSpace>
+SplinesLinearProblem3x3Blocks<ExecSpace>::~SplinesLinearProblem3x3Blocks() = default;
+
+template <class ExecSpace>
 void SplinesLinearProblem3x3Blocks<ExecSpace>::adjust_indices(std::size_t& i, std::size_t& j) const
 {
     std::size_t const nq = m_top_left_block->size(); // size of the center block

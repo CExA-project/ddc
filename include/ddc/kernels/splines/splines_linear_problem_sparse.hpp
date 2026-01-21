@@ -8,9 +8,6 @@
 #include <memory>
 #include <optional>
 
-#include <ginkgo/extensions/kokkos.hpp>
-#include <ginkgo/ginkgo.hpp>
-
 #include <Kokkos_Core.hpp>
 
 #include "splines_linear_problem.hpp"
@@ -32,28 +29,9 @@ public:
     using SplinesLinearProblem<ExecSpace>::size;
 
 private:
-    using matrix_sparse_type = gko::matrix::Csr<double, gko::int32>;
-#if defined(KOKKOS_ENABLE_OPENMP)
-    using solver_type = std::conditional_t<
-            std::is_same_v<ExecSpace, Kokkos::OpenMP>,
-            gko::solver::Gmres<double>,
-            gko::solver::Bicgstab<double>>;
-#else
-    using solver_type = gko::solver::Bicgstab<double>;
-#endif
+    class Impl;
 
-
-private:
-    std::unique_ptr<gko::matrix::Dense<double>> m_matrix_dense;
-
-    std::shared_ptr<matrix_sparse_type> m_matrix_sparse;
-
-    std::shared_ptr<solver_type> m_solver;
-    std::shared_ptr<gko::LinOp> m_solver_tr;
-
-    std::size_t m_cols_per_chunk; // Maximum number of columns of B to be passed to a Ginkgo solver
-
-    unsigned int m_preconditioner_max_block_size; // Maximum size of Jacobi-block preconditioner
+    std::unique_ptr<Impl> m_impl;
 
 public:
     /**
@@ -69,6 +47,8 @@ public:
             std::size_t mat_size,
             std::optional<std::size_t> cols_per_chunk = std::nullopt,
             std::optional<unsigned int> preconditioner_max_block_size = std::nullopt);
+
+    ~SplinesLinearProblemSparse() override;
 
     double get_element(std::size_t i, std::size_t j) const override;
 

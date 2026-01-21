@@ -169,7 +169,7 @@ void test_deriv(
                         spline_eval_deriv(e) - evaluator.deriv(x, y, z, order1, order2, order3));
             });
 
-    double const max_norm_diff = evaluator.max_norm(order1, order2);
+    double const max_norm_diff = evaluator.max_norm(order1, order2, order3);
 
     SplineErrorBounds<evaluator_type<DDimI1, DDimI2, DDimI3>> const error_bounds(evaluator);
 

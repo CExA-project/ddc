@@ -396,7 +396,7 @@ public:
     // Construct a SparseDiscreteDomain from a reordered copy of `domain`
     template <class... ODDims>
     KOKKOS_FUNCTION constexpr explicit SparseDiscreteDomain(
-            [[maybe_unused]] SparseDiscreteDomain<ODDims...> const& domain)
+            SparseDiscreteDomain<ODDims...> const& /*domain*/)
     {
     }
 
@@ -411,8 +411,7 @@ public:
 
     KOKKOS_DEFAULTED_FUNCTION SparseDiscreteDomain& operator=(SparseDiscreteDomain&& x) = default;
 
-    KOKKOS_FUNCTION constexpr bool operator==(
-            [[maybe_unused]] SparseDiscreteDomain const& other) const
+    KOKKOS_FUNCTION constexpr bool operator==(SparseDiscreteDomain const& /*other*/) const
     {
         return true;
     }
@@ -445,39 +444,35 @@ public:
         return {};
     }
 
-    KOKKOS_FUNCTION constexpr SparseDiscreteDomain take_first(
-            [[maybe_unused]] discrete_vector_type n) const
+    KOKKOS_FUNCTION constexpr SparseDiscreteDomain take_first(discrete_vector_type /*n*/) const
     {
         return *this;
     }
 
-    KOKKOS_FUNCTION constexpr SparseDiscreteDomain take_last(
-            [[maybe_unused]] discrete_vector_type n) const
+    KOKKOS_FUNCTION constexpr SparseDiscreteDomain take_last(discrete_vector_type /*n*/) const
     {
         return *this;
     }
 
-    KOKKOS_FUNCTION constexpr SparseDiscreteDomain remove_first(
-            [[maybe_unused]] discrete_vector_type n) const
+    KOKKOS_FUNCTION constexpr SparseDiscreteDomain remove_first(discrete_vector_type /*n*/) const
     {
         return *this;
     }
 
-    KOKKOS_FUNCTION constexpr SparseDiscreteDomain remove_last(
-            [[maybe_unused]] discrete_vector_type n) const
+    KOKKOS_FUNCTION constexpr SparseDiscreteDomain remove_last(discrete_vector_type /*n*/) const
     {
         return *this;
     }
 
     KOKKOS_FUNCTION constexpr SparseDiscreteDomain remove(
-            [[maybe_unused]] discrete_vector_type n1,
-            [[maybe_unused]] discrete_vector_type n2) const
+            discrete_vector_type /*n1*/,
+            discrete_vector_type /*n2*/) const
     {
         return *this;
     }
 
     KOKKOS_FUNCTION constexpr DiscreteElement<> operator()(
-            DiscreteVector<> const& /* dvect */) const noexcept
+            DiscreteVector<> const& /*dvect*/) const noexcept
     {
         return {};
     }
@@ -541,7 +536,7 @@ using convert_type_seq_to_sparse_discrete_domain_t =
 template <class... DDimsA, class... DDimsB>
 KOKKOS_FUNCTION constexpr auto remove_dims_of(
         SparseDiscreteDomain<DDimsA...> const& DDom_a,
-        [[maybe_unused]] SparseDiscreteDomain<DDimsB...> const& DDom_b) noexcept
+        SparseDiscreteDomain<DDimsB...> const& /*DDom_b*/) noexcept
 {
     using TagSeqA = detail::TypeSeq<DDimsA...>;
     using TagSeqB = detail::TypeSeq<DDimsB...>;
@@ -573,7 +568,7 @@ KOKKOS_FUNCTION constexpr std::conditional_t<
         ddc::SparseDiscreteDomain<DDim2>,
         ddc::SparseDiscreteDomain<DDimA>>
 replace_dim_of_1d(
-        SparseDiscreteDomain<DDimA> const& DDom_a,
+        [[maybe_unused]] SparseDiscreteDomain<DDimA> const& DDom_a,
         [[maybe_unused]] SparseDiscreteDomain<DDimsB...> const& DDom_b) noexcept
 {
     if constexpr (std::is_same_v<DDimA, DDim1>) {

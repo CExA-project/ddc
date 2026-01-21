@@ -29,8 +29,8 @@ struct CosineEvaluator
 
     public:
         template <class Domain>
-        explicit Evaluator([[maybe_unused]] Domain domain) : m_coef0(1.0)
-                                                           , m_coef1(0.0)
+        explicit Evaluator(Domain /*domain*/) : m_coef0(1.0)
+                                              , m_coef1(0.0)
         {
         }
 

@@ -261,7 +261,8 @@ if("${DDC_BUILD_KERNELS_SPLINES}")
     set_target_properties(ddc_splines PROPERTIES EXPORT_NAME splines)
     target_link_libraries(
         ddc_splines
-        PUBLIC Ginkgo::ginkgo Kokkos::kokkos Kokkos::kokkoskernels LAPACKE::LAPACKE
+        PRIVATE Ginkgo::ginkgo Kokkos::kokkoskernels LAPACKE::LAPACKE
+        PUBLIC Kokkos::kokkos
         INTERFACE DDC::core
     )
     target_sources(

@@ -4,10 +4,8 @@
 
 #pragma once
 
-#include <cassert>
 #include <cstddef>
 #include <memory>
-#include <utility>
 
 #include <Kokkos_Core.hpp>
 

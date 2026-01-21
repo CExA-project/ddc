@@ -4,23 +4,10 @@
 
 #pragma once
 
-#include <cassert>
 #include <cstddef>
-#include <stdexcept>
-#include <string>
 
 #include <Kokkos_Core.hpp>
 #include <Kokkos_DualView.hpp>
-
-#if __has_include(<mkl_lapacke.h>)
-#    include <mkl_lapacke.h>
-#else
-#    include <lapacke.h>
-#endif
-
-#include <KokkosBatched_Util.hpp>
-
-#include "kokkos-kernels-ext/KokkosBatched_Getrs.hpp"
 
 #include "splines_linear_problem.hpp"
 

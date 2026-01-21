@@ -4,16 +4,13 @@
 
 #pragma once
 
-#include <cassert>
 #include <cstddef>
 #include <memory>
-#include <utility>
 
 #include <Kokkos_Core.hpp>
 #include <Kokkos_DualView.hpp>
 
 #include "splines_linear_problem.hpp"
-#include "splines_linear_problem_dense.hpp"
 
 namespace ddc::detail {
 

@@ -19,6 +19,9 @@
 
 #include <Kokkos_Core.hpp>
 
+// NOLINTNEXTLINE(bugprone-suspicious-include)
+#include "../main.cpp"
+
 #if defined(EVALUATOR_COSINE)
 #    include "cosine_evaluator.hpp"
 #endif

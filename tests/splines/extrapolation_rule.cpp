@@ -12,6 +12,9 @@
 
 #include <Kokkos_Core.hpp>
 
+// NOLINTNEXTLINE(bugprone-suspicious-include)
+#include "../main.cpp"
+
 #include "cosine_evaluator.hpp"
 #include "evaluator_2d.hpp"
 #if !defined(BC_PERIODIC)

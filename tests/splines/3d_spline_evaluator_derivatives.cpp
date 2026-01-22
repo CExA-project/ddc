@@ -14,6 +14,9 @@
 
 #include <Kokkos_Core.hpp>
 
+// NOLINTNEXTLINE(bugprone-suspicious-include)
+#include "../main.cpp"
+
 #include "cosine_evaluator.hpp"
 #include "evaluator_3d.hpp"
 #include "spline_error_bounds.hpp"

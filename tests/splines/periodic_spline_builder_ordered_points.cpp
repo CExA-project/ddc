@@ -12,6 +12,9 @@
 
 #include <Kokkos_Core.hpp>
 
+// NOLINTNEXTLINE(bugprone-suspicious-include)
+#include "../main.cpp"
+
 struct DimX
 {
     static constexpr bool PERIODIC = true;

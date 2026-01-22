@@ -12,6 +12,8 @@
 
 #include <Kokkos_Core.hpp>
 
+#include "main_macro.hpp"
+
 struct DimX
 {
     static constexpr bool PERIODIC = true;
@@ -63,3 +65,5 @@ TEST(PeriodicSplineBuilderOrderTest, OrderedPoints)
         last = current;
     }
 }
+
+DDC_TESTS_MAIN

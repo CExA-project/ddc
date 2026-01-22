@@ -12,7 +12,6 @@
 #include <type_traits>
 
 #include <Kokkos_Core.hpp>
-#include <Kokkos_StdAlgorithms.hpp>
 
 #include "detail/tagged_vector.hpp"
 #include "detail/type_seq.hpp"
@@ -106,14 +105,16 @@ KOKKOS_FUNCTION bool binary_search(ForwardIt first, ForwardIt last, T const& val
 }
 
 template <class DDim>
-struct GetUidFn
+Kokkos::View<DiscreteElementType*, Kokkos::SharedSpace> extract_uid(
+        Kokkos::View<DiscreteElement<DDim>*, Kokkos::SharedSpace> const& input)
 {
-    KOKKOS_FUNCTION DiscreteElementType
-    operator()(DiscreteElement<DDim> const& delem) const noexcept
-    {
-        return delem.uid();
-    }
-};
+    Kokkos::View<DiscreteElementType*, Kokkos::SharedSpace> output(input.label(), input.size());
+    Kokkos::parallel_for(
+            "SparseDiscreteDomainCtor",
+            output.size(),
+            KOKKOS_LAMBDA(std::size_t const i) { output(i) = input(i).uid(); });
+    return output;
+}
 
 } // namespace detail
 
@@ -156,18 +157,8 @@ public:
     explicit SparseDiscreteDomain(
             Kokkos::View<DiscreteElement<DDims>*, Kokkos::SharedSpace> const&... views)
     {
-        ((m_views[type_seq_rank_v<DDims, detail::TypeSeq<DDims...>>]
-          = Kokkos::View<DiscreteElementType*, Kokkos::SharedSpace>(views.label(), views.size())),
+        ((m_views[type_seq_rank_v<DDims, detail::TypeSeq<DDims...>>] = detail::extract_uid(views)),
          ...);
-        Kokkos::DefaultExecutionSpace const execution_space;
-        ((Kokkos::Experimental::transform(
-                 "SparseDiscreteDomainCtor",
-                 execution_space,
-                 views,
-                 m_views[type_seq_rank_v<DDims, detail::TypeSeq<DDims...>>],
-                 detail::GetUidFn<DDims>())),
-         ...);
-        execution_space.fence("SparseDiscreteDomainCtor");
     }
 
     KOKKOS_DEFAULTED_FUNCTION SparseDiscreteDomain(SparseDiscreteDomain const& x) = default;
@@ -288,8 +279,8 @@ public:
         DiscreteElement<DDims...> const delem(delems...);
         for (std::size_t i = 0; i < rank(); ++i) {
             if (!detail::binary_search(
-                        Kokkos::Experimental::begin(m_views[i]),
-                        Kokkos::Experimental::end(m_views[i]),
+                        m_views[i].data(),
+                        m_views[i].data() + m_views[i].size(),
                         detail::array(delem)[i],
                         std::less {})) {
                 return false;
@@ -309,11 +300,11 @@ public:
         KOKKOS_ASSERT(contains(delems...))
         return DiscreteVector<DDims...>(
                 (detail::lower_bound(
-                         Kokkos::Experimental::begin(get<DDims>(m_views)),
-                         Kokkos::Experimental::end(get<DDims>(m_views)),
+                         get<DDims>(m_views).data(),
+                         get<DDims>(m_views).data() + get<DDims>(m_views).size(),
                          uid<DDims>(take<DDims>(delems...)),
                          std::less {})
-                 - Kokkos::Experimental::begin(get<DDims>(m_views)))...);
+                 - get<DDims>(m_views).data())...);
     }
 
     KOKKOS_FUNCTION constexpr bool empty() const noexcept
@@ -331,7 +322,7 @@ public:
             class DDim0 = std::enable_if_t<N == 1, std::tuple_element_t<0, std::tuple<DDims...>>>>
     KOKKOS_FUNCTION auto begin() const
     {
-        return Kokkos::Experimental::begin(get<DDim0>(m_views));
+        return get<DDim0>(m_views).data();
     }
 
     template <
@@ -339,7 +330,7 @@ public:
             class DDim0 = std::enable_if_t<N == 1, std::tuple_element_t<0, std::tuple<DDims...>>>>
     KOKKOS_FUNCTION auto end() const
     {
-        return Kokkos::Experimental::end(get<DDim0>(m_views));
+        return get<DDim0>(m_views).data() + get<DDim0>(m_views).size();
     }
 
     template <
@@ -347,7 +338,7 @@ public:
             class DDim0 = std::enable_if_t<N == 1, std::tuple_element_t<0, std::tuple<DDims...>>>>
     KOKKOS_FUNCTION auto cbegin() const
     {
-        return Kokkos::Experimental::cbegin(get<DDim0>(m_views));
+        return get<DDim0>(m_views).data();
     }
 
     template <
@@ -355,7 +346,7 @@ public:
             class DDim0 = std::enable_if_t<N == 1, std::tuple_element_t<0, std::tuple<DDims...>>>>
     KOKKOS_FUNCTION auto cend() const
     {
-        return Kokkos::Experimental::cend(get<DDim0>(m_views));
+        return get<DDim0>(m_views).data() + get<DDim0>(m_views).size();
     }
 
     template <

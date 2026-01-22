@@ -225,7 +225,11 @@ jobs:
             ddc_extra_cxx_flags: ''
             kokkos_extra_cmake_flags: '-D Kokkos_ENABLE_HIP=ON -D Kokkos_ENABLE_HIP_RELOCATABLE_DEVICE_CODE=ON -D Kokkos_ENABLE_ROCTHRUST=OFF -D Kokkos_ARCH_AMD_GFX90A=ON'
         cxx_version: ['17', '20', '23']
-        cmake_build_type: ['Debug', 'Release']
+        build_type:
+          - cmake_build_type: 'Release'
+            cxx_flags: ''
+          - cmake_build_type: 'Debug'
+            cxx_flags: '-O1'
         exclude:
           - image: 'oldest'  # nvcc 11 only supports C++-17
             backend:
@@ -293,7 +297,7 @@ jobs:
             export KokkosKernels_ROOT=$PWD/opt/kokkos-kernels
 
             export CMAKE_BUILD_PARALLEL_LEVEL=4
-            export CMAKE_BUILD_TYPE=${{matrix.cmake_build_type}}
+            export CMAKE_BUILD_TYPE=${{matrix.build_type.cmake_build_type}}
 
             export CC=${{matrix.backend.c_compiler}}
             export CXX=${{matrix.backend.cxx_compiler}}
@@ -356,7 +360,7 @@ jobs:
             rm -rf build
 
             cmake \
-              -D CMAKE_CXX_FLAGS="-Werror -Wall -Wextra -Wpedantic -Wno-sign-compare -pedantic-errors ${{matrix.backend.ddc_extra_cxx_flags}}" \
+              -D CMAKE_CXX_FLAGS="-Werror -Wall -Wextra -Wpedantic -Wno-sign-compare -pedantic-errors ${{matrix.build_type.cxx_flags}} ${{matrix.backend.ddc_extra_cxx_flags}}" \
               -D CMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
               -D DDC_BUILD_BENCHMARKS=ON \
               -D DDC_benchmark_DEPENDENCY_POLICY=INSTALLED \

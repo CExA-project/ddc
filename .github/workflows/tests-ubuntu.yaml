@@ -228,8 +228,8 @@ jobs:
         build_type:
           - cmake_build_type: 'Release'
             cxx_flags: ''
-          - cmake_build_type: 'None'
-            cxx_flags: '-O1'
+          - cmake_build_type: 'Debug'
+            cxx_flags: '-Og'
         exclude:
           - image: 'oldest'  # nvcc 11 only supports C++-17
             backend:

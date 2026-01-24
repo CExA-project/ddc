@@ -22,7 +22,7 @@ class SplinesLinearProblem
 {
 public:
     /// @brief The type of a Kokkos::View storing multiple right-hand sides.
-    using MultiRHS = Kokkos::View<double**, Kokkos::LayoutRight, ExecSpace>;
+    using MultiRHS = Kokkos::View<double**, Kokkos::LayoutRight, typename ExecSpace::memory_space>;
 
 private:
     std::size_t m_size;

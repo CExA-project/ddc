@@ -239,10 +239,8 @@ public:
 
         std::size_t const main_chunk_size = std::min(m_cols_per_chunk, b.extent(1));
 
-        Kokkos::View<double**, Kokkos::LayoutRight, ExecSpace> const
-                b_buffer("ddc_sparse_b_buffer", m_mat_size, main_chunk_size);
-        Kokkos::View<double**, Kokkos::LayoutRight, ExecSpace> const
-                x("ddc_sparse_x", m_mat_size, main_chunk_size);
+        MultiRHS const b_buffer("ddc_sparse_b_buffer", m_mat_size, main_chunk_size);
+        MultiRHS const x("ddc_sparse_x", m_mat_size, main_chunk_size);
 
         std::size_t const iend = (b.extent(1) + main_chunk_size - 1) / main_chunk_size;
         for (std::size_t i = 0; i < iend; ++i) {

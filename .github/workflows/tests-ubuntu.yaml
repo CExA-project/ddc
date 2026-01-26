@@ -442,7 +442,7 @@ jobs:
           docker load < ${{matrix.image}}_${{matrix.backend.name}}.tar
           rm ${{matrix.image}}_${{matrix.backend.name}}.tar
       - name: Generate undefined sanitizer environment
-        if: ${{matrix.sanitizer}} == 'undefined'
+        if: matrix.sanitizer == 'undefined'
         run: |
           cat<<-'UBSAN_SUPP_EOF' > ubsan.supp
             vptr:ginkgo/core/solver/solver_base.hpp

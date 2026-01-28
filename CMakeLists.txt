@@ -6,6 +6,8 @@ cmake_minimum_required(VERSION 3.25...4.2)
 
 project(DDC VERSION 0.11.0 LANGUAGES CXX)
 
+set(CMAKE_EXPERIMENTAL_EXPORT_PACKAGE_DEPENDENCIES "1942b4fa-b2c5-4546-9385-83f254070067")
+
 # List of options
 
 option(DDC_BUILD_BENCHMARKS "Build DDC benchmarks." OFF)
@@ -182,7 +184,7 @@ target_sources(
 
 set_target_properties(ddc_core PROPERTIES EXPORT_NAME core)
 install(TARGETS ddc_core EXPORT DDCCoreTargets FILE_SET HEADERS)
-install(EXPORT DDCCoreTargets NAMESPACE DDC:: DESTINATION ${DDC_INSTALL_CMAKEDIR})
+install(EXPORT DDCCoreTargets NAMESPACE DDC:: DESTINATION ${DDC_INSTALL_CMAKEDIR} EXPORT_PACKAGE_DEPENDENCIES)
 
 # Link library to DDC
 
@@ -234,7 +236,7 @@ if("${DDC_BUILD_KERNELS_FFT}")
             INSTALL_RPATH "$<$<PLATFORM_ID:Linux>:$ORIGIN>;$<$<PLATFORM_ID:Darwin>:@loader_path>"
     )
     install(TARGETS ddc_fft EXPORT DDCFftTargets FILE_SET HEADERS)
-    install(EXPORT DDCFftTargets NAMESPACE DDC:: DESTINATION ${DDC_INSTALL_CMAKEDIR})
+    install(EXPORT DDCFftTargets NAMESPACE DDC:: DESTINATION ${DDC_INSTALL_CMAKEDIR} EXPORT_PACKAGE_DEPENDENCIES)
 endif()
 
 if("${DDC_BUILD_KERNELS_SPLINES}")
@@ -332,7 +334,7 @@ if("${DDC_BUILD_KERNELS_SPLINES}")
             INSTALL_RPATH "$<$<PLATFORM_ID:Linux>:$ORIGIN>;$<$<PLATFORM_ID:Darwin>:@loader_path>"
     )
     install(TARGETS ddc_splines EXPORT DDCSplinesTargets FILE_SET HEADERS)
-    install(EXPORT DDCSplinesTargets NAMESPACE DDC:: DESTINATION ${DDC_INSTALL_CMAKEDIR})
+    install(EXPORT DDCSplinesTargets NAMESPACE DDC:: DESTINATION ${DDC_INSTALL_CMAKEDIR} EXPORT_PACKAGE_DEPENDENCIES)
 endif()
 
 ## The PDI wrapper
@@ -357,7 +359,7 @@ if("${DDC_BUILD_PDI_WRAPPER}")
             INSTALL_RPATH "$<$<PLATFORM_ID:Linux>:$ORIGIN>;$<$<PLATFORM_ID:Darwin>:@loader_path>"
     )
     install(TARGETS ddc_pdi EXPORT DDCPdiTargets FILE_SET HEADERS)
-    install(EXPORT DDCPdiTargets NAMESPACE DDC:: DESTINATION ${DDC_INSTALL_CMAKEDIR})
+    install(EXPORT DDCPdiTargets NAMESPACE DDC:: DESTINATION ${DDC_INSTALL_CMAKEDIR} EXPORT_PACKAGE_DEPENDENCIES)
 endif()
 
 ## if examples are enabled, build them

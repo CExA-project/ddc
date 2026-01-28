@@ -75,7 +75,6 @@ if("${BUILD_TESTING}" AND "${DDC_BUILD_TESTS}")
 
     if("${DDC_GTest_DEPENDENCY_POLICY}" STREQUAL "AUTO")
         if(NOT TARGET GTest::GTest AND NOT TARGET GTest::gtest)
-            # 1.14...<2 but GTest module does not support range version
             find_package(GTest 1.14 QUIET)
             if(NOT GTest_FOUND)
                 ddc_configure_googletest()
@@ -101,7 +100,7 @@ if("${DDC_BUILD_BENCHMARKS}")
 
     if("${DDC_benchmark_DEPENDENCY_POLICY}" STREQUAL "AUTO")
         if(NOT TARGET benchmark::benchmark)
-            find_package(benchmark 1.8...<2 QUIET)
+            find_package(benchmark 1.8 QUIET)
             if(NOT benchmark_FOUND)
                 ddc_configure_benchmark()
             endif()
@@ -109,14 +108,14 @@ if("${DDC_BUILD_BENCHMARKS}")
     elseif("${DDC_benchmark_DEPENDENCY_POLICY}" STREQUAL "EMBEDDED")
         ddc_configure_benchmark()
     elseif("${DDC_benchmark_DEPENDENCY_POLICY}" STREQUAL "INSTALLED")
-        find_package(benchmark 1.8...<2 REQUIRED)
+        find_package(benchmark 1.8 REQUIRED)
     endif()
 endif()
 
 ## Doxygen
 
 if("${DDC_BUILD_DOCUMENTATION}")
-    find_package(Doxygen 1.8.13...<2 REQUIRED OPTIONAL_COMPONENTS dot)
+    find_package(Doxygen 1.8.13 REQUIRED OPTIONAL_COMPONENTS dot)
 endif()
 
 # Our project
@@ -194,7 +193,7 @@ if("${DDC_BUILD_KERNELS_FFT}")
 
     if("${DDC_KokkosFFT_DEPENDENCY_POLICY}" STREQUAL "AUTO")
         if(NOT TARGET KokkosFFT::fft)
-            find_package(KokkosFFT 0.3.0...<1 QUIET)
+            find_package(KokkosFFT 0.3 QUIET)
             if(NOT KokkosFFT_FOUND)
                 ddc_configure_kokkos_fft()
             endif()
@@ -202,7 +201,7 @@ if("${DDC_BUILD_KERNELS_FFT}")
     elseif("${DDC_KokkosFFT_DEPENDENCY_POLICY}" STREQUAL "EMBEDDED")
         ddc_configure_kokkos_fft()
     elseif("${DDC_KokkosFFT_DEPENDENCY_POLICY}" STREQUAL "INSTALLED")
-        find_package(KokkosFFT 0.3.0...<1 REQUIRED)
+        find_package(KokkosFFT 0.3 REQUIRED)
     endif()
 
     add_library(ddc_fft INTERFACE)
@@ -223,7 +222,7 @@ endif()
 
 if("${DDC_BUILD_KERNELS_SPLINES}")
     # Ginkgo
-    find_package(Ginkgo 1.8...<2 REQUIRED)
+    find_package(Ginkgo 1.8 REQUIRED)
 
     # Lapacke
     find_package(LAPACKE REQUIRED)

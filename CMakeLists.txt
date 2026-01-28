@@ -2,9 +2,9 @@
 #
 # SPDX-License-Identifier: MIT
 
-cmake_minimum_required(VERSION 3.25...4.2)
+cmake_minimum_required(VERSION 4.3)
 
-project(DDC VERSION 0.12.0 LANGUAGES CXX)
+project(DDC VERSION 0.12.0 COMPAT_VERSION 0.12.0 SPDX_LICENSE MIT LANGUAGES CXX)
 
 # List of options
 
@@ -33,7 +33,6 @@ include(CTest)
 include(GNUInstallDirs)
 
 set(DDC_INSTALL_CMAKEDIR ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
-set(DDC_INSTALL_INCLUDEDIR ${CMAKE_INSTALL_INCLUDEDIR})
 
 ## Custom cmake modules
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
@@ -184,9 +183,22 @@ target_sources(
                 src/ddc/uniform_point_sampling.hpp
 )
 
+if("${DDC_BUILD_DEPRECATED_CODE}")
+    add_library(deprecated_code INTERFACE SYMBOLIC)
+endif()
+
+if("${DDC_BUILD_DOUBLE_PRECISION}")
+    add_library(double_precision INTERFACE SYMBOLIC)
+endif()
+
 set_target_properties(ddc_core PROPERTIES EXPORT_NAME core)
-install(TARGETS ddc_core EXPORT DDCCoreTargets FILE_SET core_interface FILE_SET core_public)
-install(EXPORT DDCCoreTargets NAMESPACE DDC:: DESTINATION ${DDC_INSTALL_CMAKEDIR})
+install(
+    TARGETS ddc_core deprecated_code double_precision
+    EXPORT DDCCoreTargets
+    FILE_SET core_interface
+    FILE_SET core_public
+)
+install(PACKAGE_INFO DDC EXPORT DDCCoreTargets)
 
 # Link library to DDC
 
@@ -238,7 +250,7 @@ if("${DDC_BUILD_KERNELS_FFT}")
             INSTALL_RPATH "$<$<PLATFORM_ID:Linux>:$ORIGIN>;$<$<PLATFORM_ID:Darwin>:@loader_path>"
     )
     install(TARGETS ddc_fft EXPORT DDCFftTargets FILE_SET HEADERS)
-    install(EXPORT DDCFftTargets NAMESPACE DDC:: DESTINATION ${DDC_INSTALL_CMAKEDIR})
+    install(PACKAGE_INFO DDC EXPORT DDCFftTargets APPENDIX fft)
 endif()
 
 if("${DDC_BUILD_KERNELS_SPLINES}")
@@ -336,7 +348,7 @@ if("${DDC_BUILD_KERNELS_SPLINES}")
             INSTALL_RPATH "$<$<PLATFORM_ID:Linux>:$ORIGIN>;$<$<PLATFORM_ID:Darwin>:@loader_path>"
     )
     install(TARGETS ddc_splines EXPORT DDCSplinesTargets FILE_SET HEADERS)
-    install(EXPORT DDCSplinesTargets NAMESPACE DDC:: DESTINATION ${DDC_INSTALL_CMAKEDIR})
+    install(PACKAGE_INFO DDC EXPORT DDCPdiTargets APPENDIX splines)
 endif()
 
 ## The PDI wrapper
@@ -361,7 +373,7 @@ if("${DDC_BUILD_PDI_WRAPPER}")
             INSTALL_RPATH "$<$<PLATFORM_ID:Linux>:$ORIGIN>;$<$<PLATFORM_ID:Darwin>:@loader_path>"
     )
     install(TARGETS ddc_pdi EXPORT DDCPdiTargets FILE_SET HEADERS)
-    install(EXPORT DDCPdiTargets NAMESPACE DDC:: DESTINATION ${DDC_INSTALL_CMAKEDIR})
+    install(PACKAGE_INFO DDC EXPORT DDCPdiTargets APPENDIX pdi)
 endif()
 
 ## if examples are enabled, build them
@@ -387,29 +399,3 @@ endif()
 if("${DDC_BUILD_DOCUMENTATION}")
     add_subdirectory(docs/)
 endif()
-
-## Installation of Config and ConfigVersion files
-
-configure_package_config_file(
-    cmake/DDCConfig.cmake.in
-    ${CMAKE_CURRENT_BINARY_DIR}/DDCConfig.cmake
-    INSTALL_DESTINATION ${DDC_INSTALL_CMAKEDIR}
-    NO_SET_AND_CHECK_MACRO
-    NO_CHECK_REQUIRED_COMPONENTS_MACRO
-)
-
-# We use SameMinorVersion until major version 1
-if(PROJECT_VERSION VERSION_GREATER_EQUAL 1)
-    message(FATAL_ERROR "DDC must switch COMPATIBILITY mode to SameMajorVersion")
-endif()
-write_basic_package_version_file(
-    ${CMAKE_CURRENT_BINARY_DIR}/DDCConfigVersion.cmake
-    COMPATIBILITY SameMinorVersion
-)
-
-install(
-    FILES
-        ${CMAKE_CURRENT_BINARY_DIR}/DDCConfig.cmake
-        ${CMAKE_CURRENT_BINARY_DIR}/DDCConfigVersion.cmake
-    DESTINATION ${DDC_INSTALL_CMAKEDIR}
-)

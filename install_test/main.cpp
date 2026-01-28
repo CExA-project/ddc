@@ -16,11 +16,11 @@ static_assert(std::is_same_v<ddc::Real, float>);
 #    error "The header <ddc/kernels/fft.hpp> cannot be found"
 #endif
 
-#if __has_include(<ddc/kernels/splines.hpp>)
-#    include <ddc/kernels/splines.hpp>
-#else
-#    error "The header <ddc/kernels/splines.hpp> cannot be found"
-#endif
+// #if __has_include(<ddc/kernels/splines.hpp>)
+// #    include <ddc/kernels/splines.hpp>
+// #else
+// #    error "The header <ddc/kernels/splines.hpp> cannot be found"
+// #endif
 
 #if __has_include(<ddc/pdi.hpp>)
 #    include <ddc/pdi.hpp>

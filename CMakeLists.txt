@@ -6,6 +6,8 @@ cmake_minimum_required(VERSION 3.25...4.2)
 
 project(DDC VERSION 0.10.0 LANGUAGES CXX)
 
+set(CMAKE_EXPERIMENTAL_EXPORT_PACKAGE_DEPENDENCIES "1942b4fa-b2c5-4546-9385-83f254070067")
+
 # List of options
 
 option(DDC_BUILD_BENCHMARKS "Build DDC benchmarks." OFF)
@@ -220,7 +222,7 @@ if("${DDC_BUILD_KERNELS_FFT}")
 
     set_target_properties(ddc_fft PROPERTIES EXPORT_NAME fft)
     install(TARGETS ddc_fft EXPORT DDCFftTargets FILE_SET HEADERS)
-    install(EXPORT DDCFftTargets NAMESPACE DDC:: DESTINATION ${DDC_INSTALL_CMAKEDIR})
+    install(EXPORT DDCFftTargets NAMESPACE DDC:: DESTINATION ${DDC_INSTALL_CMAKEDIR} EXPORT_PACKAGE_DEPENDENCIES)
 endif()
 
 if("${DDC_BUILD_KERNELS_SPLINES}")
@@ -312,7 +314,7 @@ if("${DDC_BUILD_KERNELS_SPLINES}")
     install(FILES cmake/FindLAPACKE.cmake DESTINATION ${DDC_INSTALL_CMAKEDIR})
     set_target_properties(ddc_splines PROPERTIES EXPORT_NAME splines)
     install(TARGETS ddc_splines EXPORT DDCSplinesTargets FILE_SET HEADERS)
-    install(EXPORT DDCSplinesTargets NAMESPACE DDC:: DESTINATION ${DDC_INSTALL_CMAKEDIR})
+    install(EXPORT DDCSplinesTargets NAMESPACE DDC:: DESTINATION ${DDC_INSTALL_CMAKEDIR} EXPORT_PACKAGE_DEPENDENCIES)
 endif()
 
 ## The PDI wrapper
@@ -331,7 +333,7 @@ if("${DDC_BUILD_PDI_WRAPPER}")
 
     set_target_properties(ddc_pdi PROPERTIES EXPORT_NAME pdi)
     install(TARGETS ddc_pdi EXPORT DDCPdiTargets FILE_SET HEADERS)
-    install(EXPORT DDCPdiTargets NAMESPACE DDC:: DESTINATION ${DDC_INSTALL_CMAKEDIR})
+    install(EXPORT DDCPdiTargets NAMESPACE DDC:: DESTINATION ${DDC_INSTALL_CMAKEDIR} EXPORT_PACKAGE_DEPENDENCIES)
 endif()
 
 ## if examples are enabled, build them
@@ -358,7 +360,13 @@ if("${DDC_BUILD_DOCUMENTATION}")
     add_subdirectory(docs/)
 endif()
 
+<<<<<<< HEAD
 ## Installation of Config and ConfigVersion files
+=======
+## installation
+
+install(EXPORT DDCCoreTargets NAMESPACE DDC:: DESTINATION ${DDC_INSTALL_CMAKEDIR} EXPORT_PACKAGE_DEPENDENCIES)
+>>>>>>> Automatic find_dependency
 
 configure_package_config_file(
     cmake/DDCConfig.cmake.in

@@ -2,9 +2,9 @@
 #
 # SPDX-License-Identifier: MIT
 
-cmake_minimum_required(VERSION 3.25...4.2)
+cmake_minimum_required(VERSION 4.3)
 
-project(DDC VERSION 0.15.1 LANGUAGES CXX)
+project(DDC VERSION 0.15.1 COMPAT_VERSION 0.15.0 SPDX_LICENSE MIT LANGUAGES CXX)
 
 # List of options
 
@@ -29,7 +29,6 @@ include(CTest)
 include(GNUInstallDirs)
 
 set(DDC_INSTALL_CMAKEDIR ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
-set(DDC_INSTALL_INCLUDEDIR ${CMAKE_INSTALL_INCLUDEDIR})
 
 ## Custom cmake modules
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
@@ -125,21 +124,24 @@ target_sources(
                 src/ddc/uniform_point_sampling.hpp
 )
 
+if("${DDC_BUILD_DEPRECATED_CODE}")
+    add_library(deprecated_code INTERFACE SYMBOLIC)
+endif()
+
+if("${DDC_BUILD_DOUBLE_PRECISION}")
+    add_library(double_precision INTERFACE SYMBOLIC)
+endif()
+
 set_target_properties(ddc_core PROPERTIES EXPORT_NAME core)
 install(
-    TARGETS ddc_core
+    TARGETS ddc_core deprecated_code double_precision
     EXPORT DDCCoreTargets
     ARCHIVE COMPONENT Development
     FILE_SET core_interface COMPONENT Development
     FILE_SET core_public COMPONENT Development
     LIBRARY COMPONENT Runtime
 )
-install(
-    EXPORT DDCCoreTargets
-    NAMESPACE DDC::
-    DESTINATION ${DDC_INSTALL_CMAKEDIR}
-    COMPONENT Development
-)
+install(PACKAGE_INFO DDC EXPORT DDCCoreTargets COMPONENT Development)
 
 # Link library to DDC
 
@@ -172,12 +174,7 @@ if("${DDC_BUILD_KERNELS_FFT}")
         FILE_SET HEADERS COMPONENT Development
         LIBRARY COMPONENT Runtime
     )
-    install(
-        EXPORT DDCFftTargets
-        NAMESPACE DDC::
-        DESTINATION ${DDC_INSTALL_CMAKEDIR}
-        COMPONENT Development
-    )
+    install(PACKAGE_INFO DDC EXPORT DDCFftTargets APPENDIX fft COMPONENT Development)
 endif()
 
 if("${DDC_BUILD_KERNELS_SPLINES}")
@@ -256,12 +253,7 @@ if("${DDC_BUILD_KERNELS_SPLINES}")
         FILE_SET HEADERS COMPONENT Development
         LIBRARY COMPONENT Runtime
     )
-    install(
-        EXPORT DDCSplinesTargets
-        NAMESPACE DDC::
-        DESTINATION ${DDC_INSTALL_CMAKEDIR}
-        COMPONENT Development
-    )
+    install(PACKAGE_INFO DDC EXPORT DDCSplinesTargets APPENDIX splines COMPONENT Development)
 endif()
 
 ## The PDI wrapper
@@ -292,12 +284,7 @@ if("${DDC_BUILD_PDI_WRAPPER}")
         FILE_SET HEADERS COMPONENT Development
         LIBRARY COMPONENT Runtime
     )
-    install(
-        EXPORT DDCPdiTargets
-        NAMESPACE DDC::
-        DESTINATION ${DDC_INSTALL_CMAKEDIR}
-        COMPONENT Development
-    )
+    install(PACKAGE_INFO DDC EXPORT DDCPdiTargets APPENDIX pdi COMPONENT Development)
 endif()
 
 ## if examples are enabled, build them
@@ -329,30 +316,3 @@ if("${DDC_BUILD_DOCUMENTATION}")
 
     add_subdirectory(docs/)
 endif()
-
-## Installation of Config and ConfigVersion files
-
-configure_package_config_file(
-    cmake/DDCConfig.cmake.in
-    ${CMAKE_CURRENT_BINARY_DIR}/DDCConfig.cmake
-    INSTALL_DESTINATION ${DDC_INSTALL_CMAKEDIR}
-    NO_SET_AND_CHECK_MACRO
-    NO_CHECK_REQUIRED_COMPONENTS_MACRO
-)
-
-# We use SameMinorVersion until major version 1
-if(PROJECT_VERSION VERSION_GREATER_EQUAL 1)
-    message(FATAL_ERROR "DDC must switch COMPATIBILITY mode to SameMajorVersion")
-endif()
-write_basic_package_version_file(
-    ${CMAKE_CURRENT_BINARY_DIR}/DDCConfigVersion.cmake
-    COMPATIBILITY SameMinorVersion
-)
-
-install(
-    FILES
-        ${CMAKE_CURRENT_BINARY_DIR}/DDCConfig.cmake
-        ${CMAKE_CURRENT_BINARY_DIR}/DDCConfigVersion.cmake
-    DESTINATION ${DDC_INSTALL_CMAKEDIR}
-    COMPONENT Development
-)

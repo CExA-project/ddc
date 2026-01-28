@@ -6,6 +6,9 @@ cmake_minimum_required(VERSION 3.25...4.2)
 
 project(DDC VERSION 0.10.0 LANGUAGES CXX)
 
+set(CMAKE_EXPERIMENTAL_EXPORT_PACKAGE_INFO "b80be207-778e-46ba-8080-b23bba22639e")
+set(CMAKE_EXPERIMENTAL_MAPPED_PACKAGE_INFO "ababa1b5-7099-495f-a9cd-e22d38f274f2")
+
 # List of options
 
 option(DDC_BUILD_BENCHMARKS "Build DDC benchmarks." OFF)
@@ -176,8 +179,13 @@ target_sources(
 )
 
 set_target_properties(ddc_core PROPERTIES EXPORT_NAME core)
-install(TARGETS ddc_core EXPORT DDCCoreTargets FILE_SET HEADERS)
-install(EXPORT DDCCoreTargets NAMESPACE DDC:: DESTINATION ${DDC_INSTALL_CMAKEDIR})
+install(
+    TARGETS ddc_core
+    EXPORT DDCCoreTargets
+    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+    FILE_SET HEADERS
+)
+install(PACKAGE_INFO DDC EXPORT DDCCoreTargets)
 
 # Link library to DDC
 
@@ -219,8 +227,13 @@ if("${DDC_BUILD_KERNELS_FFT}")
     target_sources(ddc_fft INTERFACE FILE_SET HEADERS BASE_DIRS src FILES src/ddc/kernels/fft.hpp)
 
     set_target_properties(ddc_fft PROPERTIES EXPORT_NAME fft)
-    install(TARGETS ddc_fft EXPORT DDCFftTargets FILE_SET HEADERS)
-    install(EXPORT DDCFftTargets NAMESPACE DDC:: DESTINATION ${DDC_INSTALL_CMAKEDIR})
+    install(
+        TARGETS ddc_fft
+        EXPORT DDCFftTargets
+        INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+        FILE_SET HEADERS
+    )
+    install(PACKAGE_INFO DDC EXPORT DDCFftTargets APPENDIX fft)
 endif()
 
 if("${DDC_BUILD_KERNELS_SPLINES}")
@@ -311,8 +324,13 @@ if("${DDC_BUILD_KERNELS_SPLINES}")
 
     install(FILES cmake/FindLAPACKE.cmake DESTINATION ${DDC_INSTALL_CMAKEDIR})
     set_target_properties(ddc_splines PROPERTIES EXPORT_NAME splines)
-    install(TARGETS ddc_splines EXPORT DDCSplinesTargets FILE_SET HEADERS)
-    install(EXPORT DDCSplinesTargets NAMESPACE DDC:: DESTINATION ${DDC_INSTALL_CMAKEDIR})
+    install(
+        TARGETS ddc_splines
+        EXPORT DDCSplinesTargets
+        INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+        FILE_SET HEADERS
+    )
+    install(PACKAGE_INFO DDC EXPORT DDCPdiTargets APPENDIX splines)
 endif()
 
 ## The PDI wrapper
@@ -330,8 +348,13 @@ if("${DDC_BUILD_PDI_WRAPPER}")
     target_sources(ddc_pdi INTERFACE FILE_SET HEADERS BASE_DIRS src FILES src/ddc/pdi.hpp)
 
     set_target_properties(ddc_pdi PROPERTIES EXPORT_NAME pdi)
-    install(TARGETS ddc_pdi EXPORT DDCPdiTargets FILE_SET HEADERS)
-    install(EXPORT DDCPdiTargets NAMESPACE DDC:: DESTINATION ${DDC_INSTALL_CMAKEDIR})
+    install(
+        TARGETS ddc_pdi
+        EXPORT DDCPdiTargets
+        INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+        FILE_SET HEADERS
+    )
+    install(PACKAGE_INFO DDC EXPORT DDCPdiTargets APPENDIX pdi)
 endif()
 
 ## if examples are enabled, build them
@@ -357,29 +380,3 @@ endif()
 if("${DDC_BUILD_DOCUMENTATION}")
     add_subdirectory(docs/)
 endif()
-
-## Installation of Config and ConfigVersion files
-
-configure_package_config_file(
-    cmake/DDCConfig.cmake.in
-    ${CMAKE_CURRENT_BINARY_DIR}/DDCConfig.cmake
-    INSTALL_DESTINATION ${DDC_INSTALL_CMAKEDIR}
-    NO_SET_AND_CHECK_MACRO
-    NO_CHECK_REQUIRED_COMPONENTS_MACRO
-)
-
-# We use SameMinorVersion until major version 1
-if(PROJECT_VERSION VERSION_GREATER_EQUAL 1)
-    message(FATAL_ERROR "DDC must switch COMPATIBILITY mode to SameMajorVersion")
-endif()
-write_basic_package_version_file(
-    ${CMAKE_CURRENT_BINARY_DIR}/DDCConfigVersion.cmake
-    COMPATIBILITY SameMinorVersion
-)
-
-install(
-    FILES
-        ${CMAKE_CURRENT_BINARY_DIR}/DDCConfig.cmake
-        ${CMAKE_CURRENT_BINARY_DIR}/DDCConfigVersion.cmake
-    DESTINATION ${DDC_INSTALL_CMAKEDIR}
-)

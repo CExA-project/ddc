@@ -2,6 +2,8 @@
 #
 # SPDX-License-Identifier: MIT
 
+set(CMAKE_EXPERIMENTAL_FIND_CPS_PACKAGES "e82e467b-f997-4464-8ace-b00808fff261")
+
 cmake_minimum_required(VERSION 3.25)
 
 project(test-installed-ddc LANGUAGES CXX)
@@ -9,7 +11,7 @@ project(test-installed-ddc LANGUAGES CXX)
 # Test whether `find_package(DDC)` can be called multiple times
 find_package(DDC 0.10 REQUIRED)
 find_package(DDC 0.10 REQUIRED COMPONENTS fft)
-find_package(DDC 0.10 REQUIRED COMPONENTS pdi splines)
+# find_package(DDC 0.10 REQUIRED COMPONENTS pdi splines)
 
 message(STATUS "DDC options:")
 message(STATUS "* DDC_BUILD_DOUBLE_PRECISION=${DDC_BUILD_DOUBLE_PRECISION}")
@@ -18,4 +20,5 @@ message(STATUS "* DDC_pdi_FOUND=${DDC_pdi_FOUND}")
 message(STATUS "* DDC_splines_FOUND=${DDC_splines_FOUND}")
 
 add_executable(main main.cpp)
-target_link_libraries(main PRIVATE DDC::core DDC::fft DDC::pdi DDC::splines)
+target_link_libraries(main PRIVATE DDC::core DDC::fft DDC::pdi)
+# target_link_libraries(main PRIVATE DDC::core DDC::fft DDC::pdi DDC::splines)

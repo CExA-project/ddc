@@ -19,6 +19,8 @@ The CMake package name is `DDC`, you will find below a table listing the targets
 | `fft`                | `DDC::fft`        | `<ddc/kernels/fft.hpp>`     |
 | `splines`            | `DDC::splines`    | `<ddc/kernels/splines.hpp>` |
 
+DDC follows semantic versioning. As of DDC v0, anything may change at any time hence the CMake compatibility mode is only `SameMinorVersion`.
+
 \note Keep in mind that the DDC components are optional.
 
 \warning Please note that all other targets and headers are private and thus should not be used.

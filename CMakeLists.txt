@@ -210,12 +210,13 @@ if("${DDC_BUILD_KERNELS_FFT}")
         endif()
     endif()
 
-    add_library(ddc_fft INTERFACE)
+    add_library(ddc_fft)
     add_library(DDC::fft ALIAS ddc_fft)
     set_target_properties(ddc_fft PROPERTIES EXPORT_NAME fft)
-    target_link_libraries(ddc_fft INTERFACE DDC::core Kokkos::kokkos KokkosFFT::fft)
+    target_link_libraries(ddc_fft PUBLIC DDC::core Kokkos::kokkos KokkosFFT::fft)
     target_sources(
         ddc_fft
+        PRIVATE include/ddc/kernels/fft.cpp
         INTERFACE
             FILE_SET HEADERS
                 BASE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include

@@ -1,4 +1,4 @@
-# Using DDC {#using_ddc}
+# CMake integration {#cmake_integration}
 
 \tableofcontents
 

@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: MIT
 
-cmake_minimum_required(VERSION 3.25)
+cmake_minimum_required(VERSION 3.25...4.2)
 
 project(test-installed-ddc LANGUAGES CXX)
 

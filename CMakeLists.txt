@@ -210,12 +210,13 @@ if("${DDC_BUILD_KERNELS_FFT}")
         endif()
     endif()
 
-    add_library(ddc_fft INTERFACE)
+    add_library(ddc_fft)
     add_library(DDC::fft ALIAS ddc_fft)
     set_target_properties(ddc_fft PROPERTIES EXPORT_NAME fft)
-    target_link_libraries(ddc_fft INTERFACE DDC::core Kokkos::kokkos KokkosFFT::fft)
+    target_link_libraries(ddc_fft PUBLIC DDC::core Kokkos::kokkos KokkosFFT::fft)
     target_sources(
         ddc_fft
+        PRIVATE include/ddc/kernels/fft.cpp
         INTERFACE
             FILE_SET HEADERS
                 BASE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include
@@ -256,15 +257,26 @@ if("${DDC_BUILD_KERNELS_SPLINES}")
         find_package(KokkosKernels 4.5.1...<6 REQUIRED)
     endif()
 
-    add_library(ddc_splines INTERFACE)
+    add_library(ddc_splines)
     add_library(DDC::splines ALIAS ddc_splines)
     set_target_properties(ddc_splines PROPERTIES EXPORT_NAME splines)
     target_link_libraries(
         ddc_splines
-        INTERFACE DDC::core Ginkgo::ginkgo Kokkos::kokkos Kokkos::kokkoskernels LAPACKE::LAPACKE
+        PRIVATE Ginkgo::ginkgo Kokkos::kokkoskernels LAPACKE::LAPACKE
+        PUBLIC Kokkos::kokkos
+        INTERFACE DDC::core
     )
     target_sources(
         ddc_splines
+        PRIVATE
+            include/ddc/kernels/splines/splines_linear_problem.cpp
+            include/ddc/kernels/splines/splines_linear_problem_2x2_blocks.cpp
+            include/ddc/kernels/splines/splines_linear_problem_3x3_blocks.cpp
+            include/ddc/kernels/splines/splines_linear_problem_band.cpp
+            include/ddc/kernels/splines/splines_linear_problem_dense.cpp
+            include/ddc/kernels/splines/splines_linear_problem_pds_band.cpp
+            include/ddc/kernels/splines/splines_linear_problem_pds_tridiag.cpp
+            include/ddc/kernels/splines/splines_linear_problem_sparse.cpp
         INTERFACE
             FILE_SET HEADERS
                 BASE_DIRS include
@@ -278,10 +290,6 @@ if("${DDC_BUILD_KERNELS_SPLINES}")
                     include/ddc/kernels/splines/integrals.hpp
                     include/ddc/kernels/splines/knot_discrete_dimension_type.hpp
                     include/ddc/kernels/splines/knots_as_interpolation_points.hpp
-                    include/ddc/kernels/splines/kokkos-kernels-ext/KokkosBatched_Gbtrs.hpp
-                    include/ddc/kernels/splines/kokkos-kernels-ext/KokkosBatched_Gbtrs_Serial_Impl.hpp
-                    include/ddc/kernels/splines/kokkos-kernels-ext/KokkosBatched_Getrs.hpp
-                    include/ddc/kernels/splines/kokkos-kernels-ext/KokkosBatched_Getrs_Serial_Impl.hpp
                     include/ddc/kernels/splines/math_tools.hpp
                     include/ddc/kernels/splines/null_extrapolation_rule.hpp
                     include/ddc/kernels/splines/periodic_extrapolation_rule.hpp

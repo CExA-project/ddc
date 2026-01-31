@@ -22,6 +22,7 @@
 #else
 #    include "polynomial_evaluator.hpp"
 #endif
+#include "main_macro.hpp"
 #include "spline_error_bounds.hpp"
 
 inline namespace anonymous_namespace_workaround_batched_2d_spline_builder_cpp {
@@ -687,3 +688,5 @@ TEST(SUFFIX(Batched2dSplineDevice), 3DBXY)
             DDimGPS<DimX>,
             DDimGPS<DimY>>();
 }
+
+DDC_TESTS_MAIN

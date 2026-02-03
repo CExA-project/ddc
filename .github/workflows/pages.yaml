@@ -122,7 +122,7 @@ jobs:
       - name: Check for relevant documentation errors
         run: |
           # Get files which have changed in this merge request
-          git diff ${{github.event.pull_request.base.sha}}..HEAD --name-only --output=pull_diff.txt include/ddc/kernels/
+          git diff ${{github.event.pull_request.base.sha}}..HEAD --name-only --output=pull_diff.txt src/ddc/kernels/
           # Search through modified files to find relevant errors
           touch relevant_errors.txt
           while read f; do

@@ -9,15 +9,16 @@ endif()
 file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/html")
 set(DOXYGEN_AUTOLINK_SUPPORT YES)
 set(DOXYGEN_BUILTIN_STL_SUPPORT YES)
-if(
-    "${DOXYGEN_VERSION}" VERSION_GREATER_EQUAL 1.9.4
-    AND CMAKE_CXX_COMPILER_ID STREQUAL "Clang"
-    AND "${CMAKE_EXPORT_COMPILE_COMMANDS}"
-)
-    # Doxygen <= 1.9.4 suffers from https://github.com/doxygen/doxygen/issues/8784
-    set(DOXYGEN_CLANG_ASSISTED_PARSING YES)
-    set(DOXYGEN_CLANG_DATABASE_PATH "${CMAKE_BINARY_DIR}")
-endif()
+# Clang assisted parsing currently fails
+# if(
+#     "${DOXYGEN_VERSION}" VERSION_GREATER_EQUAL 1.9.4
+#     AND CMAKE_CXX_COMPILER_ID STREQUAL "Clang"
+#     AND "${CMAKE_EXPORT_COMPILE_COMMANDS}"
+# )
+#     # Doxygen <= 1.9.4 suffers from https://github.com/doxygen/doxygen/issues/8784
+#     set(DOXYGEN_CLANG_ASSISTED_PARSING YES)
+#     set(DOXYGEN_CLANG_DATABASE_PATH "${CMAKE_BINARY_DIR}")
+# endif()
 set(DOXYGEN_ENUM_VALUES_PER_LINE 1)
 set(DOXYGEN_EXAMPLE_PATH "${DDC_SOURCE_DIR}/examples")
 set(DOXYGEN_EXPAND_ONLY_PREDEF YES)

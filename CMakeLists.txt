@@ -130,47 +130,47 @@ target_sources(
     ddc_core
     INTERFACE
         FILE_SET HEADERS
-            BASE_DIRS include ${CMAKE_CURRENT_BINARY_DIR}/generated
+            BASE_DIRS src ${CMAKE_CURRENT_BINARY_DIR}/generated
             FILES
                 ${CMAKE_CURRENT_BINARY_DIR}/generated/ddc/config.hpp
-                include/ddc/detail/dual_discretization.hpp
-                include/ddc/detail/kokkos.hpp
-                include/ddc/detail/macros.hpp
-                include/ddc/detail/tagged_vector.hpp
-                include/ddc/detail/type_seq.hpp
-                include/ddc/detail/type_traits.hpp
-                include/ddc/detail/utils.hpp
-                include/ddc/aligned_allocator.hpp
-                include/ddc/chunk.hpp
-                include/ddc/chunk_common.hpp
-                include/ddc/chunk_span.hpp
-                include/ddc/chunk_traits.hpp
-                include/ddc/coordinate.hpp
-                include/ddc/create_mirror.hpp
-                include/ddc/ddc.hpp
-                include/ddc/ddc_to_kokkos_execution_policy.hpp
-                include/ddc/discrete_domain.hpp
-                include/ddc/discrete_element.hpp
-                include/ddc/discrete_space.hpp
-                include/ddc/discrete_vector.hpp
-                include/ddc/for_each.hpp
-                include/ddc/kokkos_allocator.hpp
-                include/ddc/non_uniform_point_sampling.hpp
-                include/ddc/parallel_deepcopy.hpp
-                include/ddc/parallel_fill.hpp
-                include/ddc/parallel_for_each.hpp
-                include/ddc/parallel_transform.hpp
-                include/ddc/parallel_transform_reduce.hpp
-                include/ddc/periodic_sampling.hpp
-                include/ddc/print.hpp
-                include/ddc/real_type.hpp
-                include/ddc/reducer.hpp
-                include/ddc/scope_guard.hpp
-                include/ddc/sparse_discrete_domain.hpp
-                include/ddc/strided_discrete_domain.hpp
-                include/ddc/transform_reduce.hpp
-                include/ddc/trivial_space.hpp
-                include/ddc/uniform_point_sampling.hpp
+                src/ddc/detail/dual_discretization.hpp
+                src/ddc/detail/kokkos.hpp
+                src/ddc/detail/macros.hpp
+                src/ddc/detail/tagged_vector.hpp
+                src/ddc/detail/type_seq.hpp
+                src/ddc/detail/type_traits.hpp
+                src/ddc/detail/utils.hpp
+                src/ddc/aligned_allocator.hpp
+                src/ddc/chunk.hpp
+                src/ddc/chunk_common.hpp
+                src/ddc/chunk_span.hpp
+                src/ddc/chunk_traits.hpp
+                src/ddc/coordinate.hpp
+                src/ddc/create_mirror.hpp
+                src/ddc/ddc.hpp
+                src/ddc/ddc_to_kokkos_execution_policy.hpp
+                src/ddc/discrete_domain.hpp
+                src/ddc/discrete_element.hpp
+                src/ddc/discrete_space.hpp
+                src/ddc/discrete_vector.hpp
+                src/ddc/for_each.hpp
+                src/ddc/kokkos_allocator.hpp
+                src/ddc/non_uniform_point_sampling.hpp
+                src/ddc/parallel_deepcopy.hpp
+                src/ddc/parallel_fill.hpp
+                src/ddc/parallel_for_each.hpp
+                src/ddc/parallel_transform.hpp
+                src/ddc/parallel_transform_reduce.hpp
+                src/ddc/periodic_sampling.hpp
+                src/ddc/print.hpp
+                src/ddc/real_type.hpp
+                src/ddc/reducer.hpp
+                src/ddc/scope_guard.hpp
+                src/ddc/sparse_discrete_domain.hpp
+                src/ddc/strided_discrete_domain.hpp
+                src/ddc/transform_reduce.hpp
+                src/ddc/trivial_space.hpp
+                src/ddc/uniform_point_sampling.hpp
 )
 target_compile_features(ddc_core INTERFACE cxx_std_17)
 target_link_libraries(ddc_core INTERFACE Kokkos::kokkos)
@@ -214,13 +214,7 @@ if("${DDC_BUILD_KERNELS_FFT}")
     add_library(DDC::fft ALIAS ddc_fft)
     set_target_properties(ddc_fft PROPERTIES EXPORT_NAME fft)
     target_link_libraries(ddc_fft INTERFACE DDC::core Kokkos::kokkos KokkosFFT::fft)
-    target_sources(
-        ddc_fft
-        INTERFACE
-            FILE_SET HEADERS
-                BASE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include
-                FILES include/ddc/kernels/fft.hpp
-    )
+    target_sources(ddc_fft INTERFACE FILE_SET HEADERS BASE_DIRS src FILES src/ddc/kernels/fft.hpp)
 
     install(TARGETS ddc_fft EXPORT DDCFftTargets FILE_SET HEADERS)
     install(EXPORT DDCFftTargets NAMESPACE DDC:: DESTINATION ${DDC_INSTALL_CMAKEDIR})
@@ -268,48 +262,48 @@ if("${DDC_BUILD_KERNELS_SPLINES}")
     target_sources(
         ddc_splines
         PRIVATE
-            include/ddc/kernels/splines/splines_linear_problem.cpp
-            include/ddc/kernels/splines/splines_linear_problem_2x2_blocks.cpp
-            include/ddc/kernels/splines/splines_linear_problem_3x3_blocks.cpp
-            include/ddc/kernels/splines/splines_linear_problem_band.cpp
-            include/ddc/kernels/splines/splines_linear_problem_dense.cpp
-            include/ddc/kernels/splines/splines_linear_problem_pds_band.cpp
-            include/ddc/kernels/splines/splines_linear_problem_pds_tridiag.cpp
-            include/ddc/kernels/splines/splines_linear_problem_sparse.cpp
+            src/ddc/kernels/splines/splines_linear_problem.cpp
+            src/ddc/kernels/splines/splines_linear_problem_2x2_blocks.cpp
+            src/ddc/kernels/splines/splines_linear_problem_3x3_blocks.cpp
+            src/ddc/kernels/splines/splines_linear_problem_band.cpp
+            src/ddc/kernels/splines/splines_linear_problem_dense.cpp
+            src/ddc/kernels/splines/splines_linear_problem_pds_band.cpp
+            src/ddc/kernels/splines/splines_linear_problem_pds_tridiag.cpp
+            src/ddc/kernels/splines/splines_linear_problem_sparse.cpp
         INTERFACE
             FILE_SET HEADERS
-                BASE_DIRS include
+                BASE_DIRS src
                 FILES
-                    include/ddc/kernels/splines.hpp
-                    include/ddc/kernels/splines/bsplines_non_uniform.hpp
-                    include/ddc/kernels/splines/bsplines_uniform.hpp
-                    include/ddc/kernels/splines/constant_extrapolation_rule.hpp
-                    include/ddc/kernels/splines/deriv.hpp
-                    include/ddc/kernels/splines/greville_interpolation_points.hpp
-                    include/ddc/kernels/splines/integrals.hpp
-                    include/ddc/kernels/splines/knot_discrete_dimension_type.hpp
-                    include/ddc/kernels/splines/knots_as_interpolation_points.hpp
-                    include/ddc/kernels/splines/math_tools.hpp
-                    include/ddc/kernels/splines/null_extrapolation_rule.hpp
-                    include/ddc/kernels/splines/periodic_extrapolation_rule.hpp
-                    include/ddc/kernels/splines/spline_boundary_conditions.hpp
-                    include/ddc/kernels/splines/spline_builder.hpp
-                    include/ddc/kernels/splines/spline_builder_2d.hpp
-                    include/ddc/kernels/splines/spline_builder_3d.hpp
-                    include/ddc/kernels/splines/spline_evaluator.hpp
-                    include/ddc/kernels/splines/spline_evaluator_2d.hpp
-                    include/ddc/kernels/splines/spline_evaluator_3d.hpp
-                    include/ddc/kernels/splines/spline_traits.hpp
-                    include/ddc/kernels/splines/splines_linear_problem.hpp
-                    include/ddc/kernels/splines/splines_linear_problem_2x2_blocks.hpp
-                    include/ddc/kernels/splines/splines_linear_problem_3x3_blocks.hpp
-                    include/ddc/kernels/splines/splines_linear_problem_band.hpp
-                    include/ddc/kernels/splines/splines_linear_problem_dense.hpp
-                    include/ddc/kernels/splines/splines_linear_problem_maker.hpp
-                    include/ddc/kernels/splines/splines_linear_problem_pds_band.hpp
-                    include/ddc/kernels/splines/splines_linear_problem_pds_tridiag.hpp
-                    include/ddc/kernels/splines/splines_linear_problem_sparse.hpp
-                    include/ddc/kernels/splines/view.hpp
+                    src/ddc/kernels/splines.hpp
+                    src/ddc/kernels/splines/bsplines_non_uniform.hpp
+                    src/ddc/kernels/splines/bsplines_uniform.hpp
+                    src/ddc/kernels/splines/constant_extrapolation_rule.hpp
+                    src/ddc/kernels/splines/deriv.hpp
+                    src/ddc/kernels/splines/greville_interpolation_points.hpp
+                    src/ddc/kernels/splines/integrals.hpp
+                    src/ddc/kernels/splines/knot_discrete_dimension_type.hpp
+                    src/ddc/kernels/splines/knots_as_interpolation_points.hpp
+                    src/ddc/kernels/splines/math_tools.hpp
+                    src/ddc/kernels/splines/null_extrapolation_rule.hpp
+                    src/ddc/kernels/splines/periodic_extrapolation_rule.hpp
+                    src/ddc/kernels/splines/spline_boundary_conditions.hpp
+                    src/ddc/kernels/splines/spline_builder.hpp
+                    src/ddc/kernels/splines/spline_builder_2d.hpp
+                    src/ddc/kernels/splines/spline_builder_3d.hpp
+                    src/ddc/kernels/splines/spline_evaluator.hpp
+                    src/ddc/kernels/splines/spline_evaluator_2d.hpp
+                    src/ddc/kernels/splines/spline_evaluator_3d.hpp
+                    src/ddc/kernels/splines/spline_traits.hpp
+                    src/ddc/kernels/splines/splines_linear_problem.hpp
+                    src/ddc/kernels/splines/splines_linear_problem_2x2_blocks.hpp
+                    src/ddc/kernels/splines/splines_linear_problem_3x3_blocks.hpp
+                    src/ddc/kernels/splines/splines_linear_problem_band.hpp
+                    src/ddc/kernels/splines/splines_linear_problem_dense.hpp
+                    src/ddc/kernels/splines/splines_linear_problem_maker.hpp
+                    src/ddc/kernels/splines/splines_linear_problem_pds_band.hpp
+                    src/ddc/kernels/splines/splines_linear_problem_pds_tridiag.hpp
+                    src/ddc/kernels/splines/splines_linear_problem_sparse.hpp
+                    src/ddc/kernels/splines/view.hpp
     )
 
     install(FILES cmake/FindLAPACKE.cmake DESTINATION ${DDC_INSTALL_CMAKEDIR})
@@ -329,7 +323,7 @@ if("${DDC_BUILD_PDI_WRAPPER}")
     set_target_properties(ddc_pdi PROPERTIES EXPORT_NAME pdi)
     target_compile_features(ddc_pdi INTERFACE cxx_std_17)
     target_link_libraries(ddc_pdi INTERFACE DDC::core PDI::PDI_C)
-    target_sources(ddc_pdi INTERFACE FILE_SET HEADERS BASE_DIRS include FILES include/ddc/pdi.hpp)
+    target_sources(ddc_pdi INTERFACE FILE_SET HEADERS BASE_DIRS src FILES src/ddc/pdi.hpp)
 
     install(TARGETS ddc_pdi EXPORT DDCPdiTargets FILE_SET HEADERS)
     install(EXPORT DDCPdiTargets NAMESPACE DDC:: DESTINATION ${DDC_INSTALL_CMAKEDIR})

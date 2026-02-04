@@ -109,7 +109,7 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
         with:
           repository: ginkgo-project/ginkgo
-          ref: v1.10.0
+          ref: v1.11.0
           path: ginkgo
       - name: Install Ginkgo
         run: |
@@ -129,7 +129,7 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
         with:
           repository: kokkos/kokkos
-          ref: 5.0.1
+          ref: 5.0.2
           path: kokkos
       - name: Install Kokkos
         run: |
@@ -160,7 +160,7 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
         with:
           repository: kokkos/kokkos-kernels
-          ref: 5.0.1
+          ref: 5.0.2
           path: kokkos-kernels
       - name: Install Kokkos Kernels
         run: |

@@ -47,7 +47,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        cxx_version: ['17', '20', '23']
+        cxx_version: ['20', '23']
         config: ['Release']
         os: [windows-2022, windows-2025]
     runs-on: ${{matrix.os}}
@@ -61,13 +61,12 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
         with:
           repository: google/googletest
-          ref: v1.16.0
+          ref: v1.17.0
           path: googletest
       - name: Install Google test
         shell: bash
         run: |
           cmake \
-            -D CMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
             -D CMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded \
             -B build \
             -S googletest
@@ -77,13 +76,12 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
         with:
           repository: kokkos/kokkos
-          ref: 4.7.00
+          ref: 5.0.2
           path: kokkos
       - name: Install Kokkos
         shell: bash
         run: |
           cmake \
-            -D CMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
             -D CMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded \
             -D Kokkos_ENABLE_DEPRECATED_CODE_4=OFF \
             -D Kokkos_ENABLE_DEPRECATION_WARNINGS=OFF \

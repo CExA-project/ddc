@@ -74,7 +74,7 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
         with:
           repository: pdidev/pdi
-          ref: 1.9.2
+          ref: 1.10.0
           path: pdi
       - name: Install PDI+user code plugin and dependencies
         run: |
@@ -82,7 +82,6 @@ jobs:
             -D BUILD_BENCHMARKING=OFF \
             -D BUILD_DECL_HDF5_PLUGIN=OFF \
             -D BUILD_DECL_NETCDF_PLUGIN=OFF \
-            -D BUILD_DEISA_PLUGIN=OFF \
             -D BUILD_DOCUMENTATION=OFF \
             -D BUILD_FORTRAN=OFF \
             -D BUILD_MPI_PLUGIN=OFF \
@@ -110,7 +109,7 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
         with:
           repository: ginkgo-project/ginkgo
-          ref: v1.8.0
+          ref: v1.10.0
           path: ginkgo
       - name: Install Ginkgo
         run: |
@@ -131,7 +130,7 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
         with:
           repository: kokkos/kokkos
-          ref: 4.7.00
+          ref: 5.0.1
           path: kokkos
       - name: Install Kokkos
         run: |
@@ -149,7 +148,7 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
         with:
           repository: kokkos/kokkos-fft
-          ref: v0.3.0
+          ref: v1.0.0
           path: kokkos-fft
       - name: Install Kokkos-fft
         run: |
@@ -164,7 +163,7 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
         with:
           repository: kokkos/kokkos-kernels
-          ref: 4.7.00
+          ref: 5.0.1
           path: kokkos-kernels
       - name: Install Kokkos Kernels
         run: |

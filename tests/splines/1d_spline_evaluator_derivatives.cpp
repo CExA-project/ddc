@@ -15,6 +15,7 @@
 #include <Kokkos_Core.hpp>
 
 #include "cosine_evaluator.hpp"
+#include "main_macro.hpp"
 #include "spline_error_bounds.hpp"
 
 inline namespace anonymous_namespace_workaround_1d_spline_evaluator_derivatives_cpp {
@@ -434,3 +435,5 @@ TEST(SUFFIX(SplineEvaluator1dDerivativesDevice), 3DB1B2X)
             DDimBatch2,
             DDimGPS<DimX>>();
 }
+
+DDC_TESTS_MAIN

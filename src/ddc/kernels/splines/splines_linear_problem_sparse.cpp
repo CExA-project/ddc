@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: MIT
 
-#pragma once
-
 #include <algorithm>
 #include <cassert>
 #include <cstddef>
@@ -18,8 +16,11 @@
 #include <Kokkos_Core.hpp>
 
 #include "splines_linear_problem.hpp"
+#include "splines_linear_problem_sparse.hpp"
 
 namespace ddc::detail {
+
+namespace {
 
 /**
  * @brief Convert KokkosView to Ginkgo Dense matrix.
@@ -125,19 +126,13 @@ unsigned int default_preconditioner_max_block_size() noexcept
     return 1U;
 }
 
-/**
- * @brief A sparse linear problem dedicated to the computation of a spline approximation.
- *
- * The storage format is CSR. Ginkgo is used to perform every matrix and linear solver-related operations.
- *
- * @tparam ExecSpace The Kokkos::ExecutionSpace on which operations related to the matrix are performed.
- */
+} // namespace
+
 template <class ExecSpace>
-class SplinesLinearProblemSparse : public SplinesLinearProblem<ExecSpace>
+class SplinesLinearProblemSparse<ExecSpace>::Impl
 {
 public:
-    using typename SplinesLinearProblem<ExecSpace>::MultiRHS;
-    using SplinesLinearProblem<ExecSpace>::size;
+    using MultiRHS = typename SplinesLinearProblem<ExecSpace>::MultiRHS;
 
 private:
     using matrix_sparse_type = gko::matrix::Csr<double, gko::int32>;
@@ -150,8 +145,9 @@ private:
     using solver_type = gko::solver::Bicgstab<double>;
 #endif
 
-
 private:
+    std::size_t m_mat_size;
+
     std::unique_ptr<gko::matrix::Dense<double>> m_matrix_dense;
 
     std::shared_ptr<matrix_sparse_type> m_matrix_sparse;
@@ -164,20 +160,11 @@ private:
     unsigned int m_preconditioner_max_block_size; // Maximum size of Jacobi-block preconditioner
 
 public:
-    /**
-     * @brief SplinesLinearProblemSparse constructor.
-     *
-     * @param mat_size The size of one of the dimensions of the square matrix.
-     * @param cols_per_chunk An optional parameter used to define the number of right-hand sides to pass to
-     * Ginkgo solver calls. see default_cols_per_chunk.
-     * @param preconditioner_max_block_size An optional parameter used to define the maximum size of a block
-     * used by the block-Jacobi preconditioner. see default_preconditioner_max_block_size.
-     */
-    explicit SplinesLinearProblemSparse(
+    explicit Impl(
             std::size_t const mat_size,
-            std::optional<std::size_t> cols_per_chunk = std::nullopt,
-            std::optional<unsigned int> preconditioner_max_block_size = std::nullopt)
-        : SplinesLinearProblem<ExecSpace>(mat_size)
+            std::optional<std::size_t> const cols_per_chunk = std::nullopt,
+            std::optional<unsigned int> const preconditioner_max_block_size = std::nullopt)
+        : m_mat_size(mat_size)
         , m_cols_per_chunk(cols_per_chunk.value_or(default_cols_per_chunk<ExecSpace>()))
         , m_preconditioner_max_block_size(preconditioner_max_block_size.value_or(
                   default_preconditioner_max_block_size<ExecSpace>()))
@@ -189,27 +176,20 @@ public:
         m_matrix_sparse = matrix_sparse_type::create(gko_exec, gko::dim<2>(mat_size, mat_size));
     }
 
-    double get_element(std::size_t i, std::size_t j) const override
+    double get_element(std::size_t const i, std::size_t const j) const
     {
         return m_matrix_dense->at(i, j);
     }
 
-    void set_element(std::size_t i, std::size_t j, double aij) override
+    void set_element(std::size_t const i, std::size_t const j, double const aij)
     {
         m_matrix_dense->at(i, j) = aij;
     }
 
-    /**
-     * @brief Perform a pre-process operation on the solver. Must be called after filling the matrix.
-     *
-     * Removes the zeros from the CSR object and instantiate a Ginkgo solver. It also constructs a transposed version of the solver.
-     *
-     * The stopping criterion is a reduction factor ||Ax-b||/||b||<1e-15 with 1000 maximum iterations.
-     */
-    void setup_solver() override
+    void setup_solver()
     {
         // Remove zeros
-        gko::matrix_data<double> matrix_data(gko::dim<2>(size(), size()));
+        gko::matrix_data<double> matrix_data(gko::dim<2>(m_mat_size, m_mat_size));
         m_matrix_dense->write(matrix_data);
         m_matrix_dense.reset();
         matrix_data.remove_zeros();
@@ -250,19 +230,17 @@ public:
      * @param[in, out] b A 2D Kokkos::View storing the multiple right-hand sides of the problem and receiving the corresponding solution.
      * @param transpose Choose between the direct or transposed version of the linear problem.
      */
-    void solve(MultiRHS const b, bool const transpose) const override
+    void solve(MultiRHS const b, bool const transpose) const
     {
-        assert(b.extent(0) == size());
+        assert(b.extent(0) == m_mat_size);
 
         std::shared_ptr const gko_exec = m_solver->get_executor();
         std::shared_ptr const convergence_logger = gko::log::Convergence<double>::create();
 
         std::size_t const main_chunk_size = std::min(m_cols_per_chunk, b.extent(1));
 
-        Kokkos::View<double**, Kokkos::LayoutRight, ExecSpace> const
-                b_buffer("ddc_sparse_b_buffer", size(), main_chunk_size);
-        Kokkos::View<double**, Kokkos::LayoutRight, ExecSpace> const
-                x("ddc_sparse_x", size(), main_chunk_size);
+        MultiRHS const b_buffer("ddc_sparse_b_buffer", m_mat_size, main_chunk_size);
+        MultiRHS const x("ddc_sparse_x", m_mat_size, main_chunk_size);
 
         std::size_t const iend = (b.extent(1) + main_chunk_size - 1) / main_chunk_size;
         for (std::size_t i = 0; i < iend; ++i) {
@@ -307,5 +285,58 @@ public:
         }
     }
 };
+
+template <class ExecSpace>
+SplinesLinearProblemSparse<ExecSpace>::SplinesLinearProblemSparse(
+        std::size_t const mat_size,
+        std::optional<std::size_t> cols_per_chunk,
+        std::optional<unsigned int> preconditioner_max_block_size)
+    : SplinesLinearProblem<ExecSpace>(mat_size)
+    , m_impl(std::make_unique<Impl>(mat_size, cols_per_chunk, preconditioner_max_block_size))
+{
+}
+
+template <class ExecSpace>
+SplinesLinearProblemSparse<ExecSpace>::~SplinesLinearProblemSparse() = default;
+
+template <class ExecSpace>
+double SplinesLinearProblemSparse<ExecSpace>::get_element(std::size_t i, std::size_t j) const
+{
+    return m_impl->get_element(i, j);
+}
+
+template <class ExecSpace>
+void SplinesLinearProblemSparse<ExecSpace>::set_element(std::size_t i, std::size_t j, double aij)
+{
+    m_impl->set_element(i, j, aij);
+}
+
+template <class ExecSpace>
+void SplinesLinearProblemSparse<ExecSpace>::setup_solver()
+{
+    m_impl->setup_solver();
+}
+
+template <class ExecSpace>
+void SplinesLinearProblemSparse<ExecSpace>::solve(MultiRHS const b, bool const transpose) const
+{
+    m_impl->solve(b, transpose);
+}
+
+#if defined(KOKKOS_ENABLE_SERIAL)
+template class SplinesLinearProblemSparse<Kokkos::Serial>;
+#endif
+#if defined(KOKKOS_ENABLE_OPENMP)
+template class SplinesLinearProblemSparse<Kokkos::OpenMP>;
+#endif
+#if defined(KOKKOS_ENABLE_CUDA)
+template class SplinesLinearProblemSparse<Kokkos::Cuda>;
+#endif
+#if defined(KOKKOS_ENABLE_HIP)
+template class SplinesLinearProblemSparse<Kokkos::HIP>;
+#endif
+#if defined(KOKKOS_ENABLE_SYCL)
+template class SplinesLinearProblemSparse<Kokkos::SYCL>;
+#endif
 
 } // namespace ddc::detail

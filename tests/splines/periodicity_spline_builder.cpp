@@ -14,6 +14,7 @@
 #include <Kokkos_Core.hpp>
 
 #include "cosine_evaluator.hpp"
+#include "main_macro.hpp"
 #include "spline_error_bounds.hpp"
 
 inline namespace anonymous_namespace_workaround_periodicity_spline_builder_cpp {
@@ -217,3 +218,5 @@ TEST(PeriodicitySplineBuilderDevice, 1D)
             Kokkos::DefaultExecutionSpace::memory_space,
             DimX>();
 }
+
+DDC_TESTS_MAIN

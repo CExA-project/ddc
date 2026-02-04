@@ -14,6 +14,7 @@
 
 #include "cosine_evaluator.hpp"
 #include "evaluator_2d.hpp"
+#include "main_macro.hpp"
 #if !defined(BC_PERIODIC)
 #    include "polynomial_evaluator.hpp"
 #endif
@@ -374,3 +375,5 @@ TEST(SUFFIX(ExtrapolationRuleSplineDevice), 2DXY)
             DDimGPS1<DimX>,
             DDimGPS2<DimY>>();
 }
+
+DDC_TESTS_MAIN

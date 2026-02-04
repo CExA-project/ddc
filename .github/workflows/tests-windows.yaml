@@ -47,7 +47,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        cxx_version: ['17', '20', '23']
+        cxx_version: ['20', '23']
         config: ['Release']
         os: [windows-2022, windows-2025]
     runs-on: ${{matrix.os}}
@@ -67,7 +67,6 @@ jobs:
         shell: bash
         run: |
           cmake \
-            -D CMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
             -D CMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded \
             -B build \
             -S googletest
@@ -83,7 +82,6 @@ jobs:
         shell: bash
         run: |
           cmake \
-            -D CMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
             -D CMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded \
             -D Kokkos_ENABLE_DEPRECATED_CODE_4=OFF \
             -D Kokkos_ENABLE_DEPRECATION_WARNINGS=OFF \

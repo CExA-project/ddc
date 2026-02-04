@@ -131,98 +131,89 @@ $(document).ready(function(){initNavTree('parallel__transform_8hpp_source.html',
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment">//</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment">// SPDX-License-Identifier: MIT</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span> </div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#</span><span class="preprocessor">pragma</span> <span class="preprocessor">once</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="preprocessor">&lt;</span><span class="preprocessor">utility</span><span class="preprocessor">&gt;</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &lt;utility&gt;</span></div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="preprocessor">&lt;</span><span class="preprocessor">Kokkos_Macros</span><span class="preprocessor">.</span><span class="preprocessor">hpp</span><span class="preprocessor">&gt;</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;Kokkos_Macros.hpp&gt;</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="stringliteral">&quot;chunk_span.hpp&quot;</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="stringliteral">&quot;chunk_traits.hpp&quot;</span></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="stringliteral">&quot;parallel_for_each.hpp&quot;</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &quot;chunk_span.hpp&quot;</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &quot;chunk_traits.hpp&quot;</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &quot;parallel_for_each.hpp&quot;</span></div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">namespace</span> <a class="code hl_namespace" href="namespaceddc.html">ddc</a> {</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceddc.html">ddc</a> {</div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="keyword">namespace</span> detail {</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="keyword">namespace </span>detail {</div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="keyword">template</span> &lt;</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>        <span class="keyword">class</span> ElementType,</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>        <span class="keyword">class</span> SupportType,</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>        <span class="keyword">class</span> LayoutStridedPolicy,</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>        <span class="keyword">class</span> MemorySpace,</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>        <span class="keyword">class</span> Functor&gt;</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="keyword">class</span> TransformKokkosLambdaAdapter</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>        <span class="keyword">class </span><a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a>,</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>        <span class="keyword">class </span><a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">SupportType</a>,</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>        <span class="keyword">class </span><a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">LayoutStridedPolicy</a>,</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>        <span class="keyword">class </span><a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">MemorySpace</a>,</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>        <span class="keyword">class </span><a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Functor</a>&gt;</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="keyword">class </span>TransformKokkosLambdaAdapter</div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>{</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    <a class="code hl_friend" href="classddc_1_1ChunkCommon.html#a0214c802aca8ce0770988bb2784f104a">ChunkSpan</a>&lt;ElementType, SupportType, LayoutStridedPolicy, MemorySpace&gt; m_chunk;</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ChunkSpan&lt;ElementType, SupportType, LayoutStridedPolicy, MemorySpace&gt;</a> m_chunk;</div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    Functor m_functor;</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Functor</a> m_functor;</div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="keyword">public</span>:</div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    <span class="keyword">explicit</span> TransformKokkosLambdaAdapter(</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>            <a class="code hl_friend" href="classddc_1_1ChunkCommon.html#a0214c802aca8ce0770988bb2784f104a">ChunkSpan</a>&lt;ElementType, SupportType, LayoutStridedPolicy, MemorySpace&gt; <span class="keyword">const</span>&amp; chunk,</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>            Functor <span class="keyword">const</span>&amp; functor)</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>        : m_chunk(chunk)</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        , m_functor(functor)</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>            <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ChunkSpan&lt;ElementType, SupportType, LayoutStridedPolicy, MemorySpace&gt;</a> <span class="keyword">const</span>&amp; <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">chunk</a>,</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>            <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">Functor</a> <span class="keyword">const</span>&amp; <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">functor</a>)</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>        : m_chunk(<a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">chunk</a>)</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        , m_functor(<a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">functor</a>)</div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    {</div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    }</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    KOKKOS_FUNCTION <span class="keywordtype">void</span> operator()(</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>            <span class="keyword">typename</span> SupportType::discrete_element_type <span class="keyword">const</span> i) <span class="keyword">const</span> <span class="keyword">noexcept</span></div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <span class="keywordtype">void</span> operator()(</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>            <span class="keyword">typename</span> SupportType::discrete_element_type <span class="keyword">const</span> <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">i</a>) <span class="keyword">const</span> <span class="keyword">noexcept</span></div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    {</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>        ElementType&amp; value = m_chunk(i);</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>        value = m_functor(<span class="keyword">static_cast</span>&lt;ElementType <span class="keyword">const</span>&amp;&gt;(value));</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>        <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a>&amp; value = m_chunk(<a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">i</a>);</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>        value = m_functor(<span class="keyword">static_cast&lt;</span><a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ElementType</a> <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a>&amp;<span class="keyword">&gt;</span>(value));</div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    }</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>};</div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>} <span class="comment">// namespace detail</span></div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span><span class="comment">/** Transform a borrowed chunk with a given transform functor</span></div>
-<div class="line"><span class="lineno">   51</span><span class="comment"> * @param[out] dst the borrowed chunk in which to copy</span></div>
-<div class="line"><span class="lineno">   52</span><span class="comment"> * @param[in] transform a unary FunctionObject that will be applied to each element of the input</span></div>
-<div class="line"><span class="lineno">   53</span><span class="comment"> *            range. The return type must be assignable to dst</span></div>
-<div class="line"><span class="lineno">   54</span><span class="comment"> * @return dst as a ChunkSpan</span></div>
-<div class="line"><span class="lineno">   55</span><span class="comment"> */</span></div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> ChunkDst, <span class="keyword">class</span> UnaryTransformOp&gt;</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span><span class="keyword">auto</span> <a class="code hl_function" href="namespaceddc.html#af073e85da1748eeb4dc695fcdabc2975">parallel_transform</a>(ChunkDst&amp;&amp; dst, UnaryTransformOp&amp;&amp; transform)</div>
+<div class="foldopen" id="foldopen00057" data-start="{" data-end="}">
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno"><a class="line" href="namespaceddc.html#af073e85da1748eeb4dc695fcdabc2975">   57</a></span><span class="keyword">auto</span> <a class="code hl_function" href="namespaceddc.html#af073e85da1748eeb4dc695fcdabc2975">parallel_transform</a>(<a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ChunkDst</a>&amp;&amp; <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">dst</a>, <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">UnaryTransformOp</a>&amp;&amp; <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">transform</a>)</div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>{</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    <span class="keyword">static_assert</span>(is_borrowed_chunk_v&lt;ChunkDst&gt;);</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    parallel_for_each(</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    <span class="keyword">static_assert</span>(<a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">is_borrowed_chunk_v&lt;ChunkDst&gt;</a>);</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <a class="code hl_function" href="namespaceddc.html#ad92ed4439bc27c12aba3e0784dc369d4">parallel_for_each</a>(</div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>            <span class="stringliteral">&quot;ddc_parallel_transform_default&quot;</span>,</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>            dst.domain(),</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>            <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">dst</a>.domain(),</div>
 <div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>            detail::TransformKokkosLambdaAdapter(</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>                    dst.span_view(),</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>                    std::forward&lt;UnaryTransformOp&gt;(transform)));</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    <span class="keywordflow">return</span> dst.span_view();</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>                    <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">dst</a>.span_view(),</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>                    std::forward&lt;UnaryTransformOp&gt;(<a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">transform</a>)));</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">dst</a>.span_view();</div>
 <div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>}</div>
+</div>
 <div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span> </div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span><span class="comment">/** Transform a borrowed chunk with a given transform functor</span></div>
-<div class="line"><span class="lineno">   70</span><span class="comment"> * @param[in] execution_space a Kokkos execution space where the loop will be executed on</span></div>
-<div class="line"><span class="lineno">   71</span><span class="comment"> * @param[out] dst the borrowed chunk in which to copy</span></div>
-<div class="line"><span class="lineno">   72</span><span class="comment"> * @param[in] transform a unary FunctionObject that will be applied to each element of the input</span></div>
-<div class="line"><span class="lineno">   73</span><span class="comment"> *            range. The return type must be acceptable as input to reduce</span></div>
-<div class="line"><span class="lineno">   74</span><span class="comment"> * @return dst as a ChunkSpan</span></div>
-<div class="line"><span class="lineno">   75</span><span class="comment"> */</span></div>
 <div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> ExecSpace, <span class="keyword">class</span> ChunkDst, <span class="keyword">class</span> UnaryTransformOp&gt;</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span><span class="keyword">auto</span> <a class="code hl_function" href="namespaceddc.html#a1845837cc6071bd76ae20ca0ccf609c7">parallel_transform</a>(</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>        ExecSpace <span class="keyword">const</span>&amp; execution_space,</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>        ChunkDst&amp;&amp; dst,</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>        UnaryTransformOp&amp;&amp; transform)</div>
+<div class="foldopen" id="foldopen00077" data-start="{" data-end="}">
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno"><a class="line" href="namespaceddc.html#a1845837cc6071bd76ae20ca0ccf609c7">   77</a></span><span class="keyword">auto</span> <a class="code hl_function" href="namespaceddc.html#af073e85da1748eeb4dc695fcdabc2975">parallel_transform</a>(</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>        <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ExecSpace</a> <span class="keyword">const</span>&amp; <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">execution_space</a>,</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>        <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ChunkDst</a>&amp;&amp; <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">dst</a>,</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>        <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">UnaryTransformOp</a>&amp;&amp; <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">transform</a>)</div>
 <div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>{</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    <span class="keyword">static_assert</span>(is_borrowed_chunk_v&lt;ChunkDst&gt;);</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    parallel_for_each(</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    <span class="keyword">static_assert</span>(<a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">is_borrowed_chunk_v&lt;ChunkDst&gt;</a>);</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    <a class="code hl_function" href="namespaceddc.html#ad92ed4439bc27c12aba3e0784dc369d4">parallel_for_each</a>(</div>
 <div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>            <span class="stringliteral">&quot;ddc_parallel_transform_default&quot;</span>,</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>            execution_space,</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>            dst.domain(),</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>            <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">execution_space</a>,</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>            <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">dst</a>.domain(),</div>
 <div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>            detail::TransformKokkosLambdaAdapter(</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>                    dst.span_view(),</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>                    std::forward&lt;UnaryTransformOp&gt;(transform)));</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    <span class="keywordflow">return</span> dst.span_view();</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>                    <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">dst</a>.span_view(),</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>                    std::forward&lt;UnaryTransformOp&gt;(<a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">transform</a>)));</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">dst</a>.span_view();</div>
 <div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>}</div>
+</div>
 <div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span> </div>
 <div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>} <span class="comment">// namespace ddc</span></div>
-<div class="ttc" id="aclassddc_1_1ChunkCommon_html_a0214c802aca8ce0770988bb2784f104a"><div class="ttname"><a href="classddc_1_1ChunkCommon.html#a0214c802aca8ce0770988bb2784f104a">ddc::ChunkCommon::ChunkSpan</a></div><div class="ttdeci">friend class ChunkSpan</div><div class="ttdef"><b>Definition</b> <a href="chunk__common_8hpp_source.html#l00076">chunk_common.hpp:76</a></div></div>
 <div class="ttc" id="anamespaceddc_html"><div class="ttname"><a href="namespaceddc.html">ddc</a></div><div class="ttdoc">The top-level namespace of DDC.</div><div class="ttdef"><b>Definition</b> <a href="aligned__allocator_8hpp_source.html#l00011">aligned_allocator.hpp:11</a></div></div>
-<div class="ttc" id="anamespaceddc_html_a1845837cc6071bd76ae20ca0ccf609c7"><div class="ttname"><a href="namespaceddc.html#a1845837cc6071bd76ae20ca0ccf609c7">ddc::parallel_transform</a></div><div class="ttdeci">auto parallel_transform(ExecSpace const &amp;execution_space, ChunkDst &amp;&amp;dst, UnaryTransformOp &amp;&amp;transform)</div><div class="ttdoc">Transform a borrowed chunk with a given transform functor.</div><div class="ttdef"><b>Definition</b> <a href="parallel__transform_8hpp_source.html#l00077">parallel_transform.hpp:77</a></div></div>
+<div class="ttc" id="anamespaceddc_html_a0d8d6125787befc59862bed182ea1717"><div class="ttname"><a href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ddc::enable_chunk</a></div><div class="ttdeci">constexpr bool enable_chunk</div><div class="ttdef"><b>Definition</b> <a href="chunk__traits_8hpp_source.html#l00016">chunk_traits.hpp:16</a></div></div>
+<div class="ttc" id="anamespaceddc_html_ad92ed4439bc27c12aba3e0784dc369d4"><div class="ttname"><a href="namespaceddc.html#ad92ed4439bc27c12aba3e0784dc369d4">ddc::parallel_for_each</a></div><div class="ttdeci">void parallel_for_each(std::string const &amp;label, ExecSpace const &amp;execution_space, Support const &amp;domain, Functor &amp;&amp;f) noexcept</div><div class="ttdoc">iterates over a nD domain using a given Kokkos execution space</div><div class="ttdef"><b>Definition</b> <a href="parallel__for__each_8hpp_source.html#l00079">parallel_for_each.hpp:79</a></div></div>
 <div class="ttc" id="anamespaceddc_html_af073e85da1748eeb4dc695fcdabc2975"><div class="ttname"><a href="namespaceddc.html#af073e85da1748eeb4dc695fcdabc2975">ddc::parallel_transform</a></div><div class="ttdeci">auto parallel_transform(ChunkDst &amp;&amp;dst, UnaryTransformOp &amp;&amp;transform)</div><div class="ttdoc">Transform a borrowed chunk with a given transform functor.</div><div class="ttdef"><b>Definition</b> <a href="parallel__transform_8hpp_source.html#l00057">parallel_transform.hpp:57</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
@@ -234,7 +225,7 @@ SPDX-License-Identifier: MIT
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_5207078cb8d41128e6db12b03ca44199.html">ddc</a></li><li class="navelem"><b>parallel_transform.hpp</b></li>
+    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_0a1ac0a07327d16d249fe50975802d58.html">ddc</a></li><li class="navelem"><b>parallel_transform.hpp</b></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>

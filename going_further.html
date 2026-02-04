@@ -187,9 +187,9 @@ Dimension X</h3>
 <div class="line">std::vector&lt;double&gt; <span class="keyword">const</span> x_post_ghost_vect = periodic_extrapolation_right(1, x_domain_vect);</div>
 </div><!-- fragment --><p>Then we can create our 4 domains using the <code>init_discretization</code> function with the <code>init_ghosted</code> function that takes the vectors as parameters.</p>
 <div class="fragment"><div class="line"><span class="keyword">auto</span> <span class="keyword">const</span> [x_domain, ghosted_x_domain, x_pre_ghost, x_post_ghost]</div>
-<div class="line">        = <a class="code hl_function" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ddc::init_discrete_space&lt;DDimX&gt;</a>(</div>
+<div class="line">        = <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ddc::init_discrete_space&lt;DDimX&gt;</a>(</div>
 <div class="line">                DDimX::init_ghosted&lt;DDimX&gt;(x_domain_vect, x_pre_ghost_vect, x_post_ghost_vect));</div>
-<div class="ttc" id="anamespaceddc_html_a70f12a43ed0afbc092f4e974b024db3d"><div class="ttname"><a href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ddc::init_discrete_space</a></div><div class="ttdeci">void init_discrete_space(Args &amp;&amp;... args)</div><div class="ttdoc">Initialize (emplace) a global singleton discrete space.</div><div class="ttdef"><b>Definition</b> <a href="discrete__space_8hpp_source.html#l00162">discrete_space.hpp:162</a></div></div>
+<div class="ttc" id="anamespaceddc_html_a0d8d6125787befc59862bed182ea1717"><div class="ttname"><a href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ddc::enable_chunk</a></div><div class="ttdeci">constexpr bool enable_chunk</div><div class="ttdef"><b>Definition</b> <a href="chunk__traits_8hpp_source.html#l00016">chunk_traits.hpp:16</a></div></div>
 </div><!-- fragment --><p><b>To summarize,</b> in this section we saw how to build a domain with non-uniform space discretization:</p>
 <ul>
 <li>Create an iterator for your domain.</li>
@@ -204,7 +204,7 @@ Dimension Y</h3>
 <div class="line">std::vector&lt;double&gt; <span class="keyword">const</span> y_post_ghost_vect = periodic_extrapolation_right(1, y_domain_vect);</div>
 </div><!-- fragment --><p>And we use them to build the 4 domains in the same way as for the X dimension.</p>
 <div class="fragment"><div class="line"><span class="keyword">auto</span> <span class="keyword">const</span> [y_domain, ghosted_y_domain, y_pre_ghost, y_post_ghost]</div>
-<div class="line">        = <a class="code hl_function" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ddc::init_discrete_space&lt;DDimY&gt;</a>(</div>
+<div class="line">        = <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ddc::init_discrete_space&lt;DDimY&gt;</a>(</div>
 <div class="line">                DDimY::init_ghosted&lt;DDimY&gt;(y_domain_vect, y_pre_ghost_vect, y_post_ghost_vect));</div>
 </div><!-- fragment --><h3><a class="anchor" id="autotoc_md19"></a>
 Time dimension</h3>
@@ -240,7 +240,7 @@ Time dimension</h3>
 <div class="line">        std::ceil((end_time - start_time) / max_dt) + .2);</div>
 <div class="line"> </div>
 <div class="line"><a class="code hl_class" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain&lt;DDimT&gt;</a> <span class="keyword">const</span> time_domain</div>
-<div class="line">        = <a class="code hl_function" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ddc::init_discrete_space&lt;DDimT&gt;</a>(DDimT::init&lt;DDimT&gt;(</div>
+<div class="line">        = <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ddc::init_discrete_space&lt;DDimT&gt;</a>(DDimT::init&lt;DDimT&gt;(</div>
 <div class="line">                <a class="code hl_typedef" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate&lt;T&gt;</a>(start_time),</div>
 <div class="line">                <a class="code hl_typedef" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">ddc::Coordinate&lt;T&gt;</a>(end_time),</div>
 <div class="line">                nb_time_steps + 1));</div>
@@ -262,12 +262,12 @@ Time loop</h2>
 <div class="line">            <span class="keywordtype">double</span> <span class="keyword">const</span> dy_m = 0.5 * (dy_l + dy_r);</div>
 <div class="line">            next_temp(ix, iy) = last_temp(ix, iy);</div>
 <div class="line">            next_temp(ix, iy)</div>
-<div class="line">                    += kx * <a class="code hl_function" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ddc::step&lt;DDimT&gt;</a>()</div>
+<div class="line">                    += kx * <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ddc::step&lt;DDimT&gt;</a>()</div>
 <div class="line">                       * (dx_l * last_temp(ix + 1, iy) - 2.0 * dx_m * last_temp(ix, iy)</div>
 <div class="line">                          + dx_r * last_temp(ix - 1, iy))</div>
 <div class="line">                       / (dx_l * dx_m * dx_r);</div>
 <div class="line">            next_temp(ix, iy)</div>
-<div class="line">                    += ky * <a class="code hl_function" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ddc::step&lt;DDimT&gt;</a>()</div>
+<div class="line">                    += ky * <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ddc::step&lt;DDimT&gt;</a>()</div>
 <div class="line">                       * (dy_l * last_temp(ix, iy + 1) - 2.0 * dy_m * last_temp(ix, iy)</div>
 <div class="line">                          + dy_r * last_temp(ix, iy - 1))</div>
 <div class="line">                       / (dy_l * dy_m * dy_r);</div>

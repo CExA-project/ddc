@@ -6,7 +6,8 @@ FROM ubuntu:noble@sha256:c35e29c9450151419d9448b0fd75374fec4fff364a27f176fb458d4
 
 LABEL "org.opencontainers.image.source"="https://github.com/CExA-project/ddc"
 
-ARG CMAKE_VERSION=3.25.3
+ARG CMAKE_VERSION=4.2.3
+ARG GINKGO_VERSION=1.11.0
 
 COPY bash_run /bin/
 ENV BASH_ENV=/etc/profile
@@ -42,8 +43,8 @@ RUN chmod +x /bin/bash_run \
  && wget https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-linux-x86_64.tar.gz \
  && tar -xvf cmake-${CMAKE_VERSION}-linux-x86_64.tar.gz --directory /opt \
  && rm -f cmake-${CMAKE_VERSION}-linux-x86_64.tar.gz \
- && git clone --branch v1.8.0 --depth 1 https://github.com/ginkgo-project/ginkgo.git \
- && cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DGINKGO_BUILD_OMP=OFF -DGINKGO_BUILD_TESTS=OFF -DGINKGO_BUILD_EXAMPLES=OFF -DGINKGO_BUILD_BENCHMARKS=OFF -B ginkgo/build -S ginkgo \
+ && git clone --branch v${GINKGO_VERSION} --depth 1 https://github.com/ginkgo-project/ginkgo.git \
+ && cmake -DCMAKE_BUILD_TYPE=Release -DGINKGO_BUILD_OMP=OFF -DGINKGO_BUILD_TESTS=OFF -DGINKGO_BUILD_EXAMPLES=OFF -DGINKGO_BUILD_BENCHMARKS=OFF -B ginkgo/build -S ginkgo \
  && cmake --build ginkgo/build \
  && cmake --install ginkgo/build --prefix /usr \
  && rm -rf ginkgo \

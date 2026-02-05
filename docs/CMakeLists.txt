@@ -2,20 +2,10 @@
 #
 # SPDX-License-Identifier: MIT
 
-if(NOT ("${DOXYGEN_VERSION}" VERSION_EQUAL "1.9.8"))
-    message(WARNING "The documentation works best with Doxygen 1.9.8")
-endif()
-
 file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/html")
 set(DOXYGEN_AUTOLINK_SUPPORT YES)
 set(DOXYGEN_BUILTIN_STL_SUPPORT YES)
-# Clang assisted parsing currently fails
-# if(
-#     "${DOXYGEN_VERSION}" VERSION_GREATER_EQUAL 1.9.4
-#     AND CMAKE_CXX_COMPILER_ID STREQUAL "Clang"
-#     AND "${CMAKE_EXPORT_COMPILE_COMMANDS}"
-# )
-#     # Doxygen <= 1.9.4 suffers from https://github.com/doxygen/doxygen/issues/8784
+# if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND "${CMAKE_EXPORT_COMPILE_COMMANDS}")
 #     set(DOXYGEN_CLANG_ASSISTED_PARSING YES)
 #     set(DOXYGEN_CLANG_DATABASE_PATH "${CMAKE_BINARY_DIR}")
 # endif()
@@ -85,7 +75,7 @@ doxygen_add_docs(
     "${CMAKE_CURRENT_SOURCE_DIR}/concepts.md"
     "${CMAKE_CURRENT_SOURCE_DIR}/heat_equation_spectral.md"
     "${CMAKE_CURRENT_SOURCE_DIR}/examples.md"
-    "${CMAKE_CURRENT_SOURCE_DIR}/using_ddc.md"
+    "${CMAKE_CURRENT_SOURCE_DIR}/cmake_integration.md"
     "${CMAKE_CURRENT_SOURCE_DIR}/installation.md"
     "${DDC_SOURCE_DIR}/src/ddc/"
     ALL

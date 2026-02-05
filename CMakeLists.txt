@@ -2,7 +2,8 @@
 #
 # SPDX-License-Identifier: MIT
 
-cmake_minimum_required(VERSION 3.25)
+cmake_minimum_required(VERSION 3.25...4.2)
+
 project(DDC VERSION 0.10.0 LANGUAGES CXX)
 
 # List of options
@@ -115,7 +116,7 @@ endif()
 ## Doxygen
 
 if("${DDC_BUILD_DOCUMENTATION}")
-    find_package(Doxygen 1.8.13 REQUIRED OPTIONAL_COMPONENTS dot)
+    find_package(Doxygen 1.9.8 REQUIRED OPTIONAL_COMPONENTS dot)
 endif()
 
 # Our project
@@ -124,8 +125,9 @@ endif()
 
 add_library(ddc_core INTERFACE)
 add_library(DDC::core ALIAS ddc_core)
-set_target_properties(ddc_core PROPERTIES EXPORT_NAME core)
 configure_file(cmake/config.hpp.in generated/ddc/config.hpp NO_SOURCE_PERMISSIONS @ONLY)
+target_compile_features(ddc_core INTERFACE cxx_std_17)
+target_link_libraries(ddc_core INTERFACE Kokkos::kokkos)
 target_sources(
     ddc_core
     INTERFACE
@@ -172,10 +174,10 @@ target_sources(
                 src/ddc/trivial_space.hpp
                 src/ddc/uniform_point_sampling.hpp
 )
-target_compile_features(ddc_core INTERFACE cxx_std_17)
-target_link_libraries(ddc_core INTERFACE Kokkos::kokkos)
 
+set_target_properties(ddc_core PROPERTIES EXPORT_NAME core)
 install(TARGETS ddc_core EXPORT DDCCoreTargets FILE_SET HEADERS)
+install(EXPORT DDCCoreTargets NAMESPACE DDC:: DESTINATION ${DDC_INSTALL_CMAKEDIR})
 
 # Link library to DDC
 
@@ -204,7 +206,7 @@ if("${DDC_BUILD_KERNELS_FFT}")
     elseif("${DDC_KokkosFFT_DEPENDENCY_POLICY}" STREQUAL "EMBEDDED")
         ddc_configure_kokkos_fft()
     elseif("${DDC_KokkosFFT_DEPENDENCY_POLICY}" STREQUAL "INSTALLED")
-        find_package(KokkosFFT)
+        find_package(KokkosFFT REQUIRED)
         if((KokkosFFT_VERSION VERSION_LESS 0.3) OR (KokkosFFT_VERSION VERSION_GREATER_EQUAL 2))
             message(FATAL_ERROR "Could not find a supported configuration for KokkosFFT")
         endif()
@@ -212,10 +214,11 @@ if("${DDC_BUILD_KERNELS_FFT}")
 
     add_library(ddc_fft INTERFACE)
     add_library(DDC::fft ALIAS ddc_fft)
-    set_target_properties(ddc_fft PROPERTIES EXPORT_NAME fft)
+    target_compile_features(ddc_fft INTERFACE cxx_std_17)
     target_link_libraries(ddc_fft INTERFACE DDC::core Kokkos::kokkos KokkosFFT::fft)
     target_sources(ddc_fft INTERFACE FILE_SET HEADERS BASE_DIRS src FILES src/ddc/kernels/fft.hpp)
 
+    set_target_properties(ddc_fft PROPERTIES EXPORT_NAME fft)
     install(TARGETS ddc_fft EXPORT DDCFftTargets FILE_SET HEADERS)
     install(EXPORT DDCFftTargets NAMESPACE DDC:: DESTINATION ${DDC_INSTALL_CMAKEDIR})
 endif()
@@ -252,7 +255,7 @@ if("${DDC_BUILD_KERNELS_SPLINES}")
 
     add_library(ddc_splines)
     add_library(DDC::splines ALIAS ddc_splines)
-    set_target_properties(ddc_splines PROPERTIES EXPORT_NAME splines)
+    target_compile_features(ddc_splines INTERFACE cxx_std_17)
     target_link_libraries(
         ddc_splines
         PRIVATE Ginkgo::ginkgo Kokkos::kokkoskernels LAPACKE::LAPACKE
@@ -307,6 +310,7 @@ if("${DDC_BUILD_KERNELS_SPLINES}")
     )
 
     install(FILES cmake/FindLAPACKE.cmake DESTINATION ${DDC_INSTALL_CMAKEDIR})
+    set_target_properties(ddc_splines PROPERTIES EXPORT_NAME splines)
     install(TARGETS ddc_splines EXPORT DDCSplinesTargets FILE_SET HEADERS)
     install(EXPORT DDCSplinesTargets NAMESPACE DDC:: DESTINATION ${DDC_INSTALL_CMAKEDIR})
 endif()
@@ -314,17 +318,18 @@ endif()
 ## The PDI wrapper
 
 if("${DDC_BUILD_PDI_WRAPPER}")
+    # Workaround, PDI does not support reentrance
     if(NOT TARGET PDI::PDI_C)
         find_package(PDI 1.6...<2 REQUIRED COMPONENTS C)
     endif()
 
     add_library(ddc_pdi INTERFACE)
     add_library(DDC::pdi ALIAS ddc_pdi)
-    set_target_properties(ddc_pdi PROPERTIES EXPORT_NAME pdi)
     target_compile_features(ddc_pdi INTERFACE cxx_std_17)
     target_link_libraries(ddc_pdi INTERFACE DDC::core PDI::PDI_C)
     target_sources(ddc_pdi INTERFACE FILE_SET HEADERS BASE_DIRS src FILES src/ddc/pdi.hpp)
 
+    set_target_properties(ddc_pdi PROPERTIES EXPORT_NAME pdi)
     install(TARGETS ddc_pdi EXPORT DDCPdiTargets FILE_SET HEADERS)
     install(EXPORT DDCPdiTargets NAMESPACE DDC:: DESTINATION ${DDC_INSTALL_CMAKEDIR})
 endif()
@@ -353,9 +358,7 @@ if("${DDC_BUILD_DOCUMENTATION}")
     add_subdirectory(docs/)
 endif()
 
-## installation
-
-install(EXPORT DDCCoreTargets NAMESPACE DDC:: DESTINATION ${DDC_INSTALL_CMAKEDIR})
+## Installation of Config and ConfigVersion files
 
 configure_package_config_file(
     cmake/DDCConfig.cmake.in

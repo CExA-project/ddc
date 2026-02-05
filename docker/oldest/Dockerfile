@@ -2,20 +2,23 @@
 #
 # SPDX-License-Identifier: MIT
 
-FROM ubuntu:jammy@sha256:104ae83764a5119017b8e8d6218fa0832b09df65aae7d5a6de29a85d813da2fb
+FROM ubuntu:jammy@sha256:c7eb020043d8fc2ae0793fb35a37bff1cf33f156d4d4b12ccc7f3ef8706c38b1
 
 LABEL "org.opencontainers.image.source"="https://github.com/CExA-project/ddc"
 
 ARG BACKEND
 ARG AMDGPU_VERSION=5.7.3
 ARG CMAKE_VERSION=3.25.3
+ARG CUDA_MAJOR_VERSION=11
+ARG CUDA_MINOR_VERSION=8
+ARG GINKGO_VERSION=1.8.0
 ARG ROCM_VERSION=5.7.3
 
 COPY bash_run /bin/
 ENV BASH_ENV=/etc/profile
 SHELL ["/bin/bash", "-c"]
 
-ENV PATH="/usr/local/cuda-11.8/bin${PATH:+:${PATH}}"
+ENV PATH="/usr/local/cuda-${CUDA_MAJOR_VERSION}.${CUDA_MINOR_VERSION}/bin${PATH:+:${PATH}}"
 ENV PATH="/opt/cmake-${CMAKE_VERSION}-linux-x86_64/bin${PATH:+:${PATH}}"
 ENV PATH="${PATH:+$PATH:}/opt/rocm-${ROCM_VERSION}/bin"
 ENV CMAKE_PREFIX_PATH="${CMAKE_PREFIX_PATH:+$CMAKE_PREFIX_PATH:}/opt/rocm-${ROCM_VERSION}"
@@ -64,12 +67,12 @@ RUN chmod +x /bin/bash_run \
       clang \
  ;; "cuda") \
       apt-get install -y --no-install-recommends \
-      cuda-minimal-build-11-8 \
-      cuda-nvtx-11-8 \
-      libcublas-dev-11-8 \
-      libcufft-dev-11-8 \
-      libcurand-dev-11-8 \
-      libcusparse-dev-11-8 \
+      cuda-minimal-build-${CUDA_MAJOR_VERSION}-${CUDA_MINOR_VERSION} \
+      cuda-nvtx-${CUDA_MAJOR_VERSION}-${CUDA_MINOR_VERSION} \
+      libcublas-dev-${CUDA_MAJOR_VERSION}-${CUDA_MINOR_VERSION} \
+      libcufft-dev-${CUDA_MAJOR_VERSION}-${CUDA_MINOR_VERSION} \
+      libcurand-dev-${CUDA_MAJOR_VERSION}-${CUDA_MINOR_VERSION} \
+      libcusparse-dev-${CUDA_MAJOR_VERSION}-${CUDA_MINOR_VERSION} \
       gcc-10 \
       g++-10 \
  ;; "hip") \
@@ -87,7 +90,7 @@ RUN chmod +x /bin/bash_run \
  && wget https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-linux-x86_64.tar.gz \
  && tar -xvf cmake-${CMAKE_VERSION}-linux-x86_64.tar.gz --directory /opt \
  && rm -f cmake-${CMAKE_VERSION}-linux-x86_64.tar.gz \
- && git clone --branch v1.8.0 --depth 1 https://github.com/ginkgo-project/ginkgo.git \
+ && git clone --branch v${GINKGO_VERSION} --depth 1 https://github.com/ginkgo-project/ginkgo.git \
  && case "${BACKEND}" in \
     "cpu") \
       cmake -DCMAKE_BUILD_TYPE=Release -DGINKGO_BUILD_OMP=ON -DGINKGO_BUILD_TESTS=OFF -DGINKGO_BUILD_EXAMPLES=OFF -DGINKGO_BUILD_BENCHMARKS=OFF -B ginkgo/build -S ginkgo \

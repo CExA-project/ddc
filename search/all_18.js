@@ -19,6 +19,5 @@ var searchData=
   ['upper_5fextrapolation_5frule_5ftype_16',['upper_extrapolation_rule_type',['../classddc_1_1SplineEvaluator.html#abc686d4f32888defc8a424b5a7fe3dcd',1,'ddc::SplineEvaluator']]],
   ['us_17',['Join us',['../index.html#autotoc_md2',1,'']]],
   ['use_20ddc_20from_20spack_18',['4. Use DDC from Spack',['../installation.html#autotoc_md39',1,'']]],
-  ['using_20ddc_19',['Using DDC',['../using_ddc.html',1,'md_getting__started']]],
-  ['using_20the_20installed_20package_20',['Using the installed package',['../installation.html#autotoc_md33',1,'']]]
+  ['using_20the_20installed_20package_19',['Using the installed package',['../installation.html#autotoc_md33',1,'']]]
 ];

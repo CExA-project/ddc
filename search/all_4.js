@@ -13,5 +13,5 @@ var searchData=
   ['allocation_5fmdspan_5ftype_10',['allocation_mdspan_type',['../classddc_1_1Chunk.html#a555c9e2c975d2f9947b479eeda1256ec',1,'ddc::Chunk::allocation_mdspan_type'],['../classddc_1_1ChunkCommon.html#a3a5572f5cdf3593338ad02864e68a367',1,'ddc::ChunkCommon::allocation_mdspan_type'],['../classddc_1_1ChunkSpan.html#ad90599afb3aaf5e0dcbe4d2865597cb0',1,'ddc::ChunkSpan::allocation_mdspan_type']]],
   ['and_20ddc_3a_3achunkspan_11',['ddc::Chunk and ddc::ChunkSpan',['../md_concepts.html#autotoc_md26',1,'']]],
   ['and_20ddc_3a_3adiscretevector_12',['ddc::DiscreteElement and ddc::DiscreteVector',['../md_concepts.html#autotoc_md22',1,'']]],
-  ['and_20headers_13',['Public targets and headers',['../using_ddc.html#autotoc_md29',1,'']]]
+  ['and_20headers_13',['Public targets and headers',['../cmake_integration.html#autotoc_md29',1,'']]]
 ];

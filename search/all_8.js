@@ -20,7 +20,7 @@ var searchData=
   ['evaluation_5fdomain_5ftype1_17',['evaluation_domain_type1',['../classddc_1_1SplineEvaluator3D.html#a37b774b12e8bd552b25e73d9a57aea4d',1,'ddc::SplineEvaluator3D::evaluation_domain_type1'],['../classddc_1_1SplineEvaluator2D.html#a1dd5fb0e5efdc1774d85446f6ea100a8',1,'ddc::SplineEvaluator2D::evaluation_domain_type1']]],
   ['evaluation_5fdomain_5ftype2_18',['evaluation_domain_type2',['../classddc_1_1SplineEvaluator3D.html#a46c4562eee513030b3f512a34da7a993',1,'ddc::SplineEvaluator3D::evaluation_domain_type2'],['../classddc_1_1SplineEvaluator2D.html#a3ce2904650cd533d0226f4eeaabb24eb',1,'ddc::SplineEvaluator2D::evaluation_domain_type2']]],
   ['evaluation_5fdomain_5ftype3_19',['evaluation_domain_type3',['../classddc_1_1SplineEvaluator3D.html#a21c2945c44806faea7b16c3dd71026a2',1,'ddc::SplineEvaluator3D']]],
-  ['examples_20',['examples',['../using_ddc.html#autotoc_md30',1,'CMake examples'],['../md_examples.html',1,'Examples']]],
+  ['examples_20',['examples',['../cmake_integration.html#autotoc_md30',1,'CMake examples'],['../md_examples.html',1,'Examples']]],
   ['examples_20heat_5fequation_5fspectral_20cpp_21',['examples/heat_equation_spectral.cpp',['../heat_equation_spectral.html',1,'md_examples']]],
   ['examples_20non_5funiform_5fheat_5fequation_20cpp_22',['examples/non_uniform_heat_equation.cpp',['../non_uniform_heat_equation.html',1,'going_further']]],
   ['examples_20uniform_5fheat_5fequation_20cpp_23',['examples/uniform_heat_equation.cpp',['../uniform_heat_equation.html',1,'first_steps']]],

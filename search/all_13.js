@@ -17,5 +17,5 @@ var searchData=
   ['print_5ftype_5finfo_14',['print_type_info',['../namespaceddc.html#ae907362bd0bfe2f35fe0f71e35380996',1,'ddc']]],
   ['problem_20resolution_15',['Differences with the uniform problem resolution',['../going_further.html#autotoc_md14',1,'']]],
   ['prod_16',['prod',['../structddc_1_1reducer_1_1prod.html',1,'ddc::reducer::prod&lt; T &gt;'],['../namespaceddc.html#aa559ea0e9e8d32a5114b06dabbc1544f',1,'ddc::prod()']]],
-  ['public_20targets_20and_20headers_17',['Public targets and headers',['../using_ddc.html#autotoc_md29',1,'']]]
+  ['public_20targets_20and_20headers_17',['Public targets and headers',['../cmake_integration.html#autotoc_md29',1,'']]]
 ];

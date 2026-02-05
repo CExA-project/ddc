@@ -38,9 +38,9 @@ var NAVTREE =
           [ "4. Use DDC from Spack", "installation.html#autotoc_md39", null ]
         ] ]
       ] ],
-      [ "Using DDC", "using_ddc.html", [
-        [ "Public targets and headers", "using_ddc.html#autotoc_md29", null ],
-        [ "CMake examples", "using_ddc.html#autotoc_md30", null ]
+      [ "CMake integration", "cmake_integration.html", [
+        [ "Public targets and headers", "cmake_integration.html#autotoc_md29", null ],
+        [ "CMake examples", "cmake_integration.html#autotoc_md30", null ]
       ] ]
     ] ],
     [ "DDC concepts", "md_concepts.html", [
@@ -118,8 +118,8 @@ var NAVTREEINDEX =
 "classddc_1_1SplineBuilder3D.html#a302c715f12851b09c304dcdb7719e3bc",
 "classddc_1_1SplineEvaluator3D.html#a7da4b254329b357322b2943ccae8f923",
 "classddc_1_1UniformPointSampling_1_1Impl.html#ab0ae79ae8ffb7aebe902a522d819ddbf",
-"namespaceddc.html#a90a3ae31ee9a0b37dfd96a2d942b300f",
-"structddc_1_1is__spline__evaluator_3_01SplineEvaluator_3_01ExecSpace_00_01MemorySpace_00_01BSpli9c02ad999c3c97f462f5c25d3036992e.html"
+"namespaceddc.html#a8eb1602ece15c6526f2944708075157f",
+"structddc_1_1is__spline__evaluator2d.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

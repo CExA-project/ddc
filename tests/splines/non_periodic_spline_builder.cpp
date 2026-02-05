@@ -19,7 +19,6 @@
 
 #include <Kokkos_Core.hpp>
 
-#include "main_macro.hpp"
 #if defined(EVALUATOR_COSINE)
 #    include "cosine_evaluator.hpp"
 #endif
@@ -324,5 +323,3 @@ TEST(NonPeriodicSplineBuilderTest, Identity)
 {
     TestNonPeriodicSplineBuilderTestIdentity();
 }
-
-DDC_TESTS_MAIN

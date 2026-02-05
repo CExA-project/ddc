@@ -6,9 +6,13 @@ include(GoogleTest)
 
 add_subdirectory(discrete_space)
 
+add_library(ddc_gtest_main)
+target_compile_features(ddc_gtest_main PRIVATE cxx_std_17)
+target_link_libraries(ddc_gtest_main PRIVATE DDC::core GTest::gtest)
+target_sources(ddc_gtest_main PRIVATE main.cpp)
+
 add_executable(
     ddc_tests
-    main.cpp
     aligned_allocator.cpp
     chunk.cpp
     chunk_span.cpp
@@ -39,8 +43,8 @@ add_executable(
     type_seq.cpp
     uniform_point_sampling.cpp
 )
-target_compile_features(ddc_tests PUBLIC cxx_std_17)
-target_link_libraries(ddc_tests PUBLIC GTest::gmock GTest::gtest DDC::core)
+target_compile_features(ddc_tests PRIVATE cxx_std_17)
+target_link_libraries(ddc_tests PRIVATE ddc_gtest_main DDC::core GTest::gmock GTest::gtest)
 gtest_discover_tests(ddc_tests DISCOVERY_MODE PRE_TEST)
 
 if("${DDC_BUILD_KERNELS_FFT}")

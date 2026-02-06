@@ -16,7 +16,6 @@
 
 #include "cosine_evaluator.hpp"
 #include "evaluator_3d.hpp"
-#include "main_macro.hpp"
 #include "spline_error_bounds.hpp"
 
 inline namespace anonymous_namespace_workaround_3d_spline_evaluator_derivatives_cpp {
@@ -504,5 +503,3 @@ TEST(SUFFIX(SplineEvaluator3dDerivativesHost), 4DBXYZ)
             DDimGPS<DimY>,
             DDimGPS<DimZ>>();
 }
-
-DDC_TESTS_MAIN

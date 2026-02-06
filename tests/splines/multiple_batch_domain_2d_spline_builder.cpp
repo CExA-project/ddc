@@ -18,7 +18,6 @@
 #include <Kokkos_Core.hpp>
 
 #include "evaluator_2d.hpp"
-#include "main_macro.hpp"
 #if defined(BC_PERIODIC)
 #    include "cosine_evaluator.hpp"
 #else
@@ -741,5 +740,3 @@ TEST(SUFFIX(MultipleBatchDomain2dSpline), 3DBXY)
             DDimGPS<DimX>,
             DDimGPS<DimY>>();
 }
-
-DDC_TESTS_MAIN

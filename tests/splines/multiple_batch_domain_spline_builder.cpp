@@ -18,7 +18,6 @@
 #include <Kokkos_Core.hpp>
 
 #include "cosine_evaluator.hpp"
-#include "main_macro.hpp"
 #include "spline_error_bounds.hpp"
 
 inline namespace anonymous_namespace_workaround_batched_spline_builder_cpp {
@@ -477,5 +476,3 @@ TEST(SUFFIX(MultipleBatchDomainSpline), 2DBX)
             DDimBatch,
             DDimGPS<DimX>>();
 }
-
-DDC_TESTS_MAIN

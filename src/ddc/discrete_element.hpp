@@ -6,7 +6,7 @@
 
 #include <array>
 #include <cstddef>
-#include <ostream>
+#include <iosfwd>
 #include <type_traits>
 #include <utility>
 
@@ -317,20 +317,18 @@ public:
     }
 };
 
-inline std::ostream& operator<<(std::ostream& out, DiscreteElement<> const&)
-{
-    out << "()";
-    return out;
-}
+namespace detail {
 
-template <class Head, class... Tags>
-std::ostream& operator<<(std::ostream& out, DiscreteElement<Head, Tags...> const& arr)
+void print_discrete_element(std::ostream& os, DiscreteElementType const* data, std::size_t n);
+
+} // namespace detail
+
+template <class... Tags>
+std::ostream& operator<<(std::ostream& os, DiscreteElement<Tags...> const& arr)
 {
-    out << "(";
-    out << uid<Head>(arr);
-    ((out << ", " << uid<Tags>(arr)), ...);
-    out << ")";
-    return out;
+    std::array const std_arr = detail::array(arr);
+    detail::print_discrete_element(os, std_arr.data(), std_arr.size());
+    return os;
 }
 
 

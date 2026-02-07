@@ -43,14 +43,27 @@ struct BSplinesFixture<std::tuple<
     static constexpr std::size_t ncells = Nc;
 };
 
+struct BSplinesFixtureNames
+{
+    template <typename T>
+    static std::string GetName(int)
+    {
+        using Degree = std::tuple_element_t<0, T>;
+        using Knots = std::tuple_element_t<1, T>;
+        using Periodic = std::tuple_element_t<2, T>;
+
+        return "Degree:" + std::to_string(Degree::value) + "/Cells:" + std::to_string(Knots::value)
+               + "/Periodic:" + std::to_string(Periodic::value) + "/0";
+    }
+};
+
 using degrees = std::integer_sequence<std::size_t, 1, 2, 3, 4, 5, 6>;
 using ncells = std::integer_sequence<std::size_t, 10, 20, 100>;
 using periodicity = std::integer_sequence<bool, true, false>;
 
 using Cases = tuple_to_types_t<cartesian_product_t<degrees, ncells, periodicity>>;
 
-// Trailing comma is needed to avoid spurious `gnu-zero-variadic-macro-arguments` warning with clang
-TYPED_TEST_SUITE(BSplinesFixture, Cases, );
+TYPED_TEST_SUITE(BSplinesFixture, Cases, BSplinesFixtureNames);
 
 TYPED_TEST(BSplinesFixture, PartitionOfUnityUniform)
 {

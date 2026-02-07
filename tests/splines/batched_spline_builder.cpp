@@ -42,7 +42,7 @@ struct DDimBatch2
 {
 };
 
-constexpr std::size_t s_degree_x = DEGREE_X;
+constexpr std::size_t s_degree = DEGREE;
 
 #if defined(BC_PERIODIC)
 constexpr ddc::BoundCond s_bcl = ddc::BoundCond::PERIODIC;
@@ -60,12 +60,12 @@ using GrevillePoints = ddc::GrevilleInterpolationPoints<BSpX, s_bcl, s_bcr>;
 
 #if defined(BSPLINES_TYPE_UNIFORM)
 template <typename X>
-struct BSplines : ddc::UniformBSplines<X, s_degree_x>
+struct BSplines : ddc::UniformBSplines<X, s_degree>
 {
 };
 #elif defined(BSPLINES_TYPE_NON_UNIFORM)
 template <typename X>
-struct BSplines : ddc::NonUniformBSplines<X, s_degree_x>
+struct BSplines : ddc::NonUniformBSplines<X, s_degree>
 {
 };
 #endif
@@ -158,10 +158,10 @@ void TestBatchedSpline()
     ddc::DiscreteDomain<DDims...> const dom_vals(dom_vals_tmp, interpolation_domain);
 
 #if defined(BC_HERMITE)
-    int const shift = s_degree_x % 2; // shift = 0 for even order, 1 for odd order
+    int const shift = s_degree % 2; // shift = 0 for even order, 1 for odd order
     // Create the derivs domain
     ddc::DiscreteDomain<ddc::Deriv<I>> const
-            derivs_domain(DElem<ddc::Deriv<I>>(shift), DVect<ddc::Deriv<I>>(s_degree_x / 2));
+            derivs_domain(DElem<ddc::Deriv<I>>(shift), DVect<ddc::Deriv<I>>(s_degree / 2));
     auto const dom_derivs = ddc::replace_dim_of<DDimI, ddc::Deriv<I>>(dom_vals, derivs_domain);
 #endif
 
@@ -336,16 +336,16 @@ void TestBatchedSpline()
     SplineErrorBounds<evaluator_type<DDimI>> const error_bounds(evaluator);
     EXPECT_LE(
             max_norm_error,
-            std::max(error_bounds.error_bound(dx<I>(ncells), s_degree_x), 1.0e-14 * max_norm));
+            std::max(error_bounds.error_bound(dx<I>(ncells), s_degree), 1.0e-14 * max_norm));
     EXPECT_LE(
             max_norm_error_diff,
             std::
-                    max(error_bounds.error_bound_on_deriv(dx<I>(ncells), s_degree_x),
+                    max(error_bounds.error_bound_on_deriv(dx<I>(ncells), s_degree),
                         1e-12 * max_norm_diff));
     EXPECT_LE(
             max_norm_error_integ,
             std::
-                    max(error_bounds.error_bound_on_int(dx<I>(ncells), s_degree_x),
+                    max(error_bounds.error_bound_on_int(dx<I>(ncells), s_degree),
                         1.0e-14 * max_norm_int));
 }
 
@@ -377,7 +377,7 @@ void TestBatchedSpline()
 #    define SUFFIX_DEGREE(name, degree) name##Ginkgo##Hermite##NonUniform##Degree##degree
 #endif
 #define SUFFIX_DEGREE_MACRO_EXP(name, degree) SUFFIX_DEGREE(name, degree)
-#define SUFFIX(name) SUFFIX_DEGREE_MACRO_EXP(name, DEGREE_X)
+#define SUFFIX(name) SUFFIX_DEGREE_MACRO_EXP(name, DEGREE)
 
 TEST(SUFFIX(BatchedSplineHost), 1DX)
 {

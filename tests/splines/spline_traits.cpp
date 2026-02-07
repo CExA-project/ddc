@@ -150,6 +150,24 @@ struct BSplinesTraits<std::tuple<
             ddc::PeriodicExtrapolationRule<DimY>>;
 };
 
+struct BSplinesTraitsNames
+{
+    template <typename T>
+    static std::string GetName(int)
+    {
+        using execution_space1 = std::tuple_element_t<0, T>;
+        using degree1 = std::tuple_element_t<1, T>;
+        using execution_space2 = std::tuple_element_t<2, T>;
+        using degree2 = std::tuple_element_t<3, T>;
+        Kokkos::DefaultExecutionSpace::name();
+
+        return "ExecSpace1:" + std::string(execution_space1::name())
+               + "/Degree1:" + std::to_string(degree1::value)
+               + "/ExecSpace2:" + std::string(execution_space2::name())
+               + "/Degree2:" + std::to_string(degree2::value) + "/0";
+    }
+};
+
 #if defined(KOKKOS_ENABLE_SERIAL)
 using execution_space_types = std::
         tuple<Kokkos::Serial, Kokkos::DefaultHostExecutionSpace, Kokkos::DefaultExecutionSpace>;
@@ -168,7 +186,7 @@ using TestTypes = tuple_to_types_t<cartesian_product_t<
 
 } // namespace anonymous_namespace_workaround_spline_traits_cpp
 
-TYPED_TEST_SUITE(BSplinesTraits, TestTypes, );
+TYPED_TEST_SUITE(BSplinesTraits, TestTypes, BSplinesTraitsNames);
 
 TYPED_TEST(BSplinesTraits, IsSplineBuilder)
 {
@@ -176,10 +194,10 @@ TYPED_TEST(BSplinesTraits, IsSplineBuilder)
     using Evaluator1D = typename TestFixture::Evaluator1D_1;
     using Builder2D = typename TestFixture::Builder2D_1;
     using Evaluator2D = typename TestFixture::Evaluator2D_1;
-    ASSERT_TRUE(ddc::is_spline_builder_v<Builder1D>);
-    ASSERT_FALSE(ddc::is_spline_builder_v<Builder2D>);
-    ASSERT_FALSE(ddc::is_spline_builder_v<Evaluator1D>);
-    ASSERT_FALSE(ddc::is_spline_builder_v<Evaluator2D>);
+    EXPECT_TRUE(ddc::is_spline_builder_v<Builder1D>);
+    EXPECT_FALSE(ddc::is_spline_builder_v<Builder2D>);
+    EXPECT_FALSE(ddc::is_spline_builder_v<Evaluator1D>);
+    EXPECT_FALSE(ddc::is_spline_builder_v<Evaluator2D>);
 }
 
 TYPED_TEST(BSplinesTraits, IsSplineBuilder2D)
@@ -188,10 +206,10 @@ TYPED_TEST(BSplinesTraits, IsSplineBuilder2D)
     using Evaluator1D = typename TestFixture::Evaluator1D_1;
     using Builder2D = typename TestFixture::Builder2D_1;
     using Evaluator2D = typename TestFixture::Evaluator2D_1;
-    ASSERT_FALSE(ddc::is_spline_builder2d_v<Builder1D>);
-    ASSERT_TRUE(ddc::is_spline_builder2d_v<Builder2D>);
-    ASSERT_FALSE(ddc::is_spline_builder2d_v<Evaluator1D>);
-    ASSERT_FALSE(ddc::is_spline_builder2d_v<Evaluator2D>);
+    EXPECT_FALSE(ddc::is_spline_builder2d_v<Builder1D>);
+    EXPECT_TRUE(ddc::is_spline_builder2d_v<Builder2D>);
+    EXPECT_FALSE(ddc::is_spline_builder2d_v<Evaluator1D>);
+    EXPECT_FALSE(ddc::is_spline_builder2d_v<Evaluator2D>);
 }
 
 TYPED_TEST(BSplinesTraits, IsSplineEvaluator)
@@ -200,10 +218,10 @@ TYPED_TEST(BSplinesTraits, IsSplineEvaluator)
     using Evaluator1D = typename TestFixture::Evaluator1D_1;
     using Builder2D = typename TestFixture::Builder2D_1;
     using Evaluator2D = typename TestFixture::Evaluator2D_1;
-    ASSERT_FALSE(ddc::is_spline_evaluator_v<Builder1D>);
-    ASSERT_FALSE(ddc::is_spline_evaluator_v<Builder2D>);
-    ASSERT_TRUE(ddc::is_spline_evaluator_v<Evaluator1D>);
-    ASSERT_FALSE(ddc::is_spline_evaluator_v<Evaluator2D>);
+    EXPECT_FALSE(ddc::is_spline_evaluator_v<Builder1D>);
+    EXPECT_FALSE(ddc::is_spline_evaluator_v<Builder2D>);
+    EXPECT_TRUE(ddc::is_spline_evaluator_v<Evaluator1D>);
+    EXPECT_FALSE(ddc::is_spline_evaluator_v<Evaluator2D>);
 }
 
 TYPED_TEST(BSplinesTraits, IsSplineEvaluator2D)
@@ -212,10 +230,10 @@ TYPED_TEST(BSplinesTraits, IsSplineEvaluator2D)
     using Evaluator1D = typename TestFixture::Evaluator1D_1;
     using Builder2D = typename TestFixture::Builder2D_1;
     using Evaluator2D = typename TestFixture::Evaluator2D_1;
-    ASSERT_FALSE(ddc::is_spline_evaluator2d_v<Builder1D>);
-    ASSERT_FALSE(ddc::is_spline_evaluator2d_v<Builder2D>);
-    ASSERT_FALSE(ddc::is_spline_evaluator2d_v<Evaluator1D>);
-    ASSERT_TRUE(ddc::is_spline_evaluator2d_v<Evaluator2D>);
+    EXPECT_FALSE(ddc::is_spline_evaluator2d_v<Builder1D>);
+    EXPECT_FALSE(ddc::is_spline_evaluator2d_v<Builder2D>);
+    EXPECT_FALSE(ddc::is_spline_evaluator2d_v<Evaluator1D>);
+    EXPECT_TRUE(ddc::is_spline_evaluator2d_v<Evaluator2D>);
 }
 
 TYPED_TEST(BSplinesTraits, IsAdmissible1D)
@@ -226,22 +244,22 @@ TYPED_TEST(BSplinesTraits, IsAdmissible1D)
     using Evaluator1D_2 = typename TestFixture::Evaluator1D_2;
 
     // Builders are not compatible
-    ASSERT_FALSE((ddc::is_evaluator_admissible_v<Builder1D_1, Builder1D_1>));
-    ASSERT_FALSE((ddc::is_evaluator_admissible_v<Builder1D_1, Builder1D_2>));
-    ASSERT_FALSE((ddc::is_evaluator_admissible_v<Builder1D_2, Builder1D_1>));
-    ASSERT_FALSE((ddc::is_evaluator_admissible_v<Builder1D_2, Builder1D_2>));
+    EXPECT_FALSE((ddc::is_evaluator_admissible_v<Builder1D_1, Builder1D_1>));
+    EXPECT_FALSE((ddc::is_evaluator_admissible_v<Builder1D_1, Builder1D_2>));
+    EXPECT_FALSE((ddc::is_evaluator_admissible_v<Builder1D_2, Builder1D_1>));
+    EXPECT_FALSE((ddc::is_evaluator_admissible_v<Builder1D_2, Builder1D_2>));
 
     // Evaluators are not compatible
-    ASSERT_FALSE((ddc::is_evaluator_admissible_v<Evaluator1D_1, Evaluator1D_1>));
-    ASSERT_FALSE((ddc::is_evaluator_admissible_v<Evaluator1D_1, Evaluator1D_2>));
-    ASSERT_FALSE((ddc::is_evaluator_admissible_v<Evaluator1D_2, Evaluator1D_1>));
-    ASSERT_FALSE((ddc::is_evaluator_admissible_v<Evaluator1D_2, Evaluator1D_2>));
+    EXPECT_FALSE((ddc::is_evaluator_admissible_v<Evaluator1D_1, Evaluator1D_1>));
+    EXPECT_FALSE((ddc::is_evaluator_admissible_v<Evaluator1D_1, Evaluator1D_2>));
+    EXPECT_FALSE((ddc::is_evaluator_admissible_v<Evaluator1D_2, Evaluator1D_1>));
+    EXPECT_FALSE((ddc::is_evaluator_admissible_v<Evaluator1D_2, Evaluator1D_2>));
 
     // Compatible builder and evaluator pairs
-    ASSERT_TRUE((ddc::is_evaluator_admissible_v<Builder1D_1, Evaluator1D_1>));
-    ASSERT_TRUE((ddc::is_evaluator_admissible_v<Builder1D_2, Evaluator1D_2>));
-    ASSERT_FALSE((ddc::is_evaluator_admissible_v<Evaluator1D_1, Builder1D_1>));
-    ASSERT_FALSE((ddc::is_evaluator_admissible_v<Evaluator1D_2, Builder1D_2>));
+    EXPECT_TRUE((ddc::is_evaluator_admissible_v<Builder1D_1, Evaluator1D_1>));
+    EXPECT_TRUE((ddc::is_evaluator_admissible_v<Builder1D_2, Evaluator1D_2>));
+    EXPECT_FALSE((ddc::is_evaluator_admissible_v<Evaluator1D_1, Builder1D_1>));
+    EXPECT_FALSE((ddc::is_evaluator_admissible_v<Evaluator1D_2, Builder1D_2>));
 
     // Incompatible builder and evaluator pairs
     using execution_space1 = typename TestFixture::execution_space1;
@@ -251,10 +269,10 @@ TYPED_TEST(BSplinesTraits, IsAdmissible1D)
 
     if ((!std::is_same_v<execution_space1, execution_space2>)
         || (m_spline_degree1 != m_spline_degree2)) {
-        ASSERT_FALSE((ddc::is_evaluator_admissible_v<Builder1D_1, Evaluator1D_2>));
-        ASSERT_FALSE((ddc::is_evaluator_admissible_v<Evaluator1D_2, Builder1D_1>));
-        ASSERT_FALSE((ddc::is_evaluator_admissible_v<Builder1D_2, Evaluator1D_1>));
-        ASSERT_FALSE((ddc::is_evaluator_admissible_v<Evaluator1D_1, Builder1D_2>));
+        EXPECT_FALSE((ddc::is_evaluator_admissible_v<Builder1D_1, Evaluator1D_2>));
+        EXPECT_FALSE((ddc::is_evaluator_admissible_v<Evaluator1D_2, Builder1D_1>));
+        EXPECT_FALSE((ddc::is_evaluator_admissible_v<Builder1D_2, Evaluator1D_1>));
+        EXPECT_FALSE((ddc::is_evaluator_admissible_v<Evaluator1D_1, Builder1D_2>));
     }
 }
 
@@ -266,22 +284,22 @@ TYPED_TEST(BSplinesTraits, IsAdmissible2D)
     using Evaluator2D_2 = typename TestFixture::Evaluator2D_2;
 
     // Builders are not compatible
-    ASSERT_FALSE((ddc::is_evaluator_admissible_v<Builder2D_1, Builder2D_1>));
-    ASSERT_FALSE((ddc::is_evaluator_admissible_v<Builder2D_1, Builder2D_2>));
-    ASSERT_FALSE((ddc::is_evaluator_admissible_v<Builder2D_2, Builder2D_1>));
-    ASSERT_FALSE((ddc::is_evaluator_admissible_v<Builder2D_2, Builder2D_2>));
+    EXPECT_FALSE((ddc::is_evaluator_admissible_v<Builder2D_1, Builder2D_1>));
+    EXPECT_FALSE((ddc::is_evaluator_admissible_v<Builder2D_1, Builder2D_2>));
+    EXPECT_FALSE((ddc::is_evaluator_admissible_v<Builder2D_2, Builder2D_1>));
+    EXPECT_FALSE((ddc::is_evaluator_admissible_v<Builder2D_2, Builder2D_2>));
 
     // Evaluators are not compatible
-    ASSERT_FALSE((ddc::is_evaluator_admissible_v<Evaluator2D_1, Evaluator2D_1>));
-    ASSERT_FALSE((ddc::is_evaluator_admissible_v<Evaluator2D_1, Evaluator2D_2>));
-    ASSERT_FALSE((ddc::is_evaluator_admissible_v<Evaluator2D_2, Evaluator2D_1>));
-    ASSERT_FALSE((ddc::is_evaluator_admissible_v<Evaluator2D_2, Evaluator2D_2>));
+    EXPECT_FALSE((ddc::is_evaluator_admissible_v<Evaluator2D_1, Evaluator2D_1>));
+    EXPECT_FALSE((ddc::is_evaluator_admissible_v<Evaluator2D_1, Evaluator2D_2>));
+    EXPECT_FALSE((ddc::is_evaluator_admissible_v<Evaluator2D_2, Evaluator2D_1>));
+    EXPECT_FALSE((ddc::is_evaluator_admissible_v<Evaluator2D_2, Evaluator2D_2>));
 
     // Compatible builder and evaluator pairs
-    ASSERT_TRUE((ddc::is_evaluator_admissible_v<Builder2D_1, Evaluator2D_1>));
-    ASSERT_TRUE((ddc::is_evaluator_admissible_v<Builder2D_2, Evaluator2D_2>));
-    ASSERT_FALSE((ddc::is_evaluator_admissible_v<Evaluator2D_1, Builder2D_1>));
-    ASSERT_FALSE((ddc::is_evaluator_admissible_v<Evaluator2D_2, Builder2D_2>));
+    EXPECT_TRUE((ddc::is_evaluator_admissible_v<Builder2D_1, Evaluator2D_1>));
+    EXPECT_TRUE((ddc::is_evaluator_admissible_v<Builder2D_2, Evaluator2D_2>));
+    EXPECT_FALSE((ddc::is_evaluator_admissible_v<Evaluator2D_1, Builder2D_1>));
+    EXPECT_FALSE((ddc::is_evaluator_admissible_v<Evaluator2D_2, Builder2D_2>));
 
     // Incompatible builder and evaluator pairs
     using execution_space1 = typename TestFixture::execution_space1;
@@ -291,9 +309,9 @@ TYPED_TEST(BSplinesTraits, IsAdmissible2D)
 
     if ((!std::is_same_v<execution_space1, execution_space2>)
         || (m_spline_degree1 != m_spline_degree2)) {
-        ASSERT_FALSE((ddc::is_evaluator_admissible_v<Builder2D_1, Evaluator2D_2>));
-        ASSERT_FALSE((ddc::is_evaluator_admissible_v<Evaluator2D_2, Builder2D_1>));
-        ASSERT_FALSE((ddc::is_evaluator_admissible_v<Builder2D_2, Evaluator2D_1>));
-        ASSERT_FALSE((ddc::is_evaluator_admissible_v<Evaluator2D_1, Builder2D_2>));
+        EXPECT_FALSE((ddc::is_evaluator_admissible_v<Builder2D_1, Evaluator2D_2>));
+        EXPECT_FALSE((ddc::is_evaluator_admissible_v<Evaluator2D_2, Builder2D_1>));
+        EXPECT_FALSE((ddc::is_evaluator_admissible_v<Builder2D_2, Evaluator2D_1>));
+        EXPECT_FALSE((ddc::is_evaluator_admissible_v<Evaluator2D_1, Builder2D_2>));
     }
 }

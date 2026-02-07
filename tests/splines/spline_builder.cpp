@@ -20,9 +20,9 @@ struct DimX
 
 using CoordX = ddc::Coordinate<DimX>;
 
-static constexpr std::size_t s_degree_x = 2;
+static constexpr std::size_t s_degree = 2;
 
-struct BSplinesX : ddc::UniformBSplines<DimX, s_degree_x>
+struct BSplinesX : ddc::UniformBSplines<DimX, s_degree>
 {
 };
 

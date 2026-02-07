@@ -103,28 +103,8 @@ KokkosFFT::axis_type<sizeof...(DDimX)> axes()
             static_cast<int>(ddc::type_seq_rank_v<DDimX, ddc::detail::TypeSeq<DDimX...>>)...};
 }
 
-inline KokkosFFT::Normalization ddc_fft_normalization_to_kokkos_fft(
-        FFT_Normalization const ddc_fft_normalization)
-{
-    if (ddc_fft_normalization == ddc::FFT_Normalization::OFF
-        || ddc_fft_normalization == ddc::FFT_Normalization::FULL) {
-        return KokkosFFT::Normalization::none;
-    }
-
-    if (ddc_fft_normalization == ddc::FFT_Normalization::FORWARD) {
-        return KokkosFFT::Normalization::forward;
-    }
-
-    if (ddc_fft_normalization == ddc::FFT_Normalization::BACKWARD) {
-        return KokkosFFT::Normalization::backward;
-    }
-
-    if (ddc_fft_normalization == ddc::FFT_Normalization::ORTHO) {
-        return KokkosFFT::Normalization::ortho;
-    }
-
-    throw std::runtime_error("ddc::FFT_Normalization not handled");
-}
+KokkosFFT::Normalization ddc_fft_normalization_to_kokkos_fft(
+        FFT_Normalization const ddc_fft_normalization);
 
 template <class T>
 class ScaleFn

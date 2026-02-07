@@ -6,7 +6,7 @@
 
 #include <algorithm>
 #include <cstdlib>
-#include <memory>
+#include <initializer_list>
 #include <ostream>
 #include <sstream>
 #include <type_traits>
@@ -17,10 +17,6 @@
 
 #include "chunk_span.hpp"
 #include "discrete_vector.hpp"
-
-#if defined(KOKKOS_COMPILER_GNU) || defined(KOKKOS_COMPILER_CLANG)
-#    include <cxxabi.h>
-#endif
 
 namespace ddc {
 namespace detail {
@@ -262,43 +258,20 @@ public:
     }
 };
 
-inline void print_demangled_type_name(std::ostream& os, char const* const mangled_name)
-{
-#if defined(KOKKOS_COMPILER_GNU) || defined(KOKKOS_COMPILER_CLANG)
-    int status;
+void print_demangled_type_name(std::ostream& os, char const* mangled_name);
 
-    std::unique_ptr<char, decltype(std::free)*> const
-            demangled_name(abi::__cxa_demangle(mangled_name, nullptr, nullptr, &status), std::free);
-    if (status != 0) {
-        os << "Error demangling dimension name: " << status;
-        return;
-    }
-
-    os << demangled_name.get();
-#else
-    os << mangled_name;
-#endif
-}
-
-inline void print_single_dim_name(
+void print_dim_name(
         std::ostream& os,
-        std::type_info const& dim,
-        DiscreteVectorElement const size)
-{
-    print_demangled_type_name(os, dim.name());
-    os << '(' << size << ')';
-}
+        char const* const* dims,
+        DiscreteVectorElement const* sizes,
+        std::size_t n);
 
-inline void print_dim_name(std::ostream& os, DiscreteVector<> const&)
+template <class... Dims>
+void print_dim_name(std::ostream& os, DiscreteVector<Dims...> const& dd)
 {
-    os << "Scalar";
-}
-
-template <class Dim0, class... Dims>
-void print_dim_name(std::ostream& os, DiscreteVector<Dim0, Dims...> const& dd)
-{
-    print_single_dim_name(os, typeid(Dim0), get<Dim0>(dd));
-    ((os << "×", print_single_dim_name(os, typeid(Dims), get<Dims>(dd))), ...);
+    std::array const names {typeid(Dims).name()...};
+    std::array const std_dd = detail::array(dd);
+    print_dim_name(os, names.data(), std_dd.data(), std_dd.size());
 }
 
 } // namespace detail

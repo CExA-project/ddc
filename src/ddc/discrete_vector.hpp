@@ -6,7 +6,7 @@
 
 #include <array>
 #include <cstddef>
-#include <ostream>
+#include <iosfwd>
 #include <type_traits>
 #include <utility>
 
@@ -474,19 +474,17 @@ KOKKOS_FUNCTION constexpr bool operator<(DiscreteVector<Tag> const& lhs, Integra
     return lhs.value() < rhs;
 }
 
-inline std::ostream& operator<<(std::ostream& out, DiscreteVector<> const&)
-{
-    out << "()";
-    return out;
-}
+namespace detail {
 
-template <class Head, class... Tags>
-std::ostream& operator<<(std::ostream& out, DiscreteVector<Head, Tags...> const& arr)
+void discrete_vector_print(std::ostream& out, DiscreteVectorElement const* data, std::size_t n);
+
+} // namespace detail
+
+template <class... Tags>
+std::ostream& operator<<(std::ostream& out, DiscreteVector<Tags...> const& arr)
 {
-    out << "(";
-    out << get<Head>(arr);
-    ((out << ", " << get<Tags>(arr)), ...);
-    out << ")";
+    std::array const std_arr = detail::array(arr);
+    detail::discrete_vector_print(out, std_arr.data(), std_arr.size());
     return out;
 }
 

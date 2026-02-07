@@ -7,9 +7,9 @@
 #include <cassert>
 #include <cstddef>
 #include <functional>
+#include <iosfwd>
 #include <map>
 #include <optional>
-#include <ostream>
 #include <stdexcept>
 #include <string>
 #include <tuple>
@@ -23,12 +23,8 @@
 #include "detail/macros.hpp"
 
 #if defined(KOKKOS_ENABLE_CUDA)
-#    include <sstream>
-
 #    include <cuda.h>
 #elif defined(KOKKOS_ENABLE_HIP)
-#    include <sstream>
-
 #    include <hip/hip_runtime.h>
 #endif
 
@@ -42,33 +38,17 @@ namespace ddc {
 namespace detail {
 
 #if defined(KOKKOS_ENABLE_CUDA)
-inline void device_throw_on_error(
+void device_throw_on_error(
         cudaError_t const err,
         const char* const func,
         const char* const file,
-        const int line)
-{
-    if (err != cudaSuccess) {
-        std::stringstream ss;
-        ss << "CUDA Runtime Error at: " << file << ":" << line << "\n";
-        ss << cudaGetErrorString(err) << " " << func << "\n";
-        throw std::runtime_error(ss.str());
-    }
-}
+        const int line);
 #elif defined(KOKKOS_ENABLE_HIP)
-inline void device_throw_on_error(
+void device_throw_on_error(
         hipError_t const err,
         const char* const func,
         const char* const file,
-        const int line)
-{
-    if (err != hipSuccess) {
-        std::stringstream ss;
-        ss << "HIP Runtime Error at: " << file << ":" << line << "\n";
-        ss << hipGetErrorString(err) << " " << func << "\n";
-        throw std::runtime_error(ss.str());
-    }
-}
+        const int line);
 #endif
 
 template <class DDim, class MemorySpace>
@@ -111,7 +91,7 @@ public:
 };
 
 // Global CPU variable storing resetters. Required to correctly free data.
-inline std::optional<std::map<std::string, std::function<void()>>> g_discretization_store;
+extern std::optional<std::map<std::string, std::function<void()>>> g_discretization_store;
 
 // Global CPU variable owning discrete spaces data for CPU and GPU
 template <class DDim>
@@ -134,17 +114,7 @@ SYCL_EXTERNAL inline sycl::ext::oneapi::experimental::device_global<
         g_discrete_space_device;
 #endif
 
-inline void display_discretization_store(std::ostream& os)
-{
-    if (g_discretization_store) {
-        os << "The host discretization store is initialized:\n";
-        for (auto const& [key, value] : *g_discretization_store) {
-            os << " - " << key << "\n";
-        }
-    } else {
-        os << "The host discretization store is not initialized:\n";
-    }
-}
+void display_discretization_store(std::ostream& os);
 
 template <class Tuple, std::size_t... Ids>
 auto extract_after(Tuple&& t, std::index_sequence<Ids...>)

@@ -4,8 +4,7 @@
 
 #pragma once
 
-#include <cstddef>
-#include <ostream>
+#include <iosfwd>
 #include <stdexcept>
 
 namespace ddc {
@@ -27,22 +26,7 @@ enum class BoundCond {
  *
  * @return The stream in which the boundary condition is printed.
  **/
-static inline std::ostream& operator<<(std::ostream& out, ddc::BoundCond const bc)
-{
-    if (bc == ddc::BoundCond::PERIODIC) {
-        return out << "PERIODIC";
-    }
-
-    if (bc == ddc::BoundCond::HERMITE) {
-        return out << "HERMITE";
-    }
-
-    if (bc == ddc::BoundCond::GREVILLE) {
-        return out << "GREVILLE";
-    }
-
-    throw std::runtime_error("ddc::BoundCond not handled");
-}
+std::ostream& operator<<(std::ostream& out, ddc::BoundCond bc);
 
 /**
  * @brief Return the number of equations needed to describe a given boundary condition.

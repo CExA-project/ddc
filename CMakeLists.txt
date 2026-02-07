@@ -123,13 +123,18 @@ endif()
 
 ## The library itself
 
-add_library(ddc_core INTERFACE)
+add_library(ddc_core)
 add_library(DDC::core ALIAS ddc_core)
 configure_file(cmake/config.hpp.in generated/ddc/config.hpp NO_SOURCE_PERMISSIONS @ONLY)
-target_compile_features(ddc_core INTERFACE cxx_std_17)
-target_link_libraries(ddc_core INTERFACE Kokkos::kokkos)
+target_compile_features(ddc_core PUBLIC cxx_std_17)
+target_link_libraries(ddc_core PUBLIC Kokkos::kokkos)
 target_sources(
     ddc_core
+    PRIVATE
+        src/ddc/discrete_space.cpp
+        src/ddc/discrete_element.cpp
+        src/ddc/discrete_vector.cpp
+        src/ddc/print.cpp
     INTERFACE
         FILE_SET HEADERS
             BASE_DIRS src ${CMAKE_CURRENT_BINARY_DIR}/generated
@@ -212,13 +217,22 @@ if("${DDC_BUILD_KERNELS_FFT}")
         endif()
     endif()
 
-    add_library(ddc_fft INTERFACE)
+    add_library(ddc_fft)
     add_library(DDC::fft ALIAS ddc_fft)
-    target_compile_features(ddc_fft INTERFACE cxx_std_17)
-    target_link_libraries(ddc_fft INTERFACE DDC::core Kokkos::kokkos KokkosFFT::fft)
-    target_sources(ddc_fft INTERFACE FILE_SET HEADERS BASE_DIRS src FILES src/ddc/kernels/fft.hpp)
+    target_compile_features(ddc_fft PUBLIC cxx_std_17)
+    target_link_libraries(ddc_fft PUBLIC DDC::core Kokkos::kokkos KokkosFFT::fft)
+    target_sources(
+        ddc_fft
+        INTERFACE FILE_SET HEADERS BASE_DIRS src FILES src/ddc/kernels/fft.hpp
+        PRIVATE src/ddc/kernels/fft.cpp
+    )
 
-    set_target_properties(ddc_fft PROPERTIES EXPORT_NAME fft)
+    set_target_properties(
+        ddc_fft
+        PROPERTIES
+            EXPORT_NAME fft
+            INSTALL_RPATH "$<$<PLATFORM_ID:Linux>:$ORIGIN>;$<$<PLATFORM_ID:Darwin>:@loader_path>"
+    )
     install(TARGETS ddc_fft EXPORT DDCFftTargets FILE_SET HEADERS)
     install(EXPORT DDCFftTargets NAMESPACE DDC:: DESTINATION ${DDC_INSTALL_CMAKEDIR})
 endif()
@@ -258,13 +272,14 @@ if("${DDC_BUILD_KERNELS_SPLINES}")
     target_compile_features(ddc_splines INTERFACE cxx_std_17)
     target_link_libraries(
         ddc_splines
+        INTERFACE DDC::core
         PRIVATE Ginkgo::ginkgo Kokkos::kokkoskernels LAPACKE::LAPACKE
         PUBLIC Kokkos::kokkos
-        INTERFACE DDC::core
     )
     target_sources(
         ddc_splines
         PRIVATE
+            src/ddc/kernels/splines/spline_boundary_conditions.cpp
             src/ddc/kernels/splines/splines_linear_problem.cpp
             src/ddc/kernels/splines/splines_linear_problem_2x2_blocks.cpp
             src/ddc/kernels/splines/splines_linear_problem_3x3_blocks.cpp
@@ -310,7 +325,12 @@ if("${DDC_BUILD_KERNELS_SPLINES}")
     )
 
     install(FILES cmake/FindLAPACKE.cmake DESTINATION ${DDC_INSTALL_CMAKEDIR})
-    set_target_properties(ddc_splines PROPERTIES EXPORT_NAME splines)
+    set_target_properties(
+        ddc_splines
+        PROPERTIES
+            EXPORT_NAME splines
+            INSTALL_RPATH "$<$<PLATFORM_ID:Linux>:$ORIGIN>;$<$<PLATFORM_ID:Darwin>:@loader_path>"
+    )
     install(TARGETS ddc_splines EXPORT DDCSplinesTargets FILE_SET HEADERS)
     install(EXPORT DDCSplinesTargets NAMESPACE DDC:: DESTINATION ${DDC_INSTALL_CMAKEDIR})
 endif()
@@ -323,13 +343,22 @@ if("${DDC_BUILD_PDI_WRAPPER}")
         find_package(PDI 1.6...<2 REQUIRED COMPONENTS C)
     endif()
 
-    add_library(ddc_pdi INTERFACE)
+    add_library(ddc_pdi)
     add_library(DDC::pdi ALIAS ddc_pdi)
-    target_compile_features(ddc_pdi INTERFACE cxx_std_17)
-    target_link_libraries(ddc_pdi INTERFACE DDC::core PDI::PDI_C)
-    target_sources(ddc_pdi INTERFACE FILE_SET HEADERS BASE_DIRS src FILES src/ddc/pdi.hpp)
+    target_compile_features(ddc_pdi PUBLIC cxx_std_17)
+    target_link_libraries(ddc_pdi PUBLIC DDC::core PDI::PDI_C)
+    target_sources(
+        ddc_pdi
+        INTERFACE FILE_SET HEADERS BASE_DIRS src FILES src/ddc/pdi.hpp
+        PRIVATE src/ddc/pdi.cpp
+    )
 
-    set_target_properties(ddc_pdi PROPERTIES EXPORT_NAME pdi)
+    set_target_properties(
+        ddc_pdi
+        PROPERTIES
+            EXPORT_NAME pdi
+            INSTALL_RPATH "$<$<PLATFORM_ID:Linux>:$ORIGIN>;$<$<PLATFORM_ID:Darwin>:@loader_path>"
+    )
     install(TARGETS ddc_pdi EXPORT DDCPdiTargets FILE_SET HEADERS)
     install(EXPORT DDCPdiTargets NAMESPACE DDC:: DESTINATION ${DDC_INSTALL_CMAKEDIR})
 endif()

@@ -340,7 +340,7 @@ Typedefs</h2></td></tr>
 <tr class="memitem:a32ef231d93033c11321a4ca3f69183f6"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">using</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a32ef231d93033c11321a4ca3f69183f6">cartesian_prod_t</a> = <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">typename</a> <a class="el" href="namespaceddc.html#structddc_1_1cartesian__prod">cartesian_prod</a>&lt; DDoms... &gt;::type</td></tr>
 <tr class="separator:a32ef231d93033c11321a4ca3f69183f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a46e92a9cb87ee7573d46fa56d333a09b" id="r_a46e92a9cb87ee7573d46fa56d333a09b"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">typename</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">DDom</a> , typename... DDims&gt; </td></tr>
-<tr class="memitem:a46e92a9cb87ee7573d46fa56d333a09b"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">using</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a46e92a9cb87ee7573d46fa56d333a09b">remove_dims_of_t</a> = <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">decltype</a>(<a class="el" href="namespaceddc.html#a8c5099ed1365bf973383b84302b8228b">remove_dims_of</a>&lt; DDims... &gt;(std::declval&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">DDom</a> &gt;()))</td></tr>
+<tr class="memitem:a46e92a9cb87ee7573d46fa56d333a09b"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">using</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a46e92a9cb87ee7573d46fa56d333a09b">remove_dims_of_t</a> = <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">decltype</a>(<a class="el" href="namespaceddc.html#a33f7211707aa798fa665779d9a39a741">remove_dims_of</a>&lt; DDims... &gt;(std::declval&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">DDom</a> &gt;()))</td></tr>
 <tr class="separator:a46e92a9cb87ee7573d46fa56d333a09b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a96c227ae91aaf95ceaf1a7a79353b276" id="r_a96c227ae91aaf95ceaf1a7a79353b276"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">typename</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">DDom</a> , <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">typename</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">DDim1</a> , <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">typename</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">DDim2</a> &gt; </td></tr>
 <tr class="memitem:a96c227ae91aaf95ceaf1a7a79353b276"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">using</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a96c227ae91aaf95ceaf1a7a79353b276">replace_dim_of_t</a> = <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">decltype</a>(<a class="el" href="namespaceddc.html#a8fff0be52157fd76f788f49870669444">replace_dim_of</a>&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">DDim1</a>, <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">DDim2</a> &gt;(std::declval&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">DDom</a> &gt;(), std::declval&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">typename</a> detail::RebindDomain&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">DDom</a>, detail::TypeSeq&lt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">DDim2</a> &gt; &gt;::type &gt;()))</td></tr>
@@ -498,9 +498,9 @@ Functions</h2></td></tr>
 <tr class="memitem:adbc459eecdc4f531bad4e69fc7c60fe9" id="r_adbc459eecdc4f531bad4e69fc7c60fe9"><td class="memTemplParams" colspan="2">template&lt;class... QueryDDims, class... DDims&gt; </td></tr>
 <tr class="memitem:adbc459eecdc4f531bad4e69fc7c60fe9"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; QueryDDims... &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#adbc459eecdc4f531bad4e69fc7c60fe9">select</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDims... &gt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;domain)</td></tr>
 <tr class="separator:adbc459eecdc4f531bad4e69fc7c60fe9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8c5099ed1365bf973383b84302b8228b" id="r_a8c5099ed1365bf973383b84302b8228b"><td class="memTemplParams" colspan="2">template&lt;class... DDimsA, class... DDimsB&gt; </td></tr>
-<tr class="memitem:a8c5099ed1365bf973383b84302b8228b"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a8c5099ed1365bf973383b84302b8228b">remove_dims_of</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDimsA... &gt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">DDom_a</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDimsB... &gt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">DDom_b</a>) <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">noexcept</a></td></tr>
-<tr class="separator:a8c5099ed1365bf973383b84302b8228b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a33f7211707aa798fa665779d9a39a741" id="r_a33f7211707aa798fa665779d9a39a741"><td class="memTemplParams" colspan="2">template&lt;class... DDimsA, class... DDimsB&gt; </td></tr>
+<tr class="memitem:a33f7211707aa798fa665779d9a39a741"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a33f7211707aa798fa665779d9a39a741">remove_dims_of</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDimsA... &gt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">DDom_a</a>, <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDimsB... &gt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;) <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">noexcept</a></td></tr>
+<tr class="separator:a33f7211707aa798fa665779d9a39a741"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a427a30524910149d9d913c9c9ea7f002" id="r_a427a30524910149d9d913c9c9ea7f002"><td class="memTemplParams" colspan="2">template&lt;class... DDimsB, class... DDimsA&gt; </td></tr>
 <tr class="memitem:a427a30524910149d9d913c9c9ea7f002"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a427a30524910149d9d913c9c9ea7f002">remove_dims_of</a> (<a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDimsA... &gt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">DDom_a</a>) <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">noexcept</a></td></tr>
 <tr class="memdesc:a427a30524910149d9d913c9c9ea7f002"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove the dimensions DDimsB from DDom_a.  <br /></td></tr>
@@ -816,9 +816,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a3916a392f03d317aeac77400942220cf" id="r_a3916a392f03d317aeac77400942220cf"><td class="memTemplParams" colspan="2">template&lt;class... QueryDDims, class... DDims&gt; </td></tr>
 <tr class="memitem:a3916a392f03d317aeac77400942220cf"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="classddc_1_1SparseDiscreteDomain.html">SparseDiscreteDomain</a>&lt; QueryDDims... &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a3916a392f03d317aeac77400942220cf">select</a> (<a class="el" href="classddc_1_1SparseDiscreteDomain.html">SparseDiscreteDomain</a>&lt; DDims... &gt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;domain)</td></tr>
 <tr class="separator:a3916a392f03d317aeac77400942220cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aed41ae01c51f3a06925f140092820901" id="r_aed41ae01c51f3a06925f140092820901"><td class="memTemplParams" colspan="2">template&lt;class... DDimsA, class... DDimsB&gt; </td></tr>
-<tr class="memitem:aed41ae01c51f3a06925f140092820901"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#aed41ae01c51f3a06925f140092820901">remove_dims_of</a> (<a class="el" href="classddc_1_1SparseDiscreteDomain.html">SparseDiscreteDomain</a>&lt; DDimsA... &gt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">DDom_a</a>, <a class="el" href="classddc_1_1SparseDiscreteDomain.html">SparseDiscreteDomain</a>&lt; DDimsB... &gt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">DDom_b</a>) <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">noexcept</a></td></tr>
-<tr class="separator:aed41ae01c51f3a06925f140092820901"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a778e8b5e9c73e17745f3f890fa61a5ed" id="r_a778e8b5e9c73e17745f3f890fa61a5ed"><td class="memTemplParams" colspan="2">template&lt;class... DDimsA, class... DDimsB&gt; </td></tr>
+<tr class="memitem:a778e8b5e9c73e17745f3f890fa61a5ed"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a778e8b5e9c73e17745f3f890fa61a5ed">remove_dims_of</a> (<a class="el" href="classddc_1_1SparseDiscreteDomain.html">SparseDiscreteDomain</a>&lt; DDimsA... &gt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">DDom_a</a>, <a class="el" href="classddc_1_1SparseDiscreteDomain.html">SparseDiscreteDomain</a>&lt; DDimsB... &gt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;) <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">noexcept</a></td></tr>
+<tr class="separator:a778e8b5e9c73e17745f3f890fa61a5ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad16344caaa473b13ed0bb628537c3d3e" id="r_ad16344caaa473b13ed0bb628537c3d3e"><td class="memTemplParams" colspan="2">template&lt;class... DDimsB, class... DDimsA&gt; </td></tr>
 <tr class="memitem:ad16344caaa473b13ed0bb628537c3d3e"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#ad16344caaa473b13ed0bb628537c3d3e">remove_dims_of</a> (<a class="el" href="classddc_1_1SparseDiscreteDomain.html">SparseDiscreteDomain</a>&lt; DDimsA... &gt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">DDom_a</a>) <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">noexcept</a></td></tr>
 <tr class="memdesc:ad16344caaa473b13ed0bb628537c3d3e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove the dimensions DDimsB from DDom_a.  <br /></td></tr>
@@ -841,9 +841,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a620006714381c06ab46f38734936c477" id="r_a620006714381c06ab46f38734936c477"><td class="memTemplParams" colspan="2">template&lt;class... QueryDDims, class... DDims&gt; </td></tr>
 <tr class="memitem:a620006714381c06ab46f38734936c477"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="classddc_1_1StridedDiscreteDomain.html">StridedDiscreteDomain</a>&lt; QueryDDims... &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a620006714381c06ab46f38734936c477">select</a> (<a class="el" href="classddc_1_1StridedDiscreteDomain.html">StridedDiscreteDomain</a>&lt; DDims... &gt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;domain)</td></tr>
 <tr class="separator:a620006714381c06ab46f38734936c477"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0da011d8792d48d72e50587b91e692cc" id="r_a0da011d8792d48d72e50587b91e692cc"><td class="memTemplParams" colspan="2">template&lt;class... DDimsA, class... DDimsB&gt; </td></tr>
-<tr class="memitem:a0da011d8792d48d72e50587b91e692cc"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a0da011d8792d48d72e50587b91e692cc">remove_dims_of</a> (<a class="el" href="classddc_1_1StridedDiscreteDomain.html">StridedDiscreteDomain</a>&lt; DDimsA... &gt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">DDom_a</a>, <a class="el" href="classddc_1_1StridedDiscreteDomain.html">StridedDiscreteDomain</a>&lt; DDimsB... &gt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">DDom_b</a>) <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">noexcept</a></td></tr>
-<tr class="separator:a0da011d8792d48d72e50587b91e692cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a72133cf3303c4794751a6013d90cce0d" id="r_a72133cf3303c4794751a6013d90cce0d"><td class="memTemplParams" colspan="2">template&lt;class... DDimsA, class... DDimsB&gt; </td></tr>
+<tr class="memitem:a72133cf3303c4794751a6013d90cce0d"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a72133cf3303c4794751a6013d90cce0d">remove_dims_of</a> (<a class="el" href="classddc_1_1StridedDiscreteDomain.html">StridedDiscreteDomain</a>&lt; DDimsA... &gt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">DDom_a</a>, <a class="el" href="classddc_1_1StridedDiscreteDomain.html">StridedDiscreteDomain</a>&lt; DDimsB... &gt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;) <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">noexcept</a></td></tr>
+<tr class="separator:a72133cf3303c4794751a6013d90cce0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a676d70718a18f0a175fa2d9fbea4c8fb" id="r_a676d70718a18f0a175fa2d9fbea4c8fb"><td class="memTemplParams" colspan="2">template&lt;class... DDimsB, class... DDimsA&gt; </td></tr>
 <tr class="memitem:a676d70718a18f0a175fa2d9fbea4c8fb"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">constexpr</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a676d70718a18f0a175fa2d9fbea4c8fb">remove_dims_of</a> (<a class="el" href="classddc_1_1StridedDiscreteDomain.html">StridedDiscreteDomain</a>&lt; DDimsA... &gt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">DDom_a</a>) <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">noexcept</a></td></tr>
 <tr class="memdesc:a676d70718a18f0a175fa2d9fbea4c8fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove the dimensions DDimsB from DDom_a.  <br /></td></tr>
@@ -988,7 +988,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename... DDoms&gt;<br />
 struct ddc::cartesian_prod&lt; DDoms &gt;</div>
-<p class="definition">Definition at line <a class="el" href="discrete__domain_8hpp_source.html#l00486">486</a> of file <a class="el" href="discrete__domain_8hpp_source.html">discrete_domain.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="discrete__domain_8hpp_source.html#l00483">483</a> of file <a class="el" href="discrete__domain_8hpp_source.html">discrete_domain.hpp</a>.</p>
 </div><div class="dynheader">
 Collaboration diagram for ddc::cartesian_prod&lt; DDoms &gt;:</div>
 <div class="dyncontent">
@@ -1013,7 +1013,7 @@ Collaboration diagram for ddc::cartesian_prod&lt; DDoms &gt;:</div>
 </div><div class="memdoc">
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename... DDims&gt;<br />
 struct ddc::cartesian_prod&lt; DiscreteDomain&lt; DDims... &gt; &gt;</div>
-<p class="definition">Definition at line <a class="el" href="discrete__domain_8hpp_source.html#l00495">495</a> of file <a class="el" href="discrete__domain_8hpp_source.html">discrete_domain.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="discrete__domain_8hpp_source.html#l00492">492</a> of file <a class="el" href="discrete__domain_8hpp_source.html">discrete_domain.hpp</a>.</p>
 </div><div class="dynheader">
 Collaboration diagram for ddc::cartesian_prod&lt; DiscreteDomain&lt; DDims... &gt; &gt;:</div>
 <div class="dyncontent">
@@ -1047,7 +1047,7 @@ type</td>
 </div><div class="memdoc">
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename... DDims1, typename... DDims2, typename... DDomsTail&gt;<br />
 struct ddc::cartesian_prod&lt; DiscreteDomain&lt; DDims1... &gt;, DiscreteDomain&lt; DDims2... &gt;, DDomsTail... &gt;</div>
-<p class="definition">Definition at line <a class="el" href="discrete__domain_8hpp_source.html#l00489">489</a> of file <a class="el" href="discrete__domain_8hpp_source.html">discrete_domain.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="discrete__domain_8hpp_source.html#l00486">486</a> of file <a class="el" href="discrete__domain_8hpp_source.html">discrete_domain.hpp</a>.</p>
 </div><div class="dynheader">
 Collaboration diagram for ddc::cartesian_prod&lt; DiscreteDomain&lt; DDims1... &gt;, DiscreteDomain&lt; DDims2... &gt;, DDomsTail... &gt;:</div>
 <div class="dyncontent">
@@ -1080,7 +1080,7 @@ type</td>
       </table>
 </div><div class="memdoc">
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="discrete__domain_8hpp_source.html#l00501">501</a> of file <a class="el" href="discrete__domain_8hpp_source.html">discrete_domain.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="discrete__domain_8hpp_source.html#l00498">498</a> of file <a class="el" href="discrete__domain_8hpp_source.html">discrete_domain.hpp</a>.</p>
 </div><div class="dynheader">
 Collaboration diagram for ddc::cartesian_prod&lt;&gt;:</div>
 <div class="dyncontent">
@@ -1505,7 +1505,7 @@ template&lt;typename... DDoms&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="discrete__domain_8hpp_source.html#l00507">507</a> of file <a class="el" href="discrete__domain_8hpp_source.html">discrete_domain.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="discrete__domain_8hpp_source.html#l00504">504</a> of file <a class="el" href="discrete__domain_8hpp_source.html">discrete_domain.hpp</a>.</p>
 
 </div>
 </div>
@@ -1518,12 +1518,12 @@ template&lt;typename... DDoms&gt; </div>
 template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">typename</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">DDom</a> , typename... DDims&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">using</a> <a class="el" href="namespaceddc.html#a46e92a9cb87ee7573d46fa56d333a09b">ddc::remove_dims_of_t</a> = <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">typedef</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">decltype</a>(<a class="el" href="namespaceddc.html#a8c5099ed1365bf973383b84302b8228b">remove_dims_of</a>&lt;DDims...&gt;(std::declval&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">DDom</a>&gt;()))</td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">using</a> <a class="el" href="namespaceddc.html#a46e92a9cb87ee7573d46fa56d333a09b">ddc::remove_dims_of_t</a> = <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">typedef</a> <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">decltype</a>(<a class="el" href="namespaceddc.html#a33f7211707aa798fa665779d9a39a741">remove_dims_of</a>&lt;DDims...&gt;(std::declval&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">DDom</a>&gt;()))</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="discrete__domain_8hpp_source.html#l00537">537</a> of file <a class="el" href="discrete__domain_8hpp_source.html">discrete_domain.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="discrete__domain_8hpp_source.html#l00534">534</a> of file <a class="el" href="discrete__domain_8hpp_source.html">discrete_domain.hpp</a>.</p>
 
 </div>
 </div>
@@ -1541,7 +1541,7 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="discrete__domain_8hpp_source.html#l00582">582</a> of file <a class="el" href="discrete__domain_8hpp_source.html">discrete_domain.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="discrete__domain_8hpp_source.html#l00579">579</a> of file <a class="el" href="discrete__domain_8hpp_source.html">discrete_domain.hpp</a>.</p>
 
 </div>
 </div>
@@ -2344,7 +2344,7 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>a <code><a class="el" href="classddc_1_1Chunk.html">Chunk</a></code> with the same support and layout as <code>src</code> allocated on the <code>Kokkos::HostSpace</code> memory space. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="create__mirror_8hpp_source.html#l00039">39</a> of file <a class="el" href="create__mirror_8hpp_source.html">create_mirror.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="create__mirror_8hpp_source.html#l00040">40</a> of file <a class="el" href="create__mirror_8hpp_source.html">create_mirror.hpp</a>.</p>
 
 </div>
 </div>
@@ -2384,7 +2384,7 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>a <code><a class="el" href="classddc_1_1Chunk.html">Chunk</a></code> with the same support and layout as <code>src</code> allocated on the <code>Space::memory_space</code> memory space and operates a deep copy between the two. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="create__mirror_8hpp_source.html#l00048">48</a> of file <a class="el" href="create__mirror_8hpp_source.html">create_mirror.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="create__mirror_8hpp_source.html#l00049">49</a> of file <a class="el" href="create__mirror_8hpp_source.html">create_mirror.hpp</a>.</p>
 
 </div>
 </div>
@@ -2415,7 +2415,7 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>a <code><a class="el" href="classddc_1_1Chunk.html">Chunk</a></code> with the same support and layout as <code>src</code> allocated on the <code>Kokkos::HostSpace</code> memory space and operates a deep copy between the two. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="create__mirror_8hpp_source.html#l00067">67</a> of file <a class="el" href="create__mirror_8hpp_source.html">create_mirror.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="create__mirror_8hpp_source.html#l00068">68</a> of file <a class="el" href="create__mirror_8hpp_source.html">create_mirror.hpp</a>.</p>
 
 </div>
 </div>
@@ -2455,7 +2455,7 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>If <code>MemorySpace</code> is accessible from <code>Space</code> then returns a copy of <code>src</code>, otherwise returns a <code><a class="el" href="classddc_1_1Chunk.html">Chunk</a></code> with the same support and layout as <code>src</code> allocated on the <code>Space::memory_space</code> memory space. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="create__mirror_8hpp_source.html#l00076">76</a> of file <a class="el" href="create__mirror_8hpp_source.html">create_mirror.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="create__mirror_8hpp_source.html#l00077">77</a> of file <a class="el" href="create__mirror_8hpp_source.html">create_mirror.hpp</a>.</p>
 
 </div>
 </div>
@@ -2486,7 +2486,7 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>If <code>Kokkos::HostSpace</code> is accessible from <code>Space</code> then returns a copy of <code>src</code>, otherwise returns a <code><a class="el" href="classddc_1_1Chunk.html">Chunk</a></code> with the same support and layout as <code>src</code> allocated on the <code>Kokkos::HostSpace</code> memory space. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="create__mirror_8hpp_source.html#l00100">100</a> of file <a class="el" href="create__mirror_8hpp_source.html">create_mirror.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="create__mirror_8hpp_source.html#l00101">101</a> of file <a class="el" href="create__mirror_8hpp_source.html">create_mirror.hpp</a>.</p>
 
 </div>
 </div>
@@ -2526,7 +2526,7 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>If <code>MemorySpace</code> is accessible from <code>Space</code> then returns a copy of <code>src</code>, otherwise returns a <code><a class="el" href="classddc_1_1Chunk.html">Chunk</a></code> with the same support and layout as <code>src</code> allocated on the <code>Space::memory_space</code> memory space and operates a deep copy between the two. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="create__mirror_8hpp_source.html#l00109">109</a> of file <a class="el" href="create__mirror_8hpp_source.html">create_mirror.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="create__mirror_8hpp_source.html#l00110">110</a> of file <a class="el" href="create__mirror_8hpp_source.html">create_mirror.hpp</a>.</p>
 
 </div>
 </div>
@@ -2557,7 +2557,7 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>If <code>Kokkos::HostSpace</code> is accessible from <code>Space</code> then returns a copy of <code>src</code>, otherwise returns a <code><a class="el" href="classddc_1_1Chunk.html">Chunk</a></code> with the same support and layout as <code>src</code> allocated on the <code>Kokkos::HostSpace</code> memory space and operates a deep copy between the two. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="create__mirror_8hpp_source.html#l00130">130</a> of file <a class="el" href="create__mirror_8hpp_source.html">create_mirror.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="create__mirror_8hpp_source.html#l00131">131</a> of file <a class="el" href="create__mirror_8hpp_source.html">create_mirror.hpp</a>.</p>
 
 </div>
 </div>
@@ -2587,12 +2587,12 @@ template&lt;class... QueryDDims, class... DDims&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="discrete__domain_8hpp_source.html#l00461">461</a> of file <a class="el" href="discrete__domain_8hpp_source.html">discrete_domain.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="discrete__domain_8hpp_source.html#l00458">458</a> of file <a class="el" href="discrete__domain_8hpp_source.html">discrete_domain.hpp</a>.</p>
 
 </div>
 </div>
-<a id="a8c5099ed1365bf973383b84302b8228b" name="a8c5099ed1365bf973383b84302b8228b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8c5099ed1365bf973383b84302b8228b">&#9670;&#160;</a></span>remove_dims_of() <span class="overload">[1/6]</span></h2>
+<a id="a33f7211707aa798fa665779d9a39a741" name="a33f7211707aa798fa665779d9a39a741"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a33f7211707aa798fa665779d9a39a741">&#9670;&#160;</a></span>remove_dims_of() <span class="overload">[1/6]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2612,7 +2612,7 @@ template&lt;class... DDimsA, class... DDimsB&gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>&lt; DDimsB... &gt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;&#160;</td>
-          <td class="paramname"><em>DDom_b</em>&#160;</td>
+          <td class="paramname">&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -2627,7 +2627,7 @@ template&lt;class... DDimsA, class... DDimsB&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="discrete__domain_8hpp_source.html#l00511">511</a> of file <a class="el" href="discrete__domain_8hpp_source.html">discrete_domain.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="discrete__domain_8hpp_source.html#l00508">508</a> of file <a class="el" href="discrete__domain_8hpp_source.html">discrete_domain.hpp</a>.</p>
 
 </div>
 </div>
@@ -2666,7 +2666,7 @@ template&lt;class... DDimsB, class... DDimsA&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The discrete domain without DDimsB dimensions </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="discrete__domain_8hpp_source.html#l00526">526</a> of file <a class="el" href="discrete__domain_8hpp_source.html">discrete_domain.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="discrete__domain_8hpp_source.html#l00523">523</a> of file <a class="el" href="discrete__domain_8hpp_source.html">discrete_domain.hpp</a>.</p>
 
 </div>
 </div>
@@ -2706,7 +2706,7 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="discrete__domain_8hpp_source.html#l00562">562</a> of file <a class="el" href="discrete__domain_8hpp_source.html">discrete_domain.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="discrete__domain_8hpp_source.html#l00559">559</a> of file <a class="el" href="discrete__domain_8hpp_source.html">discrete_domain.hpp</a>.</p>
 
 </div>
 </div>
@@ -2736,7 +2736,7 @@ template&lt;class... QueryDDims, class... DDims&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="discrete__domain_8hpp_source.html#l00588">588</a> of file <a class="el" href="discrete__domain_8hpp_source.html">discrete_domain.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="discrete__domain_8hpp_source.html#l00585">585</a> of file <a class="el" href="discrete__domain_8hpp_source.html">discrete_domain.hpp</a>.</p>
 
 </div>
 </div>
@@ -2766,7 +2766,7 @@ template&lt;class... QueryDDims, class... DDims&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="discrete__domain_8hpp_source.html#l00595">595</a> of file <a class="el" href="discrete__domain_8hpp_source.html">discrete_domain.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="discrete__domain_8hpp_source.html#l00592">592</a> of file <a class="el" href="discrete__domain_8hpp_source.html">discrete_domain.hpp</a>.</p>
 
 </div>
 </div>
@@ -2796,7 +2796,7 @@ template&lt;class... QueryDDims, class... DDims&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="discrete__domain_8hpp_source.html#l00602">602</a> of file <a class="el" href="discrete__domain_8hpp_source.html">discrete_domain.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="discrete__domain_8hpp_source.html#l00599">599</a> of file <a class="el" href="discrete__domain_8hpp_source.html">discrete_domain.hpp</a>.</p>
 
 </div>
 </div>
@@ -5750,7 +5750,7 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="parallel__transform__reduce_8hpp_source.html#l00172">172</a> of file <a class="el" href="parallel__transform__reduce_8hpp_source.html">parallel_transform_reduce.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parallel__transform__reduce_8hpp_source.html#l00170">170</a> of file <a class="el" href="parallel__transform__reduce_8hpp_source.html">parallel_transform_reduce.hpp</a>.</p>
 
 </div>
 </div>
@@ -5820,7 +5820,7 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="parallel__transform__reduce_8hpp_source.html#l00199">199</a> of file <a class="el" href="parallel__transform__reduce_8hpp_source.html">parallel_transform_reduce.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parallel__transform__reduce_8hpp_source.html#l00197">197</a> of file <a class="el" href="parallel__transform__reduce_8hpp_source.html">parallel_transform_reduce.hpp</a>.</p>
 
 </div>
 </div>
@@ -5890,7 +5890,7 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="parallel__transform__reduce_8hpp_source.html#l00225">225</a> of file <a class="el" href="parallel__transform__reduce_8hpp_source.html">parallel_transform_reduce.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parallel__transform__reduce_8hpp_source.html#l00223">223</a> of file <a class="el" href="parallel__transform__reduce_8hpp_source.html">parallel_transform_reduce.hpp</a>.</p>
 
 </div>
 </div>
@@ -5953,7 +5953,7 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="parallel__transform__reduce_8hpp_source.html#l00250">250</a> of file <a class="el" href="parallel__transform__reduce_8hpp_source.html">parallel_transform_reduce.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parallel__transform__reduce_8hpp_source.html#l00248">248</a> of file <a class="el" href="parallel__transform__reduce_8hpp_source.html">parallel_transform_reduce.hpp</a>.</p>
 
 </div>
 </div>
@@ -6268,12 +6268,12 @@ template&lt;class... QueryDDims, class... DDims&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="sparse__discrete__domain_8hpp_source.html#l00508">508</a> of file <a class="el" href="sparse__discrete__domain_8hpp_source.html">sparse_discrete_domain.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="sparse__discrete__domain_8hpp_source.html#l00503">503</a> of file <a class="el" href="sparse__discrete__domain_8hpp_source.html">sparse_discrete_domain.hpp</a>.</p>
 
 </div>
 </div>
-<a id="aed41ae01c51f3a06925f140092820901" name="aed41ae01c51f3a06925f140092820901"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aed41ae01c51f3a06925f140092820901">&#9670;&#160;</a></span>remove_dims_of() <span class="overload">[3/6]</span></h2>
+<a id="a778e8b5e9c73e17745f3f890fa61a5ed" name="a778e8b5e9c73e17745f3f890fa61a5ed"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a778e8b5e9c73e17745f3f890fa61a5ed">&#9670;&#160;</a></span>remove_dims_of() <span class="overload">[3/6]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -6293,7 +6293,7 @@ template&lt;class... DDimsA, class... DDimsB&gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="classddc_1_1SparseDiscreteDomain.html">SparseDiscreteDomain</a>&lt; DDimsB... &gt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;&#160;</td>
-          <td class="paramname"><em>DDom_b</em>&#160;</td>
+          <td class="paramname">&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -6308,7 +6308,7 @@ template&lt;class... DDimsA, class... DDimsB&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="sparse__discrete__domain_8hpp_source.html#l00533">533</a> of file <a class="el" href="sparse__discrete__domain_8hpp_source.html">sparse_discrete_domain.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="sparse__discrete__domain_8hpp_source.html#l00528">528</a> of file <a class="el" href="sparse__discrete__domain_8hpp_source.html">sparse_discrete_domain.hpp</a>.</p>
 
 </div>
 </div>
@@ -6347,7 +6347,7 @@ template&lt;class... DDimsB, class... DDimsA&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The discrete domain without DDimsB dimensions </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="sparse__discrete__domain_8hpp_source.html#l00548">548</a> of file <a class="el" href="sparse__discrete__domain_8hpp_source.html">sparse_discrete_domain.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="sparse__discrete__domain_8hpp_source.html#l00543">543</a> of file <a class="el" href="sparse__discrete__domain_8hpp_source.html">sparse_discrete_domain.hpp</a>.</p>
 
 </div>
 </div>
@@ -6387,7 +6387,7 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="sparse__discrete__domain_8hpp_source.html#l00581">581</a> of file <a class="el" href="sparse__discrete__domain_8hpp_source.html">sparse_discrete_domain.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="sparse__discrete__domain_8hpp_source.html#l00576">576</a> of file <a class="el" href="sparse__discrete__domain_8hpp_source.html">sparse_discrete_domain.hpp</a>.</p>
 
 </div>
 </div>
@@ -6417,7 +6417,7 @@ template&lt;class... QueryDDims, class... DDims&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="sparse__discrete__domain_8hpp_source.html#l00600">600</a> of file <a class="el" href="sparse__discrete__domain_8hpp_source.html">sparse_discrete_domain.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="sparse__discrete__domain_8hpp_source.html#l00595">595</a> of file <a class="el" href="sparse__discrete__domain_8hpp_source.html">sparse_discrete_domain.hpp</a>.</p>
 
 </div>
 </div>
@@ -6447,7 +6447,7 @@ template&lt;class... QueryDDims, class... DDims&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="sparse__discrete__domain_8hpp_source.html#l00607">607</a> of file <a class="el" href="sparse__discrete__domain_8hpp_source.html">sparse_discrete_domain.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="sparse__discrete__domain_8hpp_source.html#l00602">602</a> of file <a class="el" href="sparse__discrete__domain_8hpp_source.html">sparse_discrete_domain.hpp</a>.</p>
 
 </div>
 </div>
@@ -6477,7 +6477,7 @@ template&lt;class... QueryDDims, class... DDims&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="sparse__discrete__domain_8hpp_source.html#l00614">614</a> of file <a class="el" href="sparse__discrete__domain_8hpp_source.html">sparse_discrete_domain.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="sparse__discrete__domain_8hpp_source.html#l00609">609</a> of file <a class="el" href="sparse__discrete__domain_8hpp_source.html">sparse_discrete_domain.hpp</a>.</p>
 
 </div>
 </div>
@@ -6547,12 +6547,12 @@ template&lt;class... QueryDDims, class... DDims&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00474">474</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00470">470</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
 
 </div>
 </div>
-<a id="a0da011d8792d48d72e50587b91e692cc" name="a0da011d8792d48d72e50587b91e692cc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0da011d8792d48d72e50587b91e692cc">&#9670;&#160;</a></span>remove_dims_of() <span class="overload">[5/6]</span></h2>
+<a id="a72133cf3303c4794751a6013d90cce0d" name="a72133cf3303c4794751a6013d90cce0d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a72133cf3303c4794751a6013d90cce0d">&#9670;&#160;</a></span>remove_dims_of() <span class="overload">[5/6]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -6572,7 +6572,7 @@ template&lt;class... DDimsA, class... DDimsB&gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="classddc_1_1StridedDiscreteDomain.html">StridedDiscreteDomain</a>&lt; DDimsB... &gt; <a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">const</a> &amp;&#160;</td>
-          <td class="paramname"><em>DDom_b</em>&#160;</td>
+          <td class="paramname">&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -6587,7 +6587,7 @@ template&lt;class... DDimsA, class... DDimsB&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00499">499</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00495">495</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
 
 </div>
 </div>
@@ -6626,7 +6626,7 @@ template&lt;class... DDimsB, class... DDimsA&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The discrete domain without DDimsB dimensions </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00514">514</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00510">510</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
 
 </div>
 </div>
@@ -6666,7 +6666,7 @@ template&lt;<a class="el" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00547">547</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00543">543</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
 
 </div>
 </div>
@@ -6696,7 +6696,7 @@ template&lt;class... QueryDDims, class... DDims&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00566">566</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00562">562</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
 
 </div>
 </div>
@@ -6726,7 +6726,7 @@ template&lt;class... QueryDDims, class... DDims&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00573">573</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00569">569</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
 
 </div>
 </div>
@@ -6756,7 +6756,7 @@ template&lt;class... QueryDDims, class... DDims&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00580">580</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00576">576</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
 
 </div>
 </div>

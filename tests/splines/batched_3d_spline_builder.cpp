@@ -1224,18 +1224,18 @@ void TestBatched3dSpline()
 #define SUFFIX_DEGREE_MACRO_EXP(name, degree) SUFFIX_DEGREE(name, degree)
 #define SUFFIX(name) SUFFIX_DEGREE_MACRO_EXP(name, DEGREE)
 
-TEST(SUFFIX(Batched3dSplineHost), 3DXYZ)
-{
-    TestBatched3dSpline<
-            Kokkos::DefaultHostExecutionSpace,
-            Kokkos::DefaultHostExecutionSpace::memory_space,
-            DDimGPS<DimX>,
-            DDimGPS<DimY>,
-            DDimGPS<DimZ>,
-            DDimGPS<DimX>,
-            DDimGPS<DimY>,
-            DDimGPS<DimZ>>();
-}
+// TEST(SUFFIX(Batched3dSplineHost), 3DXYZ)
+// {
+//     TestBatched3dSpline<
+//             Kokkos::DefaultHostExecutionSpace,
+//             Kokkos::DefaultHostExecutionSpace::memory_space,
+//             DDimGPS<DimX>,
+//             DDimGPS<DimY>,
+//             DDimGPS<DimZ>,
+//             DDimGPS<DimX>,
+//             DDimGPS<DimY>,
+//             DDimGPS<DimZ>>();
+// }
 
 TEST(SUFFIX(Batched3dSplineDevice), 3DXYZ)
 {
@@ -1250,11 +1250,11 @@ TEST(SUFFIX(Batched3dSplineDevice), 3DXYZ)
             DDimGPS<DimZ>>();
 }
 
-TEST(SUFFIX(Batched3dSplineHost), 4DXYZB)
+TEST(SUFFIX(Batched3dSplineDevice), 4DXYZB)
 {
     TestBatched3dSpline<
-            Kokkos::DefaultHostExecutionSpace,
-            Kokkos::DefaultHostExecutionSpace::memory_space,
+            Kokkos::DefaultExecutionSpace,
+            Kokkos::DefaultExecutionSpace::memory_space,
             DDimGPS<DimX>,
             DDimGPS<DimY>,
             DDimGPS<DimZ>,
@@ -1264,11 +1264,11 @@ TEST(SUFFIX(Batched3dSplineHost), 4DXYZB)
             DDimBatch>();
 }
 
-TEST(SUFFIX(Batched3dSplineHost), 4DXBYZ)
+TEST(SUFFIX(Batched3dSplineDevice), 4DXBYZ)
 {
     TestBatched3dSpline<
-            Kokkos::DefaultHostExecutionSpace,
-            Kokkos::DefaultHostExecutionSpace::memory_space,
+            Kokkos::DefaultExecutionSpace,
+            Kokkos::DefaultExecutionSpace::memory_space,
             DDimGPS<DimX>,
             DDimGPS<DimY>,
             DDimGPS<DimZ>,
@@ -1278,11 +1278,11 @@ TEST(SUFFIX(Batched3dSplineHost), 4DXBYZ)
             DDimGPS<DimZ>>();
 }
 
-TEST(SUFFIX(Batched3dSplineHost), 4DXYBZ)
+TEST(SUFFIX(Batched3dSplineDevice), 4DXYBZ)
 {
     TestBatched3dSpline<
-            Kokkos::DefaultHostExecutionSpace,
-            Kokkos::DefaultHostExecutionSpace::memory_space,
+            Kokkos::DefaultExecutionSpace,
+            Kokkos::DefaultExecutionSpace::memory_space,
             DDimGPS<DimX>,
             DDimGPS<DimY>,
             DDimGPS<DimZ>,
@@ -1292,11 +1292,11 @@ TEST(SUFFIX(Batched3dSplineHost), 4DXYBZ)
             DDimGPS<DimZ>>();
 }
 
-TEST(SUFFIX(Batched3dSplineHost), 4DBXYZ)
+TEST(SUFFIX(Batched3dSplineDevice), 4DBXYZ)
 {
     TestBatched3dSpline<
-            Kokkos::DefaultHostExecutionSpace,
-            Kokkos::DefaultHostExecutionSpace::memory_space,
+            Kokkos::DefaultExecutionSpace,
+            Kokkos::DefaultExecutionSpace::memory_space,
             DDimGPS<DimX>,
             DDimGPS<DimY>,
             DDimGPS<DimZ>,

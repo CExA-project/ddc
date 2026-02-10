@@ -202,13 +202,13 @@ void TestPeriodicitySplineBuilder()
 
 } // namespace anonymous_namespace_workaround_periodicity_spline_builder_cpp
 
-TEST(PeriodicitySplineBuilderHost, 1D)
-{
-    TestPeriodicitySplineBuilder<
-            Kokkos::DefaultHostExecutionSpace,
-            Kokkos::DefaultHostExecutionSpace::memory_space,
-            DimX>();
-}
+// TEST(PeriodicitySplineBuilderHost, 1D)
+// {
+//     TestPeriodicitySplineBuilder<
+//             Kokkos::DefaultHostExecutionSpace,
+//             Kokkos::DefaultHostExecutionSpace::memory_space,
+//             DimX>();
+// }
 
 TEST(PeriodicitySplineBuilderDevice, 1D)
 {

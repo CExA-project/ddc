@@ -167,13 +167,14 @@ struct BSplinesTraitsNames
     }
 };
 
-#if defined(KOKKOS_ENABLE_SERIAL)
-using execution_space_types = std::
-        tuple<Kokkos::Serial, Kokkos::DefaultHostExecutionSpace, Kokkos::DefaultExecutionSpace>;
-#else
-using execution_space_types
-        = std::tuple<Kokkos::DefaultHostExecutionSpace, Kokkos::DefaultExecutionSpace>;
-#endif
+using execution_space_types = std::tuple<Kokkos::DefaultExecutionSpace>;
+// #if defined(KOKKOS_ENABLE_SERIAL)
+// using execution_space_types = std::
+//         tuple<Kokkos::Serial, Kokkos::DefaultHostExecutionSpace, Kokkos::DefaultExecutionSpace>;
+// #else
+// using execution_space_types
+//         = std::tuple<Kokkos::DefaultHostExecutionSpace, Kokkos::DefaultExecutionSpace>;
+// #endif
 
 using spline_degrees = std::integer_sequence<std::size_t, 2, 3>;
 

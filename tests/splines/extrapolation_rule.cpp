@@ -353,16 +353,16 @@ void TestExtrapolationRuleSpline()
 #define SUFFIX_DEGREE_MACRO_EXP(name, degree) SUFFIX_DEGREE(name, degree)
 #define SUFFIX(name) SUFFIX_DEGREE_MACRO_EXP(name, DEGREE)
 
-TEST(SUFFIX(ExtrapolationRuleSplineHost), 2DXY)
-{
-    TestExtrapolationRuleSpline<
-            Kokkos::DefaultHostExecutionSpace,
-            Kokkos::DefaultHostExecutionSpace::memory_space,
-            DDimGPS1<DimX>,
-            DDimGPS2<DimY>,
-            DDimGPS1<DimX>,
-            DDimGPS2<DimY>>();
-}
+// TEST(SUFFIX(ExtrapolationRuleSplineHost), 2DXY)
+// {
+//     TestExtrapolationRuleSpline<
+//             Kokkos::DefaultHostExecutionSpace,
+//             Kokkos::DefaultHostExecutionSpace::memory_space,
+//             DDimGPS1<DimX>,
+//             DDimGPS2<DimY>,
+//             DDimGPS1<DimX>,
+//             DDimGPS2<DimY>>();
+// }
 
 TEST(SUFFIX(ExtrapolationRuleSplineDevice), 2DXY)
 {

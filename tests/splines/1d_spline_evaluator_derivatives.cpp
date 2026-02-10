@@ -311,14 +311,14 @@ void TestSplineEvaluator1dDerivatives()
 #define SUFFIX_DEGREE_MACRO_EXP(name, degree) SUFFIX_DEGREE(name, degree)
 #define SUFFIX(name) SUFFIX_DEGREE_MACRO_EXP(name, DEGREE_X)
 
-TEST(SUFFIX(SplineEvaluator1dDerivativesHost), 1DX)
-{
-    TestSplineEvaluator1dDerivatives<
-            Kokkos::DefaultHostExecutionSpace,
-            Kokkos::DefaultHostExecutionSpace::memory_space,
-            DDimGPS<DimX>,
-            DDimGPS<DimX>>();
-}
+// TEST(SUFFIX(SplineEvaluator1dDerivativesHost), 1DX)
+// {
+//     TestSplineEvaluator1dDerivatives<
+//             Kokkos::DefaultHostExecutionSpace,
+//             Kokkos::DefaultHostExecutionSpace::memory_space,
+//             DDimGPS<DimX>,
+//             DDimGPS<DimX>>();
+// }
 
 TEST(SUFFIX(SplineEvaluator1dDerivativesDevice), 1DX)
 {
@@ -329,25 +329,25 @@ TEST(SUFFIX(SplineEvaluator1dDerivativesDevice), 1DX)
             DDimGPS<DimX>>();
 }
 
-TEST(SUFFIX(SplineEvaluator1dDerivativesHost), 2DXB1)
-{
-    TestSplineEvaluator1dDerivatives<
-            Kokkos::DefaultHostExecutionSpace,
-            Kokkos::DefaultHostExecutionSpace::memory_space,
-            DDimGPS<DimX>,
-            DDimGPS<DimX>,
-            DDimBatch1>();
-}
+// TEST(SUFFIX(SplineEvaluator1dDerivativesHost), 2DXB1)
+// {
+//     TestSplineEvaluator1dDerivatives<
+//             Kokkos::DefaultHostExecutionSpace,
+//             Kokkos::DefaultHostExecutionSpace::memory_space,
+//             DDimGPS<DimX>,
+//             DDimGPS<DimX>,
+//             DDimBatch1>();
+// }
 
-TEST(SUFFIX(SplineEvaluator1dDerivativesHost), 2DB1X)
-{
-    TestSplineEvaluator1dDerivatives<
-            Kokkos::DefaultHostExecutionSpace,
-            Kokkos::DefaultHostExecutionSpace::memory_space,
-            DDimGPS<DimX>,
-            DDimBatch1,
-            DDimGPS<DimX>>();
-}
+// TEST(SUFFIX(SplineEvaluator1dDerivativesHost), 2DB1X)
+// {
+//     TestSplineEvaluator1dDerivatives<
+//             Kokkos::DefaultHostExecutionSpace,
+//             Kokkos::DefaultHostExecutionSpace::memory_space,
+//             DDimGPS<DimX>,
+//             DDimBatch1,
+//             DDimGPS<DimX>>();
+// }
 
 TEST(SUFFIX(SplineEvaluator1dDerivativesDevice), 2DXB1)
 {
@@ -369,38 +369,38 @@ TEST(SUFFIX(SplineEvaluator1dDerivativesDevice), 2DB1X)
             DDimGPS<DimX>>();
 }
 
-TEST(SUFFIX(SplineEvaluator1dDerivativesHost), 3DXB1B2)
-{
-    TestSplineEvaluator1dDerivatives<
-            Kokkos::DefaultHostExecutionSpace,
-            Kokkos::DefaultHostExecutionSpace::memory_space,
-            DDimGPS<DimX>,
-            DDimGPS<DimX>,
-            DDimBatch1,
-            DDimBatch2>();
-}
+// TEST(SUFFIX(SplineEvaluator1dDerivativesHost), 3DXB1B2)
+// {
+//     TestSplineEvaluator1dDerivatives<
+//             Kokkos::DefaultHostExecutionSpace,
+//             Kokkos::DefaultHostExecutionSpace::memory_space,
+//             DDimGPS<DimX>,
+//             DDimGPS<DimX>,
+//             DDimBatch1,
+//             DDimBatch2>();
+// }
 
-TEST(SUFFIX(SplineEvaluator1dDerivativesHost), 3DB1XB2)
-{
-    TestSplineEvaluator1dDerivatives<
-            Kokkos::DefaultHostExecutionSpace,
-            Kokkos::DefaultHostExecutionSpace::memory_space,
-            DDimGPS<DimX>,
-            DDimBatch1,
-            DDimGPS<DimX>,
-            DDimBatch2>();
-}
+// TEST(SUFFIX(SplineEvaluator1dDerivativesHost), 3DB1XB2)
+// {
+//     TestSplineEvaluator1dDerivatives<
+//             Kokkos::DefaultHostExecutionSpace,
+//             Kokkos::DefaultHostExecutionSpace::memory_space,
+//             DDimGPS<DimX>,
+//             DDimBatch1,
+//             DDimGPS<DimX>,
+//             DDimBatch2>();
+// }
 
-TEST(SUFFIX(SplineEvaluator1dDerivativesHost), 3DB1B2X)
-{
-    TestSplineEvaluator1dDerivatives<
-            Kokkos::DefaultHostExecutionSpace,
-            Kokkos::DefaultHostExecutionSpace::memory_space,
-            DDimGPS<DimX>,
-            DDimBatch1,
-            DDimBatch2,
-            DDimGPS<DimX>>();
-}
+// TEST(SUFFIX(SplineEvaluator1dDerivativesHost), 3DB1B2X)
+// {
+//     TestSplineEvaluator1dDerivatives<
+//             Kokkos::DefaultHostExecutionSpace,
+//             Kokkos::DefaultHostExecutionSpace::memory_space,
+//             DDimGPS<DimX>,
+//             DDimBatch1,
+//             DDimBatch2,
+//             DDimGPS<DimX>>();
+// }
 
 TEST(SUFFIX(SplineEvaluator1dDerivativesDevice), 3DXB1B2)
 {

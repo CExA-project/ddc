@@ -21,6 +21,7 @@ auto create_mirror(
         [[maybe_unused]] Space const& space,
         ChunkSpan<ElementType, Support, Layout, MemorySpace> const& src)
 {
+    // `space` is always unused, but needed for Doxygen
     static_assert(
             Kokkos::is_memory_space_v<Space> || Kokkos::is_execution_space_v<Space>,
             "DDC: parameter \"Space\" must be either a Kokkos execution space or a memory space");

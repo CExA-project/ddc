@@ -337,7 +337,7 @@ public:
             [[maybe_unused]] discrete_element_type const& element_begin,
             [[maybe_unused]] discrete_vector_type const& size)
     {
-        // Parameters `element_begin` and `size` are truly unused
+        // Parameters `element_begin` and `size` are always unused, but needed for Doxygen
     }
 
     KOKKOS_DEFAULTED_FUNCTION DiscreteDomain(DiscreteDomain const& x) = default;

@@ -3,6 +3,8 @@
 // SPDX-License-Identifier: MIT
 
 #include <cstddef>
+#include <ios>
+#include <sstream>
 #include <tuple>
 #include <type_traits>
 #include <utility>
@@ -70,9 +72,12 @@ struct UniformBSplinesFixtureNames
     template <typename T>
     static std::string GetName(int)
     {
-        using Periodic = std::tuple_element_t<0, T>;
+        std::stringstream ss;
+        ss << std::boolalpha;
+        ss << "Periodic:" << std::tuple_element_t<0, T>::value;
+        ss << "/0";
 
-        return "Periodic:" + std::to_string(Periodic::value) + "/0";
+        return ss.str();
     }
 };
 

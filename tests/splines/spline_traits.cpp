@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 #include <cstddef>
+#include <sstream>
 #include <tuple>
 #include <type_traits>
 #include <utility>
@@ -155,16 +156,14 @@ struct BSplinesTraitsNames
     template <typename T>
     static std::string GetName(int)
     {
-        using execution_space1 = std::tuple_element_t<0, T>;
-        using degree1 = std::tuple_element_t<1, T>;
-        using execution_space2 = std::tuple_element_t<2, T>;
-        using degree2 = std::tuple_element_t<3, T>;
-        Kokkos::DefaultExecutionSpace::name();
+        std::stringstream ss;
+        ss << "ExecSpace1:" << std::tuple_element_t<0, T>::name();
+        ss << "/Degree1:" << std::tuple_element_t<1, T>::value;
+        ss << "/ExecSpace2:" << std::tuple_element_t<2, T>::name();
+        ss << "/Degree2:" << std::tuple_element_t<3, T>::value;
+        ss << "/0";
 
-        return "ExecSpace1:" + std::string(execution_space1::name())
-               + "/Degree1:" + std::to_string(degree1::value)
-               + "/ExecSpace2:" + std::string(execution_space2::name())
-               + "/Degree2:" + std::to_string(degree2::value) + "/0";
+        return ss.str();
     }
 };
 

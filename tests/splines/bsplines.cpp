@@ -5,7 +5,9 @@
 #include <array>
 #include <cmath>
 #include <cstddef>
+#include <ios>
 #include <limits>
+#include <sstream>
 #include <tuple>
 #include <type_traits>
 #include <utility>
@@ -48,12 +50,14 @@ struct BSplinesFixtureNames
     template <typename T>
     static std::string GetName(int)
     {
-        using Degree = std::tuple_element_t<0, T>;
-        using Knots = std::tuple_element_t<1, T>;
-        using Periodic = std::tuple_element_t<2, T>;
+        std::stringstream ss;
+        ss << std::boolalpha;
+        ss << "Degree:" << std::tuple_element_t<0, T>::value;
+        ss << "/Cells:" << std::tuple_element_t<1, T>::value;
+        ss << "/Periodic:" << std::tuple_element_t<2, T>::value;
+        ss << "/0";
 
-        return "Degree:" + std::to_string(Degree::value) + "/Cells:" + std::to_string(Knots::value)
-               + "/Periodic:" + std::to_string(Periodic::value) + "/0";
+        return ss.str();
     }
 };
 

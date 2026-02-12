@@ -50,7 +50,7 @@ To use DDC components, one needs the following dependencies:
 * (optional, fft interface) DDC::fft
   * Kokkos-fft 0.3.0...<2
 * (optional, IO interface) DDC::pdi
-  * PDI 1.6...<2
+  * PDI 1.10.1...<2
 * (optional, spline interpolation) DDC::splines
   * Ginkgo 1.8...<2
   * Kokkos Kernels 4.5.1...<6

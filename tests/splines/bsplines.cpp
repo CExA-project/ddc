@@ -5,7 +5,9 @@
 #include <array>
 #include <cmath>
 #include <cstddef>
+#include <ios>
 #include <limits>
+#include <sstream>
 #include <tuple>
 #include <type_traits>
 #include <utility>
@@ -43,14 +45,29 @@ struct BSplinesFixture<std::tuple<
     static constexpr std::size_t ncells = Nc;
 };
 
+struct BSplinesFixtureNames
+{
+    template <typename T>
+    static std::string GetName(int)
+    {
+        std::stringstream ss;
+        ss << std::boolalpha;
+        ss << "Degree:" << std::tuple_element_t<0, T>::value;
+        ss << "/Cells:" << std::tuple_element_t<1, T>::value;
+        ss << "/Periodic:" << std::tuple_element_t<2, T>::value;
+        ss << "/0";
+
+        return ss.str();
+    }
+};
+
 using degrees = std::integer_sequence<std::size_t, 1, 2, 3, 4, 5, 6>;
 using ncells = std::integer_sequence<std::size_t, 10, 20, 100>;
 using periodicity = std::integer_sequence<bool, true, false>;
 
 using Cases = tuple_to_types_t<cartesian_product_t<degrees, ncells, periodicity>>;
 
-// Trailing comma is needed to avoid spurious `gnu-zero-variadic-macro-arguments` warning with clang
-TYPED_TEST_SUITE(BSplinesFixture, Cases, );
+TYPED_TEST_SUITE(BSplinesFixture, Cases, BSplinesFixtureNames);
 
 TYPED_TEST(BSplinesFixture, PartitionOfUnityUniform)
 {

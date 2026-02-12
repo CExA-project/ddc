@@ -23,7 +23,7 @@ struct DimX
     static constexpr bool PERIODIC = true;
 };
 
-constexpr std::size_t s_degree_x = DEGREE_X;
+constexpr std::size_t s_degree = DEGREE;
 
 template <typename BSpX>
 using GrevillePoints = ddc::
@@ -31,7 +31,7 @@ using GrevillePoints = ddc::
 
 #if defined(BSPLINES_TYPE_UNIFORM)
 template <typename X>
-struct BSplines : ddc::UniformBSplines<X, s_degree_x>
+struct BSplines : ddc::UniformBSplines<X, s_degree>
 {
 };
 
@@ -43,7 +43,7 @@ struct DDim : GrevillePoints<BSplines<X>>::interpolation_discrete_dimension_type
 
 #elif defined(BSPLINES_TYPE_NON_UNIFORM)
 template <typename X>
-struct BSplines : ddc::NonUniformBSplines<X, s_degree_x>
+struct BSplines : ddc::NonUniformBSplines<X, s_degree>
 {
 };
 
@@ -197,7 +197,7 @@ void TestPeriodicitySplineBuilder()
     SplineErrorBounds<evaluator_type<DDim<X>>> const error_bounds(evaluator);
     EXPECT_LE(
             max_norm_error,
-            std::max(error_bounds.error_bound(dx<X>(ncells), s_degree_x), 1.0e-14 * max_norm));
+            std::max(error_bounds.error_bound(dx<X>(ncells), s_degree), 1.0e-14 * max_norm));
 }
 
 } // namespace anonymous_namespace_workaround_periodicity_spline_builder_cpp

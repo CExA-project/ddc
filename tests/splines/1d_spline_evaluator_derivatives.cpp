@@ -32,7 +32,7 @@ struct DDimBatch2
 {
 };
 
-constexpr std::size_t s_degree_x = DEGREE_X;
+constexpr std::size_t s_degree = DEGREE;
 
 constexpr ddc::BoundCond s_bcl = ddc::BoundCond::PERIODIC;
 constexpr ddc::BoundCond s_bcr = ddc::BoundCond::PERIODIC;
@@ -42,12 +42,12 @@ using GrevillePoints = ddc::GrevilleInterpolationPoints<BSpX, s_bcl, s_bcr>;
 
 #if defined(BSPLINES_TYPE_UNIFORM)
 template <typename X>
-struct BSplines : ddc::UniformBSplines<X, s_degree_x>
+struct BSplines : ddc::UniformBSplines<X, s_degree>
 {
 };
 #elif defined(BSPLINES_TYPE_NON_UNIFORM)
 template <typename X>
-struct BSplines : ddc::NonUniformBSplines<X, s_degree_x>
+struct BSplines : ddc::NonUniformBSplines<X, s_degree>
 {
 };
 #endif
@@ -162,7 +162,7 @@ void test_deriv(
                     max(error_bounds.error_bound(
                                 std::array<ddc::DiscreteElementType, 1> {order},
                                 {dx<I>(ncells)},
-                                {s_degree_x}),
+                                {s_degree}),
                         1e-11 * max_norm_diff));
 }
 
@@ -309,7 +309,7 @@ void TestSplineEvaluator1dDerivatives()
 #    define SUFFIX_DEGREE(name, degree) name##Periodic##NonUniform##Degree##degree
 #endif
 #define SUFFIX_DEGREE_MACRO_EXP(name, degree) SUFFIX_DEGREE(name, degree)
-#define SUFFIX(name) SUFFIX_DEGREE_MACRO_EXP(name, DEGREE_X)
+#define SUFFIX(name) SUFFIX_DEGREE_MACRO_EXP(name, DEGREE)
 
 TEST(SUFFIX(SplineEvaluator1dDerivativesHost), 1DX)
 {

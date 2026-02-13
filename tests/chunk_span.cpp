@@ -28,10 +28,6 @@ using DElemY = ddc::DiscreteElement<DDimY>;
 using DVectY = ddc::DiscreteVector<DDimY>;
 using DDomY = ddc::DiscreteDomain<DDimY>;
 
-using DElemXY = ddc::DiscreteElement<DDimX, DDimY>;
-using DVectXY = ddc::DiscreteVector<DDimX, DDimY>;
-using DDomXY = ddc::DiscreteDomain<DDimX, DDimY>;
-
 template <class Datatype>
 using ChunkX = ddc::Chunk<Datatype, DDomX>;
 
@@ -95,12 +91,17 @@ void TestChunkSpan1DTestCtadOnDevice()
     EXPECT_EQ(sum, view.size());
 }
 
-// Aliases to clarify tensor notations
-using DDimMu = DDimX;
-using DDimNu = DDimY;
-using DDomMuNu = DDomXY;
-using DVectMuNu = DVectXY;
-using DElemMuNu = DElemXY;
+struct DDimMu
+{
+};
+using DElemMu = ddc::DiscreteElement<DDimMu>;
+struct DDimNu
+{
+};
+using DElemNu = ddc::DiscreteElement<DDimNu>;
+using DElemMuNu = ddc::DiscreteElement<DDimMu, DDimNu>;
+using DVectMuNu = ddc::DiscreteVector<DDimMu, DDimNu>;
+using DDomMuNu = ddc::DiscreteDomain<DDimMu, DDimNu>;
 
 void TestChunkSpan2DTestCtorStaticStorageFromLayoutRightExtents()
 {
@@ -142,9 +143,9 @@ void TestChunkSpan2DTestCtorStaticStorageFromLayoutStrideMapping()
     Kokkos::View<double*, memory_space> sum_d("sum_d", 1);
     Kokkos::deep_copy(sum_d, 0.0);
 
-    DElemX const delem_mu = ddc::init_trivial_half_bounded_space<DDimMu>();
-    DElemY const delem_nu = ddc::init_trivial_half_bounded_space<DDimNu>();
-    DDomXY const domain_munu(DElemMuNu(delem_mu, delem_nu), DVectMuNu(2, 2));
+    DElemMu const delem_mu = ddc::init_trivial_half_bounded_space<DDimMu>();
+    DElemNu const delem_nu = ddc::init_trivial_half_bounded_space<DDimNu>();
+    DDomMuNu const domain_munu(DElemMuNu(delem_mu, delem_nu), DVectMuNu(2, 2));
 
     ddc::parallel_for_each(
             execution_space(),

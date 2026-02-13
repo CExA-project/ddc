@@ -106,8 +106,6 @@ jobs:
             -D BUILD_SHARED_LIBS=${{matrix.config.build_shared_libs}} \
             -D CMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
             -D CMAKE_MSVC_RUNTIME_LIBRARY=${{matrix.config.msvc_runtime}} \
-            -D DDC_GTest_DEPENDENCY_POLICY=INSTALLED \
-            -D DDC_Kokkos_DEPENDENCY_POLICY=INSTALLED \
             -D DDC_BUILD_KERNELS_FFT=OFF \
             -D DDC_BUILD_KERNELS_SPLINES=OFF \
             -D DDC_BUILD_PDI_WRAPPER=OFF \

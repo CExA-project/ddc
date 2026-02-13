@@ -106,7 +106,7 @@ void TestChunkSpan2DTestCtorStaticStorageFromLayoutRightExtents()
 {
     using execution_space = Kokkos::DefaultExecutionSpace;
     using memory_space = typename execution_space::memory_space;
-    using chunk_type = ddc::ChunkSpan<double, DDomMuNu, Kokkos::layout_right, memory_space, 4>;
+    using tensor_type = ddc::ChunkSpan<double, DDomMuNu, Kokkos::layout_right, memory_space, 4>;
 
     Kokkos::View<double*, memory_space> sum_d("sum_d", 1);
     Kokkos::deep_copy(sum_d, 0.0);
@@ -115,17 +115,17 @@ void TestChunkSpan2DTestCtorStaticStorageFromLayoutRightExtents()
             execution_space(),
             ddc::DiscreteDomain<>(),
             KOKKOS_LAMBDA(ddc::DiscreteElement<>) {
-                chunk_type chunk(2, 2);
+                tensor_type tensor(2, 2);
 
-                chunk(DElemMuNu(0, 0)) = 1.0;
-                chunk(DElemMuNu(0, 1)) = 2.0;
-                chunk(DElemMuNu(1, 0)) = 3.0;
-                chunk(DElemMuNu(1, 1)) = 4.0;
+                tensor(DElemMuNu(0, 0)) = 1.0;
+                tensor(DElemMuNu(0, 1)) = 2.0;
+                tensor(DElemMuNu(1, 0)) = 3.0;
+                tensor(DElemMuNu(1, 1)) = 4.0;
 
-                sum_d(0) += chunk(DElemMuNu(0, 0));
-                sum_d(0) += chunk(DElemMuNu(0, 1));
-                sum_d(0) += chunk(DElemMuNu(1, 0));
-                sum_d(0) += chunk(DElemMuNu(1, 1));
+                sum_d(0) += tensor(DElemMuNu(0, 0));
+                sum_d(0) += tensor(DElemMuNu(0, 1));
+                sum_d(0) += tensor(DElemMuNu(1, 0));
+                sum_d(0) += tensor(DElemMuNu(1, 1));
             });
 
     Kokkos::View<double*, Kokkos::DefaultHostExecutionSpace::memory_space> const sum_h
@@ -137,7 +137,7 @@ void TestChunkSpan2DTestCtorStaticStorageFromLayoutStrideMapping()
 {
     using execution_space = Kokkos::DefaultExecutionSpace;
     using memory_space = typename execution_space::memory_space;
-    using chunk_type = ddc::ChunkSpan<double, DDomMuNu, Kokkos::layout_stride, memory_space, 6>;
+    using tensor_type = ddc::ChunkSpan<double, DDomMuNu, Kokkos::layout_stride, memory_space, 6>;
 
     Kokkos::View<double*, memory_space> sum_d("sum_d", 1);
     Kokkos::deep_copy(sum_d, 0.0);
@@ -150,20 +150,20 @@ void TestChunkSpan2DTestCtorStaticStorageFromLayoutStrideMapping()
             execution_space(),
             ddc::DiscreteDomain<>(),
             KOKKOS_LAMBDA(ddc::DiscreteElement<>) {
-                typename chunk_type::extents_type const extents(2, 2);
-                typename chunk_type::mapping_type const
+                typename tensor_type::extents_type const extents(2, 2);
+                typename tensor_type::mapping_type const
                         layout_mapping(extents, std::array<std::size_t, 2> {3, 1});
-                chunk_type chunk(layout_mapping, domain_munu);
+                tensor_type tensor(layout_mapping, domain_munu);
 
-                chunk(DElemMuNu(0, 0)) = 1.0;
-                chunk(DElemMuNu(0, 1)) = 2.0;
-                chunk(DElemMuNu(1, 0)) = 3.0;
-                chunk(DElemMuNu(1, 1)) = 4.0;
+                tensor(DElemMuNu(0, 0)) = 1.0;
+                tensor(DElemMuNu(0, 1)) = 2.0;
+                tensor(DElemMuNu(1, 0)) = 3.0;
+                tensor(DElemMuNu(1, 1)) = 4.0;
 
-                sum_d(0) += chunk(DElemMuNu(0, 0));
-                sum_d(0) += chunk(DElemMuNu(0, 1));
-                sum_d(0) += chunk(DElemMuNu(1, 0));
-                sum_d(0) += chunk(DElemMuNu(1, 1));
+                sum_d(0) += tensor(DElemMuNu(0, 0));
+                sum_d(0) += tensor(DElemMuNu(0, 1));
+                sum_d(0) += tensor(DElemMuNu(1, 0));
+                sum_d(0) += tensor(DElemMuNu(1, 1));
             });
 
     Kokkos::View<double*, Kokkos::DefaultHostExecutionSpace::memory_space> const sum_h

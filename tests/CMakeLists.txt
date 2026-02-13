@@ -2,6 +2,10 @@
 #
 # SPDX-License-Identifier: MIT
 
+## GoogleTest
+# 1.14...<2 but GTest module does not support range version
+find_package(GTest 1.14 REQUIRED)
+
 include(GoogleTest)
 
 add_subdirectory(discrete_space)

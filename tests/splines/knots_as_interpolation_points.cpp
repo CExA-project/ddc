@@ -3,6 +3,8 @@
 // SPDX-License-Identifier: MIT
 
 #include <cstddef>
+#include <ios>
+#include <sstream>
 #include <tuple>
 #include <type_traits>
 #include <utility>
@@ -65,14 +67,27 @@ struct NonUniformBSplinesFixture<std::tuple<std::integral_constant<bool, IsPerio
     };
 };
 
+struct UniformBSplinesFixtureNames
+{
+    template <typename T>
+    static std::string GetName(int)
+    {
+        std::stringstream ss;
+        ss << std::boolalpha;
+        ss << "Periodic:" << std::tuple_element_t<0, T>::value;
+        ss << "/0";
+
+        return ss.str();
+    }
+};
+
 } // namespace anonymous_namespace_workaround_knots_as_interpolation_points_cpp
 
 using periodicity = std::integer_sequence<bool, true, false>;
 
 using Cases = tuple_to_types_t<cartesian_product_t<periodicity>>;
 
-// Trailing comma is needed to avoid spurious `gnu-zero-variadic-macro-arguments` warning with clang
-TYPED_TEST_SUITE(UniformBSplinesFixture, Cases, );
+TYPED_TEST_SUITE(UniformBSplinesFixture, Cases, UniformBSplinesFixtureNames);
 
 TYPED_TEST(UniformBSplinesFixture, KnotsAsInterpolationPoints)
 {

@@ -55,6 +55,7 @@ public:
             ddc::ChunkSpan<double const, ddc::DiscreteDomain<BSplines>, Layout, MemorySpace> const
                     spline_coef) const
     {
+        // `pos` is always unused, but needed for Doxygen
         static_assert(in_tags_v<DimI, to_type_seq_t<CoordType>>);
 
         std::array<double, BSplines::degree() + 1> vals_ptr;

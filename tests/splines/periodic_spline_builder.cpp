@@ -25,14 +25,14 @@ struct DimX
     static constexpr bool PERIODIC = true;
 };
 
-static constexpr std::size_t s_degree_x = DEGREE_X;
+static constexpr std::size_t s_degree = DEGREE;
 
 #if defined(BSPLINES_TYPE_UNIFORM)
-struct BSplinesX : ddc::UniformBSplines<DimX, s_degree_x>
+struct BSplinesX : ddc::UniformBSplines<DimX, s_degree>
 {
 };
 #elif defined(BSPLINES_TYPE_NON_UNIFORM)
-struct BSplinesX : ddc::NonUniformBSplines<DimX, s_degree_x>
+struct BSplinesX : ddc::NonUniformBSplines<DimX, s_degree>
 {
 };
 #endif
@@ -193,18 +193,16 @@ void TestPeriodicSplineBuilderTestIdentity()
 
     SplineErrorBounds<evaluator_type> const error_bounds(evaluator);
     double const h = (xN - x0) / ncells;
-    EXPECT_LE(
-            max_norm_error,
-            std::max(error_bounds.error_bound(h, s_degree_x), 1.0e-14 * max_norm));
+    EXPECT_LE(max_norm_error, std::max(error_bounds.error_bound(h, s_degree), 1.0e-14 * max_norm));
     EXPECT_LE(
             max_norm_error_diff,
-            std::max(error_bounds.error_bound_on_deriv(h, s_degree_x), 1e-12 * max_norm_diff));
+            std::max(error_bounds.error_bound_on_deriv(h, s_degree), 1e-12 * max_norm_diff));
     EXPECT_LE(
             max_norm_error_integ,
-            std::max(error_bounds.error_bound_on_int(h, s_degree_x), 1.0e-14 * max_norm_int));
+            std::max(error_bounds.error_bound_on_int(h, s_degree), 1.0e-14 * max_norm_int));
     EXPECT_LE(
             max_norm_error_quadrature_integ,
-            std::max(error_bounds.error_bound_on_int(h, s_degree_x), 1.0e-14 * max_norm_int));
+            std::max(error_bounds.error_bound_on_int(h, s_degree), 1.0e-14 * max_norm_int));
 }
 
 TEST(PeriodicSplineBuilderTest, Identity)

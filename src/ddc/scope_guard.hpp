@@ -28,7 +28,7 @@ public:
         discretization_store_initialization();
     }
 
-    ScopeGuard([[maybe_unused]] int argc, [[maybe_unused]] char**& argv)
+    ScopeGuard(int /*argc*/, char**& /*argv*/)
     {
         discretization_store_initialization();
     }

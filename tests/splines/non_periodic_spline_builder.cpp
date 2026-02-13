@@ -30,7 +30,7 @@ struct DimX
     static constexpr bool PERIODIC = false;
 };
 
-static constexpr std::size_t s_degree_x = DEGREE_X;
+static constexpr std::size_t s_degree = DEGREE;
 
 #if defined(BCL_GREVILLE)
 static constexpr ddc::BoundCond s_bcl = ddc::BoundCond::GREVILLE;
@@ -45,11 +45,11 @@ static constexpr ddc::BoundCond s_bcr = ddc::BoundCond::HERMITE;
 #endif
 
 #if defined(BSPLINES_TYPE_UNIFORM)
-struct BSplinesX : ddc::UniformBSplines<DimX, s_degree_x>
+struct BSplinesX : ddc::UniformBSplines<DimX, s_degree>
 {
 };
 #elif defined(BSPLINES_TYPE_NON_UNIFORM)
-struct BSplinesX : ddc::NonUniformBSplines<DimX, s_degree_x>
+struct BSplinesX : ddc::NonUniformBSplines<DimX, s_degree>
 {
 };
 #endif
@@ -63,7 +63,7 @@ struct DDimX : GrevillePoints::interpolation_discrete_dimension_type
 #if defined(EVALUATOR_COSINE)
 using evaluator_type = CosineEvaluator::Evaluator<DDimX>;
 #elif defined(EVALUATOR_POLYNOMIAL)
-using evaluator_type = PolynomialEvaluator::Evaluator<DDimX, s_degree_x>;
+using evaluator_type = PolynomialEvaluator::Evaluator<DDimX, s_degree>;
 #endif
 
 using DElemX = ddc::DiscreteElement<DDimX>;
@@ -99,10 +99,10 @@ void TestNonPeriodicSplineBuilderTestIdentity()
     }
     ddc::DiscreteDomain<BSplinesX> const dom_bsplines_x(
             ddc::discrete_space<BSplinesX>().full_domain());
-    int const shift = s_degree_x % 2; // shift = 0 for even order, 1 for odd order
+    int const shift = s_degree % 2; // shift = 0 for even order, 1 for odd order
     ddc::DiscreteDomain<ddc::Deriv<DimX>> const derivs_domain(
             ddc::DiscreteElement<ddc::Deriv<DimX>>(shift),
-            ddc::DiscreteVector<ddc::Deriv<DimX>>(s_degree_x / 2));
+            ddc::DiscreteVector<ddc::Deriv<DimX>>(s_degree / 2));
 
     // 2. Create a Spline represented by a chunk over BSplines
     // The chunk is filled with garbage data, we need to initialize it
@@ -294,9 +294,7 @@ void TestNonPeriodicSplineBuilderTestIdentity()
     double const max_norm = evaluator.max_norm();
     double const max_norm_diff = evaluator.max_norm(1);
     double const max_norm_int = evaluator.max_norm(-1);
-    if constexpr (std::is_same_v<
-                          evaluator_type,
-                          PolynomialEvaluator::Evaluator<DDimX, s_degree_x>>) {
+    if constexpr (std::is_same_v<evaluator_type, PolynomialEvaluator::Evaluator<DDimX, s_degree>>) {
         EXPECT_LE(max_norm_error / max_norm, 1.0e-14);
         EXPECT_LE(max_norm_error_diff / max_norm_diff, 1.0e-11);
         EXPECT_LE(max_norm_error_integ / max_norm_int, 1.0e-14);
@@ -306,16 +304,16 @@ void TestNonPeriodicSplineBuilderTestIdentity()
         double const h = (xN - x0) / ncells;
         EXPECT_LE(
                 max_norm_error,
-                std::max(error_bounds.error_bound(h, s_degree_x), 1.0e-14 * max_norm));
+                std::max(error_bounds.error_bound(h, s_degree), 1.0e-14 * max_norm));
         EXPECT_LE(
                 max_norm_error_diff,
-                std::max(error_bounds.error_bound_on_deriv(h, s_degree_x), 1e-12 * max_norm_diff));
+                std::max(error_bounds.error_bound_on_deriv(h, s_degree), 1e-12 * max_norm_diff));
         EXPECT_LE(
                 max_norm_error_integ,
-                std::max(error_bounds.error_bound_on_int(h, s_degree_x), 1.0e-14 * max_norm_int));
+                std::max(error_bounds.error_bound_on_int(h, s_degree), 1.0e-14 * max_norm_int));
         EXPECT_LE(
                 max_norm_error_quadrature_integ,
-                std::max(error_bounds.error_bound_on_int(h, s_degree_x), 1.0e-14 * max_norm_int));
+                std::max(error_bounds.error_bound_on_int(h, s_degree), 1.0e-14 * max_norm_int));
     }
 }
 

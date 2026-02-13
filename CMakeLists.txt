@@ -22,10 +22,6 @@ option(DDC_BUILD_KERNELS_SPLINES "Build DDC kernels for splines" ON)
 option(DDC_BUILD_PDI_WRAPPER "Build DDC PDI wrapper" ON)
 option(DDC_BUILD_TESTS "Build DDC tests if BUILD_TESTING is enabled" ON)
 
-# Dependencies
-
-set(DDC_DEPENDENCY_POLICIES "AUTO" "EMBEDDED" "INSTALLED" "SUBPROJECT")
-
 ## CMake modules
 
 include(CMakePackageConfigHelpers)
@@ -42,82 +38,8 @@ include(DDCVendorConfiguration)
 
 ## kokkos
 
-set(DDC_Kokkos_DEPENDENCY_POLICY
-    "AUTO"
-    CACHE STRING
-    "Policy to find the `Kokkos` package. Options: ${DDC_DEPENDENCY_POLICIES}"
-)
-set_property(CACHE DDC_Kokkos_DEPENDENCY_POLICY PROPERTY STRINGS "${DDC_DEPENDENCY_POLICIES}")
-if("${DDC_Kokkos_DEPENDENCY_POLICY}" STREQUAL "AUTO")
-    if(NOT TARGET Kokkos::kokkos)
-        find_package(Kokkos 4.4...<6 QUIET)
-        if(NOT Kokkos_FOUND)
-            ddc_configure_kokkos()
-        else()
-            ddc_check_required_kokkos_options()
-        endif()
-    endif()
-elseif("${DDC_Kokkos_DEPENDENCY_POLICY}" STREQUAL "EMBEDDED")
-    ddc_configure_kokkos()
-elseif("${DDC_Kokkos_DEPENDENCY_POLICY}" STREQUAL "INSTALLED")
-    find_package(Kokkos 4.4...<6 REQUIRED)
-    ddc_check_required_kokkos_options()
-endif()
-
-## GoogleTest
-
-if("${BUILD_TESTING}" AND "${DDC_BUILD_TESTS}")
-    set(DDC_GTest_DEPENDENCY_POLICY
-        "AUTO"
-        CACHE STRING
-        "Policy to find the `GTest` package. Options: ${DDC_DEPENDENCY_POLICIES}"
-    )
-    set_property(CACHE DDC_GTest_DEPENDENCY_POLICY PROPERTY STRINGS ${DDC_DEPENDENCY_POLICIES})
-
-    if("${DDC_GTest_DEPENDENCY_POLICY}" STREQUAL "AUTO")
-        if(NOT TARGET GTest::GTest AND NOT TARGET GTest::gtest)
-            find_package(GTest 1.14 QUIET)
-            if(NOT GTest_FOUND)
-                ddc_configure_googletest()
-            endif()
-        endif()
-    elseif("${DDC_GTest_DEPENDENCY_POLICY}" STREQUAL "EMBEDDED")
-        ddc_configure_googletest()
-    elseif("${DDC_GTest_DEPENDENCY_POLICY}" STREQUAL "INSTALLED")
-        # 1.14...<2 but GTest module does not support range version
-        find_package(GTest 1.14 REQUIRED)
-    endif()
-endif()
-
-## Google Benchmark
-
-if("${DDC_BUILD_BENCHMARKS}")
-    set(DDC_benchmark_DEPENDENCY_POLICY
-        "AUTO"
-        CACHE STRING
-        "Policy to find the `benchmark` package. Options: ${DDC_DEPENDENCY_POLICIES}"
-    )
-    set_property(CACHE DDC_benchmark_DEPENDENCY_POLICY PROPERTY STRINGS ${DDC_DEPENDENCY_POLICIES})
-
-    if("${DDC_benchmark_DEPENDENCY_POLICY}" STREQUAL "AUTO")
-        if(NOT TARGET benchmark::benchmark)
-            find_package(benchmark 1.8 QUIET)
-            if(NOT benchmark_FOUND)
-                ddc_configure_benchmark()
-            endif()
-        endif()
-    elseif("${DDC_benchmark_DEPENDENCY_POLICY}" STREQUAL "EMBEDDED")
-        ddc_configure_benchmark()
-    elseif("${DDC_benchmark_DEPENDENCY_POLICY}" STREQUAL "INSTALLED")
-        find_package(benchmark 1.8 REQUIRED)
-    endif()
-endif()
-
-## Doxygen
-
-if("${DDC_BUILD_DOCUMENTATION}")
-    find_package(Doxygen 1.9.8 REQUIRED OPTIONAL_COMPONENTS dot)
-endif()
+find_package(Kokkos 4.4...<6 REQUIRED)
+ddc_check_required_kokkos_options()
 
 # Our project
 
@@ -183,33 +105,9 @@ install(EXPORT DDCCoreTargets NAMESPACE DDC:: DESTINATION ${DDC_INSTALL_CMAKEDIR
 
 if("${DDC_BUILD_KERNELS_FFT}")
     # Kokkos-fft
-    set(DDC_KokkosFFT_DEPENDENCY_POLICY
-        "AUTO"
-        CACHE STRING
-        "Policy to find the `Kokkos-fft` package. Options: ${DDC_DEPENDENCY_POLICIES}"
-    )
-    set_property(
-        CACHE DDC_KokkosFFT_DEPENDENCY_POLICY
-        PROPERTY STRINGS "${DDC_DEPENDENCY_POLICIES}"
-    )
-
-    if("${DDC_KokkosFFT_DEPENDENCY_POLICY}" STREQUAL "AUTO")
-        if(NOT TARGET KokkosFFT::fft)
-            find_package(KokkosFFT 0.3 QUIET)
-            if(NOT KokkosFFT_FOUND)
-                find_package(KokkosFFT 1 QUIET)
-            endif()
-            if(NOT KokkosFFT_FOUND)
-                ddc_configure_kokkos_fft()
-            endif()
-        endif()
-    elseif("${DDC_KokkosFFT_DEPENDENCY_POLICY}" STREQUAL "EMBEDDED")
-        ddc_configure_kokkos_fft()
-    elseif("${DDC_KokkosFFT_DEPENDENCY_POLICY}" STREQUAL "INSTALLED")
-        find_package(KokkosFFT REQUIRED)
-        if((KokkosFFT_VERSION VERSION_LESS 0.3) OR (KokkosFFT_VERSION VERSION_GREATER_EQUAL 2))
-            message(FATAL_ERROR "Could not find a supported configuration for KokkosFFT")
-        endif()
+    find_package(KokkosFFT REQUIRED)
+    if((KokkosFFT_VERSION VERSION_LESS 0.3) OR (KokkosFFT_VERSION VERSION_GREATER_EQUAL 2))
+        message(FATAL_ERROR "Could not find a supported configuration for KokkosFFT")
     endif()
 
     add_library(ddc_fft INTERFACE)
@@ -231,27 +129,7 @@ if("${DDC_BUILD_KERNELS_SPLINES}")
     find_package(LAPACKE REQUIRED)
 
     # Kokkos-kernels
-    set(DDC_KokkosKernels_DEPENDENCY_POLICY
-        "AUTO"
-        CACHE STRING
-        "Policy to find the `KokkosKernels` package. Options: ${DDC_DEPENDENCY_POLICIES}"
-    )
-    set_property(
-        CACHE DDC_KokkosKernels_DEPENDENCY_POLICY
-        PROPERTY STRINGS "${DDC_DEPENDENCY_POLICIES}"
-    )
-    if("${DDC_KokkosKernels_DEPENDENCY_POLICY}" STREQUAL "AUTO")
-        if(NOT TARGET Kokkos::kokkoskernels)
-            find_package(KokkosKernels 4.5.1...<6 QUIET)
-            if(NOT KokkosKernels_FOUND)
-                ddc_configure_kokkos_kernels()
-            endif()
-        endif()
-    elseif("${DDC_KokkosKernels_DEPENDENCY_POLICY}" STREQUAL "EMBEDDED")
-        ddc_configure_kokkos_kernels()
-    elseif("${DDC_KokkosKernels_DEPENDENCY_POLICY}" STREQUAL "INSTALLED")
-        find_package(KokkosKernels 4.5.1...<6 REQUIRED)
-    endif()
+    find_package(KokkosKernels 4.5.1...<6 REQUIRED)
 
     add_library(ddc_splines)
     add_library(DDC::splines ALIAS ddc_splines)
@@ -318,10 +196,7 @@ endif()
 ## The PDI wrapper
 
 if("${DDC_BUILD_PDI_WRAPPER}")
-    # Workaround, PDI does not support reentrance
-    if(NOT TARGET PDI::PDI_C)
-        find_package(PDI 1.6...<2 REQUIRED COMPONENTS C)
-    endif()
+    find_package(PDI 1.6...<2 REQUIRED COMPONENTS C)
 
     add_library(ddc_pdi INTERFACE)
     add_library(DDC::pdi ALIAS ddc_pdi)

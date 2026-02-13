@@ -367,15 +367,13 @@ public:
                     ElementType,
                     OutDDom,
                     Kokkos::layout_stride,
-                    memory_space,
-                    0>(a, OutDDom(this->m_domain));
+                    memory_space>(a, OutDDom(this->m_domain));
         } else {
             return ChunkSpan<
                     ElementType,
                     OutDDom,
                     layout_type,
-                    memory_space,
-                    0>(subview, OutDDom(this->m_domain));
+                    memory_space>(subview, OutDDom(this->m_domain));
         }
     }
 
@@ -405,15 +403,13 @@ public:
                     ElementType,
                     decltype(this->m_domain.restrict_with(odomain)),
                     Kokkos::layout_stride,
-                    memory_space,
-                    0>(a, this->m_domain.restrict_with(odomain));
+                    memory_space>(a, this->m_domain.restrict_with(odomain));
         } else {
             return ChunkSpan<
                     ElementType,
                     decltype(this->m_domain.restrict_with(odomain)),
                     layout_type,
-                    memory_space,
-                    0>(subview, this->m_domain.restrict_with(odomain));
+                    memory_space>(subview, this->m_domain.restrict_with(odomain));
         }
     }
 

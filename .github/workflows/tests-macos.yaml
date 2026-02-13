@@ -89,10 +89,6 @@ jobs:
             -D CMAKE_CXX_FLAGS="-Werror -Wall -Wextra -Wpedantic -Wno-sign-compare -pedantic-errors ${{matrix.backend.ddc_extra_cxx_flags}}" \
             -D CMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
             -D DDC_BUILD_BENCHMARKS=ON \
-            -D DDC_benchmark_DEPENDENCY_POLICY=INSTALLED \
-            -D DDC_GTest_DEPENDENCY_POLICY=INSTALLED \
-            -D DDC_Kokkos_DEPENDENCY_POLICY=INSTALLED \
-            -D DDC_KokkosFFT_DEPENDENCY_POLICY=INSTALLED \
             -B build
           cmake --build build
       - name: Run unit tests

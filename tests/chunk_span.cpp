@@ -95,11 +95,18 @@ void TestChunkSpan1DTestCtadOnDevice()
     EXPECT_EQ(sum, view.size());
 }
 
+// Aliases to clarify tensor notations
+using DDimMu = DDimX;
+using DDimNu = DDimY;
+using DDomMuNu = DDomXY;
+using DVectMuNu = DVectXY;
+using DElemMuNu = DElemXY;
+
 void TestChunkSpan2DTestCtorStaticStorageFromLayoutRightExtents()
 {
     using execution_space = Kokkos::DefaultExecutionSpace;
     using memory_space = typename execution_space::memory_space;
-    using chunk_type = ddc::ChunkSpan<double, DDomXY, Kokkos::layout_right, memory_space, 4>;
+    using chunk_type = ddc::ChunkSpan<double, DDomMuNu, Kokkos::layout_right, memory_space, 4>;
 
     Kokkos::View<double*, memory_space> sum_d("sum_d", 1);
     Kokkos::deep_copy(sum_d, 0.0);
@@ -110,15 +117,15 @@ void TestChunkSpan2DTestCtorStaticStorageFromLayoutRightExtents()
             KOKKOS_LAMBDA(ddc::DiscreteElement<>) {
                 chunk_type chunk(2, 2);
 
-                chunk(DVectX(0), DVectY(0)) = 1.0;
-                chunk(DVectX(0), DVectY(1)) = 2.0;
-                chunk(DVectX(1), DVectY(0)) = 3.0;
-                chunk(DVectX(1), DVectY(1)) = 4.0;
+                chunk(DElemMuNu(0, 0)) = 1.0;
+                chunk(DElemMuNu(0, 1)) = 2.0;
+                chunk(DElemMuNu(1, 0)) = 3.0;
+                chunk(DElemMuNu(1, 1)) = 4.0;
 
-                sum_d(0) += chunk(DVectX(0), DVectY(0));
-                sum_d(0) += chunk(DVectX(0), DVectY(1));
-                sum_d(0) += chunk(DVectX(1), DVectY(0));
-                sum_d(0) += chunk(DVectX(1), DVectY(1));
+                sum_d(0) += chunk(DElemMuNu(0, 0));
+                sum_d(0) += chunk(DElemMuNu(0, 1));
+                sum_d(0) += chunk(DElemMuNu(1, 0));
+                sum_d(0) += chunk(DElemMuNu(1, 1));
             });
 
     Kokkos::View<double*, Kokkos::DefaultHostExecutionSpace::memory_space> const sum_h
@@ -130,14 +137,14 @@ void TestChunkSpan2DTestCtorStaticStorageFromLayoutStrideMapping()
 {
     using execution_space = Kokkos::DefaultExecutionSpace;
     using memory_space = typename execution_space::memory_space;
-    using chunk_type = ddc::ChunkSpan<double, DDomXY, Kokkos::layout_stride, memory_space, 6>;
+    using chunk_type = ddc::ChunkSpan<double, DDomMuNu, Kokkos::layout_stride, memory_space, 6>;
 
     Kokkos::View<double*, memory_space> sum_d("sum_d", 1);
     Kokkos::deep_copy(sum_d, 0.0);
 
-    DElemX const delem_x = ddc::init_trivial_half_bounded_space<DDimX>();
-    DElemY const delem_y = ddc::init_trivial_half_bounded_space<DDimY>();
-    DDomXY const domain_xy(DElemXY(delem_x, delem_y), DVectXY(2, 2));
+    DElemX const delem_mu = ddc::init_trivial_half_bounded_space<DDimMu>();
+    DElemY const delem_nu = ddc::init_trivial_half_bounded_space<DDimNu>();
+    DDomXY const domain_munu(DElemMuNu(delem_mu, delem_nu), DVectMuNu(2, 2));
 
     ddc::parallel_for_each(
             execution_space(),
@@ -146,17 +153,17 @@ void TestChunkSpan2DTestCtorStaticStorageFromLayoutStrideMapping()
                 typename chunk_type::extents_type const extents(2, 2);
                 typename chunk_type::mapping_type const
                         layout_mapping(extents, std::array<std::size_t, 2> {3, 1});
-                chunk_type chunk(layout_mapping, domain_xy);
+                chunk_type chunk(layout_mapping, domain_munu);
 
-                chunk(DVectX(0), DVectY(0)) = 1.0;
-                chunk(DVectX(0), DVectY(1)) = 2.0;
-                chunk(DVectX(1), DVectY(0)) = 3.0;
-                chunk(DVectX(1), DVectY(1)) = 4.0;
+                chunk(DElemMuNu(0, 0)) = 1.0;
+                chunk(DElemMuNu(0, 1)) = 2.0;
+                chunk(DElemMuNu(1, 0)) = 3.0;
+                chunk(DElemMuNu(1, 1)) = 4.0;
 
-                sum_d(0) += chunk(DVectX(0), DVectY(0));
-                sum_d(0) += chunk(DVectX(0), DVectY(1));
-                sum_d(0) += chunk(DVectX(1), DVectY(0));
-                sum_d(0) += chunk(DVectX(1), DVectY(1));
+                sum_d(0) += chunk(DElemMuNu(0, 0));
+                sum_d(0) += chunk(DElemMuNu(0, 1));
+                sum_d(0) += chunk(DElemMuNu(1, 0));
+                sum_d(0) += chunk(DElemMuNu(1, 1));
             });
 
     Kokkos::View<double*, Kokkos::DefaultHostExecutionSpace::memory_space> const sum_h

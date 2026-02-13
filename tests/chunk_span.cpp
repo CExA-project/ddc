@@ -2,6 +2,7 @@
 //
 // SPDX-License-Identifier: MIT
 
+#include <array>
 #include <type_traits>
 #include <utility>
 
@@ -26,6 +27,10 @@ struct DDimY
 using DElemY = ddc::DiscreteElement<DDimY>;
 using DVectY = ddc::DiscreteVector<DDimY>;
 using DDomY = ddc::DiscreteDomain<DDimY>;
+
+using DElemXY = ddc::DiscreteElement<DDimX, DDimY>;
+using DVectXY = ddc::DiscreteVector<DDimX, DDimY>;
+using DDomXY = ddc::DiscreteDomain<DDimX, DDimY>;
 
 template <class Datatype>
 using ChunkX = ddc::Chunk<Datatype, DDomX>;
@@ -90,6 +95,75 @@ void TestChunkSpan1DTestCtadOnDevice()
     EXPECT_EQ(sum, view.size());
 }
 
+void TestChunkSpan2DTestCtorStaticStorageFromLayoutStrideMapping()
+{
+    using execution_space = Kokkos::DefaultExecutionSpace;
+    using memory_space = typename execution_space::memory_space;
+    using chunk_type = ddc::ChunkSpan<double, DDomXY, Kokkos::layout_stride, memory_space, 6>;
+
+    Kokkos::View<double*, memory_space> sum_d("sum_d", 1);
+    Kokkos::deep_copy(sum_d, 0.0);
+
+    DElemX const delem_x = ddc::init_trivial_half_bounded_space<DDimX>();
+    DElemY const delem_y = ddc::init_trivial_half_bounded_space<DDimY>();
+    DDomXY const domain_xy(DElemXY(delem_x, delem_y), DVectXY(2, 2));
+
+    ddc::parallel_for_each(
+            execution_space(),
+            ddc::DiscreteDomain<>(),
+            KOKKOS_LAMBDA(ddc::DiscreteElement<>) {
+                typename chunk_type::extents_type const extents(2, 2);
+                typename chunk_type::mapping_type const
+                        layout_mapping(extents, std::array<std::size_t, 2> {3, 1});
+                chunk_type chunk(layout_mapping, domain_xy);
+
+                chunk(DVectX(0), DVectY(0)) = 1.0;
+                chunk(DVectX(0), DVectY(1)) = 2.0;
+                chunk(DVectX(1), DVectY(0)) = 3.0;
+                chunk(DVectX(1), DVectY(1)) = 4.0;
+
+                sum_d(0) += chunk(DVectX(0), DVectY(0));
+                sum_d(0) += chunk(DVectX(0), DVectY(1));
+                sum_d(0) += chunk(DVectX(1), DVectY(0));
+                sum_d(0) += chunk(DVectX(1), DVectY(1));
+            });
+
+    Kokkos::View<double*, Kokkos::DefaultHostExecutionSpace::memory_space> const sum_h
+            = Kokkos::create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), sum_d);
+    EXPECT_EQ(sum_h(0), 10.0);
+}
+
+void TestChunkSpan2DTestCtorStaticStorageFromLayoutRightExtents()
+{
+    using execution_space = Kokkos::DefaultExecutionSpace;
+    using memory_space = typename execution_space::memory_space;
+    using chunk_type = ddc::ChunkSpan<double, DDomXY, Kokkos::layout_right, memory_space, 4>;
+
+    Kokkos::View<double*, memory_space> sum_d("sum_d", 1);
+    Kokkos::deep_copy(sum_d, 0.0);
+
+    ddc::parallel_for_each(
+            execution_space(),
+            ddc::DiscreteDomain<>(),
+            KOKKOS_LAMBDA(ddc::DiscreteElement<>) {
+                chunk_type chunk(2, 2);
+
+                chunk(DVectX(0), DVectY(0)) = 1.0;
+                chunk(DVectX(0), DVectY(1)) = 2.0;
+                chunk(DVectX(1), DVectY(0)) = 3.0;
+                chunk(DVectX(1), DVectY(1)) = 4.0;
+
+                sum_d(0) += chunk(DVectX(0), DVectY(0));
+                sum_d(0) += chunk(DVectX(0), DVectY(1));
+                sum_d(0) += chunk(DVectX(1), DVectY(0));
+                sum_d(0) += chunk(DVectX(1), DVectY(1));
+            });
+
+    Kokkos::View<double*, Kokkos::DefaultHostExecutionSpace::memory_space> const sum_h
+            = Kokkos::create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), sum_d);
+    EXPECT_EQ(sum_h(0), 10.0);
+}
+
 } // namespace anonymous_namespace_workaround_chunk_span_cpp
 
 TEST(ChunkSpan1DTest, CtadOnDevice)
@@ -136,4 +210,14 @@ TEST(ChunkSpan2DTest, CtorLayoutStrideKokkosView)
                     ddc::DiscreteVector<DDimX, DDimY>(subview.extent(0), subview.extent(1)));
     ASSERT_TRUE((std::is_same_v<decltype(subview)::array_layout, Kokkos::LayoutStride>));
     EXPECT_NO_FATAL_FAILURE(ddc::ChunkSpan(subview, ddom_xy));
+}
+
+TEST(ChunkSpan2DTest, CtorStaticStorageFromLayoutStrideMapping)
+{
+    TestChunkSpan2DTestCtorStaticStorageFromLayoutStrideMapping();
+}
+
+TEST(ChunkSpan2DTest, CtorStaticStorageFromLayoutRightExtents)
+{
+    TestChunkSpan2DTestCtorStaticStorageFromLayoutRightExtents();
 }

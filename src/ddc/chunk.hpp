@@ -30,10 +30,10 @@ template <class ElementType, class SupportType, class Allocator>
 inline constexpr bool enable_chunk<Chunk<ElementType, SupportType, Allocator>> = true;
 
 template <class ElementType, class SupportType, class Allocator>
-class Chunk : public ChunkCommon<ElementType, SupportType, Kokkos::layout_right>
+class Chunk : public ChunkCommon<ElementType, SupportType, Kokkos::layout_right, 0>
 {
 protected:
-    using base_type = ChunkCommon<ElementType, SupportType, Kokkos::layout_right>;
+    using base_type = ChunkCommon<ElementType, SupportType, Kokkos::layout_right, 0>;
 
 public:
     /// type of a span of this full chunk

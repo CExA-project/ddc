@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <array>
+#include <concepts>
 #include <cstddef>
 #include <type_traits>
 #include <utility>
@@ -29,7 +31,11 @@ KOKKOS_FUNCTION auto get_domain(ChunkType const& chunk) noexcept
     return chunk.template domain<QueryDDims...>();
 }
 
-template <class ElementType, class SupportType, class LayoutStridedPolicy>
+template <
+        class ElementType,
+        class SupportType,
+        class LayoutStridedPolicy,
+        std::size_t StaticStorageSize = 0>
 class ChunkCommon
 {
 public:
@@ -69,10 +75,10 @@ public:
     using reference = typename allocation_mdspan_type::reference;
 
     // ChunkCommon, ChunkSpan and Chunk need to access to m_allocation_mdspan_mdspan and m_domain of other template versions
-    template <class, class, class>
+    template <class, class, class, std::size_t>
     friend class ChunkCommon;
 
-    template <class, class, class, class>
+    template <class, class, class, class, std::size_t>
     friend class ChunkSpan;
 
     template <class, class, class>
@@ -86,6 +92,9 @@ protected:
 
     /// The mesh on which this chunk is defined
     SupportType m_domain;
+
+    /// Optional static storage used by constructors specialized for StaticStorageSize > 0
+    std::array<ElementType, StaticStorageSize> m_static_storage {};
 
 public:
     static KOKKOS_FUNCTION constexpr int rank() noexcept
@@ -221,6 +230,77 @@ protected:
     {
         // Handle the case where an allocation of size 0 returns a nullptr.
         KOKKOS_ASSERT(domain.empty() || ((ptr != nullptr) && !domain.empty()))
+    }
+
+    /** Constructs a new ChunkCommon from static storage and an mdspan mapping.
+     * Requires a non-zero StaticStorageSize.
+     * @param layout_mapping the mapping (layout + extents + optional strides)
+     * @param domain the domain that sustains the view, defaults to an origin at 0
+     */
+    template <std::size_t S = StaticStorageSize>
+    requires(S != 0) KOKKOS_FUNCTION constexpr explicit ChunkCommon(
+            mapping_type const& layout_mapping,
+            SupportType const& domain)
+        : m_allocation_mdspan(m_static_storage.data(), layout_mapping)
+        , m_domain(domain)
+    {
+        for (std::size_t i = 0; i < SupportType::rank(); ++i) {
+            KOKKOS_ASSERT(
+                    layout_mapping.extents().extent(i)
+                    == static_cast<std::size_t>(detail::array(domain.extents())[i]))
+        }
+        KOKKOS_ASSERT(layout_mapping.required_span_size() <= StaticStorageSize)
+    }
+
+    template <std::size_t S = StaticStorageSize>
+    requires(S != 0) KOKKOS_FUNCTION
+            constexpr explicit ChunkCommon(mapping_type const& layout_mapping)
+        : m_allocation_mdspan(m_static_storage.data(), layout_mapping)
+    {
+        std::array<std::size_t, SupportType::rank()> front_values {};
+        std::array<std::ptrdiff_t, SupportType::rank()> extents_values {};
+        for (std::size_t i = 0; i < SupportType::rank(); ++i) {
+            extents_values[i] = static_cast<std::ptrdiff_t>(layout_mapping.extents().extent(i));
+        }
+        m_domain = SupportType(
+                typename SupportType::discrete_element_type(front_values),
+                typename SupportType::discrete_vector_type(extents_values));
+        KOKKOS_ASSERT(layout_mapping.required_span_size() <= StaticStorageSize)
+    }
+
+    /** Constructs a new ChunkCommon from static storage and extents for layout_left/layout_right.
+     * Requires a non-zero StaticStorageSize.
+     * @param extents the extents in each rank direction
+     * @param domain the domain that sustains the view, defaults to an origin at 0
+     */
+    template <
+            std::size_t S = StaticStorageSize,
+            class Layout = LayoutStridedPolicy,
+            class... ExtentValues>
+    requires(
+            (S != 0)
+            && (std::same_as<Layout, Kokkos::layout_left>
+                || std::same_as<Layout, Kokkos::layout_right>)
+            && (sizeof...(ExtentValues) == SupportType::rank())
+            && (std::convertible_to<ExtentValues, std::size_t> && ...)) KOKKOS_FUNCTION
+            constexpr explicit ChunkCommon(ExtentValues... extents, SupportType const& domain)
+        : ChunkCommon(mapping_type(extents_type(extents...)), domain)
+    {
+    }
+
+    template <
+            std::size_t S = StaticStorageSize,
+            class Layout = LayoutStridedPolicy,
+            class... ExtentValues>
+    requires(
+            (S != 0)
+            && (std::same_as<Layout, Kokkos::layout_left>
+                || std::same_as<Layout, Kokkos::layout_right>)
+            && (sizeof...(ExtentValues) == SupportType::rank())
+            && (std::convertible_to<ExtentValues, std::size_t> && ...)) KOKKOS_FUNCTION
+            constexpr explicit ChunkCommon(ExtentValues... extents)
+        : ChunkCommon(mapping_type(extents_type(extents...)))
+    {
     }
 
     /** Constructs a new ChunkCommon by copy, yields a new view to the same data

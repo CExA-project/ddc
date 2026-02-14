@@ -6,6 +6,9 @@ cmake_minimum_required(VERSION 3.25...4.2)
 
 project(test-installed-ddc LANGUAGES CXX)
 
+# Test whether `find_package(DDC)` does not define global targets
+add_subdirectory(subdir)
+
 # Test whether `find_package(DDC)` can be called multiple times
 find_package(DDC 0.10 REQUIRED)
 find_package(DDC 0.10 REQUIRED COMPONENTS fft)

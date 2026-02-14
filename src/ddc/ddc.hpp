@@ -40,6 +40,7 @@ namespace ddc {
 #include "detail/kokkos.hpp"
 #include "detail/macros.hpp"
 #include "detail/tagged_vector.hpp"
+#include "detail/tuple/tuple.hpp"
 #include "detail/type_seq.hpp"
 #include "detail/utils.hpp"
 

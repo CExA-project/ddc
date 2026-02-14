@@ -149,8 +149,8 @@ public:
     using upper_extrapolation_rule_type = ddc::type_seq_element_t<I, upper_extrap_rule_ts>;
 
 private:
-    std::tuple<ddc::type_seq_element_t<IDX, lower_extrap_rule_ts>...> m_lower_extrap_rules;
-    std::tuple<ddc::type_seq_element_t<IDX, upper_extrap_rule_ts>...> m_upper_extrap_rules;
+    cexa::tuple<ddc::type_seq_element_t<IDX, lower_extrap_rule_ts>...> m_lower_extrap_rules;
+    cexa::tuple<ddc::type_seq_element_t<IDX, upper_extrap_rule_ts>...> m_upper_extrap_rules;
 
 public:
     static_assert(
@@ -220,9 +220,9 @@ public:
                 "The type of the extrapolation rules passed to the constructor should be the same "
                 "as the ones passed as template argument to the class");
 
-        std::tuple extrap_rules_tuple(extrap_rules...);
-        m_lower_extrap_rules = std::tuple(std::get<2 * IDX>(extrap_rules_tuple)...);
-        m_upper_extrap_rules = std::tuple(std::get<2 * IDX + 1>(extrap_rules_tuple)...);
+        cexa::tuple extrap_rules_tuple(extrap_rules...);
+        m_lower_extrap_rules = cexa::tuple(cexa::get<2 * IDX>(extrap_rules_tuple)...);
+        m_upper_extrap_rules = cexa::tuple(cexa::get<2 * IDX + 1>(extrap_rules_tuple)...);
     }
 
     /**
@@ -270,7 +270,7 @@ public:
     template <std::size_t I>
     auto lower_extrapolation_rule() const
     {
-        return std::get<I>(m_lower_extrap_rules);
+        return cexa::get<I>(m_lower_extrap_rules);
     }
 
     /**
@@ -285,7 +285,7 @@ public:
     template <std::size_t I>
     auto upper_extrapolation_rule() const
     {
-        return std::get<I>(m_upper_extrap_rules);
+        return cexa::get<I>(m_upper_extrap_rules);
     }
 
     /**
@@ -598,12 +598,12 @@ public:
                 "The integrals domain must only contain the batch dimensions");
 
         batch_domain_type<BatchedDDom> const batch_domain(integrals.domain());
-        auto values_alloc = std::make_tuple(
+        auto values_alloc = cexa::make_tuple(
                 ddc::
                         Chunk(ddc::DiscreteDomain<BSplines>(spline_coef.domain()),
                               ddc::KokkosAllocator<double, memory_space>())...);
-        auto values = std::make_tuple(std::get<IDX>(values_alloc).span_view()...);
-        (ddc::integrals(exec_space(), std::get<IDX>(values)), ...);
+        auto values = cexa::make_tuple(cexa::get<IDX>(values_alloc).span_view()...);
+        (ddc::integrals(exec_space(), cexa::get<IDX>(values)), ...);
 
         ddc::parallel_for_each(
                 "ddc_splines_integrate_bsplines",
@@ -617,7 +617,7 @@ public:
                             [=](typename ddc::DiscreteDomain<
                                     BSplines...>::discrete_element_type const i) {
                                 integrals(j) += spline_coef(i, j)
-                                                * (std::get<IDX>(values)(
+                                                * (cexa::get<IDX>(values)(
                                                            ddc::DiscreteElement<BSplines>(i))
                                                    * ...);
                             });
@@ -656,12 +656,12 @@ private:
         if constexpr (!bsplines_type<I>::is_periodic()) {
             if (ddc::get<continuous_dimension_type<I>>(coord_eval)
                 < ddc::discrete_space<bsplines_type<I>>().rmin()) {
-                res = std::get<I>(m_lower_extrap_rules)(coord_eval, spline_coef);
+                res = cexa::get<I>(m_lower_extrap_rules)(coord_eval, spline_coef);
                 return true;
             }
             if (ddc::get<continuous_dimension_type<I>>(coord_eval)
                 > ddc::discrete_space<bsplines_type<I>>().rmax()) {
-                res = std::get<I>(m_upper_extrap_rules)(coord_eval, spline_coef);
+                res = cexa::get<I>(m_upper_extrap_rules)(coord_eval, spline_coef);
                 return true;
             }
         }
@@ -752,7 +752,7 @@ private:
     {
         static constexpr std::size_t I = sizeof...(Is);
         if constexpr (I == N) {
-            f(std::make_tuple(is...));
+            f(cexa::make_tuple(is...));
         } else {
             for (std::size_t i = 0; i < bounds[I]; ++i) {
                 for_each(bounds, f, is..., i);
@@ -787,15 +787,15 @@ private:
                 "The only valid dimensions for deriv_order are Deriv<Dim1>, Deriv<Dim2>, ..., "
                 "Deriv<DimN>");
 
-        std::tuple vals_ptr = std::make_tuple(std::array<double, BSplines::degree() + 1> {}...);
-        std::tuple const vals = std::make_tuple(
+        cexa::tuple vals_ptr = cexa::make_tuple(std::array<double, BSplines::degree() + 1> {}...);
+        cexa::tuple const vals = cexa::make_tuple(
                 Kokkos::mdspan<double, Kokkos::extents<std::size_t, BSplines::degree() + 1>>(
-                        std::get<IDX>(vals_ptr).data())...);
+                        cexa::get<IDX>(vals_ptr).data())...);
 
-        std::tuple const jmin = std::make_tuple(
+        cexa::tuple const jmin = cexa::make_tuple(
                 get_jmin<BSplines>(
                         deriv_order,
-                        std::get<IDX>(vals),
+                        cexa::get<IDX>(vals),
                         ddc::Coordinate<typename BSplines::continuous_dimension_type>(
                                 coord_eval))...);
 
@@ -803,8 +803,8 @@ private:
         for_each(std::array<std::size_t, dimension> {(BSplines::degree() + 1)...}, [&](auto idx) {
             y += spline_coef(
                          ddc::DiscreteElement<BSplines...>(
-                                 (std::get<IDX>(jmin) + std::get<IDX>(idx))...))
-                 * (std::get<IDX>(vals)[std::get<IDX>(idx)] * ...);
+                                 (cexa::get<IDX>(jmin) + cexa::get<IDX>(idx))...))
+                 * (cexa::get<IDX>(vals)[cexa::get<IDX>(idx)] * ...);
         });
 
         return y;

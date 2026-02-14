@@ -161,8 +161,8 @@ jobs:
           cat<<-EOF > run.sh
             set -xe
             git config --global --add safe.directory '*'
-            export CC=clang
-            export CXX=clang++
+            export CC=clang-21
+            export CXX=clang++-21
             cmake \
                 -D DDC_BUILD_DOCUMENTATION=ON \
                 -D CMAKE_CXX_FLAGS="-Wno-unused-command-line-argument" \

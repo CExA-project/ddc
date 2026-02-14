@@ -7,7 +7,9 @@ FROM ubuntu:noble@sha256:c35e29c9450151419d9448b0fd75374fec4fff364a27f176fb458d4
 LABEL "org.opencontainers.image.source"="https://github.com/CExA-project/ddc"
 
 ARG CMAKE_VERSION=4.2.3
+ARG DOXYGEN_VERSION=1.16.1
 ARG GINKGO_VERSION=1.11.0
+ARG LLVM_VERSION=21
 
 COPY bash_run /bin/
 ENV BASH_ENV=/etc/profile
@@ -25,15 +27,28 @@ RUN chmod +x /bin/bash_run \
     apt-utils \
     ca-certificates \
     wget \
+ && wget -O /usr/share/keyrings/apt.llvm.org.asc https://apt.llvm.org/llvm-snapshot.gpg.key \
  && wget -O /usr/share/keyrings/pdidev-archive-keyring.gpg https://repo.pdi.dev/ubuntu/pdidev-archive-keyring.gpg \
+ && echo "deb [arch=amd64 signed-by=/usr/share/keyrings/apt.llvm.org.asc] http://apt.llvm.org/noble/ llvm-toolchain-noble-${LLVM_VERSION} main" > /etc/apt/sources.list.d/llvm.list \
  && echo "deb [arch=amd64 signed-by=/usr/share/keyrings/pdidev-archive-keyring.gpg] https://repo.pdi.dev/ubuntu noble main" > /etc/apt/sources.list.d/pdi.list \
  && apt-get update -y \
  && apt-get install -y --no-install-recommends \
-    build-essential \
-    clang \
+    clang-${LLVM_VERSION} \
+    libclang-${LLVM_VERSION}-dev \
+    llvm-${LLVM_VERSION}-dev \
     cm-super-minimal \
-    doxygen-latex \
     ghostscript \
+    libc6 \
+    texlive-extra-utils \
+    texlive-font-utils \
+    texlive-fonts-recommended \
+    texlive-latex-extra \
+    texlive-latex-recommended \
+    texlive-plain-generic \
+    bison \
+    flex \
+    build-essential \
+    python3 \
     git \
     graphviz \
     libfftw3-dev \
@@ -48,6 +63,13 @@ RUN chmod +x /bin/bash_run \
  && cmake --build ginkgo/build \
  && cmake --install ginkgo/build --prefix /usr \
  && rm -rf ginkgo \
+ && wget https://www.doxygen.nl/files/doxygen-${DOXYGEN_VERSION}.src.tar.gz \
+ && tar -xvf doxygen-${DOXYGEN_VERSION}.src.tar.gz \
+ && rm -f doxygen-${DOXYGEN_VERSION}.src.tar.gz \
+ && cmake -D CMAKE_PREFIX_PATH=/usr/lib/llvm-21 -D CMAKE_BUILD_TYPE=Release -D use_libclang=ON -D use_sys_fmt=ON -D use_sys_spdlog=ON -B doxygen-${DOXYGEN_VERSION}/build -S doxygen-${DOXYGEN_VERSION} \
+ && cmake --build doxygen-${DOXYGEN_VERSION}/build \
+ && cmake --install doxygen-${DOXYGEN_VERSION}/build --prefix /usr \
+ && rm -rf doxygen-${DOXYGEN_VERSION} \
  && apt-get purge -y \
     apt-transport-https \
  && apt-get autoremove -y \

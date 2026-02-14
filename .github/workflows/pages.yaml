@@ -165,9 +165,9 @@ jobs:
             export CXX=clang++
             cmake \
                 -D DDC_BUILD_DOCUMENTATION=ON \
-                -D CMAKE_CXX_FLAGS="-Wno-unused-command-line-argument" \
                 -D CMAKE_CXX_STANDARD=20 \
                 -D CMAKE_EXPORT_COMPILE_COMMANDS=ON \
+                -D CMAKE_VERIFY_INTERFACE_HEADER_SETS=ON \
                 -D Kokkos_ENABLE_DEPRECATION_WARNINGS=OFF \
                 -B build \
                 -S /src

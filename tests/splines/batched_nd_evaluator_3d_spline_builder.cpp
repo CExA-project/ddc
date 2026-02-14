@@ -324,7 +324,7 @@ void BatchedNd3dSplineTest()
                         DDimI3>(derivs_domain1, interpolation_domain2, interpolation_domain3),
                 ddc::HostAllocator<double>());
         ddc::ChunkSpan const derivs1_lhs_host = derivs1_lhs_host_alloc.span_view();
-        ddc::for_each(
+        ddc::host_for_each(
                 derivs1_lhs_host.domain(),
                 KOKKOS_LAMBDA(ddc::DiscreteElement<ddc::Deriv<I1>, DDimI2, DDimI3> const e) {
                     auto deriv_idx = ddc::DiscreteElement<ddc::Deriv<I1>>(e).uid();
@@ -356,7 +356,7 @@ void BatchedNd3dSplineTest()
                         DDimI3>(derivs_domain1, interpolation_domain2, interpolation_domain3),
                 ddc::HostAllocator<double>());
         ddc::ChunkSpan const derivs1_rhs_host = derivs1_rhs_host_alloc.span_view();
-        ddc::for_each(
+        ddc::host_for_each(
                 derivs1_rhs_host.domain(),
                 KOKKOS_LAMBDA(ddc::DiscreteElement<ddc::Deriv<I1>, DDimI2, DDimI3> const e) {
                     auto deriv_idx = ddc::DiscreteElement<ddc::Deriv<I1>>(e).uid();
@@ -388,7 +388,7 @@ void BatchedNd3dSplineTest()
                         DDimI3>(interpolation_domain1, derivs_domain2, interpolation_domain3),
                 ddc::HostAllocator<double>());
         ddc::ChunkSpan const derivs2_lhs_host = derivs2_lhs_host_alloc.span_view();
-        ddc::for_each(
+        ddc::host_for_each(
                 derivs2_lhs_host.domain(),
                 KOKKOS_LAMBDA(ddc::DiscreteElement<DDimI1, ddc::Deriv<I2>, DDimI3> const e) {
                     auto x1 = ddc::coordinate(ddc::DiscreteElement<DDimI1>(e));
@@ -421,7 +421,7 @@ void BatchedNd3dSplineTest()
                         DDimI3>(interpolation_domain1, derivs_domain2, interpolation_domain3),
                 ddc::HostAllocator<double>());
         ddc::ChunkSpan const derivs2_rhs_host = derivs2_rhs_host_alloc.span_view();
-        ddc::for_each(
+        ddc::host_for_each(
                 derivs2_rhs_host.domain(),
                 KOKKOS_LAMBDA(ddc::DiscreteElement<DDimI1, ddc::Deriv<I2>, DDimI3> const e) {
                     auto x1 = ddc::coordinate(ddc::DiscreteElement<DDimI1>(e));
@@ -455,7 +455,7 @@ void BatchedNd3dSplineTest()
                                 I3>>(interpolation_domain1, interpolation_domain2, derivs_domain3),
                 ddc::HostAllocator<double>());
         ddc::ChunkSpan const derivs3_lhs_host = derivs3_lhs_host_alloc.span_view();
-        ddc::for_each(
+        ddc::host_for_each(
                 derivs3_lhs_host.domain(),
                 KOKKOS_LAMBDA(ddc::DiscreteElement<DDimI1, DDimI2, ddc::Deriv<I3>> const e) {
                     auto x1 = ddc::coordinate(ddc::DiscreteElement<DDimI1>(e));
@@ -489,7 +489,7 @@ void BatchedNd3dSplineTest()
                                 I3>>(interpolation_domain1, interpolation_domain2, derivs_domain3),
                 ddc::HostAllocator<double>());
         ddc::ChunkSpan const derivs3_rhs_host = derivs3_rhs_host_alloc.span_view();
-        ddc::for_each(
+        ddc::host_for_each(
                 derivs3_rhs_host.domain(),
                 KOKKOS_LAMBDA(ddc::DiscreteElement<DDimI1, DDimI2, ddc::Deriv<I3>> const e) {
                     auto x1 = ddc::coordinate(ddc::DiscreteElement<DDimI1>(e));
@@ -547,7 +547,7 @@ void BatchedNd3dSplineTest()
         ddc::ChunkSpan const derivs_mixed_rhs1_rhs2_host
                 = derivs_mixed_rhs1_rhs2_host_alloc.span_view();
 
-        ddc::for_each(
+        ddc::host_for_each(
                 derivs_domain12,
                 KOKKOS_LAMBDA(
                         ddc::DiscreteElement<ddc::Deriv<I1>, ddc::Deriv<I2>, DDimI3> const e) {
@@ -647,7 +647,7 @@ void BatchedNd3dSplineTest()
         ddc::ChunkSpan const derivs_mixed_rhs2_rhs3_host
                 = derivs_mixed_rhs2_rhs3_host_alloc.span_view();
 
-        ddc::for_each(
+        ddc::host_for_each(
                 derivs_domain23,
                 KOKKOS_LAMBDA(
                         ddc::DiscreteElement<DDimI1, ddc::Deriv<I2>, ddc::Deriv<I3>> const e) {
@@ -747,7 +747,7 @@ void BatchedNd3dSplineTest()
         ddc::ChunkSpan const derivs_mixed_rhs1_rhs3_host
                 = derivs_mixed_rhs1_rhs3_host_alloc.span_view();
 
-        ddc::for_each(
+        ddc::host_for_each(
                 derivs_domain13,
                 KOKKOS_LAMBDA(
                         ddc::DiscreteElement<ddc::Deriv<I1>, DDimI2, ddc::Deriv<I3>> const e) {

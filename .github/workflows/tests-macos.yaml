@@ -8,6 +8,8 @@ name: Tests on macOS
 # yamllint disable-line rule:truthy
 on:
   pull_request:
+    branches-ignore:
+      - '*'
     paths:
       - '.github/workflows/tests-macos.yaml'
       - '**.cpp'

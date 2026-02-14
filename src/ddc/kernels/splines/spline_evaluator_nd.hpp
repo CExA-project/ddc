@@ -366,7 +366,7 @@ public:
                     auto const spline_eval_ND = spline_eval[j];
                     auto const coords_eval_ND = coords_eval[j];
                     auto const spline_coef_ND = spline_coef[j];
-                    ddc::for_each(
+                    ddc::device_for_each(
                             evaluation_domain(spline_eval.domain()),
                             [=, *this](typename evaluation_domain::discrete_element_type const i) {
                                 spline_eval_ND(i) = eval(coords_eval_ND(i), spline_coef_ND);
@@ -413,7 +413,7 @@ public:
                     auto const spline_eval_ND = spline_eval[j];
                     auto const spline_coef_ND = spline_coef[j];
 
-                    ddc::for_each(
+                    ddc::device_for_each(
                             evaluation_domain(spline_eval.domain()),
                             [=, *this](typename evaluation_domain::discrete_element_type const i) {
                                 ddc::Coordinate<typename BSplines::continuous_dimension_type...>
@@ -509,7 +509,7 @@ public:
                     auto const spline_eval_ND = spline_eval[j];
                     auto const coords_eval_ND = coords_eval[j];
                     auto const spline_coef_ND = spline_coef[j];
-                    ddc::for_each(
+                    ddc::device_for_each(
                             evaluation_domain(spline_eval.domain()),
                             [=, *this](typename evaluation_domain::discrete_element_type const i) {
                                 spline_eval_ND(i) = eval_no_bc(
@@ -560,7 +560,7 @@ public:
                                 BatchedInterpolationDDom>::discrete_element_type const j) {
                     auto const spline_eval_ND = spline_eval[j];
                     auto const spline_coef_ND = spline_coef[j];
-                    ddc::for_each(
+                    ddc::device_for_each(
                             evaluation_domain(spline_eval.domain()),
                             [=, *this](typename evaluation_domain::discrete_element_type const i) {
                                 ddc::Coordinate<typename BSplines::continuous_dimension_type...>
@@ -612,7 +612,7 @@ public:
                 KOKKOS_LAMBDA(
                         typename batch_domain_type<BatchedDDom>::discrete_element_type const j) {
                     integrals(j) = 0;
-                    ddc::for_each(
+                    ddc::device_for_each(
                             ddc::DiscreteDomain<BSplines...>(),
                             [=](typename ddc::DiscreteDomain<
                                     BSplines...>::discrete_element_type const i) {

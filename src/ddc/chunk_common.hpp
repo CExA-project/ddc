@@ -258,7 +258,7 @@ protected:
         : m_allocation_mdspan(m_static_storage.data(), layout_mapping)
     {
         std::array<std::size_t, SupportType::rank()> front_values {};
-        std::array<std::ptrdiff_t, SupportType::rank()> extents_values {};
+        std::array<std::size_t, SupportType::rank()> extents_values {};
         for (std::size_t i = 0; i < SupportType::rank(); ++i) {
             front_values[i] = 0;
             extents_values[i] = static_cast<std::ptrdiff_t>(layout_mapping.extents().extent(i));

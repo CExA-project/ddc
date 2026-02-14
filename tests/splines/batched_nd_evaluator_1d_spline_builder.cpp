@@ -45,7 +45,7 @@ struct DDimBatch2
 {
 };
 
-constexpr std::size_t s_degree_x = DEGREE_X;
+constexpr std::size_t s_degree_x = DEGREE;
 
 #if defined(BC_PERIODIC)
 constexpr ddc::BoundCond s_bcl = ddc::BoundCond::PERIODIC;

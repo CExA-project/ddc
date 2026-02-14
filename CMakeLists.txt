@@ -139,6 +139,15 @@ target_sources(
                 src/ddc/detail/kokkos.hpp
                 src/ddc/detail/macros.hpp
                 src/ddc/detail/tagged_vector.hpp
+                src/ddc/detail/tuple/impl/apply.hpp
+                src/ddc/detail/tuple/impl/creation.hpp
+                src/ddc/detail/tuple/impl/helper.hpp
+                src/ddc/detail/tuple/impl/ignore.hpp
+                src/ddc/detail/tuple/impl/macros.hpp
+                src/ddc/detail/tuple/impl/traits.hpp
+                src/ddc/detail/tuple/impl/tuple.hpp
+                src/ddc/detail/tuple/impl/tuple_fwd.hpp
+                src/ddc/detail/tuple/tuple.hpp
                 src/ddc/detail/type_seq.hpp
                 src/ddc/detail/type_traits.hpp
                 src/ddc/detail/utils.hpp

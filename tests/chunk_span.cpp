@@ -2,6 +2,7 @@
 //
 // SPDX-License-Identifier: MIT
 
+#include <array>
 #include <type_traits>
 #include <utility>
 
@@ -90,6 +91,87 @@ void TestChunkSpan1DTestCtadOnDevice()
     EXPECT_EQ(sum, view.size());
 }
 
+struct DDimMu
+{
+};
+using DElemMu = ddc::DiscreteElement<DDimMu>;
+struct DDimNu
+{
+};
+using DElemNu = ddc::DiscreteElement<DDimNu>;
+using DElemMuNu = ddc::DiscreteElement<DDimMu, DDimNu>;
+using DVectMuNu = ddc::DiscreteVector<DDimMu, DDimNu>;
+using DDomMuNu = ddc::DiscreteDomain<DDimMu, DDimNu>;
+
+void TestChunkSpan2DTestCtorStaticStorageFromLayoutRightExtents()
+{
+    using execution_space = Kokkos::DefaultExecutionSpace;
+    using memory_space = typename execution_space::memory_space;
+    using tensor_type = ddc::ChunkSpan<double, DDomMuNu, Kokkos::layout_right, memory_space, 4>;
+
+    Kokkos::View<double*, memory_space> sum_d("sum_d", 1);
+    Kokkos::deep_copy(sum_d, 0.0);
+
+    ddc::parallel_for_each(
+            execution_space(),
+            ddc::DiscreteDomain<>(),
+            KOKKOS_LAMBDA(ddc::DiscreteElement<>) {
+                tensor_type tensor(2, 2);
+
+                tensor(DElemMuNu(0, 0)) = 1.0;
+                tensor(DElemMuNu(0, 1)) = 2.0;
+                tensor(DElemMuNu(1, 0)) = 3.0;
+                tensor(DElemMuNu(1, 1)) = 4.0;
+
+                sum_d(0) += tensor(DElemMuNu(0, 0));
+                sum_d(0) += tensor(DElemMuNu(0, 1));
+                sum_d(0) += tensor(DElemMuNu(1, 0));
+                sum_d(0) += tensor(DElemMuNu(1, 1));
+            });
+
+    Kokkos::View<double*, Kokkos::DefaultHostExecutionSpace::memory_space> const sum_h
+            = Kokkos::create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), sum_d);
+    EXPECT_EQ(sum_h(0), 10.0);
+}
+
+void TestChunkSpan2DTestCtorStaticStorageFromLayoutStrideMapping()
+{
+    using execution_space = Kokkos::DefaultExecutionSpace;
+    using memory_space = typename execution_space::memory_space;
+    using tensor_type = ddc::ChunkSpan<double, DDomMuNu, Kokkos::layout_stride, memory_space, 6>;
+
+    Kokkos::View<double*, memory_space> sum_d("sum_d", 1);
+    Kokkos::deep_copy(sum_d, 0.0);
+
+    DElemMu const delem_mu = ddc::init_trivial_half_bounded_space<DDimMu>();
+    DElemNu const delem_nu = ddc::init_trivial_half_bounded_space<DDimNu>();
+    DDomMuNu const domain_munu(DElemMuNu(delem_mu, delem_nu), DVectMuNu(2, 2));
+
+    ddc::parallel_for_each(
+            execution_space(),
+            ddc::DiscreteDomain<>(),
+            KOKKOS_LAMBDA(ddc::DiscreteElement<>) {
+                typename tensor_type::extents_type const extents(2, 2);
+                typename tensor_type::mapping_type const
+                        layout_mapping(extents, std::array<std::size_t, 2> {3, 1});
+                tensor_type tensor(layout_mapping, domain_munu);
+
+                tensor(DElemMuNu(0, 0)) = 1.0;
+                tensor(DElemMuNu(0, 1)) = 2.0;
+                tensor(DElemMuNu(1, 0)) = 3.0;
+                tensor(DElemMuNu(1, 1)) = 4.0;
+
+                sum_d(0) += tensor(DElemMuNu(0, 0));
+                sum_d(0) += tensor(DElemMuNu(0, 1));
+                sum_d(0) += tensor(DElemMuNu(1, 0));
+                sum_d(0) += tensor(DElemMuNu(1, 1));
+            });
+
+    Kokkos::View<double*, Kokkos::DefaultHostExecutionSpace::memory_space> const sum_h
+            = Kokkos::create_mirror_view_and_copy(Kokkos::DefaultHostExecutionSpace(), sum_d);
+    EXPECT_EQ(sum_h(0), 10.0);
+}
+
 } // namespace anonymous_namespace_workaround_chunk_span_cpp
 
 TEST(ChunkSpan1DTest, CtadOnDevice)
@@ -136,4 +218,14 @@ TEST(ChunkSpan2DTest, CtorLayoutStrideKokkosView)
                     ddc::DiscreteVector<DDimX, DDimY>(subview.extent(0), subview.extent(1)));
     ASSERT_TRUE((std::is_same_v<decltype(subview)::array_layout, Kokkos::LayoutStride>));
     EXPECT_NO_FATAL_FAILURE(ddc::ChunkSpan(subview, ddom_xy));
+}
+
+TEST(ChunkSpan2DTest, CtorStaticStorageFromLayoutRightExtents)
+{
+    TestChunkSpan2DTestCtorStaticStorageFromLayoutRightExtents();
+}
+
+TEST(ChunkSpan2DTest, CtorStaticStorageFromLayoutStrideMapping)
+{
+    TestChunkSpan2DTestCtorStaticStorageFromLayoutStrideMapping();
 }

@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <concepts>
 #include <cstddef>
 #include <type_traits>
 #include <utility>
@@ -29,21 +30,38 @@ template <
         class ElementType,
         class SupportType,
         class LayoutStridedPolicy = Kokkos::layout_right,
-        class MemorySpace = Kokkos::DefaultHostExecutionSpace::memory_space>
+        class MemorySpace = Kokkos::DefaultHostExecutionSpace::memory_space,
+        std::size_t StaticStorageSize = 0>
 class ChunkSpan;
 
-template <class ElementType, class SupportType, class LayoutStridedPolicy, class MemorySpace>
-inline constexpr bool
-        enable_chunk<ChunkSpan<ElementType, SupportType, LayoutStridedPolicy, MemorySpace>>
+template <
+        class ElementType,
+        class SupportType,
+        class LayoutStridedPolicy,
+        class MemorySpace,
+        std::size_t StaticStorageSize>
+inline constexpr bool enable_chunk<
+        ChunkSpan<ElementType, SupportType, LayoutStridedPolicy, MemorySpace, StaticStorageSize>>
         = true;
 
-template <class ElementType, class SupportType, class LayoutStridedPolicy, class MemorySpace>
-inline constexpr bool
-        enable_borrowed_chunk<ChunkSpan<ElementType, SupportType, LayoutStridedPolicy, MemorySpace>>
+template <
+        class ElementType,
+        class SupportType,
+        class LayoutStridedPolicy,
+        class MemorySpace,
+        std::size_t StaticStorageSize>
+inline constexpr bool enable_borrowed_chunk<
+        ChunkSpan<ElementType, SupportType, LayoutStridedPolicy, MemorySpace, StaticStorageSize>>
         = true;
 
-template <class ElementType, class SupportType, class LayoutStridedPolicy, class MemorySpace>
-class ChunkSpan : public ChunkCommon<ElementType, SupportType, LayoutStridedPolicy>
+template <
+        class ElementType,
+        class SupportType,
+        class LayoutStridedPolicy,
+        class MemorySpace,
+        std::size_t StaticStorageSize>
+class ChunkSpan
+    : public ChunkCommon<ElementType, SupportType, LayoutStridedPolicy, StaticStorageSize>
 {
     static_assert(
             std::is_same_v<LayoutStridedPolicy, Kokkos::layout_left>
@@ -52,14 +70,24 @@ class ChunkSpan : public ChunkCommon<ElementType, SupportType, LayoutStridedPoli
             "ChunkSpan only supports layout_left, layout_right or layout_stride");
 
 protected:
-    using base_type = ChunkCommon<ElementType, SupportType, LayoutStridedPolicy>;
+    using base_type = ChunkCommon<ElementType, SupportType, LayoutStridedPolicy, StaticStorageSize>;
 
 public:
     /// type of a span of this full chunk
-    using span_type = ChunkSpan<ElementType, SupportType, LayoutStridedPolicy, MemorySpace>;
+    using span_type = ChunkSpan<
+            ElementType,
+            SupportType,
+            LayoutStridedPolicy,
+            MemorySpace,
+            StaticStorageSize>;
 
     /// type of a view of this full chunk
-    using view_type = ChunkSpan<ElementType const, SupportType, LayoutStridedPolicy, MemorySpace>;
+    using view_type = ChunkSpan<
+            ElementType const,
+            SupportType,
+            LayoutStridedPolicy,
+            MemorySpace,
+            StaticStorageSize>;
 
     using discrete_domain_type = typename base_type::discrete_domain_type;
 
@@ -92,7 +120,7 @@ public:
 
     using reference = typename base_type::reference;
 
-    template <class, class, class, class>
+    template <class, class, class, class, std::size_t>
     friend class ChunkSpan;
 
 protected:
@@ -206,7 +234,8 @@ public:
      */
     template <class OElementType>
     KOKKOS_FUNCTION constexpr explicit ChunkSpan(
-            ChunkSpan<OElementType, SupportType, layout_type, MemorySpace> const& other) noexcept
+            ChunkSpan<OElementType, SupportType, layout_type, MemorySpace, StaticStorageSize> const&
+                    other) noexcept
         : base_type(other.m_allocation_mdspan, other.m_domain)
     {
     }
@@ -220,6 +249,51 @@ public:
             std::enable_if_t<std::is_constructible_v<Mapping, extents_type>, int> = 0>
     KOKKOS_FUNCTION constexpr ChunkSpan(ElementType* const ptr, SupportType const& domain)
         : base_type(ptr, domain)
+    {
+    }
+
+    template <std::size_t S = StaticStorageSize>
+    requires(S != 0) KOKKOS_FUNCTION constexpr explicit ChunkSpan(
+            mapping_type const& layout_mapping,
+            SupportType const& domain)
+        : base_type(layout_mapping, domain)
+    {
+    }
+
+    template <std::size_t S = StaticStorageSize>
+    requires(S != 0) KOKKOS_FUNCTION
+            constexpr explicit ChunkSpan(mapping_type const& layout_mapping)
+        : base_type(layout_mapping)
+    {
+    }
+
+    template <
+            std::size_t S = StaticStorageSize,
+            class Layout = LayoutStridedPolicy,
+            class... ExtentValues>
+    requires(
+            (S != 0)
+            && (std::same_as<Layout, Kokkos::layout_left>
+                || std::same_as<Layout, Kokkos::layout_right>)
+            && (sizeof...(ExtentValues) == SupportType::rank())
+            && (std::convertible_to<ExtentValues, std::size_t> && ...)) KOKKOS_FUNCTION
+            constexpr explicit ChunkSpan(ExtentValues... extents, SupportType const& domain)
+        : base_type(extents..., domain)
+    {
+    }
+
+    template <
+            std::size_t S = StaticStorageSize,
+            class Layout = LayoutStridedPolicy,
+            class... ExtentValues>
+    requires(
+            (S != 0)
+            && (std::same_as<Layout, Kokkos::layout_left>
+                || std::same_as<Layout, Kokkos::layout_right>)
+            && (sizeof...(ExtentValues) == SupportType::rank())
+            && (std::convertible_to<ExtentValues, std::size_t> && ...)) KOKKOS_FUNCTION
+            constexpr explicit ChunkSpan(ExtentValues... extents)
+        : base_type(extents...)
     {
     }
 
@@ -448,7 +522,13 @@ template <
         class ElementType,
         class SupportType,
         class LayoutStridedPolicy = Kokkos::layout_right,
-        class MemorySpace = Kokkos::HostSpace>
-using ChunkView = ChunkSpan<ElementType const, SupportType, LayoutStridedPolicy, MemorySpace>;
+        class MemorySpace = Kokkos::HostSpace,
+        std::size_t StaticStorageSize = 0>
+using ChunkView = ChunkSpan<
+        ElementType const,
+        SupportType,
+        LayoutStridedPolicy,
+        MemorySpace,
+        StaticStorageSize>;
 
 } // namespace ddc

@@ -50,14 +50,14 @@ jobs:
         run: |
           DOCKER_BUILDKIT=1 docker build \
             --build-arg BUILDKIT_INLINE_CACHE=1 \
-            --cache-from ghcr.io/cexa-project/ddc/doxygen \
+            --cache-from ghcr.io/cexa-project/ddc/doxygen:4a9a77b \
             -t ghcr.io/cexa-project/ddc/doxygen \
-            -t ghcr.io/cexa-project/ddc/doxygen:${GITHUB_SHA:0:7} \
+            -t ghcr.io/cexa-project/ddc/doxygen:4a9a77b \
             docker/doxygen
       - name: Publish image for current SHA
         if: needs.id_repo.outputs.in_base_repo == 'true'
         run: |
-          docker push ghcr.io/cexa-project/ddc/doxygen:${GITHUB_SHA:0:7}
+          docker push ghcr.io/cexa-project/ddc/doxygen:4a9a77b
       - name: Publish latest (default) image
         if: github.event_name == 'push' && github.ref_name == 'main' && needs.id_repo.outputs.in_base_repo == 'true'
         run: |
@@ -65,7 +65,7 @@ jobs:
       - name: Create image tarball
         if: needs.id_repo.outputs.in_base_repo == 'false'
         run: |
-          docker save ghcr.io/cexa-project/ddc/doxygen:${GITHUB_SHA:0:7} > doxygen.tar
+          docker save ghcr.io/cexa-project/ddc/doxygen:4a9a77b > doxygen.tar
       - name: Generate docker artifact from image
         if: needs.id_repo.outputs.in_base_repo == 'false'
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f  # v6.0.0
@@ -118,7 +118,7 @@ jobs:
           EOF
           mkdir docs_out
           chmod a+rwx docs_out
-          docker run -v ${PWD}:/src ghcr.io/cexa-project/ddc/doxygen:${GITHUB_SHA:0:7} bash /src/run.sh
+          docker run -v ${PWD}:/src ghcr.io/cexa-project/ddc/doxygen:4a9a77b bash /src/run.sh
       - name: Check for relevant documentation errors
         run: |
           # Get files which have changed in this merge request
@@ -161,13 +161,13 @@ jobs:
           cat<<-EOF > run.sh
             set -xe
             git config --global --add safe.directory '*'
-            export CC=clang
-            export CXX=clang++
+            export CC=clang-21
+            export CXX=clang++-21
             cmake \
                 -D DDC_BUILD_DOCUMENTATION=ON \
-                -D CMAKE_CXX_FLAGS="-Wno-unused-command-line-argument" \
                 -D CMAKE_CXX_STANDARD=20 \
                 -D CMAKE_EXPORT_COMPILE_COMMANDS=ON \
+                -D CMAKE_VERIFY_INTERFACE_HEADER_SETS=ON \
                 -D Kokkos_ENABLE_DEPRECATION_WARNINGS=OFF \
                 -B build \
                 -S /src
@@ -177,7 +177,7 @@ jobs:
           EOF
           mkdir docs_out
           chmod a+rwx docs_out
-          docker run -v ${PWD}:/src ghcr.io/cexa-project/ddc/doxygen:${GITHUB_SHA:0:7} bash /src/run.sh
+          docker run -v ${PWD}:/src ghcr.io/cexa-project/ddc/doxygen:4a9a77b bash /src/run.sh
           if [ -s docs_out/doxygen.log ]; then
             # The file is not-empty.
             head -n 30 docs_out/doxygen.log

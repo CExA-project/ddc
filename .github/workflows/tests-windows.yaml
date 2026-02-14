@@ -8,6 +8,8 @@ name: Tests on Windows
 # yamllint disable-line rule:truthy
 on:
   pull_request:
+    branches-ignore:
+      - '*'
     paths:
       - '.github/workflows/tests-windows.yaml'
       - '**.cpp'

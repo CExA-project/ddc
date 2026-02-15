@@ -256,17 +256,12 @@ foreach(bc "periodic" "greville" "hermite")
             string(TOUPPER "degree=${degree}" degree_macro)
             string(TOUPPER "bsplines_type_${bsplines_type}" bsplines_type_macro)
             set(test_filename "batched_nd_evaluator_1d_spline_builder")
-            set(test_name
-                "${test_filename}_tests_degree_${degree}_${bsplines_type}_${bc}"
-            )
+            set(test_name "${test_filename}_tests_degree_${degree}_${bsplines_type}_${bc}")
 
             add_executable("${test_name}" "${test_filename}.cpp")
             target_compile_definitions(
                 "${test_name}"
-                PRIVATE
-                    -D${bc_macro}
-                    -D${degree_macro}
-                    -D${bsplines_type_macro}
+                PRIVATE -D${bc_macro} -D${degree_macro} -D${bsplines_type_macro}
             )
             target_compile_features("${test_name}" PRIVATE cxx_std_17)
             target_link_libraries(
@@ -275,7 +270,7 @@ foreach(bc "periodic" "greville" "hermite")
             )
             gtest_discover_tests("${test_name}" DISCOVERY_MODE PRE_TEST)
         endforeach()
-endforeach()
+    endforeach()
 endforeach()
 
 foreach(bc "periodic" "greville" "hermite")
@@ -285,17 +280,12 @@ foreach(bc "periodic" "greville" "hermite")
             string(TOUPPER "degree=${degree}" degree_macro)
             string(TOUPPER "bsplines_type_${bsplines_type}" bsplines_type_macro)
             set(test_filename "batched_nd_evaluator_3d_spline_builder")
-            set(test_name
-                "${test_filename}_tests_degree_${degree}_${bsplines_type}_${bc}"
-            )
+            set(test_name "${test_filename}_tests_degree_${degree}_${bsplines_type}_${bc}")
 
             add_executable("${test_name}" "${test_filename}.cpp")
             target_compile_definitions(
                 "${test_name}"
-                PRIVATE
-                    -D${bc_macro}
-                    -D${degree_macro}
-                    -D${bsplines_type_macro}
+                PRIVATE -D${bc_macro} -D${degree_macro} -D${bsplines_type_macro}
             )
             target_compile_features("${test_name}" PRIVATE cxx_std_17)
             target_link_libraries(

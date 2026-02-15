@@ -3,9 +3,6 @@
 #include <array>
 #include <type_traits>
 #include <functional>
-#if defined(CEXA_HAS_CXX20)
-#include <ranges>
-#endif
 
 #include "tuple_fwd.hpp"
 
@@ -93,11 +90,6 @@ struct is_tuple_like_impl<std::tuple<Types...>> : std::true_type {};
 template <typename... Types>
 struct is_tuple_like_impl<cexa::tuple<Types...>> : std::true_type {};
 
-#if defined(CEXA_HAS_CXX20)
-template <class I, class S, std::ranges::subrange_kind K>
-struct is_tuple_like_impl<std::ranges::subrange<I, S, K>> : std::true_type {};
-#endif
-
 template <typename T>
 struct is_tuple_like : is_tuple_like_impl<impl::remove_cvref_t<T>> {};
 
@@ -113,18 +105,6 @@ struct is_tuple<tuple<Types...>> : std::true_type {};
 
 template <class T>
 inline constexpr bool is_tuple_v = is_tuple<T>::value;
-
-// is_subrange
-template <class T>
-struct is_subrange : std::false_type {};
-
-#if defined(CEXA_HAS_CXX20)
-template <class I, class S, std::ranges::subrange_kind K>
-struct is_subrange<std::ranges::subrange<I, S, K>> : std::true_type {};
-#endif
-
-template <class T>
-inline constexpr bool is_subrange_v = is_subrange<T>::value;
 
 // is_different_from
 template <class T, class U>
@@ -213,7 +193,7 @@ struct std::basic_common_reference<cexa::tuple<TTypes...>, UTuple, TQual,
   static_assert(sizeof...(TTypes) ==
                 std::tuple_size_v<std::remove_reference_t<UTuple>>);
 
-  using type = cexa::impl::common_reference_helper<
+  using type = typename cexa::impl::common_reference_helper<
       cexa::tuple<TTypes...>, UTuple, TQual, UQual,
       decltype(std::index_sequence_for<TTypes...>{})>::type;
 };
@@ -228,7 +208,7 @@ struct std::basic_common_reference<TTuple, cexa::tuple<UTypes...>, TQual,
   static_assert(std::tuple_size_v<std::remove_reference_t<TTuple>> ==
                 sizeof...(UTypes));
 
-  using type = cexa::impl::common_reference_helper<
+  using type = typename cexa::impl::common_reference_helper<
       TTuple, cexa::tuple<UTypes...>, TQual, UQual,
       decltype(std::index_sequence_for<UTypes...>{})>::type;
 };

@@ -131,37 +131,37 @@ $(document).ready(function(){initNavTree('splines__linear__problem__pds__tridiag
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment">//</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment">// SPDX-License-Identifier: MIT</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span> </div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;cassert&gt;</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#if !defined(NDEBUG)</span></div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#    include &lt;cmath&gt;</span></div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;cstddef&gt;</span></div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &lt;stdexcept&gt;</span></div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;string&gt;</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;utility&gt;</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="preprocessor">&lt;</span><span class="preprocessor">cassert</span><span class="preprocessor">&gt;</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#</span><span class="preprocessor">if</span> <span class="preprocessor">!</span><span class="preprocessor">defined</span><span class="preprocessor">(</span><span class="preprocessor">NDEBUG</span><span class="preprocessor">)</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#</span>    <span class="preprocessor">include</span> <span class="preprocessor">&lt;</span><span class="preprocessor">cmath</span><span class="preprocessor">&gt;</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#</span><span class="preprocessor">endif</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="preprocessor">&lt;</span><span class="preprocessor">cstddef</span><span class="preprocessor">&gt;</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="preprocessor">&lt;</span><span class="preprocessor">stdexcept</span><span class="preprocessor">&gt;</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="preprocessor">&lt;</span><span class="preprocessor">string</span><span class="preprocessor">&gt;</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="preprocessor">&lt;</span><span class="preprocessor">utility</span><span class="preprocessor">&gt;</span></div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &lt;Kokkos_Core.hpp&gt;</span></div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &lt;Kokkos_DualView.hpp&gt;</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="preprocessor">&lt;</span><span class="preprocessor">Kokkos_Core</span><span class="preprocessor">.</span><span class="preprocessor">hpp</span><span class="preprocessor">&gt;</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="preprocessor">&lt;</span><span class="preprocessor">Kokkos_DualView</span><span class="preprocessor">.</span><span class="preprocessor">hpp</span><span class="preprocessor">&gt;</span></div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#if __has_include(&lt;mkl_lapacke.h&gt;)</span></div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#    include &lt;mkl_lapacke.h&gt;</span></div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#else</span></div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#    include &lt;lapacke.h&gt;</span></div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#</span><span class="preprocessor">if</span> __has_include<span class="preprocessor">(</span><span class="preprocessor">&lt;</span><span class="preprocessor">mkl_lapacke</span><span class="preprocessor">.</span><span class="preprocessor">h</span><span class="preprocessor">&gt;</span><span class="preprocessor">)</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#</span>    <span class="preprocessor">include</span> <span class="preprocessor">&lt;</span><span class="preprocessor">mkl_lapacke</span><span class="preprocessor">.</span><span class="preprocessor">h</span><span class="preprocessor">&gt;</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#</span><span class="preprocessor">else</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#</span>    <span class="preprocessor">include</span> <span class="preprocessor">&lt;</span><span class="preprocessor">lapacke</span><span class="preprocessor">.</span><span class="preprocessor">h</span><span class="preprocessor">&gt;</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#</span><span class="preprocessor">endif</span></div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &lt;KokkosBatched_Pttrs.hpp&gt;</span></div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &lt;KokkosBatched_Util.hpp&gt;</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="preprocessor">&lt;</span><span class="preprocessor">KokkosBatched_Pttrs</span><span class="preprocessor">.</span><span class="preprocessor">hpp</span><span class="preprocessor">&gt;</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="preprocessor">&lt;</span><span class="preprocessor">KokkosBatched_Util</span><span class="preprocessor">.</span><span class="preprocessor">hpp</span><span class="preprocessor">&gt;</span></div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#include &quot;splines_linear_problem.hpp&quot;</span></div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#include &quot;splines_linear_problem_pds_tridiag.hpp&quot;</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#</span><span class="preprocessor">include</span> <a class="code" href="splines__linear__problem_8hpp.html">&quot;splines_linear_problem.hpp&quot;</a></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#</span><span class="preprocessor">include</span> <a class="code" href="splines__linear__problem__pds__tridiag_8hpp.html">&quot;splines_linear_problem_pds_tridiag.hpp&quot;</a></div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="keyword">namespace </span>ddc::detail {</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="keyword">namespace</span> <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::detail {</div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> ExecSpace&gt;</div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>SplinesLinearProblemPDSTridiag&lt;ExecSpace&gt;::SplinesLinearProblemPDSTridiag(</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>        std::size_t <span class="keyword">const</span> <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">mat_size</a>)</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    : SplinesLinearProblem&lt;<a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ExecSpace</a>&gt;(<a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">mat_size</a>)</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    , m_q(<span class="stringliteral">&quot;q&quot;</span>, 2, <a class="code hl_variable" href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">mat_size</a>)</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>        std::size_t <span class="keyword">const</span> mat_size)</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    : SplinesLinearProblem&lt;ExecSpace&gt;(mat_size)</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    , m_q(<span class="stringliteral">&quot;q&quot;</span>, 2, mat_size)</div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>{</div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    Kokkos::deep_copy(m_q.view_host(), 0.);</div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>}</div>
@@ -170,8 +170,8 @@ $(document).ready(function(){initNavTree('splines__linear__problem__pds__tridiag
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>SplinesLinearProblemPDSTridiag&lt;ExecSpace&gt;::~SplinesLinearProblemPDSTridiag() = <span class="keywordflow">default</span>;</div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> ExecSpace&gt;</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="keywordtype">double</span> SplinesLinearProblemPDSTridiag&lt;ExecSpace&gt;::get_element(std::size_t i, std::size_t j)<span class="keyword"> const</span></div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="keyword"></span>{</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="keywordtype">double</span> SplinesLinearProblemPDSTridiag&lt;ExecSpace&gt;::get_element(std::size_t i, std::size_t j) <span class="keyword">const</span></div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>{</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    assert(i &lt; size());</div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    assert(j &lt; size());</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
@@ -224,12 +224,12 @@ $(document).ready(function(){initNavTree('splines__linear__problem__pds__tridiag
 <div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>}</div>
 <div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span> </div>
 <div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> ExecSpace&gt;</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span><span class="keywordtype">void</span> SplinesLinearProblemPDSTridiag&lt;ExecSpace&gt;::solve(MultiRHS <span class="keyword">const</span> b, <span class="keywordtype">bool</span> <span class="keyword">const</span>)<span class="keyword"> const</span></div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span><span class="keyword"></span>{</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span><span class="keywordtype">void</span> SplinesLinearProblemPDSTridiag&lt;ExecSpace&gt;::solve(MultiRHS <span class="keyword">const</span> b, <span class="keywordtype">bool</span> <span class="keyword">const</span>) <span class="keyword">const</span></div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>{</div>
 <div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    assert(b.extent(0) == size());</div>
 <div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    <span class="keyword">auto</span> q_device = m_q.view_device();</div>
 <div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>    <span class="keyword">auto</span> d = Kokkos::subview(q_device, 0, Kokkos::ALL);</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    <span class="keyword">auto</span> e = Kokkos::subview(q_device, 1, Kokkos::pair&lt;int, int&gt;(0, q_device.extent_int(1) - 1));</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    <span class="keyword">auto</span> e = Kokkos::subview(q_device, 1, Kokkos::pair&lt;<span class="keywordtype">int</span>, <span class="keywordtype">int</span>&gt;(0, q_device.extent_int(1) - 1));</div>
 <div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    Kokkos::RangePolicy&lt;ExecSpace&gt; <span class="keyword">const</span> policy(0, b.extent(1));</div>
 <div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    Kokkos::parallel_for(</div>
 <div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>            <span class="stringliteral">&quot;pttrs&quot;</span>,</div>
@@ -242,24 +242,24 @@ $(document).ready(function(){initNavTree('splines__linear__problem__pds__tridiag
 <div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>            });</div>
 <div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>}</div>
 <div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span> </div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span><span class="preprocessor">#if defined(KOKKOS_ENABLE_SERIAL)</span></div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span><span class="keyword">template</span> <span class="keyword">class </span>SplinesLinearProblemPDSTridiag&lt;Kokkos::Serial&gt;;</div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span><span class="preprocessor">#if defined(KOKKOS_ENABLE_OPENMP)</span></div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span><span class="keyword">template</span> <span class="keyword">class </span>SplinesLinearProblemPDSTridiag&lt;Kokkos::OpenMP&gt;;</div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span><span class="preprocessor">#if defined(KOKKOS_ENABLE_CUDA)</span></div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span><span class="keyword">template</span> <span class="keyword">class </span>SplinesLinearProblemPDSTridiag&lt;Kokkos::Cuda&gt;;</div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span><span class="preprocessor">#if defined(KOKKOS_ENABLE_HIP)</span></div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span><span class="keyword">template</span> <span class="keyword">class </span>SplinesLinearProblemPDSTridiag&lt;Kokkos::HIP&gt;;</div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span><span class="preprocessor">#if defined(KOKKOS_ENABLE_SYCL)</span></div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span><span class="keyword">template</span> <span class="keyword">class </span>SplinesLinearProblemPDSTridiag&lt;Kokkos::SYCL&gt;;</div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span><span class="preprocessor">#</span><span class="preprocessor">if</span> <span class="preprocessor">defined</span><span class="preprocessor">(</span>KOKKOS_ENABLE_SERIAL<span class="preprocessor">)</span></div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span><span class="keyword">template</span> <span class="keyword">class</span> SplinesLinearProblemPDSTridiag&lt;Kokkos::Serial&gt;;</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span><span class="preprocessor">#</span><span class="preprocessor">endif</span></div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span><span class="preprocessor">#</span><span class="preprocessor">if</span> <span class="preprocessor">defined</span><span class="preprocessor">(</span><span class="preprocessor">KOKKOS_ENABLE_OPENMP</span><span class="preprocessor">)</span></div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span><span class="keyword">template</span> <span class="keyword">class</span> SplinesLinearProblemPDSTridiag&lt;Kokkos::OpenMP&gt;;</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span><span class="preprocessor">#</span><span class="preprocessor">endif</span></div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span><span class="preprocessor">#</span><span class="preprocessor">if</span> <span class="preprocessor">defined</span><span class="preprocessor">(</span><span class="preprocessor">KOKKOS_ENABLE_CUDA</span><span class="preprocessor">)</span></div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span><span class="keyword">template</span> <span class="keyword">class</span> SplinesLinearProblemPDSTridiag&lt;Kokkos::Cuda&gt;;</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span><span class="preprocessor">#</span><span class="preprocessor">endif</span></div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span><span class="preprocessor">#</span><span class="preprocessor">if</span> <span class="preprocessor">defined</span><span class="preprocessor">(</span><span class="preprocessor">KOKKOS_ENABLE_HIP</span><span class="preprocessor">)</span></div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span><span class="keyword">template</span> <span class="keyword">class</span> SplinesLinearProblemPDSTridiag&lt;Kokkos::HIP&gt;;</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span><span class="preprocessor">#</span><span class="preprocessor">endif</span></div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span><span class="preprocessor">#</span><span class="preprocessor">if</span> <span class="preprocessor">defined</span><span class="preprocessor">(</span><span class="preprocessor">KOKKOS_ENABLE_SYCL</span><span class="preprocessor">)</span></div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span><span class="keyword">template</span> <span class="keyword">class</span> SplinesLinearProblemPDSTridiag&lt;Kokkos::SYCL&gt;;</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span><span class="preprocessor">#</span><span class="preprocessor">endif</span></div>
 <div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span> </div>
 <div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>} <span class="comment">// namespace ddc::detail</span></div>
-<div class="ttc" id="anamespaceddc_html_a0d8d6125787befc59862bed182ea1717"><div class="ttname"><a href="namespaceddc.html#a0d8d6125787befc59862bed182ea1717">ddc::enable_chunk</a></div><div class="ttdeci">constexpr bool enable_chunk</div><div class="ttdef"><b>Definition</b> <a href="chunk__traits_8hpp_source.html#l00016">chunk_traits.hpp:16</a></div></div>
+<div class="ttc" id="anamespaceddc_html"><div class="ttname"><a href="namespaceddc.html">ddc</a></div><div class="ttdoc">The top-level namespace of DDC.</div><div class="ttdef"><b>Definition</b> <a href="aligned__allocator_8hpp_source.html#l00011">aligned_allocator.hpp:11</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!--
@@ -270,7 +270,7 @@ SPDX-License-Identifier: MIT
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_0a1ac0a07327d16d249fe50975802d58.html">ddc</a></li><li class="navelem"><a class="el" href="dir_8a1b80f894ad0ad8a6b877d6e01bfcab.html">kernels</a></li><li class="navelem"><a class="el" href="dir_109688489bf406327a07e6a8923b570b.html">splines</a></li><li class="navelem"><b>splines_linear_problem_pds_tridiag.cpp</b></li>
+    <li class="navelem"><a class="el" href="dir_98cdb10f369f6a3b9149e010b312bf5d.html">src</a></li><li class="navelem"><a class="el" href="dir_7221e96dc01906ed388a1c4b0a4b5964.html">ddc</a></li><li class="navelem"><a class="el" href="dir_1b8cf154f124619c983e34e0c1032e41.html">kernels</a></li><li class="navelem"><a class="el" href="dir_b31549623f0ffa148d58fab999e3c451.html">splines</a></li><li class="navelem"><b>splines_linear_problem_pds_tridiag.cpp</b></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>

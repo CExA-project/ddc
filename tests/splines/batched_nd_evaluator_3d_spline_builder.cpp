@@ -169,7 +169,7 @@ template <
         typename DDimI1,
         typename DDimI2,
         typename DDimI3,
-        typename... DDims,
+        typename DDimsDElem,
         typename ExecSpace,
         typename ChunkSpanType,
         typename Evaluator>
@@ -189,7 +189,7 @@ double get_max_norm_error_deriv(
             spline_eval.domain(),
             0.,
             ddc::reducer::max<double>(),
-            KOKKOS_LAMBDA(DElem<DDims...> const e) {
+            KOKKOS_LAMBDA(DDimsDElem const e) {
                 Coord<I1> const x = ddc::coordinate(DElem<DDimI1>(e));
                 Coord<I2> const y = ddc::coordinate(DElem<DDimI2>(e));
                 Coord<I3> const z = ddc::coordinate(DElem<DDimI3>(e));
@@ -1063,37 +1063,37 @@ void TestBatchedNd3dSpline()
             DDimI1,
             DDimI2,
             DDimI3,
-            DDims...>(exec_space, evaluator, spline_eval_deriv1, 1, 0, 0);
+            DElem<DDims...>>(exec_space, evaluator, spline_eval_deriv1, 1, 0, 0);
     double const max_norm_error_diff2 = get_max_norm_error_deriv<
             DDimI1,
             DDimI2,
             DDimI3,
-            DDims...>(exec_space, evaluator, spline_eval_deriv2, 0, 1, 0);
+            DElem<DDims...>>(exec_space, evaluator, spline_eval_deriv2, 0, 1, 0);
     double const max_norm_error_diff3 = get_max_norm_error_deriv<
             DDimI1,
             DDimI2,
             DDimI3,
-            DDims...>(exec_space, evaluator, spline_eval_deriv3, 0, 0, 1);
+            DElem<DDims...>>(exec_space, evaluator, spline_eval_deriv3, 0, 0, 1);
     double const max_norm_error_diff12 = get_max_norm_error_deriv<
             DDimI1,
             DDimI2,
             DDimI3,
-            DDims...>(exec_space, evaluator, spline_eval_deriv12, 1, 1, 0);
+            DElem<DDims...>>(exec_space, evaluator, spline_eval_deriv12, 1, 1, 0);
     double const max_norm_error_diff13 = get_max_norm_error_deriv<
             DDimI1,
             DDimI2,
             DDimI3,
-            DDims...>(exec_space, evaluator, spline_eval_deriv13, 1, 0, 1);
+            DElem<DDims...>>(exec_space, evaluator, spline_eval_deriv13, 1, 0, 1);
     double const max_norm_error_diff23 = get_max_norm_error_deriv<
             DDimI1,
             DDimI2,
             DDimI3,
-            DDims...>(exec_space, evaluator, spline_eval_deriv23, 0, 1, 1);
+            DElem<DDims...>>(exec_space, evaluator, spline_eval_deriv23, 0, 1, 1);
     double const max_norm_error_diff123 = get_max_norm_error_deriv<
             DDimI1,
             DDimI2,
             DDimI3,
-            DDims...>(exec_space, evaluator, spline_eval_deriv123, 1, 1, 1);
+            DElem<DDims...>>(exec_space, evaluator, spline_eval_deriv123, 1, 1, 1);
 
     double const max_norm = evaluator.max_norm();
     double const max_norm_diff1 = evaluator.max_norm(1, 0, 0);

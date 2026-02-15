@@ -192,10 +192,10 @@ struct store<Bools<false, false, false, false>> {
   KOKKOS_DEFAULTED_FUNCTION constexpr store(const store&) = default;
   KOKKOS_INLINE_FUNCTION constexpr store& operator=(const store&) {
     return *this;
-  };
+  }
   KOKKOS_INLINE_FUNCTION constexpr const store& operator=(const store&) const {
     return *this;
-  };
+  }
 
   KOKKOS_INLINE_FUNCTION constexpr void swap(store&) noexcept {}
   KOKKOS_INLINE_FUNCTION constexpr void swap(const store&) const noexcept {}
@@ -643,9 +643,9 @@ struct tuple_assign_helper;
 template <>
 struct tuple_assign_helper<false, false, false, false> {
   TUPLE_ASSIGN_HELPER_CONSTRUCTORS
-  constexpr tuple_assign_helper& operator=(tuple_assign_helper&) = delete;
-  constexpr const tuple_assign_helper& operator=(tuple_assign_helper&) const =
-      delete;
+  constexpr tuple_assign_helper& operator=(const tuple_assign_helper&) = delete;
+  constexpr const tuple_assign_helper& operator=(
+      const tuple_assign_helper&) const                           = delete;
   constexpr tuple_assign_helper& operator=(tuple_assign_helper&&) = delete;
   constexpr const tuple_assign_helper& operator=(tuple_assign_helper&&) const =
       delete;
@@ -654,12 +654,12 @@ struct tuple_assign_helper<false, false, false, false> {
 template <>
 struct tuple_assign_helper<false, false, false, true> {
   TUPLE_ASSIGN_HELPER_CONSTRUCTORS
-  constexpr tuple_assign_helper& operator=(tuple_assign_helper&) = delete;
-  constexpr const tuple_assign_helper& operator=(tuple_assign_helper&) const =
-      delete;
+  constexpr tuple_assign_helper& operator=(const tuple_assign_helper&) = delete;
+  constexpr const tuple_assign_helper& operator=(
+      const tuple_assign_helper&) const                           = delete;
   constexpr tuple_assign_helper& operator=(tuple_assign_helper&&) = delete;
   KOKKOS_INLINE_FUNCTION constexpr const tuple_assign_helper& operator=(
-      tuple_assign_helper&&) const {
+      tuple_assign_helper&&) const noexcept {
     return *this;
   }
 };
@@ -667,11 +667,11 @@ struct tuple_assign_helper<false, false, false, true> {
 template <>
 struct tuple_assign_helper<false, false, true, false> {
   TUPLE_ASSIGN_HELPER_CONSTRUCTORS
-  constexpr tuple_assign_helper& operator=(tuple_assign_helper&) = delete;
-  constexpr const tuple_assign_helper& operator=(tuple_assign_helper&) const =
-      delete;
+  constexpr tuple_assign_helper& operator=(const tuple_assign_helper&) = delete;
+  constexpr const tuple_assign_helper& operator=(
+      const tuple_assign_helper&) const = delete;
   KOKKOS_INLINE_FUNCTION constexpr tuple_assign_helper& operator=(
-      tuple_assign_helper&&) {
+      tuple_assign_helper&&) noexcept {
     return *this;
   }
   constexpr const tuple_assign_helper& operator=(tuple_assign_helper&&) const =
@@ -681,15 +681,15 @@ struct tuple_assign_helper<false, false, true, false> {
 template <>
 struct tuple_assign_helper<false, false, true, true> {
   TUPLE_ASSIGN_HELPER_CONSTRUCTORS
-  constexpr tuple_assign_helper& operator=(tuple_assign_helper&) = delete;
-  constexpr const tuple_assign_helper& operator=(tuple_assign_helper&) const =
-      delete;
+  constexpr tuple_assign_helper& operator=(const tuple_assign_helper&) = delete;
+  constexpr const tuple_assign_helper& operator=(
+      const tuple_assign_helper&) const = delete;
   KOKKOS_INLINE_FUNCTION constexpr tuple_assign_helper& operator=(
-      tuple_assign_helper&&) {
+      tuple_assign_helper&&) noexcept {
     return *this;
   }
   KOKKOS_INLINE_FUNCTION constexpr const tuple_assign_helper& operator=(
-      tuple_assign_helper&&) const {
+      tuple_assign_helper&&) const noexcept {
     return *this;
   }
 };
@@ -697,9 +697,9 @@ struct tuple_assign_helper<false, false, true, true> {
 template <>
 struct tuple_assign_helper<false, true, false, false> {
   TUPLE_ASSIGN_HELPER_CONSTRUCTORS
-  constexpr tuple_assign_helper& operator=(tuple_assign_helper&) = delete;
+  constexpr tuple_assign_helper& operator=(const tuple_assign_helper&) = delete;
   KOKKOS_INLINE_FUNCTION constexpr const tuple_assign_helper& operator=(
-      tuple_assign_helper&) const {
+      const tuple_assign_helper&) const noexcept {
     return *this;
   }
   constexpr tuple_assign_helper& operator=(tuple_assign_helper&&) = delete;
@@ -710,14 +710,14 @@ struct tuple_assign_helper<false, true, false, false> {
 template <>
 struct tuple_assign_helper<false, true, false, true> {
   TUPLE_ASSIGN_HELPER_CONSTRUCTORS
-  constexpr tuple_assign_helper& operator=(tuple_assign_helper&) = delete;
+  constexpr tuple_assign_helper& operator=(const tuple_assign_helper&) = delete;
   KOKKOS_INLINE_FUNCTION constexpr const tuple_assign_helper& operator=(
-      tuple_assign_helper&) const {
+      const tuple_assign_helper&) const noexcept {
     return *this;
   }
   constexpr tuple_assign_helper& operator=(tuple_assign_helper&&) = delete;
   KOKKOS_INLINE_FUNCTION constexpr const tuple_assign_helper& operator=(
-      tuple_assign_helper&&) const {
+      tuple_assign_helper&&) const noexcept {
     return *this;
   }
 };
@@ -725,13 +725,13 @@ struct tuple_assign_helper<false, true, false, true> {
 template <>
 struct tuple_assign_helper<false, true, true, false> {
   TUPLE_ASSIGN_HELPER_CONSTRUCTORS
-  constexpr tuple_assign_helper& operator=(tuple_assign_helper&) = delete;
+  constexpr tuple_assign_helper& operator=(const tuple_assign_helper&) = delete;
   KOKKOS_INLINE_FUNCTION constexpr const tuple_assign_helper& operator=(
-      tuple_assign_helper&) const {
+      const tuple_assign_helper&) const noexcept {
     return *this;
   }
   KOKKOS_INLINE_FUNCTION constexpr tuple_assign_helper& operator=(
-      tuple_assign_helper&&) {
+      tuple_assign_helper&&) noexcept {
     return *this;
   }
   constexpr const tuple_assign_helper& operator=(tuple_assign_helper&&) const =
@@ -741,17 +741,17 @@ struct tuple_assign_helper<false, true, true, false> {
 template <>
 struct tuple_assign_helper<false, true, true, true> {
   TUPLE_ASSIGN_HELPER_CONSTRUCTORS
-  constexpr tuple_assign_helper& operator=(tuple_assign_helper&) = delete;
+  constexpr tuple_assign_helper& operator=(const tuple_assign_helper&) = delete;
   KOKKOS_INLINE_FUNCTION constexpr const tuple_assign_helper& operator=(
-      tuple_assign_helper&) const {
+      const tuple_assign_helper&) const noexcept {
     return *this;
   }
   KOKKOS_INLINE_FUNCTION constexpr tuple_assign_helper& operator=(
-      tuple_assign_helper&&) {
+      tuple_assign_helper&&) noexcept {
     return *this;
   }
   KOKKOS_INLINE_FUNCTION constexpr const tuple_assign_helper& operator=(
-      tuple_assign_helper&&) const {
+      tuple_assign_helper&&) const noexcept {
     return *this;
   }
 };
@@ -760,11 +760,11 @@ template <>
 struct tuple_assign_helper<true, false, false, false> {
   TUPLE_ASSIGN_HELPER_CONSTRUCTORS
   KOKKOS_INLINE_FUNCTION constexpr tuple_assign_helper& operator=(
-      tuple_assign_helper&) {
+      const tuple_assign_helper&) noexcept {
     return *this;
   }
-  constexpr const tuple_assign_helper& operator=(tuple_assign_helper&) const =
-      delete;
+  constexpr const tuple_assign_helper& operator=(
+      const tuple_assign_helper&) const                           = delete;
   constexpr tuple_assign_helper& operator=(tuple_assign_helper&&) = delete;
   constexpr const tuple_assign_helper& operator=(tuple_assign_helper&&) const =
       delete;
@@ -774,14 +774,14 @@ template <>
 struct tuple_assign_helper<true, false, false, true> {
   TUPLE_ASSIGN_HELPER_CONSTRUCTORS
   KOKKOS_INLINE_FUNCTION constexpr tuple_assign_helper& operator=(
-      tuple_assign_helper&) {
+      const tuple_assign_helper&) noexcept {
     return *this;
   }
-  constexpr const tuple_assign_helper& operator=(tuple_assign_helper&) const =
-      delete;
+  constexpr const tuple_assign_helper& operator=(
+      const tuple_assign_helper&) const                           = delete;
   constexpr tuple_assign_helper& operator=(tuple_assign_helper&&) = delete;
   KOKKOS_INLINE_FUNCTION constexpr const tuple_assign_helper& operator=(
-      tuple_assign_helper&&) const {
+      tuple_assign_helper&&) const noexcept {
     return *this;
   }
 };
@@ -790,13 +790,13 @@ template <>
 struct tuple_assign_helper<true, false, true, false> {
   TUPLE_ASSIGN_HELPER_CONSTRUCTORS
   KOKKOS_INLINE_FUNCTION constexpr tuple_assign_helper& operator=(
-      tuple_assign_helper&) {
+      const tuple_assign_helper&) noexcept {
     return *this;
   }
-  constexpr const tuple_assign_helper& operator=(tuple_assign_helper&) const =
-      delete;
+  constexpr const tuple_assign_helper& operator=(
+      const tuple_assign_helper&) const = delete;
   KOKKOS_INLINE_FUNCTION constexpr tuple_assign_helper& operator=(
-      tuple_assign_helper&&) {
+      tuple_assign_helper&&) noexcept {
     return *this;
   }
   constexpr const tuple_assign_helper& operator=(tuple_assign_helper&&) const =
@@ -807,17 +807,17 @@ template <>
 struct tuple_assign_helper<true, false, true, true> {
   TUPLE_ASSIGN_HELPER_CONSTRUCTORS
   KOKKOS_INLINE_FUNCTION constexpr tuple_assign_helper& operator=(
-      tuple_assign_helper&) {
+      const tuple_assign_helper&) noexcept {
     return *this;
   }
-  constexpr const tuple_assign_helper& operator=(tuple_assign_helper&) const =
-      delete;
+  constexpr const tuple_assign_helper& operator=(
+      const tuple_assign_helper&) const = delete;
   KOKKOS_INLINE_FUNCTION constexpr tuple_assign_helper& operator=(
-      tuple_assign_helper&&) {
+      tuple_assign_helper&&) noexcept {
     return *this;
   }
   KOKKOS_INLINE_FUNCTION constexpr const tuple_assign_helper& operator=(
-      tuple_assign_helper&&) const {
+      tuple_assign_helper&&) const noexcept {
     return *this;
   }
 };
@@ -826,11 +826,11 @@ template <>
 struct tuple_assign_helper<true, true, false, false> {
   TUPLE_ASSIGN_HELPER_CONSTRUCTORS
   KOKKOS_INLINE_FUNCTION constexpr tuple_assign_helper& operator=(
-      tuple_assign_helper&) {
+      const tuple_assign_helper&) noexcept {
     return *this;
   }
   KOKKOS_INLINE_FUNCTION constexpr const tuple_assign_helper& operator=(
-      tuple_assign_helper&) const {
+      const tuple_assign_helper&) const noexcept {
     return *this;
   }
   constexpr tuple_assign_helper& operator=(tuple_assign_helper&&) = delete;
@@ -842,16 +842,16 @@ template <>
 struct tuple_assign_helper<true, true, false, true> {
   TUPLE_ASSIGN_HELPER_CONSTRUCTORS
   KOKKOS_INLINE_FUNCTION constexpr tuple_assign_helper& operator=(
-      tuple_assign_helper&) {
+      const tuple_assign_helper&) noexcept {
     return *this;
   }
   KOKKOS_INLINE_FUNCTION constexpr const tuple_assign_helper& operator=(
-      tuple_assign_helper&) const {
+      const tuple_assign_helper&) const noexcept {
     return *this;
   }
   constexpr tuple_assign_helper& operator=(tuple_assign_helper&&) = delete;
   KOKKOS_INLINE_FUNCTION constexpr const tuple_assign_helper& operator=(
-      tuple_assign_helper&&) const {
+      tuple_assign_helper&&) const noexcept {
     return *this;
   }
 };
@@ -860,15 +860,15 @@ template <>
 struct tuple_assign_helper<true, true, true, false> {
   TUPLE_ASSIGN_HELPER_CONSTRUCTORS
   KOKKOS_INLINE_FUNCTION constexpr tuple_assign_helper& operator=(
-      tuple_assign_helper&) {
+      const tuple_assign_helper&) noexcept {
     return *this;
   }
   KOKKOS_INLINE_FUNCTION constexpr const tuple_assign_helper& operator=(
-      tuple_assign_helper&) const {
+      const tuple_assign_helper&) const noexcept {
     return *this;
   }
   KOKKOS_INLINE_FUNCTION constexpr tuple_assign_helper& operator=(
-      tuple_assign_helper&&) {
+      tuple_assign_helper&&) noexcept {
     return *this;
   }
   constexpr const tuple_assign_helper& operator=(tuple_assign_helper&&) const =
@@ -879,19 +879,19 @@ template <>
 struct tuple_assign_helper<true, true, true, true> {
   TUPLE_ASSIGN_HELPER_CONSTRUCTORS
   KOKKOS_INLINE_FUNCTION constexpr tuple_assign_helper& operator=(
-      tuple_assign_helper&) {
+      const tuple_assign_helper&) noexcept {
     return *this;
   }
   KOKKOS_INLINE_FUNCTION constexpr const tuple_assign_helper& operator=(
-      tuple_assign_helper&) const {
+      const tuple_assign_helper&) const noexcept {
     return *this;
   }
   KOKKOS_INLINE_FUNCTION constexpr tuple_assign_helper& operator=(
-      tuple_assign_helper&&) {
+      tuple_assign_helper&&) noexcept {
     return *this;
   }
   KOKKOS_INLINE_FUNCTION constexpr const tuple_assign_helper& operator=(
-      tuple_assign_helper&&) const {
+      tuple_assign_helper&&) const noexcept {
     return *this;
   }
 };

@@ -45,7 +45,7 @@ struct DDimBatch2
 {
 };
 
-constexpr std::size_t s_degree_x = DEGREE;
+constexpr std::size_t s_degree = DEGREE;
 
 #if defined(BC_PERIODIC)
 constexpr ddc::BoundCond s_bcl = ddc::BoundCond::PERIODIC;
@@ -63,12 +63,12 @@ using GrevillePoints = ddc::GrevilleInterpolationPoints<BSpX, s_bcl, s_bcr>;
 
 #if defined(BSPLINES_TYPE_UNIFORM)
 template <typename X>
-struct BSplines : ddc::UniformBSplines<X, s_degree_x>
+struct BSplines : ddc::UniformBSplines<X, s_degree>
 {
 };
 #elif defined(BSPLINES_TYPE_NON_UNIFORM)
 template <typename X>
-struct BSplines : ddc::NonUniformBSplines<X, s_degree_x>
+struct BSplines : ddc::NonUniformBSplines<X, s_degree>
 {
 };
 #endif
@@ -100,7 +100,7 @@ KOKKOS_FUNCTION Coord<X> x0()
 
 // Templated function giving last coordinate of the mesh in given dimension.
 template <typename X>
-KOKKOS_FUNCTION Coord<X> xN()
+KOKKOS_FUNCTION Coord<X> xn()
 {
     return Coord<X>(1.);
 }
@@ -109,7 +109,7 @@ KOKKOS_FUNCTION Coord<X> xN()
 template <typename X>
 double dx(std::size_t ncells)
 {
-    return (xN<X>() - x0<X>()) / ncells;
+    return (xn<X>() - x0<X>()) / ncells;
 }
 
 // Templated function giving break points of mesh in given dimension for non-uniform case.
@@ -124,11 +124,11 @@ std::vector<Coord<X>> breaks(std::size_t ncells)
 }
 
 template <class DDim>
-void InterestDimInitializer(std::size_t const ncells)
+void interest_dim_initializer(std::size_t const ncells)
 {
     using CDim = typename DDim::continuous_dimension_type;
 #if defined(BSPLINES_TYPE_UNIFORM)
-    ddc::init_discrete_space<BSplines<CDim>>(x0<CDim>(), xN<CDim>(), ncells);
+    ddc::init_discrete_space<BSplines<CDim>>(x0<CDim>(), xn<CDim>(), ncells);
 #elif defined(BSPLINES_TYPE_NON_UNIFORM)
     ddc::init_discrete_space<BSplines<CDim>>(breaks<CDim>(ncells));
 #endif
@@ -138,7 +138,7 @@ void InterestDimInitializer(std::size_t const ncells)
 // Checks that when evaluating the spline at interpolation points one
 // recovers values that were used to build the spline
 template <typename ExecSpace, typename MemorySpace, typename DDimI, typename... DDims>
-void BatchedNd1dSplineTest()
+void TestBatchedNd1dSpline()
 {
     using I = typename DDimI::continuous_dimension_type;
 
@@ -146,7 +146,7 @@ void BatchedNd1dSplineTest()
     ExecSpace const exec_space;
 
     std::size_t const ncells = 10;
-    InterestDimInitializer<DDimI>(ncells);
+    interest_dim_initializer<DDimI>(ncells);
 
     // Create the values domain (mesh)
     ddc::DiscreteDomain<DDimI> const interpolation_domain
@@ -157,9 +157,10 @@ void BatchedNd1dSplineTest()
     ddc::DiscreteDomain<DDims...> const dom_vals(dom_vals_tmp, interpolation_domain);
 
 #if defined(BC_HERMITE)
+    int const shift = s_degree % 2; // shift = 0 for even order, 1 for odd order
     // Create the derivs domain
     ddc::DiscreteDomain<ddc::Deriv<I>> const
-            derivs_domain(DElem<ddc::Deriv<I>>(1), DVect<ddc::Deriv<I>>(s_degree_x / 2));
+            derivs_domain(DElem<ddc::Deriv<I>>(shift), DVect<ddc::Deriv<I>>(s_degree / 2));
     auto const dom_derivs = ddc::replace_dim_of<DDimI, ddc::Deriv<I>>(dom_vals, derivs_domain);
 #endif
 
@@ -195,17 +196,13 @@ void BatchedNd1dSplineTest()
 
 #if defined(BC_HERMITE)
     // Allocate and fill a chunk containing derivs to be passed as input to spline_builder.
-    int const shift = s_degree_x % 2; // shift = 0 for even order, 1 for odd order
     ddc::Chunk derivs_lhs_alloc(dom_derivs, ddc::KokkosAllocator<double, MemorySpace>());
     ddc::ChunkSpan const derivs_lhs = derivs_lhs_alloc.span_view();
     if (s_bcl == ddc::BoundCond::HERMITE) {
         ddc::Chunk derivs_lhs1_host_alloc(derivs_domain, ddc::HostAllocator<double>());
         ddc::ChunkSpan const derivs_lhs1_host = derivs_lhs1_host_alloc.span_view();
-        for (int ii = 1; ii < derivs_lhs1_host.domain().template extent<ddc::Deriv<I>>() + 1;
-             ++ii) {
-            derivs_lhs1_host(
-                    typename decltype(derivs_lhs1_host.domain())::discrete_element_type(ii))
-                    = evaluator.deriv(x0<I>(), ii + shift - 1);
+        for (ddc::DiscreteElement<ddc::Deriv<I>> const ei : derivs_domain) {
+            derivs_lhs1_host(ei) = evaluator.deriv(x0<I>(), ei.uid());
         }
         auto derivs_lhs1_alloc = ddc::create_mirror_view_and_copy(exec_space, derivs_lhs1_host);
         ddc::ChunkSpan const derivs_lhs1 = derivs_lhs1_alloc.span_view();
@@ -223,11 +220,8 @@ void BatchedNd1dSplineTest()
     if (s_bcr == ddc::BoundCond::HERMITE) {
         ddc::Chunk derivs_rhs1_host_alloc(derivs_domain, ddc::HostAllocator<double>());
         ddc::ChunkSpan const derivs_rhs1_host = derivs_rhs1_host_alloc.span_view();
-        for (int ii = 1; ii < derivs_rhs1_host.domain().template extent<ddc::Deriv<I>>() + 1;
-             ++ii) {
-            derivs_rhs1_host(
-                    typename decltype(derivs_rhs1_host.domain())::discrete_element_type(ii))
-                    = evaluator.deriv(xN<I>(), ii + shift - 1);
+        for (ddc::DiscreteElement<ddc::Deriv<I>> const ei : derivs_domain) {
+            derivs_rhs1_host(ei) = evaluator.deriv(x0<I>(), ei.uid());
         }
         auto derivs_rhs1_alloc = ddc::create_mirror_view_and_copy(exec_space, derivs_rhs1_host);
         ddc::ChunkSpan const derivs_rhs1 = derivs_rhs1_alloc.span_view();
@@ -329,7 +323,7 @@ void BatchedNd1dSplineTest()
                     typename decltype(spline_builder)::template batch_domain_type<
                             ddc::DiscreteDomain<DDims...>>::discrete_element_type const e) {
                 return Kokkos::abs(
-                        spline_eval_integrals(e) - evaluator.deriv(xN<I>(), -1)
+                        spline_eval_integrals(e) - evaluator.deriv(xn<I>(), -1)
                         + evaluator.deriv(x0<I>(), -1));
             });
 
@@ -340,38 +334,40 @@ void BatchedNd1dSplineTest()
     SplineErrorBounds<evaluator_type<DDimI>> const error_bounds(evaluator);
     EXPECT_LE(
             max_norm_error,
-            std::max(error_bounds.error_bound(dx<I>(ncells), s_degree_x), 1.0e-14 * max_norm));
+            std::max(error_bounds.error_bound(dx<I>(ncells), s_degree), 1.0e-14 * max_norm));
     EXPECT_LE(
             max_norm_error_diff,
             std::
-                    max(error_bounds.error_bound_on_deriv(dx<I>(ncells), s_degree_x),
+                    max(error_bounds.error_bound_on_deriv(dx<I>(ncells), s_degree),
                         1e-12 * max_norm_diff));
     EXPECT_LE(
             max_norm_error_integ,
             std::
-                    max(error_bounds.error_bound_on_int(dx<I>(ncells), s_degree_x),
+                    max(error_bounds.error_bound_on_int(dx<I>(ncells), s_degree),
                         1.0e-14 * max_norm_int));
 }
 
 } // namespace anonymous_namespace_workaround_batched_nd_evaluator_1d_spline_builder_cpp
 
 #if defined(BC_PERIODIC) && defined(BSPLINES_TYPE_UNIFORM)
-#    define SUFFIX(name) name##Ginkgo##Periodic##Uniform
+#    define SUFFIX_DEGREE(name, degree) name##Periodic##Uniform##Degree##degree
 #elif defined(BC_PERIODIC) && defined(BSPLINES_TYPE_NON_UNIFORM)
-#    define SUFFIX(name) name##Ginkgo##Periodic##NonUniform
+#    define SUFFIX_DEGREE(name, degree) name##Periodic##NonUniform##Degree##degree
 #elif defined(BC_GREVILLE) && defined(BSPLINES_TYPE_UNIFORM)
-#    define SUFFIX(name) name##Ginkgo##Greville##Uniform
+#    define SUFFIX_DEGREE(name, degree) name##Greville##Uniform##Degree##degree
 #elif defined(BC_GREVILLE) && defined(BSPLINES_TYPE_NON_UNIFORM)
-#    define SUFFIX(name) name##Ginkgo##Greville##NonUniform
+#    define SUFFIX_DEGREE(name, degree) name##Greville##NonUniform##Degree##degree
 #elif defined(BC_HERMITE) && defined(BSPLINES_TYPE_UNIFORM)
-#    define SUFFIX(name) name##Ginkgo##Hermite##Uniform
+#    define SUFFIX_DEGREE(name, degree) name##Hermite##Uniform##Degree##degree
 #elif defined(BC_HERMITE) && defined(BSPLINES_TYPE_NON_UNIFORM)
-#    define SUFFIX(name) name##Ginkgo##Hermite##NonUniform
+#    define SUFFIX_DEGREE(name, degree) name##Hermite##NonUniform##Degree##degree
 #endif
+#define SUFFIX_DEGREE_MACRO_EXP(name, degree) SUFFIX_DEGREE(name, degree)
+#define SUFFIX(name) SUFFIX_DEGREE_MACRO_EXP(name, DEGREE)
 
 TEST(SUFFIX(BatchedNd1dSplineHost), 2DXB1)
 {
-    BatchedNd1dSplineTest<
+    TestBatchedNd1dSpline<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DDimGPS<DimX>,
@@ -381,7 +377,7 @@ TEST(SUFFIX(BatchedNd1dSplineHost), 2DXB1)
 
 TEST(SUFFIX(BatchedNd1dSplineHost), 2DB1X)
 {
-    BatchedNd1dSplineTest<
+    TestBatchedNd1dSpline<
             Kokkos::DefaultHostExecutionSpace,
             Kokkos::DefaultHostExecutionSpace::memory_space,
             DDimGPS<DimX>,
@@ -391,7 +387,7 @@ TEST(SUFFIX(BatchedNd1dSplineHost), 2DB1X)
 
 TEST(SUFFIX(BatchedNd1dSplineDevice), 2DXB1)
 {
-    BatchedNd1dSplineTest<
+    TestBatchedNd1dSpline<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             DDimGPS<DimX>,
@@ -401,7 +397,7 @@ TEST(SUFFIX(BatchedNd1dSplineDevice), 2DXB1)
 
 TEST(SUFFIX(BatchedNd1dSplineDevice), 2DB1X)
 {
-    BatchedNd1dSplineTest<
+    TestBatchedNd1dSpline<
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             DDimGPS<DimX>,

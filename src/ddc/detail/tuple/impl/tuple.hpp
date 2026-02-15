@@ -1109,7 +1109,6 @@ class tuple
               tuple_size<std::remove_reference_t<UTuple>>::value>,
           impl::all_types_constructible<tuple<Types...>, UTuple&&>,
           std::negation<impl::is_tuple<impl::remove_cvref_t<UTuple>>>,
-          std::negation<impl::is_subrange<impl::remove_cvref_t<UTuple>>>,
           std::negation<impl::any_types_reference_constructs_from_temporary<
               tuple<Types...>, UTuple>>,
           std::conjunction<std::bool_constant<sizeof...(Types) != 1>,
@@ -1236,7 +1235,6 @@ class tuple
                 !impl::is_tuple_v<impl::remove_cvref_t<UTuple>> &&
                 !impl::is_pair<impl::remove_cvref_t<UTuple>>::value &&
                 impl::is_different_from_v<UTuple, tuple> &&
-                !impl::is_subrange_v<UTuple> &&
                 sizeof...(Types) ==
                     tuple_size<std::remove_reference_t<UTuple>>::value>>
   // The check for is_assignable is delegated to store.set_all()
@@ -1251,7 +1249,6 @@ class tuple
                 !impl::is_tuple_v<impl::remove_cvref_t<UTuple>> &&
                 !impl::is_pair<impl::remove_cvref_t<UTuple>>::value &&
                 impl::is_different_from_v<UTuple, tuple> &&
-                !impl::is_subrange_v<impl::remove_cvref_t<UTuple>> &&
                 sizeof...(Types) ==
                     tuple_size<std::remove_reference_t<UTuple>>::value>>
   // The check for is_assignable is delegated to store.set_all()

@@ -304,4 +304,30 @@ KOKKOS_FUNCTION Coordinate<typename DDim::continuous_dimension_type> rlength(
     return rmax(d) - rmin(d);
 }
 
+template <class DDim, std::enable_if_t<is_uniform_point_sampling_v<DDim>, int> = 0>
+KOKKOS_FUNCTION DiscreteElement<DDim> find_nearest(
+        DiscreteDomain<DDim> const& dom,
+        Coordinate<typename DDim::continuous_dimension_type> const& x,
+        double const tol = 1e-14)
+{
+    KOKKOS_ASSERT(x - rmin(dom) >= -rlength(dom) * tol)
+    KOKKOS_ASSERT(rmax(dom) - x >= -rlength(dom) * tol)
+
+    if (x <= rmin(dom)) {
+        return dom.front();
+    }
+
+    if (x >= rmax(dom)) {
+        return dom.back();
+    }
+
+    DiscreteElement<DDim> ret
+            = dom.front() + static_cast<DiscreteVectorElement>((x - rmin(dom)) / step<DDim>());
+    if (ret - 1 == dom.back()) {
+        --ret;
+    }
+
+    return ret;
+}
+
 } // namespace ddc

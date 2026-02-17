@@ -74,3 +74,22 @@ TEST(UniformPointSamplingTest, Attributes)
     EXPECT_EQ(ddc::distance_at_left(point_ix), step);
     EXPECT_EQ(ddc::distance_at_right(point_ix), step);
 }
+
+TEST(UniformPointSamplingTest, FindNearest)
+{
+    ddc::DiscreteDomain<DDimX> const ddom_x(point_ix, ddc::DiscreteVector<DDimX>(10));
+    ddc::init_discrete_space<DDimX>(origin, step);
+    for (ddc::DiscreteElement<DDimX> const ix : ddom_x) {
+        EXPECT_EQ(ddc::find_nearest(ddom_x, ddc::coordinate(ix)), ix);
+    }
+#if !defined(NDEBUG) // The assertion is only checked if NDEBUG isn't defined
+    EXPECT_DEATH(
+            ddc::find_nearest(ddom_x, ddc::coordinate(ddom_x.front() - 1)),
+            R"rgx(x - rmin\(dom\) >= -rlength\(dom\) \* tol)rgx");
+    EXPECT_DEATH(
+            ddc::find_nearest(ddom_x, ddc::coordinate(ddom_x.back() + 1)),
+            R"rgx(rmax\(dom\) - x >= -rlength\(dom\) \* tol)rgx");
+#else
+    GTEST_SKIP();
+#endif
+}

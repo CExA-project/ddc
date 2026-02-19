@@ -1,0 +1,50 @@
+# Copyright (C) The DDC development team, see COPYRIGHT.md file
+#
+# SPDX-License-Identifier: MIT
+
+---
+name: Tests of Spack
+
+# yamllint disable-line rule:truthy
+on:
+  pull_request:
+
+concurrency:
+  group: ${{github.workflow}}-${{github.ref == github.ref_protected && github.run_id || github.event.pull_request.number || github.ref}}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  test-spack:
+    strategy:
+      fail-fast: false
+      matrix:
+        runner:
+          - 'ubuntu-slim'
+          - 'ubuntu-24.04'
+          - 'ubuntu-22.04'
+          - 'ubuntu-24.04-arm'
+          - 'ubuntu-22.04-arm'
+          - 'macos-26'
+          - 'macos-15'
+          - 'macos-14'
+          - 'macos-15-intel'
+    runs-on: ${{matrix.runner}}
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
+        with:
+          repository: spack/spack
+          ref: v1.1.1
+      - shell: bash
+        run: |
+          . share/spack/setup-env.sh
+          spack arch --target
+          spack arch --generic --target
+          spack arch --family --target
+      - shell: bash
+        run: |
+          . share/spack/setup-env.sh
+          spack config --scope site add packages:all:target:[$(spack arch --family --target)]
+          spack spec --install-status kokkos

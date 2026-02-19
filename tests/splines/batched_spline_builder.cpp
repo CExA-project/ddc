@@ -53,6 +53,9 @@ constexpr ddc::BoundCond s_bcr = ddc::BoundCond::GREVILLE;
 #elif defined(BC_HERMITE)
 constexpr ddc::BoundCond s_bcl = ddc::BoundCond::HERMITE;
 constexpr ddc::BoundCond s_bcr = ddc::BoundCond::HERMITE;
+#elif defined(BC_HOMOGENEOUS_HERMITE)
+constexpr ddc::BoundCond s_bcl = ddc::BoundCond::HOMOGENEOUS_HERMITE;
+constexpr ddc::BoundCond s_bcr = ddc::BoundCond::HOMOGENEOUS_HERMITE;
 #endif
 
 template <typename BSpX>
@@ -363,6 +366,10 @@ void TestBatchedSpline()
 #    define SUFFIX_DEGREE(name, degree) name##Lapack##Hermite##Uniform##Degree##degree
 #elif defined(BC_HERMITE) && defined(BSPLINES_TYPE_NON_UNIFORM) && defined(SOLVER_LAPACK)
 #    define SUFFIX_DEGREE(name, degree) name##Lapack##Hermite##NonUniform##Degree##degree
+#elif defined(BC_HOMOGENEOUS_HERMITE) && defined(BSPLINES_TYPE_UNIFORM) && defined(SOLVER_LAPACK)
+#    define SUFFIX_DEGREE(name, degree) name##Lapack##HomogeneousHermite##Uniform##Degree##degree
+#elif defined(BC_HOMOGENEOUS_HERMITE) && defined(BSPLINES_TYPE_NON_UNIFORM) && defined(SOLVER_LAPACK)
+#    define SUFFIX_DEGREE(name, degree) name##Lapack##HomogeneousHermite##NonUniform##Degree##degree
 #elif defined(BC_PERIODIC) && defined(BSPLINES_TYPE_UNIFORM) && defined(SOLVER_GINKGO)
 #    define SUFFIX_DEGREE(name, degree) name##Ginkgo##Periodic##Uniform##Degree##degree
 #elif defined(BC_PERIODIC) && defined(BSPLINES_TYPE_NON_UNIFORM) && defined(SOLVER_GINKGO)
@@ -375,6 +382,10 @@ void TestBatchedSpline()
 #    define SUFFIX_DEGREE(name, degree) name##Ginkgo##Hermite##Uniform##Degree##degree
 #elif defined(BC_HERMITE) && defined(BSPLINES_TYPE_NON_UNIFORM) && defined(SOLVER_GINKGO)
 #    define SUFFIX_DEGREE(name, degree) name##Ginkgo##Hermite##NonUniform##Degree##degree
+#elif defined(BC_HOMOGENEOUS_HERMITE) && defined(BSPLINES_TYPE_UNIFORM) && defined(SOLVER_GINKGO)
+#    define SUFFIX_DEGREE(name, degree) name##Ginkgo##HomogeneousHermite##Uniform##Degree##degree
+#elif defined(BC_HOMOGENEOUS_HERMITE) && defined(BSPLINES_TYPE_NON_UNIFORM) && defined(SOLVER_GINKGO)
+#    define SUFFIX_DEGREE(name, degree) name##Ginkgo##HomogeneousHermite##NonUniform##Degree##degree
 #endif
 #define SUFFIX_DEGREE_MACRO_EXP(name, degree) SUFFIX_DEGREE(name, degree)
 #define SUFFIX(name) SUFFIX_DEGREE_MACRO_EXP(name, DEGREE)

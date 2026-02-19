@@ -609,7 +609,7 @@ int SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower, 
         return static_cast<int>(bsplines_type::degree()) / 2;
     }
 
-    if (bound_cond == ddc::BoundCond::HERMITE) {
+    if (bound_cond == ddc::BoundCond::HERMITE || bound_cond == ddc::BoundCond::HOMOGENOUS_HERMITE) {
         return nbc;
     }
 
@@ -635,7 +635,7 @@ int SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower, 
         return static_cast<int>(bsplines_type::degree()) - 1;
     }
 
-    if (bound_cond == ddc::BoundCond::HERMITE) {
+    if (bound_cond == ddc::BoundCond::HERMITE || bound_cond == ddc::BoundCond::HOMOGENOUS_HERMITE) {
         return nbc + 1;
     }
 
@@ -712,7 +712,7 @@ void SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower,
         build_matrix_system()
 {
     // Hermite boundary conditions at xmin, if any
-    if constexpr (BcLower == ddc::BoundCond::HERMITE) {
+    if constexpr (BcLower == ddc::BoundCond::HERMITE || BcLower == ddc::BoundCond::HOMOGENEOUS_HERMITE) {
         std::array<double, (bsplines_type::degree() / 2 + 1) * (bsplines_type::degree() + 1)>
                 derivs_ptr;
         ddc::DSpan2D const
@@ -764,7 +764,7 @@ void SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower,
     });
 
     // Hermite boundary conditions at xmax, if any
-    if constexpr (BcUpper == ddc::BoundCond::HERMITE) {
+    if constexpr (BcUpper == ddc::BoundCond::HERMITE || BcUpper == ddc::BoundCond::HOMOGENEOUS_HERMITE) {
         std::array<double, (bsplines_type::degree() / 2 + 1) * (bsplines_type::degree() + 1)>
                 derivs_ptr;
         Kokkos::mdspan<

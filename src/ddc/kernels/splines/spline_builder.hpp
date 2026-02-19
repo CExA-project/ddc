@@ -880,8 +880,10 @@ operator()(
                     }
                 });
     }
-    else if constexpr (BcLower == BoundCond::HOMOGENEOUS_HERMITE && batch_domain_type<BatchedInterpolationDDom>::rank()) {
-        ddc::parallel_fill(exec_space(), spline[batch_domain(batched_interpolation_domain)], 0.0);
+    else if constexpr (BcLower == BoundCond::HOMOGENEOUS_HERMITE) {
+        ddc::DiscreteDomain<bsplines_type> dx_splines(ddc::DiscreteElement<bsplines_type>(0), ddc::DiscreteVector<bsplines_type>(s_nbe_xmin));
+        batched_spline_domain_type<BatchedInterpolationDDom> dx_spline_domain(dx_splines, batch_domain(batched_interpolation_domain));
+        ddc::parallel_fill(exec_space(), spline[dx_spline_domain], 0.0);
     }
 
     // Fill spline with vals (to work in spline afterward and preserve vals)
@@ -932,8 +934,10 @@ operator()(
                     }
                 });
     }
-    else if constexpr (BcUpper == BoundCond::HOMOGENEOUS_HERMITE && batch_domain_type<BatchedInterpolationDDom>::rank()) {
-        ddc::parallel_fill(exec_space(), spline[batch_domain(batched_interpolation_domain)], 0.0);
+    else if constexpr (BcUpper == BoundCond::HOMOGENEOUS_HERMITE) {
+        ddc::DiscreteDomain<bsplines_type> dx_splines(ddc::DiscreteElement<bsplines_type>(nbasis_proxy - s_nbe_xmax), ddc::DiscreteVector<bsplines_type>(s_nbe_xmax));
+        batched_spline_domain_type<BatchedInterpolationDDom> dx_spline_domain(dx_splines, batch_domain(batched_interpolation_domain));
+        ddc::parallel_fill(exec_space(), spline[dx_spline_domain], 0.0);
     }
 
     // Allocate and fill a transposed version of spline in order to get dimension of interest as last dimension (optimal for GPU, necessary for Ginkgo). Also select only relevant rows in case of periodic boundaries

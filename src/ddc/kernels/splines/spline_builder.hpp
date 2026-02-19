@@ -609,7 +609,7 @@ int SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower, 
         return static_cast<int>(bsplines_type::degree()) / 2;
     }
 
-    if (bound_cond == ddc::BoundCond::HERMITE || bound_cond == ddc::BoundCond::HOMOGENOUS_HERMITE) {
+    if (bound_cond == ddc::BoundCond::HERMITE || bound_cond == ddc::BoundCond::HOMOGENEOUS_HERMITE) {
         return nbc;
     }
 
@@ -635,7 +635,7 @@ int SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower, 
         return static_cast<int>(bsplines_type::degree()) - 1;
     }
 
-    if (bound_cond == ddc::BoundCond::HERMITE || bound_cond == ddc::BoundCond::HOMOGENOUS_HERMITE) {
+    if (bound_cond == ddc::BoundCond::HERMITE || bound_cond == ddc::BoundCond::HOMOGENEOUS_HERMITE) {
         return nbc + 1;
     }
 
@@ -880,7 +880,7 @@ operator()(
                     }
                 });
     }
-    else if constexpr (BcLower == BoundCond::HOMOGENEOUS_HERMITE) {
+    else if constexpr (BcLower == BoundCond::HOMOGENEOUS_HERMITE && batch_domain_type<BatchedInterpolationDDom>::rank()) {
         ddc::parallel_fill(exec_space(), spline[batch_domain(batched_interpolation_domain)], 0.0);
     }
 
@@ -932,7 +932,7 @@ operator()(
                     }
                 });
     }
-    else if constexpr (BcUpper == BoundCond::HOMOGENEOUS_HERMITE) {
+    else if constexpr (BcUpper == BoundCond::HOMOGENEOUS_HERMITE && batch_domain_type<BatchedInterpolationDDom>::rank()) {
         ddc::parallel_fill(exec_space(), spline[batch_domain(batched_interpolation_domain)], 0.0);
     }
 

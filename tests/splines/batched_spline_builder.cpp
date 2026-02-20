@@ -368,7 +368,8 @@ void TestBatchedSpline()
 #    define SUFFIX_DEGREE(name, degree) name##Lapack##Hermite##NonUniform##Degree##degree
 #elif defined(BC_HOMOGENEOUS_HERMITE) && defined(BSPLINES_TYPE_UNIFORM) && defined(SOLVER_LAPACK)
 #    define SUFFIX_DEGREE(name, degree) name##Lapack##HomogeneousHermite##Uniform##Degree##degree
-#elif defined(BC_HOMOGENEOUS_HERMITE) && defined(BSPLINES_TYPE_NON_UNIFORM) && defined(SOLVER_LAPACK)
+#elif defined(BC_HOMOGENEOUS_HERMITE) && defined(BSPLINES_TYPE_NON_UNIFORM)                        \
+        && defined(SOLVER_LAPACK)
 #    define SUFFIX_DEGREE(name, degree) name##Lapack##HomogeneousHermite##NonUniform##Degree##degree
 #elif defined(BC_PERIODIC) && defined(BSPLINES_TYPE_UNIFORM) && defined(SOLVER_GINKGO)
 #    define SUFFIX_DEGREE(name, degree) name##Ginkgo##Periodic##Uniform##Degree##degree
@@ -384,7 +385,8 @@ void TestBatchedSpline()
 #    define SUFFIX_DEGREE(name, degree) name##Ginkgo##Hermite##NonUniform##Degree##degree
 #elif defined(BC_HOMOGENEOUS_HERMITE) && defined(BSPLINES_TYPE_UNIFORM) && defined(SOLVER_GINKGO)
 #    define SUFFIX_DEGREE(name, degree) name##Ginkgo##HomogeneousHermite##Uniform##Degree##degree
-#elif defined(BC_HOMOGENEOUS_HERMITE) && defined(BSPLINES_TYPE_NON_UNIFORM) && defined(SOLVER_GINKGO)
+#elif defined(BC_HOMOGENEOUS_HERMITE) && defined(BSPLINES_TYPE_NON_UNIFORM)                        \
+        && defined(SOLVER_GINKGO)
 #    define SUFFIX_DEGREE(name, degree) name##Ginkgo##HomogeneousHermite##NonUniform##Degree##degree
 #endif
 #define SUFFIX_DEGREE_MACRO_EXP(name, degree) SUFFIX_DEGREE(name, degree)

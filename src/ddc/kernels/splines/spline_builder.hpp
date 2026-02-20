@@ -183,10 +183,14 @@ public:
     static constexpr int s_nbe_xmax = n_boundary_equations(BcUpper, BSplines::degree());
 
     /// @brief The number of input values defining the boundary condition at the lower bound.
-    static constexpr int s_nbv_xmin = BcLower == BoundCond::HOMOGENEOUS_HERMITE ? 0 : n_boundary_equations(BcLower, BSplines::degree());
+    static constexpr int s_nbv_xmin = BcLower == BoundCond::HOMOGENEOUS_HERMITE
+                                              ? 0
+                                              : n_boundary_equations(BcLower, BSplines::degree());
 
     /// @brief The number of input values defining the boundary condition at the upper bound.
-    static constexpr int s_nbv_xmax = BcUpper == BoundCond::HOMOGENEOUS_HERMITE ? 0 : n_boundary_equations(BcUpper, BSplines::degree());
+    static constexpr int s_nbv_xmax = BcUpper == BoundCond::HOMOGENEOUS_HERMITE
+                                              ? 0
+                                              : n_boundary_equations(BcUpper, BSplines::degree());
 
     /// @brief The boundary condition implemented at the lower bound.
     static constexpr ddc::BoundCond s_bc_xmin = BcLower;
@@ -609,7 +613,8 @@ int SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower, 
         return static_cast<int>(bsplines_type::degree()) / 2;
     }
 
-    if (bound_cond == ddc::BoundCond::HERMITE || bound_cond == ddc::BoundCond::HOMOGENEOUS_HERMITE) {
+    if (bound_cond == ddc::BoundCond::HERMITE
+        || bound_cond == ddc::BoundCond::HOMOGENEOUS_HERMITE) {
         return nbc;
     }
 
@@ -635,7 +640,8 @@ int SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower, 
         return static_cast<int>(bsplines_type::degree()) - 1;
     }
 
-    if (bound_cond == ddc::BoundCond::HERMITE || bound_cond == ddc::BoundCond::HOMOGENEOUS_HERMITE) {
+    if (bound_cond == ddc::BoundCond::HERMITE
+        || bound_cond == ddc::BoundCond::HOMOGENEOUS_HERMITE) {
         return nbc + 1;
     }
 
@@ -712,7 +718,8 @@ void SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower,
         build_matrix_system()
 {
     // Hermite boundary conditions at xmin, if any
-    if constexpr (BcLower == ddc::BoundCond::HERMITE || BcLower == ddc::BoundCond::HOMOGENEOUS_HERMITE) {
+    if constexpr (
+            BcLower == ddc::BoundCond::HERMITE || BcLower == ddc::BoundCond::HOMOGENEOUS_HERMITE) {
         std::array<double, (bsplines_type::degree() / 2 + 1) * (bsplines_type::degree() + 1)>
                 derivs_ptr;
         ddc::DSpan2D const
@@ -764,7 +771,8 @@ void SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower,
     });
 
     // Hermite boundary conditions at xmax, if any
-    if constexpr (BcUpper == ddc::BoundCond::HERMITE || BcUpper == ddc::BoundCond::HOMOGENEOUS_HERMITE) {
+    if constexpr (
+            BcUpper == ddc::BoundCond::HERMITE || BcUpper == ddc::BoundCond::HOMOGENEOUS_HERMITE) {
         std::array<double, (bsplines_type::degree() / 2 + 1) * (bsplines_type::degree() + 1)>
                 derivs_ptr;
         Kokkos::mdspan<
@@ -879,10 +887,12 @@ operator()(
                                   * ddc::detail::ipow(dx_proxy, i + odd_proxy);
                     }
                 });
-    }
-    else if constexpr (BcLower == BoundCond::HOMOGENEOUS_HERMITE) {
-        ddc::DiscreteDomain<bsplines_type> dx_splines(ddc::DiscreteElement<bsplines_type>(0), ddc::DiscreteVector<bsplines_type>(s_nbe_xmin));
-        batched_spline_domain_type<BatchedInterpolationDDom> dx_spline_domain(dx_splines, batch_domain(batched_interpolation_domain));
+    } else if constexpr (BcLower == BoundCond::HOMOGENEOUS_HERMITE) {
+        ddc::DiscreteDomain<bsplines_type> dx_splines(
+                ddc::DiscreteElement<bsplines_type>(0),
+                ddc::DiscreteVector<bsplines_type>(s_nbe_xmin));
+        batched_spline_domain_type<BatchedInterpolationDDom>
+                dx_spline_domain(dx_splines, batch_domain(batched_interpolation_domain));
         ddc::parallel_fill(exec_space(), spline[dx_spline_domain], 0.0);
     }
 
@@ -933,10 +943,12 @@ operator()(
                                   * ddc::detail::ipow(dx_proxy, i + odd_proxy);
                     }
                 });
-    }
-    else if constexpr (BcUpper == BoundCond::HOMOGENEOUS_HERMITE) {
-        ddc::DiscreteDomain<bsplines_type> dx_splines(ddc::DiscreteElement<bsplines_type>(nbasis_proxy - s_nbe_xmax), ddc::DiscreteVector<bsplines_type>(s_nbe_xmax));
-        batched_spline_domain_type<BatchedInterpolationDDom> dx_spline_domain(dx_splines, batch_domain(batched_interpolation_domain));
+    } else if constexpr (BcUpper == BoundCond::HOMOGENEOUS_HERMITE) {
+        ddc::DiscreteDomain<bsplines_type> dx_splines(
+                ddc::DiscreteElement<bsplines_type>(nbasis_proxy - s_nbe_xmax),
+                ddc::DiscreteVector<bsplines_type>(s_nbe_xmax));
+        batched_spline_domain_type<BatchedInterpolationDDom>
+                dx_spline_domain(dx_splines, batch_domain(batched_interpolation_domain));
         ddc::parallel_fill(exec_space(), spline[dx_spline_domain], 0.0);
     }
 

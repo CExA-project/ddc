@@ -888,10 +888,10 @@ operator()(
                     }
                 });
     } else if constexpr (BcLower == BoundCond::HOMOGENEOUS_HERMITE) {
-        ddc::DiscreteDomain<bsplines_type> dx_splines(
+        ddc::DiscreteDomain<bsplines_type> const dx_splines(
                 ddc::DiscreteElement<bsplines_type>(0),
                 ddc::DiscreteVector<bsplines_type>(s_nbe_xmin));
-        batched_spline_domain_type<BatchedInterpolationDDom>
+        batched_spline_domain_type<BatchedInterpolationDDom> const
                 dx_spline_domain(dx_splines, batch_domain(batched_interpolation_domain));
         ddc::parallel_fill(exec_space(), spline[dx_spline_domain], 0.0);
     }
@@ -944,10 +944,10 @@ operator()(
                     }
                 });
     } else if constexpr (BcUpper == BoundCond::HOMOGENEOUS_HERMITE) {
-        ddc::DiscreteDomain<bsplines_type> dx_splines(
+        ddc::DiscreteDomain<bsplines_type> const dx_splines(
                 ddc::DiscreteElement<bsplines_type>(nbasis_proxy - s_nbe_xmax),
                 ddc::DiscreteVector<bsplines_type>(s_nbe_xmax));
-        batched_spline_domain_type<BatchedInterpolationDDom>
+        batched_spline_domain_type<BatchedInterpolationDDom> const
                 dx_spline_domain(dx_splines, batch_domain(batched_interpolation_domain));
         ddc::parallel_fill(exec_space(), spline[dx_spline_domain], 0.0);
     }

@@ -148,11 +148,7 @@ foreach(solver "ginkgo" "lapack")
         add_executable("${test_name}" "${test_filename}.cpp")
         target_compile_definitions(
             "${test_name}"
-            PRIVATE
-                -D${solver_macro}
-                -D${bc_macro}
-                -D${degree_macro}
-                -D${bsplines_type_macro}
+            PRIVATE -D${solver_macro} -D${bc_macro} -D${degree_macro} -D${bsplines_type_macro}
         )
         target_compile_features("${test_name}" PRIVATE cxx_std_17)
         target_link_libraries(

@@ -140,7 +140,7 @@ foreach(solver "ginkgo" "lapack")
         # Only run HOMOGENEOUS_HERMITE tests for the case where the assumptions
         # (dx f(\Omega) = 0 ) are valid.
         string(TOUPPER "BC_HOMOGENEOUS_HERMITE" bc_macro)
-        string(TOUPPER "DEGREE=3" 3)
+        string(TOUPPER "DEGREE=3" degree_macro)
         set(test_name
             "${test_filename}_tests_degree_3_${bsplines_type}_homogeneous_hermite_${solver}"
         )

@@ -106,12 +106,15 @@ KOKKOS_FUNCTION bool binary_search(ForwardIt first, ForwardIt last, T const& val
 
 template <class DDim>
 Kokkos::View<DiscreteElementType*, Kokkos::SharedSpace> extract_uid(
+        Kokkos::DefaultExecutionSpace const& exec_space,
         Kokkos::View<DiscreteElement<DDim>*, Kokkos::SharedSpace> const& input)
 {
     Kokkos::View<DiscreteElementType*, Kokkos::SharedSpace> output(input.label(), input.size());
     Kokkos::parallel_for(
             "SparseDiscreteDomainCtor",
-            output.size(),
+            Kokkos::RangePolicy<
+                    Kokkos::DefaultExecutionSpace,
+                    Kokkos::IndexType<std::size_t>>(exec_space, 0, output.size()),
             KOKKOS_LAMBDA(std::size_t const i) { output(i) = input(i).uid(); });
     return output;
 }
@@ -157,8 +160,11 @@ public:
     explicit SparseDiscreteDomain(
             Kokkos::View<DiscreteElement<DDims>*, Kokkos::SharedSpace> const&... views)
     {
-        ((m_views[type_seq_rank_v<DDims, detail::TypeSeq<DDims...>>] = detail::extract_uid(views)),
+        Kokkos::DefaultExecutionSpace const exec_space;
+        ((m_views[type_seq_rank_v<DDims, detail::TypeSeq<DDims...>>]
+          = detail::extract_uid(exec_space, views)),
          ...);
+        exec_space.fence("SparseDiscreteDomainCtor");
     }
 
     KOKKOS_DEFAULTED_FUNCTION SparseDiscreteDomain(SparseDiscreteDomain const& x) = default;

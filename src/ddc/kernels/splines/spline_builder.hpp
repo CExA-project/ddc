@@ -177,10 +177,16 @@ public:
     static constexpr bool s_odd = BSplines::degree() % 2;
 
     /// @brief The number of equations defining the boundary condition at the lower bound.
-    static constexpr int s_nbc_xmin = n_boundary_equations(BcLower, BSplines::degree());
+    static constexpr int s_nbe_xmin = n_boundary_equations(BcLower, BSplines::degree());
 
     /// @brief The number of equations defining the boundary condition at the upper bound.
-    static constexpr int s_nbc_xmax = n_boundary_equations(BcUpper, BSplines::degree());
+    static constexpr int s_nbe_xmax = n_boundary_equations(BcUpper, BSplines::degree());
+
+    /// @brief The number of input values defining the boundary condition at the lower bound.
+    static constexpr int s_nbv_xmin = BcLower == BoundCond::HOMOGENEOUS_HERMITE ? 0 : n_boundary_equations(BcLower, BSplines::degree());
+
+    /// @brief The number of input values defining the boundary condition at the upper bound.
+    static constexpr int s_nbv_xmax = BcUpper == BoundCond::HOMOGENEOUS_HERMITE ? 0 : n_boundary_equations(BcUpper, BSplines::degree());
 
     /// @brief The boundary condition implemented at the lower bound.
     static constexpr ddc::BoundCond s_bc_xmin = BcLower;
@@ -240,11 +246,11 @@ public:
         int lower_block_size;
         int upper_block_size;
         if constexpr (bsplines_type::is_uniform()) {
-            upper_block_size = compute_block_sizes_uniform(BcLower, s_nbc_xmin);
-            lower_block_size = compute_block_sizes_uniform(BcUpper, s_nbc_xmax);
+            upper_block_size = compute_block_sizes_uniform(BcLower, s_nbe_xmin);
+            lower_block_size = compute_block_sizes_uniform(BcUpper, s_nbe_xmax);
         } else {
-            upper_block_size = compute_block_sizes_non_uniform(BcLower, s_nbc_xmin);
-            lower_block_size = compute_block_sizes_non_uniform(BcUpper, s_nbc_xmax);
+            upper_block_size = compute_block_sizes_non_uniform(BcLower, s_nbe_xmin);
+            lower_block_size = compute_block_sizes_non_uniform(BcUpper, s_nbe_xmax);
         }
         allocate_matrix(
                 lower_block_size,
@@ -429,7 +435,7 @@ public:
                 batched_interpolation_domain,
                 ddc::DiscreteDomain<deriv_type>(
                         ddc::DiscreteElement<deriv_type>(1),
-                        ddc::DiscreteVector<deriv_type>(s_nbc_xmin)));
+                        ddc::DiscreteVector<deriv_type>(s_nbv_xmin)));
     }
 
     /**
@@ -450,7 +456,7 @@ public:
                 batched_interpolation_domain,
                 ddc::DiscreteDomain<deriv_type>(
                         ddc::DiscreteElement<deriv_type>(1),
-                        ddc::DiscreteVector<deriv_type>(s_nbc_xmax)));
+                        ddc::DiscreteVector<deriv_type>(s_nbv_xmax)));
     }
 
     /**
@@ -603,7 +609,7 @@ int SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower, 
         return static_cast<int>(bsplines_type::degree()) / 2;
     }
 
-    if (bound_cond == ddc::BoundCond::HERMITE) {
+    if (bound_cond == ddc::BoundCond::HERMITE || bound_cond == ddc::BoundCond::HOMOGENEOUS_HERMITE) {
         return nbc;
     }
 
@@ -629,7 +635,7 @@ int SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower, 
         return static_cast<int>(bsplines_type::degree()) - 1;
     }
 
-    if (bound_cond == ddc::BoundCond::HERMITE) {
+    if (bound_cond == ddc::BoundCond::HERMITE || bound_cond == ddc::BoundCond::HOMOGENEOUS_HERMITE) {
         return nbc + 1;
     }
 
@@ -706,7 +712,7 @@ void SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower,
         build_matrix_system()
 {
     // Hermite boundary conditions at xmin, if any
-    if constexpr (BcLower == ddc::BoundCond::HERMITE) {
+    if constexpr (BcLower == ddc::BoundCond::HERMITE || BcLower == ddc::BoundCond::HOMOGENEOUS_HERMITE) {
         std::array<double, (bsplines_type::degree() / 2 + 1) * (bsplines_type::degree() + 1)>
                 derivs_ptr;
         ddc::DSpan2D const
@@ -716,7 +722,7 @@ void SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower,
         ddc::discrete_space<BSplines>().eval_basis_and_n_derivs(
                 derivs,
                 ddc::discrete_space<BSplines>().rmin(),
-                s_nbc_xmin);
+                s_nbe_xmin);
 
         // In order to improve the condition number of the matrix, we normalize
         // all derivatives by multiplying the i-th derivative by dx^i
@@ -726,9 +732,9 @@ void SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower,
             }
         }
 
-        if constexpr (s_nbc_xmin > 0) {
+        if constexpr (s_nbe_xmin > 0) {
             // iterate only to deg as last bspline is 0
-            for (std::size_t i = 0; i < s_nbc_xmin; ++i) {
+            for (std::size_t i = 0; i < s_nbe_xmin; ++i) {
                 for (std::size_t j = 0; j < bsplines_type::degree(); ++j) {
                     m_matrix->set_element(i, j, DDC_MDSPAN_ACCESS_OP(derivs, j, i + s_odd));
                 }
@@ -751,14 +757,14 @@ void SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower,
                     modulo(int(jmin.uid() - m_offset + s),
                            static_cast<int>(ddc::discrete_space<BSplines>().nbasis()));
             m_matrix->set_element(
-                    ix.uid() - start + s_nbc_xmin,
+                    ix.uid() - start + s_nbe_xmin,
                     j,
                     DDC_MDSPAN_ACCESS_OP(values, s));
         }
     });
 
     // Hermite boundary conditions at xmax, if any
-    if constexpr (BcUpper == ddc::BoundCond::HERMITE) {
+    if constexpr (BcUpper == ddc::BoundCond::HERMITE || BcUpper == ddc::BoundCond::HOMOGENEOUS_HERMITE) {
         std::array<double, (bsplines_type::degree() / 2 + 1) * (bsplines_type::degree() + 1)>
                 derivs_ptr;
         Kokkos::mdspan<
@@ -771,7 +777,7 @@ void SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower,
         ddc::discrete_space<BSplines>().eval_basis_and_n_derivs(
                 derivs,
                 ddc::discrete_space<BSplines>().rmax(),
-                s_nbc_xmax);
+                s_nbe_xmax);
 
         // In order to improve the condition number of the matrix, we normalize
         // all derivatives by multiplying the i-th derivative by dx^i
@@ -781,11 +787,11 @@ void SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower,
             }
         }
 
-        if constexpr (s_nbc_xmax > 0) {
-            int const i0 = ddc::discrete_space<BSplines>().nbasis() - s_nbc_xmax;
+        if constexpr (s_nbe_xmax > 0) {
+            int const i0 = ddc::discrete_space<BSplines>().nbasis() - s_nbe_xmax;
             int const j0 = ddc::discrete_space<BSplines>().nbasis() - bsplines_type::degree();
             for (std::size_t j = 0; j < bsplines_type::degree(); ++j) {
-                for (std::size_t i = 0; i < s_nbc_xmax; ++i) {
+                for (std::size_t i = 0; i < s_nbe_xmax; ++i) {
                     m_matrix->set_element(
                             i0 + i,
                             j0 + j,
@@ -835,17 +841,17 @@ operator()(
     }
 
     assert(vals.template extent<interpolation_discrete_dimension_type>()
-           == ddc::discrete_space<bsplines_type>().nbasis() - s_nbc_xmin - s_nbc_xmax);
+           == ddc::discrete_space<bsplines_type>().nbasis() - s_nbe_xmin - s_nbe_xmax);
 
     if constexpr (BcLower == BoundCond::HERMITE) {
         assert(ddc::DiscreteElement<deriv_type>(derivs_xmin->domain().front()).uid() == s_odd);
-        assert(derivs_xmin.has_value() || s_nbc_xmin == 0);
+        assert(derivs_xmin.has_value() || s_nbe_xmin == 0);
     } else {
         assert(!derivs_xmin.has_value() || derivs_xmin->template extent<deriv_type>() == 0);
     }
     if constexpr (BcUpper == BoundCond::HERMITE) {
         assert(ddc::DiscreteElement<deriv_type>(derivs_xmax->domain().front()).uid() == s_odd);
-        assert(derivs_xmax.has_value() || s_nbc_xmax == 0);
+        assert(derivs_xmax.has_value() || s_nbe_xmax == 0);
     } else {
         assert(!derivs_xmax.has_value() || derivs_xmax->template extent<deriv_type>() == 0);
     }
@@ -854,7 +860,7 @@ operator()(
     // NOTE: For consistency with the linear system, the i-th derivative
     //       provided by the user must be multiplied by dx^i
     if constexpr (BcLower == BoundCond::HERMITE) {
-        assert(derivs_xmin->template extent<deriv_type>() == s_nbc_xmin);
+        assert(derivs_xmin->template extent<deriv_type>() == s_nbe_xmin);
         auto derivs_xmin_values = *derivs_xmin;
         auto const dx_proxy = m_dx;
         auto const odd_proxy = s_odd;
@@ -865,7 +871,7 @@ operator()(
                 KOKKOS_LAMBDA(
                         typename batch_domain_type<BatchedInterpolationDDom>::discrete_element_type
                                 j) {
-                    for (int i = 0; i < s_nbc_xmin; ++i) {
+                    for (int i = 0; i < s_nbe_xmin; ++i) {
                         spline(ddc::DiscreteElement<bsplines_type>(i), j)
                                 = derivs_xmin_values(
                                           ddc::DiscreteElement<deriv_type>(i + odd_proxy),
@@ -874,12 +880,17 @@ operator()(
                     }
                 });
     }
+    else if constexpr (BcLower == BoundCond::HOMOGENEOUS_HERMITE) {
+        ddc::DiscreteDomain<bsplines_type> dx_splines(ddc::DiscreteElement<bsplines_type>(0), ddc::DiscreteVector<bsplines_type>(s_nbe_xmin));
+        batched_spline_domain_type<BatchedInterpolationDDom> dx_spline_domain(dx_splines, batch_domain(batched_interpolation_domain));
+        ddc::parallel_fill(exec_space(), spline[dx_spline_domain], 0.0);
+    }
 
     // Fill spline with vals (to work in spline afterward and preserve vals)
     ddc::parallel_fill(
             exec_space(),
             spline[ddc::DiscreteDomain<bsplines_type>(
-                    ddc::DiscreteElement<bsplines_type>(s_nbc_xmin),
+                    ddc::DiscreteElement<bsplines_type>(s_nbe_xmin),
                     ddc::DiscreteVector<bsplines_type>(m_offset))],
             0.);
     // NOTE: We rely on Kokkos::deep_copy because ddc::parallel_deepcopy do not support
@@ -887,7 +898,7 @@ operator()(
     Kokkos::deep_copy(
             exec_space(),
             spline[ddc::DiscreteDomain<bsplines_type>(
-                           ddc::DiscreteElement<bsplines_type>(s_nbc_xmin + m_offset),
+                           ddc::DiscreteElement<bsplines_type>(s_nbe_xmin + m_offset),
                            ddc::DiscreteVector<bsplines_type>(static_cast<std::size_t>(
                                    vals.domain()
                                            .template extent<
@@ -902,7 +913,7 @@ operator()(
     //       provided by the user must be multiplied by dx^i
     auto const& nbasis_proxy = ddc::discrete_space<bsplines_type>().nbasis();
     if constexpr (BcUpper == BoundCond::HERMITE) {
-        assert(derivs_xmax->template extent<deriv_type>() == s_nbc_xmax);
+        assert(derivs_xmax->template extent<deriv_type>() == s_nbe_xmax);
         auto derivs_xmax_values = *derivs_xmax;
         auto const dx_proxy = m_dx;
         auto const odd_proxy = s_odd;
@@ -913,8 +924,8 @@ operator()(
                 KOKKOS_LAMBDA(
                         typename batch_domain_type<BatchedInterpolationDDom>::discrete_element_type
                                 j) {
-                    for (int i = 0; i < s_nbc_xmax; ++i) {
-                        spline(ddc::DiscreteElement<bsplines_type>(nbasis_proxy - s_nbc_xmax + i),
+                    for (int i = 0; i < s_nbe_xmax; ++i) {
+                        spline(ddc::DiscreteElement<bsplines_type>(nbasis_proxy - s_nbe_xmax + i),
                                j)
                                 = derivs_xmax_values(
                                           ddc::DiscreteElement<deriv_type>(i + odd_proxy),
@@ -922,6 +933,11 @@ operator()(
                                   * ddc::detail::ipow(dx_proxy, i + odd_proxy);
                     }
                 });
+    }
+    else if constexpr (BcUpper == BoundCond::HOMOGENEOUS_HERMITE) {
+        ddc::DiscreteDomain<bsplines_type> dx_splines(ddc::DiscreteElement<bsplines_type>(nbasis_proxy - s_nbe_xmax), ddc::DiscreteVector<bsplines_type>(s_nbe_xmax));
+        batched_spline_domain_type<BatchedInterpolationDDom> dx_spline_domain(dx_splines, batch_domain(batched_interpolation_domain));
+        ddc::parallel_fill(exec_space(), spline[dx_spline_domain], 0.0);
     }
 
     // Allocate and fill a transposed version of spline in order to get dimension of interest as last dimension (optimal for GPU, necessary for Ginkgo). Also select only relevant rows in case of periodic boundaries
@@ -1058,21 +1074,21 @@ SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower, BcUp
     // Slice into three ChunkSpan corresponding to lower derivatives, function values and upper derivatives
     ddc::ChunkSpan const coefficients_derivs_xmin
             = integral_bsplines_without_periodic_additional_bsplines[spline_domain().take_first(
-                    ddc::DiscreteVector<bsplines_type>(s_nbc_xmin))];
+                    ddc::DiscreteVector<bsplines_type>(s_nbv_xmin))];
     ddc::ChunkSpan const coefficients = integral_bsplines_without_periodic_additional_bsplines
             [spline_domain()
-                     .remove_first(ddc::DiscreteVector<bsplines_type>(s_nbc_xmin))
+                     .remove_first(ddc::DiscreteVector<bsplines_type>(s_nbv_xmin))
                      .take_first(
                              ddc::DiscreteVector<bsplines_type>(
-                                     ddc::discrete_space<bsplines_type>().nbasis() - s_nbc_xmin
-                                     - s_nbc_xmax))];
+                                     ddc::discrete_space<bsplines_type>().nbasis() - s_nbv_xmin
+                                     - s_nbv_xmax))];
     ddc::ChunkSpan const coefficients_derivs_xmax
             = integral_bsplines_without_periodic_additional_bsplines
                     [spline_domain()
                              .remove_first(
                                      ddc::DiscreteVector<bsplines_type>(
-                                             s_nbc_xmin + coefficients.size()))
-                             .take_first(ddc::DiscreteVector<bsplines_type>(s_nbc_xmax))];
+                                             s_nbv_xmin + coefficients.size()))
+                             .take_first(ddc::DiscreteVector<bsplines_type>(s_nbv_xmax))];
 
     // Multiply derivatives coefficients by dx^n
     auto const dx_proxy = m_dx;
@@ -1100,7 +1116,7 @@ SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower, BcUp
     // Allocate Chunk on deriv_type and interpolation_discrete_dimension_type and copy quadrature coefficients into it
     ddc::Chunk coefficients_derivs_xmin_out(
             ddc::DiscreteDomain<
-                    deriv_type>(first_deriv, ddc::DiscreteVector<deriv_type>(s_nbc_xmin)),
+                    deriv_type>(first_deriv, ddc::DiscreteVector<deriv_type>(s_nbv_xmin)),
             ddc::KokkosAllocator<double, OutMemorySpace>());
     ddc::Chunk coefficients_out(
             interpolation_domain().take_first(
@@ -1109,7 +1125,7 @@ SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower, BcUp
             ddc::KokkosAllocator<double, OutMemorySpace>());
     ddc::Chunk coefficients_derivs_xmax_out(
             ddc::DiscreteDomain<
-                    deriv_type>(first_deriv, ddc::DiscreteVector<deriv_type>(s_nbc_xmax)),
+                    deriv_type>(first_deriv, ddc::DiscreteVector<deriv_type>(s_nbv_xmax)),
             ddc::KokkosAllocator<double, OutMemorySpace>());
     Kokkos::deep_copy(
             coefficients_derivs_xmin_out.allocation_kokkos_view(),
@@ -1161,7 +1177,7 @@ void SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower,
 {
     std::size_t const n_interp_points = interpolation_domain().size();
     std::size_t const expected_npoints
-            = ddc::discrete_space<BSplines>().nbasis() - s_nbc_xmin - s_nbc_xmax;
+            = ddc::discrete_space<BSplines>().nbasis() - s_nbe_xmin - s_nbe_xmax;
     if (n_interp_points != expected_npoints) {
         throw std::runtime_error(
                 "Incorrect number of points supplied to NonUniformInterpolationPoints. "

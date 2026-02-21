@@ -318,10 +318,7 @@ endif()
 ## The PDI wrapper
 
 if("${DDC_BUILD_PDI_WRAPPER}")
-    # Workaround, PDI does not support reentrance
-    if(NOT TARGET PDI::PDI_C)
-        find_package(PDI 1.6...<2 REQUIRED COMPONENTS C)
-    endif()
+    find_package(PDI 1.10.1...<2 REQUIRED COMPONENTS C)
 
     add_library(ddc_pdi INTERFACE)
     add_library(DDC::pdi ALIAS ddc_pdi)

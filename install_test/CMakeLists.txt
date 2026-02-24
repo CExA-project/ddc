@@ -6,6 +6,17 @@ cmake_minimum_required(VERSION 3.25...4.2)
 
 project(test-installed-ddc LANGUAGES CXX)
 
+# assert(<condition>)
+#
+# Fails configuration with a FATAL_ERROR if <condition> evaluates to FALSE.
+# The full condition is printed in the error message.
+#
+# Example:
+#   set(MY_VAR OFF)
+#   assert(MY_VAR)  # Triggers: "Assertion failed: MY_VAR"
+#
+#   set(VERSION 3)
+#   assert(VERSION GREATER 2)  # Passes
 function(assert)
     if(NOT (${ARGN}))
         string(REPLACE ";" " " ASSERT_TEXT "${ARGN}")

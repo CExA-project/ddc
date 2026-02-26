@@ -74,7 +74,7 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
         with:
           repository: pdidev/pdi
-          ref: 1.10.0
+          ref: 1.10.1
           path: pdi
       - name: Install PDI+user code plugin and dependencies
         run: |

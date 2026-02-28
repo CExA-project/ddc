@@ -2,6 +2,7 @@
 //
 // SPDX-License-Identifier: MIT
 
+#include <sstream>
 #include <stdexcept>
 
 #include <ddc/ddc.hpp>
@@ -42,4 +43,29 @@ TEST(DiscreteSpace, Initialization)
     EXPECT_EQ(
             static_cast<void const*>(&ddc::discrete_space<DDimX>()),
             static_cast<void const*>(&ddc::host_discrete_space<DDimX>()));
+}
+
+TEST(DiscreteSpace, DisplayDiscretizationStore)
+{
+    ddc::init_discrete_space<DDimX>(DDimX::template init<DDimX>(
+            ddc::Coordinate<DimX>(0),
+            ddc::Coordinate<DimX>(1),
+            ddc::DiscreteVector<DDimX>(2)));
+    std::stringstream ss;
+    ddc::detail::display_discretization_store(ss);
+#if defined(KOKKOS_COMPILER_GNU) || defined(KOKKOS_COMPILER_CLANG)
+    EXPECT_EQ(
+            ss.str(),
+            "The host discretization store is initialized:\n - "
+            "N49anonymous_namespace_workaround_discrete_space_cpp5DDimXE\n");
+
+#elif defined(KOKKOS_COMPILER_MSVC)
+    EXPECT_EQ(
+            ss.str(),
+            "The host discretization store is initialized:\n - "
+            "struct anonymous_namespace_workaround_discrete_space_cpp::DDimX\n");
+
+#else
+    GTEST_SKIP();
+#endif
 }

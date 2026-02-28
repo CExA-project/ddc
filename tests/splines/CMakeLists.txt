@@ -12,6 +12,7 @@ add_executable(
     bsplines.cpp
     knots_as_interpolation_points.cpp
     splines_linear_problem.cpp
+    spline_boundary_conditions.cpp
     spline_builder.cpp
     spline_traits.cpp
     view.cpp

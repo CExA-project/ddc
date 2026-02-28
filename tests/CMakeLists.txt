@@ -11,6 +11,12 @@ target_compile_features(ddc_gtest_main PRIVATE cxx_std_17)
 target_link_libraries(ddc_gtest_main PRIVATE DDC::core GTest::gtest)
 target_sources(ddc_gtest_main PRIVATE main.cpp)
 
+add_executable(ddc_tests_uninitialized)
+target_compile_features(ddc_tests_uninitialized PRIVATE cxx_std_17)
+target_link_libraries(ddc_tests_uninitialized PRIVATE DDC::core GTest::gtest_main)
+target_sources(ddc_tests_uninitialized PRIVATE discrete_space_uninitialized.cpp)
+gtest_discover_tests(ddc_tests_uninitialized DISCOVERY_MODE PRE_TEST)
+
 add_executable(
     ddc_tests
     aligned_allocator.cpp

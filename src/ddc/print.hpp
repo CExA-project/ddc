@@ -268,7 +268,7 @@ void print_dim_name(
 template <class... Dims>
 void print_dim_name(std::ostream& os, DiscreteVector<Dims...> const& dd)
 {
-    std::array const names {typeid(Dims).name()...};
+    std::array<char const*, sizeof...(Dims)> const names {typeid(Dims).name()...};
     std::array const std_dd = detail::array(dd);
     print_dim_name(os, names.data(), std_dd.data(), std_dd.size());
 }

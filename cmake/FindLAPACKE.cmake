@@ -22,11 +22,7 @@
 #  LAPACKE_FOUND            - True if headers and requested libraries were found
 #  LAPACKE_LINKER_FLAGS     - list of required linker flags (excluding -l and -L)
 #  LAPACKE_INCLUDE_DIRS     - lapacke include directories
-#  LAPACKE_LIBRARY_DIRS     - Link directories for lapacke libraries
 #  LAPACKE_LIBRARIES        - lapacke component libraries to be linked
-#  LAPACKE_INCLUDE_DIRS_DEP - lapacke + dependencies include directories
-#  LAPACKE_LIBRARY_DIRS_DEP - lapacke + dependencies link directories
-#  LAPACKE_LIBRARIES_DEP    - lapacke libraries + dependencies
 #
 # The user can give specific paths where to find the libraries adding cmake
 # options at configure (ex: cmake path/to/project -DLAPACKE_DIR=path/to/lapacke):
@@ -95,13 +91,8 @@ if (NOT LAPACKE_FOUND)
         endif()
         # test succeeds: LAPACKE is in LAPACK
         set(LAPACKE_LIBRARIES "${LAPACK_LIBRARIES}")
-        set(LAPACKE_LIBRARIES_DEP "${LAPACK_LIBRARIES}")
-        if (LAPACK_LIBRARY_DIRS)
-          set(LAPACKE_LIBRARY_DIRS "${LAPACK_LIBRARY_DIRS}")
-        endif()
         if(LAPACK_INCLUDE_DIRS)
           set(LAPACKE_INCLUDE_DIRS "${LAPACK_INCLUDE_DIRS}")
-          set(LAPACKE_INCLUDE_DIRS_DEP "${LAPACK_INCLUDE_DIRS}")
         endif()
         if (LAPACK_LINKER_FLAGS)
           set(LAPACKE_LINKER_FLAGS "${LAPACK_LINKER_FLAGS}")
@@ -246,10 +237,8 @@ if (NOT LAPACKE_FOUND)
         get_filename_component(lapacke_lib_path "${LAPACKE_lapacke_LIBRARY}" PATH)
         # set cmake variables
         set(LAPACKE_LIBRARIES    "${LAPACKE_lapacke_LIBRARY}")
-        set(LAPACKE_LIBRARY_DIRS "${lapacke_lib_path}")
       else ()
         set(LAPACKE_LIBRARIES    "LAPACKE_LIBRARIES-NOTFOUND")
-        set(LAPACKE_LIBRARY_DIRS "LAPACKE_LIBRARY_DIRS-NOTFOUND")
         if (NOT LAPACKE_FIND_QUIETLY)
           message(STATUS "Looking for lapacke -- lib lapacke not found")
         endif()
@@ -266,9 +255,6 @@ if (NOT LAPACKE_FOUND)
         # LAPACKE
         if (LAPACKE_INCLUDE_DIRS)
           set(REQUIRED_INCDIRS "${LAPACKE_INCLUDE_DIRS}")
-        endif()
-        if (LAPACKE_LIBRARY_DIRS)
-          set(REQUIRED_LIBDIRS "${LAPACKE_LIBRARY_DIRS}")
         endif()
         set(REQUIRED_LIBS "${LAPACKE_LIBRARIES}")
         # LAPACK
@@ -328,12 +314,7 @@ if (NOT LAPACKE_FOUND)
 
         if(LAPACKE_WORKS)
           # save link with dependencies
-          set(LAPACKE_LIBRARIES_DEP "${REQUIRED_LIBS}")
-          set(LAPACKE_LIBRARY_DIRS_DEP "${REQUIRED_LIBDIRS}")
-          set(LAPACKE_INCLUDE_DIRS_DEP "${REQUIRED_INCDIRS}")
           set(LAPACKE_LINKER_FLAGS "${REQUIRED_LDFLAGS}")
-          list(REMOVE_DUPLICATES LAPACKE_LIBRARY_DIRS_DEP)
-          list(REMOVE_DUPLICATES LAPACKE_INCLUDE_DIRS_DEP)
           list(REMOVE_DUPLICATES LAPACKE_LINKER_FLAGS)
         else()
           if(NOT LAPACKE_FIND_QUIETLY)

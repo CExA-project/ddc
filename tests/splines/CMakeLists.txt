@@ -107,15 +107,24 @@ foreach(bc "periodic" "greville")
     endforeach()
 endforeach()
 
-set(test_filename "batched_spline_builder")
 foreach(solver "ginkgo" "lapack")
-    foreach(bsplines_type "uniform" "non_uniform")
-        string(TOUPPER "solver_${solver}" solver_macro)
-        string(TOUPPER "bsplines_type_${bsplines_type}" bsplines_type_macro)
-        foreach(bc "periodic" "greville" "hermite")
-            foreach(degree RANGE "${DDC_SPLINES_TEST_DEGREE_MIN}" "${DDC_SPLINES_TEST_DEGREE_MAX}")
+    foreach(bc "periodic" "greville" "homogeneous_hermite" "hermite")
+        # Only run HOMOGENEOUS_HERMITE tests for the case where the assumptions
+        # (dx f(\Omega) = 0 ) are valid.
+        if(bc STREQUAL "homogeneous_hermite")
+            set(splines_degree_min 3)
+            set(splines_degree_max 3)
+        else()
+            set(splines_degree_min "${DDC_SPLINES_TEST_DEGREE_MIN}")
+            set(splines_degree_max "${DDC_SPLINES_TEST_DEGREE_MAX}")
+        endif()
+        foreach(degree RANGE "${splines_degree_min}" "${splines_degree_max}")
+            foreach(bsplines_type "uniform" "non_uniform")
+                string(TOUPPER "solver_${solver}" solver_macro)
                 string(TOUPPER "bc_${bc}" bc_macro)
                 string(TOUPPER "degree=${degree}" degree_macro)
+                string(TOUPPER "bsplines_type_${bsplines_type}" bsplines_type_macro)
+                set(test_filename "batched_spline_builder")
                 set(test_name
                     "${test_filename}_tests_degree_${degree}_${bsplines_type}_${bc}_${solver}"
                 )
@@ -137,25 +146,6 @@ foreach(solver "ginkgo" "lapack")
                 gtest_discover_tests("${test_name}" DISCOVERY_MODE PRE_TEST)
             endforeach()
         endforeach()
-        # Only run HOMOGENEOUS_HERMITE tests for the case where the assumptions
-        # (dx f(\Omega) = 0 ) are valid.
-        string(TOUPPER "BC_HOMOGENEOUS_HERMITE" bc_macro)
-        string(TOUPPER "DEGREE=3" degree_macro)
-        set(test_name
-            "${test_filename}_tests_degree_3_${bsplines_type}_homogeneous_hermite_${solver}"
-        )
-
-        add_executable("${test_name}" "${test_filename}.cpp")
-        target_compile_definitions(
-            "${test_name}"
-            PRIVATE -D${solver_macro} -D${bc_macro} -D${degree_macro} -D${bsplines_type_macro}
-        )
-        target_compile_features("${test_name}" PRIVATE cxx_std_17)
-        target_link_libraries(
-            "${test_name}"
-            PRIVATE ddc_gtest_main DDC::core DDC::splines GTest::gtest
-        )
-        gtest_discover_tests("${test_name}" DISCOVERY_MODE PRE_TEST)
     endforeach()
 endforeach()
 

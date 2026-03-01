@@ -93,6 +93,20 @@ if (NOT LAPACKE_FOUND)
         set(LAPACKE_LIBRARIES "${LAPACK_LIBRARIES}")
         if(LAPACK_INCLUDE_DIRS)
           set(LAPACKE_INCLUDE_DIRS "${LAPACK_INCLUDE_DIRS}")
+        else()
+          list(GET LAPACKE_LIBRARIES 0 first_lib)
+          get_filename_component(first_lib_path "${first_lib}" PATH)
+          string(REGEX REPLACE "(/lib(32|64)?$)|(/lib/intel64$|/lib/ia32$)" "" not_cached_dir "${first_lib_path}")
+
+          set(LAPACKE_INCLUDE_DIRS "LAPACKE_INCLUDE_DIRS-NOTFOUND")
+          find_path(LAPACKE_INCLUDE_DIRS
+            NAMES lapacke.h
+            HINTS ${not_cached_dir}
+            PATH_SUFFIXES "include" "include/lapacke"
+            NO_CACHE)
+
+          unset(first_lib_path)
+          unset(first_lib)
         endif()
         if (LAPACK_LINKER_FLAGS)
           set(LAPACKE_LINKER_FLAGS "${LAPACK_LINKER_FLAGS}")

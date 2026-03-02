@@ -117,6 +117,7 @@ var namespaceddc =
     [ "BoundCond", "namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744a", [
       [ "PERIODIC", "namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744aad9d83fc826ae0d42075af007a477e2c9", null ],
       [ "HERMITE", "namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744aad85d6eb1a93601cc83dc87ac66dfb75e", null ],
+      [ "HOMOGENEOUS_HERMITE", "namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744aa7f554ccdf64705edd67d9fb0e4a1b00b", null ],
       [ "GREVILLE", "namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744aa9febc190323c06d33ae8d8716f98bfe9", null ]
     ] ],
     [ "SplineSolver", "namespaceddc.html#a36c0210a850dde0979ad8b5772ee730c", [

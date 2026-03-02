@@ -137,7 +137,7 @@ Collaboration diagram for ddc::SplineBuilder&lt; ExecSpace, MemorySpace, BSpline
 <div class="dyncontent">
 <div class="center"><img src="classddc_1_1SplineBuilder__coll__graph.png" border="0" usemap="#addc_1_1SplineBuilder_3_01ExecSpace_00_01MemorySpace_00_01BSplines_00_01InterpolationDDim_00_01BcLower_00_01BcUpper_00_01Solver_01_4_coll__map" alt="Collaboration graph"/></div>
 <map name="addc_1_1SplineBuilder_3_01ExecSpace_00_01MemorySpace_00_01BSplines_00_01InterpolationDDim_00_01BcLower_00_01BcUpper_00_01Solver_01_4_coll__map" id="addc_1_1SplineBuilder_3_01ExecSpace_00_01MemorySpace_00_01BSplines_00_01InterpolationDDim_00_01BcLower_00_01BcUpper_00_01Solver_01_4_coll__map">
-<area shape="rect" title="A class for creating a spline approximation of a function." alt="" coords="5,5,212,559"/>
+<area shape="rect" title="A class for creating a spline approximation of a function." alt="" coords="5,5,212,599"/>
 </map>
 </div>
 <table class="memberdecls">
@@ -245,12 +245,18 @@ Static Public Attributes</h2></td></tr>
 <tr class="memitem:a942620c02e5864f743a44b820c9bd488" id="r_a942620c02e5864f743a44b820c9bd488"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">static</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1SplineBuilder.html#a942620c02e5864f743a44b820c9bd488">s_odd</a> = BSplines::degree() % 2</td></tr>
 <tr class="memdesc:a942620c02e5864f743a44b820c9bd488"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicates if the degree of the splines is odd or even.  <br /></td></tr>
 <tr class="separator:a942620c02e5864f743a44b820c9bd488"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a540a5931864b89b8cb75d56118ce7890" id="r_a540a5931864b89b8cb75d56118ce7890"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">static</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1SplineBuilder.html#a540a5931864b89b8cb75d56118ce7890">s_nbc_xmin</a> = <a class="el" href="namespaceddc.html#a086f7e0fd872b6bd2aef5760d1b3845f">n_boundary_equations</a>(<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BcLower</a>, BSplines::degree())</td></tr>
-<tr class="memdesc:a540a5931864b89b8cb75d56118ce7890"><td class="mdescLeft">&#160;</td><td class="mdescRight">The number of equations defining the boundary condition at the lower bound.  <br /></td></tr>
-<tr class="separator:a540a5931864b89b8cb75d56118ce7890"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac0673a2a2add4a0be504ecfe9a7af851" id="r_ac0673a2a2add4a0be504ecfe9a7af851"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">static</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1SplineBuilder.html#ac0673a2a2add4a0be504ecfe9a7af851">s_nbc_xmax</a> = <a class="el" href="namespaceddc.html#a086f7e0fd872b6bd2aef5760d1b3845f">n_boundary_equations</a>(<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BcUpper</a>, BSplines::degree())</td></tr>
-<tr class="memdesc:ac0673a2a2add4a0be504ecfe9a7af851"><td class="mdescLeft">&#160;</td><td class="mdescRight">The number of equations defining the boundary condition at the upper bound.  <br /></td></tr>
-<tr class="separator:ac0673a2a2add4a0be504ecfe9a7af851"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af4ae808e971a32af11ef18046a7a90e7" id="r_af4ae808e971a32af11ef18046a7a90e7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">static</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1SplineBuilder.html#af4ae808e971a32af11ef18046a7a90e7">s_nbe_xmin</a> = <a class="el" href="namespaceddc.html#a086f7e0fd872b6bd2aef5760d1b3845f">n_boundary_equations</a>(<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BcLower</a>, BSplines::degree())</td></tr>
+<tr class="memdesc:af4ae808e971a32af11ef18046a7a90e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">The number of equations defining the boundary condition at the lower bound.  <br /></td></tr>
+<tr class="separator:af4ae808e971a32af11ef18046a7a90e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a38ece00e99bf386de694ccd99329d744" id="r_a38ece00e99bf386de694ccd99329d744"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">static</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1SplineBuilder.html#a38ece00e99bf386de694ccd99329d744">s_nbe_xmax</a> = <a class="el" href="namespaceddc.html#a086f7e0fd872b6bd2aef5760d1b3845f">n_boundary_equations</a>(<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BcUpper</a>, BSplines::degree())</td></tr>
+<tr class="memdesc:a38ece00e99bf386de694ccd99329d744"><td class="mdescLeft">&#160;</td><td class="mdescRight">The number of equations defining the boundary condition at the upper bound.  <br /></td></tr>
+<tr class="separator:a38ece00e99bf386de694ccd99329d744"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa09709360999d914ca32cd5b9c7b6485" id="r_aa09709360999d914ca32cd5b9c7b6485"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">static</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1SplineBuilder.html#aa09709360999d914ca32cd5b9c7b6485">s_nbv_xmin</a></td></tr>
+<tr class="memdesc:aa09709360999d914ca32cd5b9c7b6485"><td class="mdescLeft">&#160;</td><td class="mdescRight">The number of input values defining the boundary condition at the lower bound.  <br /></td></tr>
+<tr class="separator:aa09709360999d914ca32cd5b9c7b6485"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8e6d897d7a1f34a68c6a44fb6bf2e1fc" id="r_a8e6d897d7a1f34a68c6a44fb6bf2e1fc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">static</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1SplineBuilder.html#a8e6d897d7a1f34a68c6a44fb6bf2e1fc">s_nbv_xmax</a></td></tr>
+<tr class="memdesc:a8e6d897d7a1f34a68c6a44fb6bf2e1fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">The number of input values defining the boundary condition at the upper bound.  <br /></td></tr>
+<tr class="separator:a8e6d897d7a1f34a68c6a44fb6bf2e1fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4cc69f4ab29d14e997478b4b7fa52a42" id="r_a4cc69f4ab29d14e997478b4b7fa52a42"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">static</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744a">ddc::BoundCond</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1SplineBuilder.html#a4cc69f4ab29d14e997478b4b7fa52a42">s_bc_xmin</a> = <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BcLower</a></td></tr>
 <tr class="memdesc:a4cc69f4ab29d14e997478b4b7fa52a42"><td class="mdescLeft">&#160;</td><td class="mdescRight">The boundary condition implemented at the lower bound.  <br /></td></tr>
 <tr class="separator:a4cc69f4ab29d14e997478b4b7fa52a42"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -588,7 +594,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d" title="Initialize (emplace) a global singleton discrete space.">MatrixSparse</a> </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="spline__builder_8hpp_source.html#l00224">224</a> of file <a class="el" href="spline__builder_8hpp_source.html">spline_builder.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="spline__builder_8hpp_source.html#l00234">234</a> of file <a class="el" href="spline__builder_8hpp_source.html">spline_builder.hpp</a>.</p>
 
 </div>
 </div>
@@ -647,7 +653,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d" title="Initialize (emplace) a global singleton discrete space.">MatrixSparse</a> </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="spline__builder_8hpp_source.html#l00275">275</a> of file <a class="el" href="spline__builder_8hpp_source.html">spline_builder.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="spline__builder_8hpp_source.html#l00285">285</a> of file <a class="el" href="spline__builder_8hpp_source.html">spline_builder.hpp</a>.</p>
 
 </div>
 </div>
@@ -843,7 +849,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 <p>This is 1D because it is defined along the dimension of interest.</p>
 <dl class="section return"><dt>Returns</dt><dd>The 1D domain for the interpolation mesh. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="spline__builder_8hpp_source.html#l00316">316</a> of file <a class="el" href="spline__builder_8hpp_source.html">spline_builder.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="spline__builder_8hpp_source.html#l00326">326</a> of file <a class="el" href="spline__builder_8hpp_source.html">spline_builder.hpp</a>.</p>
 
 </div>
 </div>
@@ -885,7 +891,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The domain for the interpolation mesh. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="spline__builder_8hpp_source.html#l00334">334</a> of file <a class="el" href="spline__builder_8hpp_source.html">spline_builder.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="spline__builder_8hpp_source.html#l00344">344</a> of file <a class="el" href="spline__builder_8hpp_source.html">spline_builder.hpp</a>.</p>
 
 </div>
 </div>
@@ -927,7 +933,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The batch domain. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="spline__builder_8hpp_source.html#l00351">351</a> of file <a class="el" href="spline__builder_8hpp_source.html">spline_builder.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="spline__builder_8hpp_source.html#l00361">361</a> of file <a class="el" href="spline__builder_8hpp_source.html">spline_builder.hpp</a>.</p>
 
 </div>
 </div>
@@ -960,7 +966,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 <p>The 1D spline domain corresponding to the dimension of interest.</p>
 <dl class="section return"><dt>Returns</dt><dd>The 1D domain for the spline coefficients. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="spline__builder_8hpp_source.html#l00365">365</a> of file <a class="el" href="spline__builder_8hpp_source.html">spline_builder.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="spline__builder_8hpp_source.html#l00375">375</a> of file <a class="el" href="spline__builder_8hpp_source.html">spline_builder.hpp</a>.</p>
 
 </div>
 </div>
@@ -1002,7 +1008,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The domain for the spline coefficients. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="spline__builder_8hpp_source.html#l00380">380</a> of file <a class="el" href="spline__builder_8hpp_source.html">spline_builder.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="spline__builder_8hpp_source.html#l00390">390</a> of file <a class="el" href="spline__builder_8hpp_source.html">spline_builder.hpp</a>.</p>
 
 </div>
 </div>
@@ -1044,7 +1050,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The domain for the Derivs values. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="spline__builder_8hpp_source.html#l00424">424</a> of file <a class="el" href="spline__builder_8hpp_source.html">spline_builder.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="spline__builder_8hpp_source.html#l00434">434</a> of file <a class="el" href="spline__builder_8hpp_source.html">spline_builder.hpp</a>.</p>
 
 </div>
 </div>
@@ -1086,7 +1092,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The domain for the Derivs values. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="spline__builder_8hpp_source.html#l00445">445</a> of file <a class="el" href="spline__builder_8hpp_source.html">spline_builder.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="spline__builder_8hpp_source.html#l00455">455</a> of file <a class="el" href="spline__builder_8hpp_source.html">spline_builder.hpp</a>.</p>
 
 </div>
 </div>
@@ -1145,7 +1151,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="spline__builder_8hpp_source.html#l00808">808</a> of file <a class="el" href="spline__builder_8hpp_source.html">spline_builder.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="spline__builder_8hpp_source.html#l00822">822</a> of file <a class="el" href="spline__builder_8hpp_source.html">spline_builder.hpp</a>.</p>
 
 </div>
 </div>
@@ -1181,7 +1187,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A tuple containing the three Chunks containing the quadrature coefficients (if HERMITE is not used, first and third are empty). </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="spline__builder_8hpp_source.html#l01020">1020</a> of file <a class="el" href="spline__builder_8hpp_source.html">spline_builder.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="spline__builder_8hpp_source.html#l01048">1048</a> of file <a class="el" href="spline__builder_8hpp_source.html">spline_builder.hpp</a>.</p>
 
 </div>
 </div>
@@ -1214,8 +1220,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 
 </div>
 </div>
-<a id="a540a5931864b89b8cb75d56118ce7890" name="a540a5931864b89b8cb75d56118ce7890"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a540a5931864b89b8cb75d56118ce7890">&#9670;&#160;</a></span>s_nbc_xmin</h2>
+<a id="af4ae808e971a32af11ef18046a7a90e7" name="af4ae808e971a32af11ef18046a7a90e7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af4ae808e971a32af11ef18046a7a90e7">&#9670;&#160;</a></span>s_nbe_xmin</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1226,7 +1232,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">int</a> <a class="el" href="classddc_1_1SplineBuilder.html">ddc::SplineBuilder</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ExecSpace</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BSplines</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">InterpolationDDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BcLower</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BcUpper</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Solver</a> &gt;::s_nbc_xmin = <a class="el" href="namespaceddc.html#a086f7e0fd872b6bd2aef5760d1b3845f">n_boundary_equations</a>(<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BcLower</a>, BSplines::degree())</td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">int</a> <a class="el" href="classddc_1_1SplineBuilder.html">ddc::SplineBuilder</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ExecSpace</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BSplines</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">InterpolationDDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BcLower</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BcUpper</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Solver</a> &gt;::s_nbe_xmin = <a class="el" href="namespaceddc.html#a086f7e0fd872b6bd2aef5760d1b3845f">n_boundary_equations</a>(<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BcLower</a>, BSplines::degree())</td>
         </tr>
       </table>
   </td>
@@ -1242,8 +1248,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 
 </div>
 </div>
-<a id="ac0673a2a2add4a0be504ecfe9a7af851" name="ac0673a2a2add4a0be504ecfe9a7af851"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac0673a2a2add4a0be504ecfe9a7af851">&#9670;&#160;</a></span>s_nbc_xmax</h2>
+<a id="a38ece00e99bf386de694ccd99329d744" name="a38ece00e99bf386de694ccd99329d744"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a38ece00e99bf386de694ccd99329d744">&#9670;&#160;</a></span>s_nbe_xmax</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1254,7 +1260,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">int</a> <a class="el" href="classddc_1_1SplineBuilder.html">ddc::SplineBuilder</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ExecSpace</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BSplines</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">InterpolationDDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BcLower</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BcUpper</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Solver</a> &gt;::s_nbc_xmax = <a class="el" href="namespaceddc.html#a086f7e0fd872b6bd2aef5760d1b3845f">n_boundary_equations</a>(<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BcUpper</a>, BSplines::degree())</td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">int</a> <a class="el" href="classddc_1_1SplineBuilder.html">ddc::SplineBuilder</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ExecSpace</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BSplines</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">InterpolationDDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BcLower</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BcUpper</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Solver</a> &gt;::s_nbe_xmax = <a class="el" href="namespaceddc.html#a086f7e0fd872b6bd2aef5760d1b3845f">n_boundary_equations</a>(<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BcUpper</a>, BSplines::degree())</td>
         </tr>
       </table>
   </td>
@@ -1267,6 +1273,71 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 <p>The number of equations defining the boundary condition at the upper bound. </p>
 
 <p class="definition">Definition at line <a class="el" href="spline__builder_8hpp_source.html#l00183">183</a> of file <a class="el" href="spline__builder_8hpp_source.html">spline_builder.hpp</a>.</p>
+
+</div>
+</div>
+<a id="aa09709360999d914ca32cd5b9c7b6485" name="aa09709360999d914ca32cd5b9c7b6485"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa09709360999d914ca32cd5b9c7b6485">&#9670;&#160;</a></span>s_nbv_xmin</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ExecSpace</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BSplines</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">InterpolationDDim</a> , <a class="el" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744a">ddc::BoundCond</a> BcLower, <a class="el" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744a">ddc::BoundCond</a> BcUpper, <a class="el" href="namespaceddc.html#a36c0210a850dde0979ad8b5772ee730c">SplineSolver</a> Solver&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">int</a> <a class="el" href="classddc_1_1SplineBuilder.html">ddc::SplineBuilder</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ExecSpace</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BSplines</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">InterpolationDDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BcLower</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BcUpper</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Solver</a> &gt;::s_nbv_xmin</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">= <a class="code hl_function" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BcLower</a> == <a class="code hl_enumvalue" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744aa7f554ccdf64705edd67d9fb0e4a1b00b">BoundCond::HOMOGENEOUS_HERMITE</a></div>
+<div class="line">                                              ? 0</div>
+<div class="line">                                              : <a class="code hl_function" href="namespaceddc.html#a086f7e0fd872b6bd2aef5760d1b3845f">n_boundary_equations</a>(<a class="code hl_function" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BcLower</a>, BSplines::degree())</div>
+<div class="ttc" id="anamespaceddc_html_a086f7e0fd872b6bd2aef5760d1b3845f"><div class="ttname"><a href="namespaceddc.html#a086f7e0fd872b6bd2aef5760d1b3845f">ddc::n_boundary_equations</a></div><div class="ttdeci">constexpr int n_boundary_equations(ddc::BoundCond const bc, std::size_t const degree)</div><div class="ttdoc">Return the number of equations needed to describe a given boundary condition.</div><div class="ttdef"><b>Definition</b> <a href="spline__boundary__conditions_8hpp_source.html#l00060">spline_boundary_conditions.hpp:60</a></div></div>
+<div class="ttc" id="anamespaceddc_html_a28f4ae114fe8694bf78c0d761bc9744aa7f554ccdf64705edd67d9fb0e4a1b00b"><div class="ttname"><a href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744aa7f554ccdf64705edd67d9fb0e4a1b00b">ddc::BoundCond::HOMOGENEOUS_HERMITE</a></div><div class="ttdeci">@ HOMOGENEOUS_HERMITE</div><div class="ttdoc">Homogeneous Hermite boundary condition (derivatives are 0)</div></div>
+<div class="ttc" id="anamespaceddc_html_a70f12a43ed0afbc092f4e974b024db3d"><div class="ttname"><a href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ddc::init_discrete_space</a></div><div class="ttdeci">void init_discrete_space(Args &amp;&amp;... args)</div><div class="ttdoc">Initialize (emplace) a global singleton discrete space.</div><div class="ttdef"><b>Definition</b> <a href="discrete__space_8hpp_source.html#l00162">discrete_space.hpp:162</a></div></div>
+</div><!-- fragment -->
+<p>The number of input values defining the boundary condition at the lower bound. </p>
+
+<p class="definition">Definition at line <a class="el" href="spline__builder_8hpp_source.html#l00186">186</a> of file <a class="el" href="spline__builder_8hpp_source.html">spline_builder.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a8e6d897d7a1f34a68c6a44fb6bf2e1fc" name="a8e6d897d7a1f34a68c6a44fb6bf2e1fc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8e6d897d7a1f34a68c6a44fb6bf2e1fc">&#9670;&#160;</a></span>s_nbv_xmax</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ExecSpace</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BSplines</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">InterpolationDDim</a> , <a class="el" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744a">ddc::BoundCond</a> BcLower, <a class="el" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744a">ddc::BoundCond</a> BcUpper, <a class="el" href="namespaceddc.html#a36c0210a850dde0979ad8b5772ee730c">SplineSolver</a> Solver&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">int</a> <a class="el" href="classddc_1_1SplineBuilder.html">ddc::SplineBuilder</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ExecSpace</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BSplines</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">InterpolationDDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BcLower</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BcUpper</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Solver</a> &gt;::s_nbv_xmax</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">= <a class="code hl_function" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BcUpper</a> == <a class="code hl_enumvalue" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744aa7f554ccdf64705edd67d9fb0e4a1b00b">BoundCond::HOMOGENEOUS_HERMITE</a></div>
+<div class="line">                                              ? 0</div>
+<div class="line">                                              : <a class="code hl_function" href="namespaceddc.html#a086f7e0fd872b6bd2aef5760d1b3845f">n_boundary_equations</a>(<a class="code hl_function" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BcUpper</a>, BSplines::degree())</div>
+</div><!-- fragment -->
+<p>The number of input values defining the boundary condition at the upper bound. </p>
+
+<p class="definition">Definition at line <a class="el" href="spline__builder_8hpp_source.html#l00191">191</a> of file <a class="el" href="spline__builder_8hpp_source.html">spline_builder.hpp</a>.</p>
 
 </div>
 </div>
@@ -1294,7 +1365,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 
 <p>The boundary condition implemented at the lower bound. </p>
 
-<p class="definition">Definition at line <a class="el" href="spline__builder_8hpp_source.html#l00186">186</a> of file <a class="el" href="spline__builder_8hpp_source.html">spline_builder.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="spline__builder_8hpp_source.html#l00196">196</a> of file <a class="el" href="spline__builder_8hpp_source.html">spline_builder.hpp</a>.</p>
 
 </div>
 </div>
@@ -1322,7 +1393,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 
 <p>The boundary condition implemented at the upper bound. </p>
 
-<p class="definition">Definition at line <a class="el" href="spline__builder_8hpp_source.html#l00189">189</a> of file <a class="el" href="spline__builder_8hpp_source.html">spline_builder.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="spline__builder_8hpp_source.html#l00199">199</a> of file <a class="el" href="spline__builder_8hpp_source.html">spline_builder.hpp</a>.</p>
 
 </div>
 </div>
@@ -1350,7 +1421,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 
 <p>The SplineSolver giving the backend used to perform the spline approximation. </p>
 
-<p class="definition">Definition at line <a class="el" href="spline__builder_8hpp_source.html#l00192">192</a> of file <a class="el" href="spline__builder_8hpp_source.html">spline_builder.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="spline__builder_8hpp_source.html#l00202">202</a> of file <a class="el" href="spline__builder_8hpp_source.html">spline_builder.hpp</a>.</p>
 
 </div>
 </div>

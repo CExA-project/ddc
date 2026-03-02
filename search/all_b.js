@@ -4,8 +4,9 @@ var searchData=
   ['heat_20equation_1',['heat equation',['../going_further.html',1,'The non uniform heat equation'],['../first_steps.html',1,'The uniform heat equation']]],
   ['heat_5fequation_5fspectral_20cpp_2',['examples/heat_equation_spectral.cpp',['../heat_equation_spectral.html',1,'md_examples']]],
   ['hermite_3',['HERMITE',['../namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744aad85d6eb1a93601cc83dc87ac66dfb75e',1,'ddc']]],
-  ['host_5fdiscrete_5fspace_4',['host_discrete_space',['../namespaceddc.html#a7d46db599cc0436ad0b042efd27dc055',1,'ddc']]],
-  ['host_5ffor_5feach_5',['host_for_each',['../namespaceddc.html#a73a61ffa3418241e1072ec0ab40eed1c',1,'ddc']]],
-  ['host_5ftransform_5freduce_6',['host_transform_reduce',['../namespaceddc.html#a477f0d6ae51850e77237d162f44c5855',1,'ddc']]],
-  ['hostallocator_7',['HostAllocator',['../namespaceddc.html#a1eb87e589bae955cef6cd18cdc7826f3',1,'ddc']]]
+  ['homogeneous_5fhermite_4',['HOMOGENEOUS_HERMITE',['../namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744aa7f554ccdf64705edd67d9fb0e4a1b00b',1,'ddc']]],
+  ['host_5fdiscrete_5fspace_5',['host_discrete_space',['../namespaceddc.html#a7d46db599cc0436ad0b042efd27dc055',1,'ddc']]],
+  ['host_5ffor_5feach_6',['host_for_each',['../namespaceddc.html#a73a61ffa3418241e1072ec0ab40eed1c',1,'ddc']]],
+  ['host_5ftransform_5freduce_7',['host_transform_reduce',['../namespaceddc.html#a477f0d6ae51850e77237d162f44c5855',1,'ddc']]],
+  ['hostallocator_8',['HostAllocator',['../namespaceddc.html#a1eb87e589bae955cef6cd18cdc7826f3',1,'ddc']]]
 ];

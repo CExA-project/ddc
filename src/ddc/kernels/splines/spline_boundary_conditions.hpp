@@ -16,6 +16,7 @@ namespace ddc {
 enum class BoundCond {
     PERIODIC, ///< Periodic boundary condition u(1)=u(n)
     HERMITE, ///< Hermite boundary condition
+    HOMOGENEOUS_HERMITE, ///< Homogeneous Hermite boundary condition (derivatives are 0)
     GREVILLE, ///< Use Greville points instead of conditions on derivative for B-Spline interpolation
 };
 
@@ -35,6 +36,10 @@ static inline std::ostream& operator<<(std::ostream& out, ddc::BoundCond const b
 
     if (bc == ddc::BoundCond::HERMITE) {
         return out << "HERMITE";
+    }
+
+    if (bc == ddc::BoundCond::HOMOGENEOUS_HERMITE) {
+        return out << "HOMOGENEOUS_HERMITE";
     }
 
     if (bc == ddc::BoundCond::GREVILLE) {
@@ -58,7 +63,7 @@ constexpr int n_boundary_equations(ddc::BoundCond const bc, std::size_t const de
         return 0;
     }
 
-    if (bc == ddc::BoundCond::HERMITE) {
+    if (bc == ddc::BoundCond::HERMITE || bc == ddc::BoundCond::HOMOGENEOUS_HERMITE) {
         return degree / 2;
     }
 

@@ -52,7 +52,7 @@ jobs:
         with:
           clang-format-version: '21'
       - name: Prefer 'if defined'/'if !defined' over 'ifdef'/'ifndef'
-        run: if grep -RE "(ifdef|ifndef)" $(git ls-files '*.[ch]pp' ':!*/kokkos-kernels-ext/*'); then exit 1; fi
+        run: if grep -RE "(ifdef|ifndef)" $(git ls-files '*.[ch]pp'); then exit 1; fi
       - name: Do not include <iostream> in the headers of the library
         run: if grep -R "#include <iostream>" $(git ls-files 'src/*.[ch]pp'); then exit 1; fi
       - name: Find modifications of Kokkos reserved macros

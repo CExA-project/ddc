@@ -16,9 +16,11 @@
 #    include <lapacke.h>
 #endif
 
-#include <KokkosBatched_Util.hpp>
+// #include <KokkosBatched_Laswp.hpp>
+// #include <KokkosBatched_Trsm_Decl.hpp>
 
-#include "kokkos-kernels-ext/KokkosBatched_Getrs.hpp"
+#include <KokkosBatched_Getrs.hpp>
+#include <KokkosBatched_Util.hpp>
 
 #include "splines_linear_problem.hpp"
 #include "splines_linear_problem_dense.hpp"
@@ -106,7 +108,7 @@ void SplinesLinearProblemDense<ExecSpace>::solve(MultiRHS const b, bool const tr
                     auto sub_b = Kokkos::subview(b, Kokkos::ALL, i);
                     KokkosBatched::SerialGetrs<
                             KokkosBatched::Trans::Transpose,
-                            KokkosBatched::Algo::Level3::Unblocked>::
+                            KokkosBatched::Algo::Getrs::Unblocked>::
                             invoke(a_device, ipiv_device, sub_b);
                 });
     } else {
@@ -117,7 +119,7 @@ void SplinesLinearProblemDense<ExecSpace>::solve(MultiRHS const b, bool const tr
                     auto sub_b = Kokkos::subview(b, Kokkos::ALL, i);
                     KokkosBatched::SerialGetrs<
                             KokkosBatched::Trans::NoTranspose,
-                            KokkosBatched::Algo::Level3::Unblocked>::
+                            KokkosBatched::Algo::Getrs::Unblocked>::
                             invoke(a_device, ipiv_device, sub_b);
                 });
     }

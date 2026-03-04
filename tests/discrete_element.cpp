@@ -241,6 +241,14 @@ TEST(DiscreteElementXYZTest, RightExternalBinaryOperatorMinus)
     EXPECT_EQ(ixyz2.uid<DDimZ>(), uid_z);
 }
 
+TEST(DiscreteElement0DTest, StreamOperator)
+{
+    ddc::DiscreteElement<> const i0d {};
+    std::stringstream ss;
+    ss << i0d;
+    EXPECT_EQ(ss.str(), "()");
+}
+
 TEST(DiscreteElementXYZTest, StreamOperator)
 {
     ddc::DiscreteElementType const uid_x = 7;

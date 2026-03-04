@@ -270,7 +270,28 @@ TEST(Print, CheckOutput3d)
 }
 
 #if defined(KOKKOS_COMPILER_GNU) || defined(KOKKOS_COMPILER_CLANG)
-void TestPrintTestMetadata()
+TEST(Print, CheckMetadata0d)
+{
+    using ElementType = double;
+
+    ddc::DiscreteDomain<> const domain_0d;
+
+    ddc::Chunk chunk("chunk", domain_0d, ddc::DeviceAllocator<ElementType>());
+    ddc::ChunkSpan const chunk_span = chunk.span_view();
+
+    {
+        std::stringstream ss;
+        print_type_info(ss, chunk_span);
+        EXPECT_THAT(
+                ss.str(),
+                testing::MatchesRegex(
+                        "Scalar\n"
+                        "ddc::ChunkSpan<double, ddc::DiscreteDomain<>"
+                        ", Kokkos::layout_.+, Kokkos::.+Space>\n"));
+    }
+}
+
+void TestPrintTestMetadata2d()
 {
     using ElementType = double;
 
@@ -302,8 +323,8 @@ void TestPrintTestMetadata()
     }
 }
 
-TEST(Print, CheckMetadata)
+TEST(Print, CheckMetadata2d)
 {
-    TestPrintTestMetadata();
+    TestPrintTestMetadata2d();
 }
 #endif

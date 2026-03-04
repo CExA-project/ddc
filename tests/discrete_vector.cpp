@@ -206,6 +206,14 @@ TEST(DiscreteVectorTest, ExternalBinaryOperatorMinus)
     EXPECT_EQ(ddc::get<DDimZ>(result5), dv_z - dv2_z);
 }
 
+TEST(DiscreteVector0DTest, StreamOperator)
+{
+    ddc::DiscreteVector<> const dv0d {};
+    std::stringstream ss;
+    ss << dv0d;
+    EXPECT_EQ(ss.str(), "()");
+}
+
 TEST(DiscreteVectorTest, StreamOperator)
 {
     ddc::DiscreteVectorElement const dv_x = 7;

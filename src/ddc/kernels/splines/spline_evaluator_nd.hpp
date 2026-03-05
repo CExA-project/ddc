@@ -747,15 +747,15 @@ private:
     template <std::size_t N, class Functor, typename... Is>
     KOKKOS_INLINE_FUNCTION static void for_each(
             std::array<std::size_t, N> const& bounds,
-            Functor const& f,
+            Functor&& f,
             Is... is)
     {
         static constexpr std::size_t I = sizeof...(Is);
         if constexpr (I == N) {
-            f(cexa::make_tuple(is...));
+            f(std::array<std::size_t, N> {is...});
         } else {
             for (std::size_t i = 0; i < bounds[I]; ++i) {
-                for_each(bounds, f, is..., i);
+                for_each(bounds, std::forward<Functor>(f), is..., i);
             }
         }
     }
@@ -800,12 +800,14 @@ private:
                                 coord_eval))...);
 
         double y = 0.0;
-        for_each(std::array<std::size_t, dimension> {(BSplines::degree() + 1)...}, [&](auto idx) {
-            y += spline_coef(
-                         ddc::DiscreteElement<BSplines...>(
-                                 (cexa::get<IDX>(jmin) + cexa::get<IDX>(idx))...))
-                 * (cexa::get<IDX>(vals)[cexa::get<IDX>(idx)] * ...);
-        });
+        for_each(
+                std::array<std::size_t, dimension> {(BSplines::degree() + 1)...},
+                [&](std::array<std::size_t, dimension> idx) {
+                    y += spline_coef(
+                                 ddc::DiscreteElement<BSplines...>(
+                                         (cexa::get<IDX>(jmin) + idx[IDX])...))
+                         * (cexa::get<IDX>(vals)[idx[IDX]] * ...);
+                });
 
         return y;
     }

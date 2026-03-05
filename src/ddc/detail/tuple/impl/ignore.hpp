@@ -1,9 +1,14 @@
+// SPDX-FileCopyrightText: 2026 CExA-project
+// SPDX-License-Identifier: MIT or Apache-2.0 with LLVM-exception
 #pragma once
 
 #include "macros.hpp"
+#include <Kokkos_Macros.hpp>
 
 namespace cexa {
 namespace impl {
+// FIXME: address this
+// NOLINTNEXTLINE(cppcoreguidelines-special-member-functions)
 struct ignore_t {
   KOKKOS_DEFAULTED_FUNCTION constexpr ignore_t() = default;
   KOKKOS_DEFAULTED_FUNCTION

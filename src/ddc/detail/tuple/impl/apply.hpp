@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2026 CExA-project
+// SPDX-License-Identifier: MIT or Apache-2.0 with LLVM-exception
 #pragma once
 
 #include <type_traits>
@@ -25,22 +27,24 @@ KOKKOS_INLINE_FUNCTION constexpr decltype(auto) invoke_ptr(Pointed C::* member,
       std::is_same_v<C, object_t> || std::is_base_of_v<C, object_t>;
 
   if constexpr (std::is_function_v<Pointed>) {
-    if constexpr (is_derived_object)
+    if constexpr (is_derived_object) {
       return (std::forward<Object>(object).*
               member)(std::forward<Args>(args)...);
-    else if constexpr (is_wrapped)
+    } else if constexpr (is_wrapped) {
       return (object.get().*member)(std::forward<Args>(args)...);
-    else
+    } else {
       return ((*std::forward<Object>(object)).*
               member)(std::forward<Args>(args)...);
+    }
   } else {
     static_assert(std::is_object_v<Pointed> && sizeof...(args) == 0);
-    if constexpr (is_derived_object)
+    if constexpr (is_derived_object) {
       return std::forward<Object>(object).*member;
-    else if constexpr (is_wrapped)
+    } else if constexpr (is_wrapped) {
       return object.get().*member;
-    else
+    } else {
       return (*std::forward<Object>(object)).*member;
+    }
   }
 }
 

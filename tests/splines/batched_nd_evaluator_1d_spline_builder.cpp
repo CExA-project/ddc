@@ -221,7 +221,7 @@ void TestBatchedNd1dSpline()
         ddc::Chunk derivs_rhs1_host_alloc(derivs_domain, ddc::HostAllocator<double>());
         ddc::ChunkSpan const derivs_rhs1_host = derivs_rhs1_host_alloc.span_view();
         for (ddc::DiscreteElement<ddc::Deriv<I>> const ei : derivs_domain) {
-            derivs_rhs1_host(ei) = evaluator.deriv(x0<I>(), ei.uid());
+            derivs_rhs1_host(ei) = evaluator.deriv(xn<I>(), ei.uid());
         }
         auto derivs_rhs1_alloc = ddc::create_mirror_view_and_copy(exec_space, derivs_rhs1_host);
         ddc::ChunkSpan const derivs_rhs1 = derivs_rhs1_alloc.span_view();

@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2026 CExA-project
+// SPDX-License-Identifier: MIT or Apache-2.0 with LLVM-exception
 #pragma once
 
 #include <Kokkos_Macros.hpp>
@@ -19,6 +21,7 @@ namespace cexa {
 
 // Pre-declarations of get, as C++17 doesn't allow the function to be used
 // before its declaration.
+#if !defined(CEXA_HAS_CXX20)
 template <std::size_t I, class... Types>
 KOKKOS_INLINE_FUNCTION constexpr std::enable_if_t<
     (I < sizeof...(Types)), typename tuple_element<I, tuple<Types...>>::type&>
@@ -60,6 +63,7 @@ template <class T, class... Types>
 KOKKOS_INLINE_FUNCTION constexpr const std::enable_if_t<
     (std::is_same_v<T, Types> || ...), const T&&>
 get(const tuple<Types...>&& t) noexcept;
+#endif
 
 namespace impl {
 
@@ -85,13 +89,13 @@ struct all_types_constructible<tuple<Types...>, UTuple> {
   struct all_types_constructible_helper;
   template <std::size_t... Ints>
   struct all_types_constructible_helper<std::index_sequence<Ints...>> {
-    static inline constexpr bool value =
+    static constexpr bool value =
         (std::is_constructible_v<Types,
                                  decltype(get<Ints>(std::declval<UTuple>()))> &&
          ...);
   };
 
-  static inline constexpr bool value = all_types_constructible_helper<
+  static constexpr bool value = all_types_constructible_helper<
       decltype(std::index_sequence_for<Types...>{})>::value;
 };
 
@@ -108,13 +112,13 @@ struct all_types_convertible<UTuple, tuple<Types...>> {
   struct all_types_convertible_helper;
   template <std::size_t... Ints>
   struct all_types_convertible_helper<std::index_sequence<Ints...>> {
-    static inline constexpr bool value =
+    static constexpr bool value =
         (std::is_convertible_v<decltype(get<Ints>(FWD(std::declval<UTuple>()))),
                                Types> &&
          ...);
   };
 
-  static inline constexpr bool value = all_types_convertible_helper<
+  static constexpr bool value = all_types_convertible_helper<
       decltype(std::index_sequence_for<Types...>{})>::value;
 };
 
@@ -138,13 +142,13 @@ struct any_types_reference_constructs_from_temporary<tuple<Types...>, UTuple> {
   template <std::size_t... Ints>
   struct any_types_reference_constructs_from_temporary_helper<
       std::index_sequence<Ints...>> {
-    static inline constexpr bool value =
+    static constexpr bool value =
         (impl::reference_constructs_from_temporary_v<
              Types, decltype(get<Ints>(FWD(std::declval<UTuple>())))> ||
          ...);
   };
 
-  static inline constexpr bool value =
+  static constexpr bool value =
       any_types_reference_constructs_from_temporary_helper<
           decltype(std::index_sequence_for<Types...>{})>::value;
 };
@@ -186,19 +190,42 @@ struct store_alias<T, Types...> {
 template <class... Types>
 using store_ = typename store_alias<Types...>::type;
 
+#if defined(CEXA_HAS_CXX20)
+#define CEXA_CONSTEXPR_CXX20 constexpr
+#else
+#define CEXA_CONSTEXPR_CXX20
+#endif
+
 template <>
 struct store<Bools<false, false, false, false>> {
   KOKKOS_DEFAULTED_FUNCTION constexpr store()             = default;
   KOKKOS_DEFAULTED_FUNCTION constexpr store(const store&) = default;
-  KOKKOS_INLINE_FUNCTION constexpr store& operator=(const store&) {
+  KOKKOS_DEFAULTED_FUNCTION constexpr store(store&&)      = default;
+#if defined(CEXA_HAS_CXX23)
+  KOKKOS_DEFAULTED_FUNCTION constexpr store(store&) noexcept {}
+  KOKKOS_DEFAULTED_FUNCTION constexpr store(const store&&) noexcept {};
+#endif
+  KOKKOS_DEFAULTED_FUNCTION CEXA_CONSTEXPR_CXX20 ~store() = default;
+
+  KOKKOS_DEFAULTED_FUNCTION constexpr store& operator=(const store&) = default;
+  KOKKOS_DEFAULTED_FUNCTION constexpr store& operator=(store&&)      = default;
+
+#if defined(CEXA_HAS_CXX23)
+  KOKKOS_DEFAULTED_FUNCTION constexpr const store& operator=(
+      const store&) const noexcept {
     return *this;
   }
-  KOKKOS_INLINE_FUNCTION constexpr const store& operator=(const store&) const {
+  KOKKOS_DEFAULTED_FUNCTION constexpr const store& operator=(
+      store&&) const noexcept {
     return *this;
   }
+#endif
 
   KOKKOS_INLINE_FUNCTION constexpr void swap(store&) noexcept {}
+#if defined(CEXA_HAS_CXX23)
   KOKKOS_INLINE_FUNCTION constexpr void swap(const store&) const noexcept {}
+#endif
+
 #if defined(CEXA_HAS_CXX20)
   KOKKOS_DEFAULTED_FUNCTION auto operator<=>(const store&) const = default;
 #endif
@@ -216,8 +243,6 @@ KOKKOS_INLINE_FUNCTION constexpr bool operator<(const store_<>&,
 #endif
 
 #if defined(CEXA_HAS_CXX20)
-#define CEXA_CONSTEXPR_CXX20 constexpr
-
 // TODO: check if the non-three way comparable case should always return
 // weak_ordering
 #define STORE_SPACESHIP_COMP                                                  \
@@ -247,8 +272,46 @@ KOKKOS_INLINE_FUNCTION constexpr bool operator<(const store_<>&,
     return operator<=>(rhs) == 0;                                             \
   }
 #else
-#define CEXA_CONSTEXPR_CXX20
 #define STORE_SPACESHIP_COMP
+#endif
+
+#if defined(CEXA_HAS_CXX23)
+#define STORE_CXX23_CONST_SWAP                                            \
+  KOKKOS_INLINE_FUNCTION constexpr void swap(const store& rhs)            \
+      const noexcept(std::is_nothrow_swappable_v<const T> &&              \
+                     (std::is_nothrow_swappable_v<const Types> && ...)) { \
+    using std::swap;                                                      \
+    swap(value, rhs.value);                                               \
+    rest.swap(rhs.rest);                                                  \
+  }
+#define STORE_CXX23_CONST_ASSIGN                                              \
+  template <bool b1, bool b2, bool b3, bool b4, class U, class... UTypes,     \
+            class =                                                           \
+                std::enable_if_t<sizeof...(UTypes) == sizeof...(Types) &&     \
+                                 !(std::is_same_v<U, T> &&                    \
+                                   (std::is_same_v<UTypes, Types> && ...)) && \
+                                 std::is_assignable_v<const T&, const U&>>>   \
+  KOKKOS_INLINE_FUNCTION constexpr const store& operator=(                    \
+      const store<Bools<b1, b2, b3, b4>, U, UTypes...>& other) const {        \
+    value = other.value;                                                      \
+    rest  = other.rest;                                                       \
+    return *this;                                                             \
+  }                                                                           \
+  template <bool b1, bool b2, bool b3, bool b4, class U, class... UTypes,     \
+            class =                                                           \
+                std::enable_if_t<sizeof...(UTypes) == sizeof...(Types) &&     \
+                                 !(std::is_same_v<U, T> &&                    \
+                                   (std::is_same_v<UTypes, Types> && ...)) && \
+                                 std::is_assignable_v<const T&, U&&>>>        \
+  KOKKOS_INLINE_FUNCTION constexpr const store& operator=(                    \
+      store<Bools<b1, b2, b3, b4>, U, UTypes...>&& other) const {             \
+    value = FWD(other.value);                                                 \
+    rest  = std::move(other.rest);                                            \
+    return *this;                                                             \
+  }
+#else
+#define STORE_CXX23_CONST_SWAP
+#define STORE_CXX23_CONST_ASSIGN
 #endif
 
 #define STORE_COMMON_FUNCS                                                     \
@@ -261,8 +324,8 @@ KOKKOS_INLINE_FUNCTION constexpr bool operator<(const store_<>&,
   template <class Dummy = void,                                                \
             class       = std::enable_if_t<std::is_same_v<Dummy, void> &&      \
                                            std::is_move_constructible_v<T>>>   \
-  KOKKOS_INLINE_FUNCTION constexpr store(store&& other)                        \
-      : value(FWD(other).value), rest(FWD(other).rest) {}                      \
+  KOKKOS_INLINE_FUNCTION constexpr explicit store(store&& other)               \
+      : value(FWD(other.value)), rest(FWD(other.rest)) {}                      \
                                                                                \
   template <typename U, typename... UTypes,                                    \
             class = std::enable_if_t<!is_store_v<U> &&                         \
@@ -289,38 +352,15 @@ KOKKOS_INLINE_FUNCTION constexpr bool operator<(const store_<>&,
                 std::enable_if_t<sizeof...(UTypes) == sizeof...(Types) &&      \
                                  !(std::is_same_v<U, T> &&                     \
                                    (std::is_same_v<UTypes, Types> && ...)) &&  \
-                                 std::is_assignable_v<const T&, const U&>>>    \
-  KOKKOS_INLINE_FUNCTION constexpr const store& operator=(                     \
-      const store<Bools<b1, b2, b3, b4>, U, UTypes...>& other) const {         \
-    value = other.value;                                                       \
-    rest  = other.rest;                                                        \
-    return *this;                                                              \
-  }                                                                            \
-  template <bool b1, bool b2, bool b3, bool b4, class U, class... UTypes,      \
-            class =                                                            \
-                std::enable_if_t<sizeof...(UTypes) == sizeof...(Types) &&      \
-                                 !(std::is_same_v<U, T> &&                     \
-                                   (std::is_same_v<UTypes, Types> && ...)) &&  \
                                  std::is_assignable_v<T&, U&&>>>               \
   KOKKOS_INLINE_FUNCTION constexpr store& operator=(                           \
       store<Bools<b1, b2, b3, b4>, U, UTypes...>&& other) {                    \
     value = FWD(other.value);                                                  \
-    rest  = FWD(other.rest);                                                   \
+    rest  = std::move(other.rest);                                             \
     return *this;                                                              \
   }                                                                            \
+  STORE_CXX23_CONST_ASSIGN                                                     \
                                                                                \
-  template <bool b1, bool b2, bool b3, bool b4, class U, class... UTypes,      \
-            class =                                                            \
-                std::enable_if_t<sizeof...(UTypes) == sizeof...(Types) &&      \
-                                 !(std::is_same_v<U, T> &&                     \
-                                   (std::is_same_v<UTypes, Types> && ...)) &&  \
-                                 std::is_assignable_v<const T&, U&&>>>         \
-  KOKKOS_INLINE_FUNCTION constexpr const store& operator=(                     \
-      store<Bools<b1, b2, b3, b4>, U, UTypes...>&& other) const {              \
-    value = FWD(other.value);                                                  \
-    rest  = FWD(other.rest);                                                   \
-    return *this;                                                              \
-  }                                                                            \
   template <std::size_t I>                                                     \
   KOKKOS_INLINE_FUNCTION constexpr tuple_element_t<I, tuple<T, Types...>>&     \
   get_value() noexcept {                                                       \
@@ -392,63 +432,65 @@ KOKKOS_INLINE_FUNCTION constexpr bool operator<(const store_<>&,
     rest.swap(rhs.rest);                                                       \
   }                                                                            \
                                                                                \
-  KOKKOS_INLINE_FUNCTION constexpr void swap(const store& rhs)                 \
-      const noexcept(std::is_nothrow_swappable_v<const T> &&                   \
-                     (std::is_nothrow_swappable_v<const Types> && ...)) {      \
-    using std::swap;                                                           \
-    swap(value, rhs.value);                                                    \
-    rest.swap(rhs.rest);                                                       \
-  }                                                                            \
+  STORE_CXX23_CONST_SWAP                                                       \
   STORE_SPACESHIP_COMP
 
-#define STORE_COPY_ASSIGN                                                 \
-  KOKKOS_INLINE_FUNCTION constexpr store& operator=(const store& other) { \
-    value = other.value;                                                  \
-    rest  = other.rest;                                                   \
-    return *this;                                                         \
-  }                                                                       \
-  KOKKOS_INLINE_FUNCTION constexpr store& operator=(store& other) {       \
-    value = other.value;                                                  \
-    rest  = other.rest;                                                   \
-    return *this;                                                         \
+#define STORE_COPY_ASSIGN                                  \
+  KOKKOS_INLINE_FUNCTION constexpr store&                  \
+  operator=(const store& other) noexcept(                  \
+      std::is_nothrow_copy_assignable_v<T> &&              \
+      (std::is_nothrow_copy_assignable_v<Types> && ...)) { \
+    value = other.value;                                   \
+    rest  = other.rest;                                    \
+    return *this;                                          \
   }
+
+// NOLINTBEGIN(bugprone-macro-parentheses)
+#define STORE_MOVE_ASSIGN                                                    \
+  KOKKOS_INLINE_FUNCTION constexpr store& operator=(store&& other) noexcept( \
+      std::is_nothrow_move_assignable_v<T> &&                                \
+      (std::is_nothrow_move_assignable_v<Types> && ...)) {                   \
+    value = std::move(other.value);                                          \
+    rest  = std::move(other.rest);                                           \
+    return *this;                                                            \
+  }
+// NOLINTEND(bugprone-macro-parentheses)
+
+#define DELETED_STORE_COPY_ASSIGN \
+  constexpr store& operator=(const store&) = delete;
+#define DELETED_STORE_MOVE_ASSIGN constexpr store& operator=(store&&) = delete;
+
+#if defined(CEXA_HAS_CXX23)
 #define STORE_CONST_COPY_ASSIGN                                               \
   KOKKOS_INLINE_FUNCTION constexpr const store& operator=(const store& other) \
       const {                                                                 \
     value = other.value;                                                      \
     rest  = other.rest;                                                       \
     return *this;                                                             \
-  }                                                                           \
-  KOKKOS_INLINE_FUNCTION constexpr const store& operator=(store& other)       \
-      const {                                                                 \
-    value = other.value;                                                      \
-    rest  = other.rest;                                                       \
-    return *this;                                                             \
-  }
-#define STORE_MOVE_ASSIGN                                            \
-  KOKKOS_INLINE_FUNCTION constexpr store& operator=(store&& other) { \
-    value = std::move(other.value);                                  \
-    rest  = std::move(other.rest);                                   \
-    return *this;                                                    \
   }
 #define STORE_CONST_MOVE_ASSIGN                                          \
   KOKKOS_INLINE_FUNCTION constexpr const store& operator=(store&& other) \
-      const {                                                            \
+      const noexcept(                                                    \
+          std::is_nothrow_move_assignable_v<const T> &&                  \
+          (std::is_nothrow_move_assignable_v<const Types> && ...)) {     \
     value = std::move(other.value);                                      \
     rest  = std::move(other.rest);                                       \
     return *this;                                                        \
   }
-
-#define DELETED_STORE_COPY_ASSIGN                    \
-  constexpr store& operator=(store&)       = delete; \
-  constexpr store& operator=(const store&) = delete;
-#define DELETED_STORE_CONST_COPY_ASSIGN                          \
-  constexpr const store& operator=(store&) const       = delete; \
+#define DELETED_STORE_CONST_COPY_ASSIGN \
   constexpr const store& operator=(const store&) const = delete;
-#define DELETED_STORE_MOVE_ASSIGN constexpr store& operator=(store&&) = delete;
 #define DELETED_STORE_CONST_MOVE_ASSIGN \
   constexpr const store& operator=(store&&) const = delete;
+#else
+#define STORE_CONST_MOVE_ASSIGN
+#define STORE_CONST_COPY_ASSIGN
+#define DELETED_STORE_CONST_COPY_ASSIGN
+#define DELETED_STORE_CONST_MOVE_ASSIGN
+#endif
 
+// NOLINTBEGIN(cppcoreguidelines-special-member-functions,
+// google-explicit-constructor) NOTE: move constructor is templated so
+// clang-tidy complains that the structs don't have a move constructor
 template <class T, class... Types>
 struct store<Bools<false, false, false, false>, T, Types...> {
   STORE_COMMON_FUNCS
@@ -592,6 +634,8 @@ struct store<Bools<true, true, true, true>, T, Types...> {
   STORE_MOVE_ASSIGN
   STORE_CONST_MOVE_ASSIGN
 };
+// NOLINTEND(cppcoreguidelines-special-member-functions,
+// google-explicit-constructor)
 
 #if !defined(CEXA_HAS_CXX20)
 template <bool bt1, bool bt2, bool bt3, bool bt4, class T, class... TTypes,
@@ -617,6 +661,8 @@ KOKKOS_INLINE_FUNCTION constexpr bool operator<(
 }
 #endif
 
+#undef STORE_CXX23_CONST_SWAP
+#undef STORE_CXX23_CONST_ASSIGN
 #undef STORE_COMMON_FUNCS
 #undef STORE_COPY_ASSIGN
 #undef STORE_CONST_COPY_ASSIGN
@@ -628,11 +674,12 @@ KOKKOS_INLINE_FUNCTION constexpr bool operator<(
 #undef DELETED_STORE_CONST_MOVE_ASSIGN
 
 #define TUPLE_ASSIGN_HELPER_CONSTRUCTORS                                  \
-  KOKKOS_DEFAULTED_FUNCTION constexpr tuple_assign_helper() = default;    \
-  KOKKOS_INLINE_FUNCTION constexpr tuple_assign_helper(                   \
-      const tuple_assign_helper&) {}                                      \
-  KOKKOS_INLINE_FUNCTION constexpr tuple_assign_helper(                   \
-      tuple_assign_helper&&) {}                                           \
+  KOKKOS_DEFAULTED_FUNCTION constexpr tuple_assign_helper() noexcept =    \
+      default;                                                            \
+  KOKKOS_DEFAULTED_FUNCTION constexpr tuple_assign_helper(                \
+      const tuple_assign_helper&) noexcept = default;                     \
+  KOKKOS_DEFAULTED_FUNCTION constexpr tuple_assign_helper(                \
+      tuple_assign_helper&&) noexcept = default;                          \
   KOKKOS_DEFAULTED_FUNCTION CEXA_CONSTEXPR_CXX20 ~tuple_assign_helper() = \
       default;
 
@@ -644,256 +691,236 @@ template <>
 struct tuple_assign_helper<false, false, false, false> {
   TUPLE_ASSIGN_HELPER_CONSTRUCTORS
   constexpr tuple_assign_helper& operator=(const tuple_assign_helper&) = delete;
-  constexpr const tuple_assign_helper& operator=(
-      const tuple_assign_helper&) const                           = delete;
-  constexpr tuple_assign_helper& operator=(tuple_assign_helper&&) = delete;
-  constexpr const tuple_assign_helper& operator=(tuple_assign_helper&&) const =
-      delete;
+  constexpr tuple_assign_helper& operator=(tuple_assign_helper&&)      = delete;
+#if defined(CEXA_HAS_CXX23)
+
+#endif
 };
 
 template <>
 struct tuple_assign_helper<false, false, false, true> {
   TUPLE_ASSIGN_HELPER_CONSTRUCTORS
   constexpr tuple_assign_helper& operator=(const tuple_assign_helper&) = delete;
+  constexpr tuple_assign_helper& operator=(tuple_assign_helper&&)      = delete;
+#if defined(CEXA_HAS_CXX23)
+
   constexpr const tuple_assign_helper& operator=(
-      const tuple_assign_helper&) const                           = delete;
-  constexpr tuple_assign_helper& operator=(tuple_assign_helper&&) = delete;
-  KOKKOS_INLINE_FUNCTION constexpr const tuple_assign_helper& operator=(
       tuple_assign_helper&&) const noexcept {
     return *this;
   }
+#endif
 };
 
 template <>
 struct tuple_assign_helper<false, false, true, false> {
   TUPLE_ASSIGN_HELPER_CONSTRUCTORS
   constexpr tuple_assign_helper& operator=(const tuple_assign_helper&) = delete;
-  constexpr const tuple_assign_helper& operator=(
-      const tuple_assign_helper&) const = delete;
-  KOKKOS_INLINE_FUNCTION constexpr tuple_assign_helper& operator=(
-      tuple_assign_helper&&) noexcept {
-    return *this;
-  }
-  constexpr const tuple_assign_helper& operator=(tuple_assign_helper&&) const =
-      delete;
+  KOKKOS_DEFAULTED_FUNCTION constexpr tuple_assign_helper& operator=(
+      tuple_assign_helper&&) noexcept = default;
+#if defined(CEXA_HAS_CXX23)
+
+#endif
 };
 
 template <>
 struct tuple_assign_helper<false, false, true, true> {
   TUPLE_ASSIGN_HELPER_CONSTRUCTORS
   constexpr tuple_assign_helper& operator=(const tuple_assign_helper&) = delete;
+  KOKKOS_DEFAULTED_FUNCTION constexpr tuple_assign_helper& operator=(
+      tuple_assign_helper&&) noexcept = default;
+#if defined(CEXA_HAS_CXX23)
+
   constexpr const tuple_assign_helper& operator=(
-      const tuple_assign_helper&) const = delete;
-  KOKKOS_INLINE_FUNCTION constexpr tuple_assign_helper& operator=(
-      tuple_assign_helper&&) noexcept {
-    return *this;
-  }
-  KOKKOS_INLINE_FUNCTION constexpr const tuple_assign_helper& operator=(
       tuple_assign_helper&&) const noexcept {
     return *this;
   }
+#endif
 };
 
 template <>
 struct tuple_assign_helper<false, true, false, false> {
   TUPLE_ASSIGN_HELPER_CONSTRUCTORS
   constexpr tuple_assign_helper& operator=(const tuple_assign_helper&) = delete;
-  KOKKOS_INLINE_FUNCTION constexpr const tuple_assign_helper& operator=(
+  constexpr tuple_assign_helper& operator=(tuple_assign_helper&&)      = delete;
+#if defined(CEXA_HAS_CXX23)
+  constexpr const tuple_assign_helper& operator=(
       const tuple_assign_helper&) const noexcept {
     return *this;
   }
-  constexpr tuple_assign_helper& operator=(tuple_assign_helper&&) = delete;
-  constexpr const tuple_assign_helper& operator=(tuple_assign_helper&&) const =
-      delete;
+
+#endif
 };
 
 template <>
 struct tuple_assign_helper<false, true, false, true> {
   TUPLE_ASSIGN_HELPER_CONSTRUCTORS
   constexpr tuple_assign_helper& operator=(const tuple_assign_helper&) = delete;
-  KOKKOS_INLINE_FUNCTION constexpr const tuple_assign_helper& operator=(
+  constexpr tuple_assign_helper& operator=(tuple_assign_helper&&)      = delete;
+#if defined(CEXA_HAS_CXX23)
+  constexpr const tuple_assign_helper& operator=(
       const tuple_assign_helper&) const noexcept {
     return *this;
   }
-  constexpr tuple_assign_helper& operator=(tuple_assign_helper&&) = delete;
-  KOKKOS_INLINE_FUNCTION constexpr const tuple_assign_helper& operator=(
+  constexpr const tuple_assign_helper& operator=(
       tuple_assign_helper&&) const noexcept {
     return *this;
   }
+#endif
 };
 
 template <>
 struct tuple_assign_helper<false, true, true, false> {
   TUPLE_ASSIGN_HELPER_CONSTRUCTORS
   constexpr tuple_assign_helper& operator=(const tuple_assign_helper&) = delete;
-  KOKKOS_INLINE_FUNCTION constexpr const tuple_assign_helper& operator=(
+  KOKKOS_DEFAULTED_FUNCTION constexpr tuple_assign_helper& operator=(
+      tuple_assign_helper&&) noexcept = default;
+#if defined(CEXA_HAS_CXX23)
+  constexpr const tuple_assign_helper& operator=(
       const tuple_assign_helper&) const noexcept {
     return *this;
   }
-  KOKKOS_INLINE_FUNCTION constexpr tuple_assign_helper& operator=(
-      tuple_assign_helper&&) noexcept {
-    return *this;
-  }
-  constexpr const tuple_assign_helper& operator=(tuple_assign_helper&&) const =
-      delete;
+
+#endif
 };
 
 template <>
 struct tuple_assign_helper<false, true, true, true> {
   TUPLE_ASSIGN_HELPER_CONSTRUCTORS
   constexpr tuple_assign_helper& operator=(const tuple_assign_helper&) = delete;
-  KOKKOS_INLINE_FUNCTION constexpr const tuple_assign_helper& operator=(
+  KOKKOS_DEFAULTED_FUNCTION constexpr tuple_assign_helper& operator=(
+      tuple_assign_helper&&) noexcept = default;
+#if defined(CEXA_HAS_CXX23)
+  constexpr const tuple_assign_helper& operator=(
       const tuple_assign_helper&) const noexcept {
     return *this;
   }
-  KOKKOS_INLINE_FUNCTION constexpr tuple_assign_helper& operator=(
-      tuple_assign_helper&&) noexcept {
-    return *this;
-  }
-  KOKKOS_INLINE_FUNCTION constexpr const tuple_assign_helper& operator=(
+  constexpr const tuple_assign_helper& operator=(
       tuple_assign_helper&&) const noexcept {
     return *this;
   }
+#endif
 };
 
 template <>
 struct tuple_assign_helper<true, false, false, false> {
   TUPLE_ASSIGN_HELPER_CONSTRUCTORS
-  KOKKOS_INLINE_FUNCTION constexpr tuple_assign_helper& operator=(
-      const tuple_assign_helper&) noexcept {
-    return *this;
-  }
-  constexpr const tuple_assign_helper& operator=(
-      const tuple_assign_helper&) const                           = delete;
+  KOKKOS_DEFAULTED_FUNCTION constexpr tuple_assign_helper& operator=(
+      const tuple_assign_helper&) noexcept                        = default;
   constexpr tuple_assign_helper& operator=(tuple_assign_helper&&) = delete;
-  constexpr const tuple_assign_helper& operator=(tuple_assign_helper&&) const =
-      delete;
+#if defined(CEXA_HAS_CXX23)
+
+#endif
 };
 
 template <>
 struct tuple_assign_helper<true, false, false, true> {
   TUPLE_ASSIGN_HELPER_CONSTRUCTORS
-  KOKKOS_INLINE_FUNCTION constexpr tuple_assign_helper& operator=(
-      const tuple_assign_helper&) noexcept {
-    return *this;
-  }
-  constexpr const tuple_assign_helper& operator=(
-      const tuple_assign_helper&) const                           = delete;
+  KOKKOS_DEFAULTED_FUNCTION constexpr tuple_assign_helper& operator=(
+      const tuple_assign_helper&) noexcept                        = default;
   constexpr tuple_assign_helper& operator=(tuple_assign_helper&&) = delete;
-  KOKKOS_INLINE_FUNCTION constexpr const tuple_assign_helper& operator=(
+#if defined(CEXA_HAS_CXX23)
+
+  constexpr const tuple_assign_helper& operator=(
       tuple_assign_helper&&) const noexcept {
     return *this;
   }
+#endif
 };
 
 template <>
 struct tuple_assign_helper<true, false, true, false> {
   TUPLE_ASSIGN_HELPER_CONSTRUCTORS
-  KOKKOS_INLINE_FUNCTION constexpr tuple_assign_helper& operator=(
-      const tuple_assign_helper&) noexcept {
-    return *this;
-  }
-  constexpr const tuple_assign_helper& operator=(
-      const tuple_assign_helper&) const = delete;
-  KOKKOS_INLINE_FUNCTION constexpr tuple_assign_helper& operator=(
-      tuple_assign_helper&&) noexcept {
-    return *this;
-  }
-  constexpr const tuple_assign_helper& operator=(tuple_assign_helper&&) const =
-      delete;
+  KOKKOS_DEFAULTED_FUNCTION constexpr tuple_assign_helper& operator=(
+      const tuple_assign_helper&) noexcept = default;
+  KOKKOS_DEFAULTED_FUNCTION constexpr tuple_assign_helper& operator=(
+      tuple_assign_helper&&) noexcept = default;
+#if defined(CEXA_HAS_CXX23)
+
+#endif
 };
 
 template <>
 struct tuple_assign_helper<true, false, true, true> {
   TUPLE_ASSIGN_HELPER_CONSTRUCTORS
-  KOKKOS_INLINE_FUNCTION constexpr tuple_assign_helper& operator=(
-      const tuple_assign_helper&) noexcept {
-    return *this;
-  }
+  KOKKOS_DEFAULTED_FUNCTION constexpr tuple_assign_helper& operator=(
+      const tuple_assign_helper&) noexcept = default;
+  KOKKOS_DEFAULTED_FUNCTION constexpr tuple_assign_helper& operator=(
+      tuple_assign_helper&&) noexcept = default;
+#if defined(CEXA_HAS_CXX23)
+
   constexpr const tuple_assign_helper& operator=(
-      const tuple_assign_helper&) const = delete;
-  KOKKOS_INLINE_FUNCTION constexpr tuple_assign_helper& operator=(
-      tuple_assign_helper&&) noexcept {
-    return *this;
-  }
-  KOKKOS_INLINE_FUNCTION constexpr const tuple_assign_helper& operator=(
       tuple_assign_helper&&) const noexcept {
     return *this;
   }
+#endif
 };
 
 template <>
 struct tuple_assign_helper<true, true, false, false> {
   TUPLE_ASSIGN_HELPER_CONSTRUCTORS
-  KOKKOS_INLINE_FUNCTION constexpr tuple_assign_helper& operator=(
-      const tuple_assign_helper&) noexcept {
-    return *this;
-  }
-  KOKKOS_INLINE_FUNCTION constexpr const tuple_assign_helper& operator=(
+  KOKKOS_DEFAULTED_FUNCTION constexpr tuple_assign_helper& operator=(
+      const tuple_assign_helper&) noexcept                        = default;
+  constexpr tuple_assign_helper& operator=(tuple_assign_helper&&) = delete;
+#if defined(CEXA_HAS_CXX23)
+  constexpr const tuple_assign_helper& operator=(
       const tuple_assign_helper&) const noexcept {
     return *this;
   }
-  constexpr tuple_assign_helper& operator=(tuple_assign_helper&&) = delete;
-  constexpr const tuple_assign_helper& operator=(tuple_assign_helper&&) const =
-      delete;
+
+#endif
 };
 
 template <>
 struct tuple_assign_helper<true, true, false, true> {
   TUPLE_ASSIGN_HELPER_CONSTRUCTORS
-  KOKKOS_INLINE_FUNCTION constexpr tuple_assign_helper& operator=(
-      const tuple_assign_helper&) noexcept {
-    return *this;
-  }
-  KOKKOS_INLINE_FUNCTION constexpr const tuple_assign_helper& operator=(
+  KOKKOS_DEFAULTED_FUNCTION constexpr tuple_assign_helper& operator=(
+      const tuple_assign_helper&) noexcept                        = default;
+  constexpr tuple_assign_helper& operator=(tuple_assign_helper&&) = delete;
+#if defined(CEXA_HAS_CXX23)
+  constexpr const tuple_assign_helper& operator=(
       const tuple_assign_helper&) const noexcept {
     return *this;
   }
-  constexpr tuple_assign_helper& operator=(tuple_assign_helper&&) = delete;
-  KOKKOS_INLINE_FUNCTION constexpr const tuple_assign_helper& operator=(
+  constexpr const tuple_assign_helper& operator=(
       tuple_assign_helper&&) const noexcept {
     return *this;
   }
+#endif
 };
 
 template <>
 struct tuple_assign_helper<true, true, true, false> {
   TUPLE_ASSIGN_HELPER_CONSTRUCTORS
-  KOKKOS_INLINE_FUNCTION constexpr tuple_assign_helper& operator=(
-      const tuple_assign_helper&) noexcept {
-    return *this;
-  }
-  KOKKOS_INLINE_FUNCTION constexpr const tuple_assign_helper& operator=(
+  KOKKOS_DEFAULTED_FUNCTION constexpr tuple_assign_helper& operator=(
+      const tuple_assign_helper&) noexcept = default;
+  KOKKOS_DEFAULTED_FUNCTION constexpr tuple_assign_helper& operator=(
+      tuple_assign_helper&&) noexcept = default;
+#if defined(CEXA_HAS_CXX23)
+  constexpr const tuple_assign_helper& operator=(
       const tuple_assign_helper&) const noexcept {
     return *this;
   }
-  KOKKOS_INLINE_FUNCTION constexpr tuple_assign_helper& operator=(
-      tuple_assign_helper&&) noexcept {
-    return *this;
-  }
-  constexpr const tuple_assign_helper& operator=(tuple_assign_helper&&) const =
-      delete;
+
+#endif
 };
 
 template <>
 struct tuple_assign_helper<true, true, true, true> {
   TUPLE_ASSIGN_HELPER_CONSTRUCTORS
-  KOKKOS_INLINE_FUNCTION constexpr tuple_assign_helper& operator=(
-      const tuple_assign_helper&) noexcept {
-    return *this;
-  }
-  KOKKOS_INLINE_FUNCTION constexpr const tuple_assign_helper& operator=(
+  KOKKOS_DEFAULTED_FUNCTION constexpr tuple_assign_helper& operator=(
+      const tuple_assign_helper&) noexcept = default;
+  KOKKOS_DEFAULTED_FUNCTION constexpr tuple_assign_helper& operator=(
+      tuple_assign_helper&&) noexcept = default;
+#if defined(CEXA_HAS_CXX23)
+  constexpr const tuple_assign_helper& operator=(
       const tuple_assign_helper&) const noexcept {
     return *this;
   }
-  KOKKOS_INLINE_FUNCTION constexpr tuple_assign_helper& operator=(
-      tuple_assign_helper&&) noexcept {
-    return *this;
-  }
-  KOKKOS_INLINE_FUNCTION constexpr const tuple_assign_helper& operator=(
+  constexpr const tuple_assign_helper& operator=(
       tuple_assign_helper&&) const noexcept {
     return *this;
   }
+#endif
 };
 
 #undef TUPLE_ASSIGN_HELPER_CONSTRUCTORS
@@ -914,13 +941,20 @@ class tuple<> {
  public:
   KOKKOS_DEFAULTED_FUNCTION constexpr tuple() = default;
 
-  KOKKOS_DEFAULTED_FUNCTION constexpr tuple(tuple& u)       = default;
-  KOKKOS_DEFAULTED_FUNCTION constexpr tuple(const tuple& u) = default;
+  KOKKOS_DEFAULTED_FUNCTION constexpr tuple(const tuple& u)     = default;
+  KOKKOS_DEFAULTED_FUNCTION constexpr tuple(tuple&& u) noexcept = default;
 
   KOKKOS_DEFAULTED_FUNCTION CEXA_CONSTEXPR_CXX20 ~tuple() = default;
 
+  KOKKOS_DEFAULTED_FUNCTION constexpr tuple& operator=(const tuple& u) =
+      default;
+  KOKKOS_DEFAULTED_FUNCTION constexpr tuple& operator=(tuple&& u) noexcept =
+      default;
+
   KOKKOS_INLINE_FUNCTION constexpr void swap(tuple&) noexcept {}
+#if defined(CEXA_HAS_CXX23)
   KOKKOS_INLINE_FUNCTION constexpr void swap(const tuple&) const noexcept {}
+#endif
 #if defined(CEXA_HAS_CXX20)
   KOKKOS_DEFAULTED_FUNCTION auto operator<=>(const tuple&) const = default;
 #endif
@@ -939,6 +973,10 @@ KOKKOS_INLINE_FUNCTION constexpr bool operator<(const tuple<>&,
 #endif
 
 template <typename... Types>
+// NOTE: move ctor is defined but not detected by clang-tidy, assignment ops are
+// intentionally not defined, so that the compiler can default/delete them based
+// on what's done inside tuple_assign_helper
+// NOLINTNEXTLINE(cppcoreguidelines-special-member-functions)
 class tuple
     : impl::tuple_assign_helper<
           std::conjunction_v<std::is_copy_assignable<Types>...>,
@@ -959,6 +997,24 @@ class tuple
 
   impl::store_<Types...> values;
 
+// NOLINTBEGIN(bugprone-macro-parentheses)
+#define CONVERTING_TUPLE_CTOR_CONSTRAINTS(CONST, REF)                    \
+  class = std::enable_if_t<std::conjunction_v<                           \
+      std::bool_constant<sizeof...(Types) == sizeof...(UTypes)>,         \
+      impl::all_types_constructible<tuple<Types...>,                     \
+                                    CONST tuple<UTypes...> REF>,         \
+      std::disjunction<                                                  \
+          std::bool_constant<sizeof...(Types) != 1>,                     \
+          std::negation<std::disjunction<                                \
+              std::is_convertible<                                       \
+                  decltype(std::declval<CONST tuple<UTypes...> REF>()),  \
+                  T0<Types...>>,                                         \
+              std::is_constructible<                                     \
+                  T0<Types...>,                                          \
+                  decltype(std::declval<CONST tuple<UTypes...> REF>())>, \
+              std::is_same<T0<Types...>, T0<UTypes...>>>>>,              \
+      std::negation<impl::any_types_reference_constructs_from_temporary< \
+          tuple<Types...>, CONST tuple<UTypes...> REF>>>>
 #define IMPL_CONVERTING_TUPLE_CONSTRUCTOR(CONST, REF)                          \
  public:                                                                       \
   template <                                                                   \
@@ -985,6 +1041,23 @@ class tuple
           tuple<Types...>>)) constexpr tuple(CONST tuple<UTypes...> REF other) \
       : tuple(converting_tag{}, FWD(other),                                    \
               std::make_index_sequence<sizeof...(Types)>{}) {}
+
+#define PAIR_CTOR_CONSTRAINTS(CONST, REF)                                  \
+  class = std::enable_if_t < sizeof...(Types) == 2 &&                      \
+          std::is_constructible_v<                                         \
+              T0<Types...>,                                                \
+              decltype(std::get<0>(                                        \
+                  FWD((std::declval<CONST std::pair<U1, U2> REF>()))))> && \
+          std::is_constructible_v<                                         \
+              T1<Types...>,                                                \
+              decltype(std::get<1>(                                        \
+                  FWD((std::declval<CONST std::pair<U1, U2> REF>()))))> && \
+          !impl::reference_constructs_from_temporary_v<                    \
+              T0<Types...>,                                                \
+              decltype(std::get<0>(                                        \
+                  FWD((std::declval<CONST std::pair<U1, U2> REF>()))))> && \
+          !impl::reference_constructs_from_temporary_v < T1<Types...>,     \
+  decltype(std::get<1>(FWD((std::declval<CONST std::pair<U1, U2> REF>())))) >>
 
 #define IMPL_PAIR_CONSTRUCTOR(CONST, REF)                                    \
   template <class U1, class U2,                                              \
@@ -1016,6 +1089,7 @@ class tuple
                FWD((std::declval<CONST std::pair<U1, U2> REF>())))),         \
            T1<Types...>>)) tuple(CONST std::pair<U1, U2> REF u)              \
       : values(std::get<0>(FWD(u)), std::get<1>(FWD(u))) {}
+  // NOLINTEND(bugprone-macro-parentheses)
 
   template <class UTuple, std::size_t... Ints>
   KOKKOS_INLINE_FUNCTION constexpr tuple(converting_tag, UTuple&& u,
@@ -1023,8 +1097,7 @@ class tuple
       : values(get<Ints>(FWD(u))...) {}
 
   template <class UTuple, std::size_t... Ints>
-  inline constexpr tuple(tuple_like_tag, UTuple&& u,
-                         std::index_sequence<Ints...>)
+  constexpr tuple(tuple_like_tag, UTuple&& u, std::index_sequence<Ints...>)
       : values(std::get<Ints>(FWD(u))...) {}
 
  public:
@@ -1047,7 +1120,7 @@ class tuple
                                      (sizeof...(Types) >= 1 &&
                                 (std::is_copy_constructible_v<Types> && ...))>>
   KOKKOS_INLINE_FUNCTION
-  CEXA_EXPLICIT((!std::is_constructible_v<Types, const Types&> || ...)) constexpr tuple(
+  CEXA_EXPLICIT((!std::is_convertible_v<const Types&, Types> || ...)) constexpr tuple(
       const Types&... vals) noexcept((std::
                                           is_nothrow_copy_constructible_v<
                                               Types> &&
@@ -1088,17 +1161,100 @@ class tuple
       class Dummy = void,
       class       = std::enable_if_t<std::is_same_v<Dummy, void> &&
                                      (std::is_move_constructible_v<Types> && ...)>>
-  KOKKOS_INLINE_FUNCTION constexpr tuple(tuple&& u) : values(FWD(u).values) {}
+  // FIXME: give a reason why we can't mark this one explicit
+  // NOLINTNEXTLINE(google-explicit-constructor)
+  KOKKOS_INLINE_FUNCTION constexpr tuple(tuple&& u)
+      : values(std::move(u.values)) {}
 
-  IMPL_CONVERTING_TUPLE_CONSTRUCTOR(, &)
-  IMPL_CONVERTING_TUPLE_CONSTRUCTOR(, &&)
-  IMPL_CONVERTING_TUPLE_CONSTRUCTOR(const, &)
-  IMPL_CONVERTING_TUPLE_CONSTRUCTOR(const, &&)
+  template <class... UTypes, CONVERTING_TUPLE_CTOR_CONSTRAINTS(const, &)>
+  KOKKOS_INLINE_FUNCTION CEXA_EXPLICIT(
+      !(impl::all_types_convertible_v<
+          const tuple<UTypes...>&,
+          tuple<Types...>>)) constexpr tuple(const tuple<UTypes...>& other)
+      : tuple(converting_tag{}, FWD(other),
+              std::make_index_sequence<sizeof...(Types)>{}) {}
 
-  IMPL_PAIR_CONSTRUCTOR(, &)
-  IMPL_PAIR_CONSTRUCTOR(, &&)
-  IMPL_PAIR_CONSTRUCTOR(const, &)
-  IMPL_PAIR_CONSTRUCTOR(const, &&)
+  template <class... UTypes, CONVERTING_TUPLE_CTOR_CONSTRAINTS(, &&)>
+  KOKKOS_INLINE_FUNCTION CEXA_EXPLICIT(
+      !(impl::all_types_convertible_v<
+          tuple<UTypes...>&&,
+          tuple<Types...>>)) constexpr tuple(tuple<UTypes...>&& other)
+      : tuple(converting_tag{}, std::move(other),
+              std::make_index_sequence<sizeof...(Types)>{}) {}
+
+#if defined(CEXA_HAS_CXX23)
+  template <class... UTypes, CONVERTING_TUPLE_CTOR_CONSTRAINTS(, &)>
+  KOKKOS_INLINE_FUNCTION CEXA_EXPLICIT(
+      !(impl::all_types_convertible_v<
+          tuple<UTypes...>&,
+          tuple<Types...>>)) constexpr tuple(tuple<UTypes...>& other)
+      : tuple(converting_tag{}, FWD(other),
+              std::make_index_sequence<sizeof...(Types)>{}) {}
+
+  template <class... UTypes, CONVERTING_TUPLE_CTOR_CONSTRAINTS(const, &&)>
+  KOKKOS_INLINE_FUNCTION CEXA_EXPLICIT(
+      !(impl::all_types_convertible_v<
+          const tuple<UTypes...>&&,
+          tuple<Types...>>)) constexpr tuple(const tuple<UTypes...>&& other)
+      : tuple(converting_tag{}, std::move(other),
+              std::make_index_sequence<sizeof...(Types)>{}) {}
+#endif
+  //   IMPL_CONVERTING_TUPLE_CONSTRUCTOR(const, &)
+  //   IMPL_CONVERTING_TUPLE_CONSTRUCTOR(, &&)
+  // #if defined(CEXA_HAS_CXX23)
+  //   IMPL_CONVERTING_TUPLE_CONSTRUCTOR(, &)
+  //   IMPL_CONVERTING_TUPLE_CONSTRUCTOR(const, &&)
+  // #endif
+
+  template <class U1, class U2, PAIR_CTOR_CONSTRAINTS(const, &)>
+  constexpr CEXA_EXPLICIT(
+      (!std::is_convertible_v<decltype(std::get<0>(FWD(
+                                  (std::declval<const std::pair<U1, U2>&>())))),
+                              T0<Types...>> ||
+       !std::is_convertible_v<decltype(std::get<1>(FWD(
+                                  (std::declval<const std::pair<U1, U2>&>())))),
+                              T1<Types...>>)) tuple(const std::pair<U1, U2>& u)
+      : values(u.first, u.second) {}
+
+  template <class U1, class U2, PAIR_CTOR_CONSTRAINTS(, &&)>
+  constexpr CEXA_EXPLICIT(
+      (!std::is_convertible_v<
+           decltype(std::get<0>(FWD((std::declval<std::pair<U1, U2>&&>())))),
+           T0<Types...>> ||
+       !std::is_convertible_v<
+           decltype(std::get<1>(FWD((std::declval<std::pair<U1, U2>&&>())))),
+           T1<Types...>>)) tuple(std::pair<U1, U2>&& u)
+      : values(std::move(u.first), std::move(u.second)) {
+  }  // FIXME: see if we should use forward instead
+
+#if defined(CEXA_HAS_CXX23)
+  template <class U1, class U2, PAIR_CTOR_CONSTRAINTS(, &)>
+  constexpr CEXA_EXPLICIT(
+      (!std::is_convertible_v<
+           decltype(std::get<0>(FWD((std::declval<std::pair<U1, U2>&>())))),
+           T0<Types...>> ||
+       !std::is_convertible_v<
+           decltype(std::get<1>(FWD((std::declval<std::pair<U1, U2>&>())))),
+           T1<Types...>>)) tuple(std::pair<U1, U2>& u)
+      : values(u.first, u.second) {}
+
+  template <class U1, class U2, PAIR_CTOR_CONSTRAINTS(const, &&)>
+  constexpr CEXA_EXPLICIT((
+      !std::is_convertible_v<decltype(std::get<0>(FWD(
+                                 (std::declval<const std::pair<U1, U2>&&>())))),
+                             T0<Types...>> ||
+      !std::is_convertible_v<decltype(std::get<1>(FWD(
+                                 (std::declval<const std::pair<U1, U2>&&>())))),
+                             T1<Types...>>)) tuple(const std::pair<U1, U2>&& u)
+      : values(std::move(u.first), std::move(u.second)) {
+  }  // FIXME: see if we should use forward instead
+#endif
+  //   IMPL_PAIR_CONSTRUCTOR(const, &)
+  //   IMPL_PAIR_CONSTRUCTOR(, &&)
+  // #if defined(CEXA_HAS_CXX23)
+  //   IMPL_PAIR_CONSTRUCTOR(, &)
+  //   IMPL_PAIR_CONSTRUCTOR(const, &&)
+  // #endif
 
   template <
       class UTuple,
@@ -1109,13 +1265,14 @@ class tuple
               tuple_size<std::remove_reference_t<UTuple>>::value>,
           impl::all_types_constructible<tuple<Types...>, UTuple&&>,
           std::negation<impl::is_tuple<impl::remove_cvref_t<UTuple>>>,
+          std::negation<impl::is_subrange<impl::remove_cvref_t<UTuple>>>,
           std::negation<impl::any_types_reference_constructs_from_temporary<
               tuple<Types...>, UTuple>>,
           std::conjunction<std::bool_constant<sizeof...(Types) != 1>,
                            std::negation<std::disjunction<
                                std::is_convertible<UTuple, T0<Types...>>,
                                std::is_constructible<T0<Types...>, UTuple>>>>>>>
-  inline constexpr CEXA_EXPLICIT(
+  constexpr CEXA_EXPLICIT(
       (!impl::all_types_convertible_v<UTuple&&, tuple<Types...>>))
       tuple(UTuple&& u)
       : tuple(tuple_like_tag{}, FWD(u),
@@ -1127,6 +1284,8 @@ class tuple
 #endif
       ~tuple() = default;
 
+#undef CONVERTING_TUPLE_CTOR_CONSTRAINTS
+#undef PAIR_CTOR_CONSTRAINTS
 #undef IMPL_CONVERTING_TUPLE_CONSTRUCTOR
 #undef IMPL_PAIR_CONSTRUCTOR
 
@@ -1145,6 +1304,18 @@ class tuple
   template <class... UTypes,
             class = std::enable_if_t<std::conjunction_v<
                 std::bool_constant<sizeof...(Types) == sizeof...(UTypes)>,
+                std::is_assignable<Types&, UTypes>...>>>
+  KOKKOS_INLINE_FUNCTION constexpr tuple&
+  operator=(tuple<UTypes...>&& other) noexcept(
+      (std::is_nothrow_assignable_v<Types&, UTypes> && ...)) {
+    values = std::move(other.values);
+    return *this;
+  }
+
+#if defined(CEXA_HAS_CXX23)
+  template <class... UTypes,
+            class = std::enable_if_t<std::conjunction_v<
+                std::bool_constant<sizeof...(Types) == sizeof...(UTypes)>,
                 std::is_assignable<const Types&, const UTypes&>...>>>
   KOKKOS_INLINE_FUNCTION constexpr const tuple& operator=(
       const tuple<UTypes...>& other) const
@@ -1157,46 +1328,23 @@ class tuple
   template <class... UTypes,
             class = std::enable_if_t<std::conjunction_v<
                 std::bool_constant<sizeof...(Types) == sizeof...(UTypes)>,
-                std::is_assignable<Types&, UTypes>...>>>
-  KOKKOS_INLINE_FUNCTION constexpr tuple&
-  operator=(tuple<UTypes...>&& other) noexcept(
-      (std::is_nothrow_assignable_v<Types&, UTypes> && ...)) {
-    values = FWD(other).values;
-    return *this;
-  }
-
-  template <class... UTypes,
-            class = std::enable_if_t<std::conjunction_v<
-                std::bool_constant<sizeof...(Types) == sizeof...(UTypes)>,
                 std::is_assignable<const Types&, UTypes>...>>>
   KOKKOS_INLINE_FUNCTION constexpr const tuple& operator=(
       tuple<UTypes...>&& other) const
       noexcept((std::is_nothrow_assignable_v<const Types&, UTypes> && ...)) {
-    values = FWD(other).values;
+    values = std::move(other.values);
     return *this;
   }
+#endif
 
   template <class U1, class U2,
             class = std::enable_if_t<std::conjunction_v<
                 std::bool_constant<sizeof...(Types) == 2>,
                 std::is_assignable<T0<Types...>&, const U1&>,
                 std::is_assignable<T1<Types...>&, const U2&>>>>
-  inline constexpr tuple& operator=(const std::pair<U1, U2>& p) noexcept(
+  constexpr tuple& operator=(const std::pair<U1, U2>& p) noexcept(
       std::is_nothrow_assignable_v<T0<Types...>&, const U1&> &&
       std::is_nothrow_assignable_v<T1<Types...>&, const U2&>) {
-    values.value      = p.first;
-    values.rest.value = p.second;
-    return *this;
-  }
-
-  template <class U1, class U2,
-            class = std::enable_if_t<std::conjunction_v<
-                std::bool_constant<sizeof...(Types) == 2>,
-                std::is_assignable<const T0<Types...>&, const U1&>,
-                std::is_assignable<const T1<Types...>&, const U2&>>>>
-  inline constexpr const tuple& operator=(const std::pair<U1, U2>& p) const
-      noexcept(std::is_nothrow_assignable_v<const T0<Types...>&, const U1&> &&
-               std::is_nothrow_assignable_v<const T1<Types...>&, const U2&>) {
     values.value      = p.first;
     values.rest.value = p.second;
     return *this;
@@ -1207,11 +1355,28 @@ class tuple
                 std::conjunction_v<std::bool_constant<sizeof...(Types) == 2>,
                                    std::is_assignable<T0<Types...>&, U1>,
                                    std::is_assignable<T1<Types...>&, U2>>>>
-  inline constexpr tuple& operator=(std::pair<U1, U2>&& p) noexcept(
+  // NOTE: we use forward in order to not move out of references contained
+  // inside the pair
+  // NOLINTNEXTLINE(cppcoreguidelines-rvalue-reference-param-not-moved)
+  constexpr tuple& operator=(std::pair<U1, U2>&& p) noexcept(
       std::is_nothrow_assignable_v<T0<Types...>&, U1> &&
       std::is_nothrow_assignable_v<T1<Types...>&, U2>) {
-    values.value      = std::forward<U1>(p.first);
-    values.rest.value = std::forward<U2>(p.second);
+    values.value      = FWD(p.first);
+    values.rest.value = FWD(p.second);
+    return *this;
+  }
+
+#if defined(CEXA_HAS_CXX23)
+  template <class U1, class U2,
+            class = std::enable_if_t<std::conjunction_v<
+                std::bool_constant<sizeof...(Types) == 2>,
+                std::is_assignable<const T0<Types...>&, const U1&>,
+                std::is_assignable<const T1<Types...>&, const U2&>>>>
+  constexpr const tuple& operator=(const std::pair<U1, U2>& p) const
+      noexcept(std::is_nothrow_assignable_v<const T0<Types...>&, const U1&> &&
+               std::is_nothrow_assignable_v<const T1<Types...>&, const U2&>) {
+    values.value      = p.first;
+    values.rest.value = p.second;
     return *this;
   }
 
@@ -1220,21 +1385,27 @@ class tuple
                 std::bool_constant<sizeof...(Types) == 2>,
                 std::is_assignable<const T0<Types...>&, U1>,
                 std::is_assignable<const T1<Types...>&, U2>>>>
-  inline constexpr const tuple& operator=(std::pair<U1, U2>&& p) const
+  // NOTE: we use forward in order to not move out of references contained
+  // inside the pair
+  // NOLINTNEXTLINE(cppcoreguidelines-rvalue-reference-param-not-moved)
+  constexpr const tuple& operator=(std::pair<U1, U2>&& p) const
       noexcept(std::is_nothrow_assignable_v<const T0<Types...>&, U1> &&
                std::is_nothrow_assignable_v<const T1<Types...>&, U2>) {
-    values.value      = std::forward<U1>(p.first);
-    values.rest.value = std::forward<U2>(p.second);
+    values.value      = FWD(p.first);
+    values.rest.value = FWD(p.second);
     return *this;
   }
+#endif
 
   // TODO: use conjunction_v here
+  // NOTE: This overload is introduced in C++23
   template <class UTuple,
             class = std::enable_if_t<
                 impl::is_tuple_like_v<UTuple> &&
                 !impl::is_tuple_v<impl::remove_cvref_t<UTuple>> &&
                 !impl::is_pair<impl::remove_cvref_t<UTuple>>::value &&
                 impl::is_different_from_v<UTuple, tuple> &&
+                !impl::is_subrange_v<UTuple> &&
                 sizeof...(Types) ==
                     tuple_size<std::remove_reference_t<UTuple>>::value>>
   // The check for is_assignable is delegated to store.set_all()
@@ -1243,12 +1414,14 @@ class tuple
     return *this;
   }
 
+#if defined(CEXA_HAS_CXX23)
   template <class UTuple,
             class = std::enable_if_t<
                 impl::is_tuple_like_v<UTuple> &&
                 !impl::is_tuple_v<impl::remove_cvref_t<UTuple>> &&
                 !impl::is_pair<impl::remove_cvref_t<UTuple>>::value &&
                 impl::is_different_from_v<UTuple, tuple> &&
+                !impl::is_subrange_v<impl::remove_cvref_t<UTuple>> &&
                 sizeof...(Types) ==
                     tuple_size<std::remove_reference_t<UTuple>>::value>>
   // The check for is_assignable is delegated to store.set_all()
@@ -1256,6 +1429,7 @@ class tuple
     values.set(FWD(u));
     return *this;
   }
+#endif
 #undef FWD
 
   KOKKOS_INLINE_FUNCTION constexpr void swap(tuple& rhs) noexcept(
@@ -1263,10 +1437,12 @@ class tuple
     return values.swap(rhs.values);
   }
 
+#if defined(CEXA_HAS_CXX23)
   KOKKOS_INLINE_FUNCTION constexpr void swap(const tuple& rhs) const
       noexcept((std::is_nothrow_swappable_v<const Types> && ...)) {
     return values.swap(rhs.values);
   }
+#endif
 
   template <std::size_t I, class... Ts>
   KOKKOS_INLINE_FUNCTION friend constexpr std::enable_if_t<
@@ -1344,6 +1520,8 @@ get(tuple<Types...>& t) noexcept {
 template <std::size_t I, class... Types>
 KOKKOS_INLINE_FUNCTION constexpr std::enable_if_t<
     (I < sizeof...(Types)), typename tuple_element<I, tuple<Types...>>::type&&>
+// NOTE: this doesn't work with std::move
+// NOLINTNEXTLINE(cppcoreguidelines-rvalue-reference-param-not-moved)
 get(tuple<Types...>&& t) noexcept {
   return static_cast<tuple_element_t<I, tuple<Types...>>&&>(
       t.values.template get_value<I>());
@@ -1372,6 +1550,8 @@ get(tuple<Types...>& t) noexcept {
 template <class T, class... Types>
 KOKKOS_INLINE_FUNCTION constexpr std::enable_if_t<
     (std::is_same_v<T, Types> || ...), T&&>
+// NOTE: this doesn't work with std::move
+// NOLINTNEXTLINE(cppcoreguidelines-rvalue-reference-param-not-moved)
 get(tuple<Types...>&& t) noexcept {
   return static_cast<T&&>(t.values.template get_value<T>());
 }
@@ -1431,17 +1611,22 @@ KOKKOS_INLINE_FUNCTION constexpr bool operator>=(const tuple<TTypes...>& lhs,
 
 template <class... Types,
           class = std::enable_if_t<(std::is_swappable_v<Types> && ...)>>
-KOKKOS_INLINE_FUNCTION constexpr void swap(tuple<Types...>& lhs,
-                                           tuple<Types...>& rhs) {
+KOKKOS_INLINE_FUNCTION constexpr void swap(
+    tuple<Types...>& lhs,
+    tuple<Types...>& rhs) noexcept((std::is_nothrow_swappable_v<Types> &&
+                                    ...)) {
   lhs.swap(rhs);
 }
 
+#if defined(CEXA_HAS_CXX23)
 template <class... Types,
           class = std::enable_if_t<(std::is_swappable_v<const Types> && ...)>>
-KOKKOS_INLINE_FUNCTION constexpr void swap(const tuple<Types...>& lhs,
-                                           const tuple<Types...>& rhs) {
+KOKKOS_INLINE_FUNCTION constexpr void
+swap(const tuple<Types...>& lhs, const tuple<Types...>& rhs) noexcept(
+    (std::is_nothrow_swappable_v<const Types> && ...)) {
   lhs.swap(rhs);
 }
+#endif
 
 }  // namespace cexa
 

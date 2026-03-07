@@ -2,14 +2,13 @@
 //
 // SPDX-License-Identifier: MIT
 
-#include <cassert>
 #include <functional>
 #include <map>
 #include <optional>
 #include <ostream>
 #include <string>
 
-#include <Kokkos_Core.hpp>
+#include <Kokkos_Macros.hpp>
 
 #if defined(KOKKOS_ENABLE_CUDA)
 #    include <sstream>

@@ -5,7 +5,6 @@
 #include <sstream>
 #include <stdexcept>
 
-#include <ddc/ddc.hpp>
 #include <ddc/kernels/splines.hpp>
 
 #include <gtest/gtest.h>

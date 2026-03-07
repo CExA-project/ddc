@@ -264,7 +264,7 @@ if("${DDC_BUILD_KERNELS_SPLINES}")
     elseif("${DDC_KokkosKernels_DEPENDENCY_POLICY}" STREQUAL "EMBEDDED")
         ddc_configure_kokkos_kernels()
     elseif("${DDC_KokkosKernels_DEPENDENCY_POLICY}" STREQUAL "INSTALLED")
-        find_package(KokkosKernels 4.5.1...<6 REQUIRED)
+        find_package(KokkosKernels 4.7...<6 REQUIRED)
     endif()
 
     add_library(ddc_splines)

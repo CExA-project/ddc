@@ -53,7 +53,7 @@ To use DDC components, one needs the following dependencies:
   * PDI 1.10.1...<2
 * (optional, spline interpolation) DDC::splines
   * Ginkgo 1.8...<2
-  * Kokkos Kernels 4.5.1...<6
+  * Kokkos Kernels 4.7...<6
 
 ## Getting the code and basic configuration
 

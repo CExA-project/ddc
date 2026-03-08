@@ -16,11 +16,11 @@ TEST(TaggedVector, Constructor)
 TEST(TaggedVector, ConstructorFromTaggedVectors)
 {
     ddc::detail::TaggedVector<int, float, double> const map_v1(1, 2);
-    ddc::detail::TaggedVector<int, long double> const map_v2(3);
-    ddc::detail::TaggedVector<int, float, long double, double> const map_v3(map_v1, map_v2);
+    ddc::detail::TaggedVector<int, char> const map_v2(3);
+    ddc::detail::TaggedVector<int, float, char, double> const map_v3(map_v1, map_v2);
     EXPECT_EQ(map_v3.get<float>(), 1);
     EXPECT_EQ(map_v3.get<double>(), 2);
-    EXPECT_EQ(map_v3.get<long double>(), 3);
+    EXPECT_EQ(map_v3.get<char>(), 3);
 }
 
 TEST(TaggedVector, ReorderingConstructor)

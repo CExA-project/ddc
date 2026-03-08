@@ -201,7 +201,7 @@ constexpr bool in_tags_v<QueryTag, detail::TypeSeq<Tags...>>
 
 template <class... Tags, class OTypeSeq>
 constexpr bool type_seq_contains_v<detail::TypeSeq<Tags...>, OTypeSeq>
-        = ((detail::TypeSeqRank<detail::SingleType<Tags>, OTypeSeq>::present) && ...);
+        = (detail::TypeSeqRank<detail::SingleType<Tags>, OTypeSeq>::present && ...);
 
 template <class QueryTag, class... Tags>
 constexpr std::size_t type_seq_rank_v<QueryTag, detail::TypeSeq<Tags...>>

@@ -327,7 +327,7 @@ void TestDeviceForEachStritedSerialDevice1D(
                 int,
                 DDomX,
                 Kokkos::layout_right,
-                typename Kokkos::DefaultExecutionSpace::memory_space> view)
+                Kokkos::DefaultExecutionSpace::memory_space> view)
 {
     ddc::parallel_for_each(
             Kokkos::DefaultExecutionSpace(),
@@ -346,7 +346,7 @@ TEST(DeviceForEachStritedSerialDevice, OneDimension)
             int,
             DDomX,
             Kokkos::layout_right,
-            typename Kokkos::DefaultExecutionSpace::memory_space> const view(storage.data(), dom);
+            Kokkos::DefaultExecutionSpace::memory_space> const view(storage.data(), dom);
     TestDeviceForEachStritedSerialDevice1D(view);
     EXPECT_EQ(
             Kokkos::Experimental::
@@ -362,7 +362,7 @@ void TestDeviceForEachStritedSerialDevice2D(
                 int,
                 DDomXY,
                 Kokkos::layout_right,
-                typename Kokkos::DefaultExecutionSpace::memory_space> view)
+                Kokkos::DefaultExecutionSpace::memory_space> view)
 {
     ddc::parallel_for_each(
             Kokkos::DefaultExecutionSpace(),
@@ -381,7 +381,7 @@ TEST(DeviceForEachStritedSerialDevice, TwoDimensions)
             int,
             DDomXY,
             Kokkos::layout_right,
-            typename Kokkos::DefaultExecutionSpace::memory_space> const view(storage.data(), dom);
+            Kokkos::DefaultExecutionSpace::memory_space> const view(storage.data(), dom);
     TestDeviceForEachStritedSerialDevice2D(view);
     EXPECT_EQ(
             Kokkos::Experimental::
@@ -397,7 +397,7 @@ int TestDeviceTransformReduceStrided(
                 int,
                 DDomXY,
                 Kokkos::layout_right,
-                typename Kokkos::DefaultExecutionSpace::memory_space> chunk)
+                Kokkos::DefaultExecutionSpace::memory_space> chunk)
 {
     Kokkos::View<int, Kokkos::LayoutRight, Kokkos::DefaultExecutionSpace> const count("");
     ddc::parallel_for_each(
@@ -423,6 +423,6 @@ TEST(DeviceTransformReduceStrided, TwoDimensions)
             int,
             DDomXY,
             Kokkos::layout_right,
-            typename Kokkos::DefaultExecutionSpace::memory_space> const chunk(storage.data(), dom);
+            Kokkos::DefaultExecutionSpace::memory_space> const chunk(storage.data(), dom);
     EXPECT_EQ(TestDeviceTransformReduceStrided(chunk), dom.size());
 }

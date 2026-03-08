@@ -161,7 +161,7 @@ void TestDeviceForEachSparseDevice2D(
                 int,
                 DDomXY,
                 Kokkos::layout_right,
-                typename Kokkos::DefaultExecutionSpace::memory_space> view)
+                Kokkos::DefaultExecutionSpace::memory_space> view)
 {
     ddc::parallel_for_each(
             Kokkos::DefaultExecutionSpace(),
@@ -188,7 +188,7 @@ TEST(DeviceForEachSparseDevice, TwoDimensions)
             int,
             DDomXY,
             Kokkos::layout_right,
-            typename Kokkos::DefaultExecutionSpace::memory_space> const view(storage.data(), dom);
+            Kokkos::DefaultExecutionSpace::memory_space> const view(storage.data(), dom);
 
     TestDeviceForEachSparseDevice2D(view);
     EXPECT_EQ(
@@ -205,7 +205,7 @@ int TestDeviceTransformReduceSparse(
                 int,
                 DDomXY,
                 Kokkos::layout_right,
-                typename Kokkos::DefaultExecutionSpace::memory_space> chunk)
+                Kokkos::DefaultExecutionSpace::memory_space> chunk)
 {
     Kokkos::View<int, Kokkos::LayoutRight, Kokkos::DefaultExecutionSpace> const count("");
     ddc::parallel_for_each(
@@ -239,6 +239,6 @@ TEST(DeviceTransformReduceSparse, TwoDimensions)
             int,
             DDomXY,
             Kokkos::layout_right,
-            typename Kokkos::DefaultExecutionSpace::memory_space> const chunk(storage.data(), dom);
+            Kokkos::DefaultExecutionSpace::memory_space> const chunk(storage.data(), dom);
     EXPECT_EQ(TestDeviceTransformReduceSparse(chunk), dom.size());
 }

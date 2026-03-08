@@ -86,7 +86,7 @@ int TestDeviceTransformReduce(
                 int,
                 DDomXY,
                 Kokkos::layout_right,
-                typename Kokkos::DefaultExecutionSpace::memory_space> chunk)
+                Kokkos::DefaultExecutionSpace::memory_space> chunk)
 {
     Kokkos::View<int, Kokkos::LayoutRight, Kokkos::DefaultExecutionSpace> const count("");
     ddc::parallel_for_each(
@@ -112,6 +112,6 @@ TEST(DeviceTransformReduce, TwoDimensions)
             int,
             DDomXY,
             Kokkos::layout_right,
-            typename Kokkos::DefaultExecutionSpace::memory_space> const chunk(storage.data(), dom);
+            Kokkos::DefaultExecutionSpace::memory_space> const chunk(storage.data(), dom);
     EXPECT_EQ(TestDeviceTransformReduce(chunk), dom.size());
 }

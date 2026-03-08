@@ -209,14 +209,14 @@ void TestNonPeriodicSplineBuilderTestIdentity()
 
     ddc::Chunk<
             double,
-            ddc::DiscreteDomain<ddc::Deriv<typename DDimX::continuous_dimension_type>>,
+            ddc::DiscreteDomain<ddc::Deriv<DDimX::continuous_dimension_type>>,
             ddc::KokkosAllocator<double, memory_space>>
             quadrature_coefficients_derivs_xmin_alloc;
     ddc::Chunk<double, ddc::DiscreteDomain<DDimX>, ddc::KokkosAllocator<double, memory_space>>
             quadrature_coefficients_alloc;
     ddc::Chunk<
             double,
-            ddc::DiscreteDomain<ddc::Deriv<typename DDimX::continuous_dimension_type>>,
+            ddc::DiscreteDomain<ddc::Deriv<DDimX::continuous_dimension_type>>,
             ddc::KokkosAllocator<double, memory_space>>
             quadrature_coefficients_derivs_xmax_alloc;
     std::

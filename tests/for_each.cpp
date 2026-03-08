@@ -89,7 +89,7 @@ void TestDeviceForEachSerialDevice1D(
                 int,
                 DDomX,
                 Kokkos::layout_right,
-                typename Kokkos::DefaultExecutionSpace::memory_space> view)
+                Kokkos::DefaultExecutionSpace::memory_space> view)
 {
     ddc::parallel_for_each(
             Kokkos::DefaultExecutionSpace(),
@@ -108,7 +108,7 @@ TEST(DeviceForEachSerialDevice, OneDimension)
             int,
             DDomX,
             Kokkos::layout_right,
-            typename Kokkos::DefaultExecutionSpace::memory_space> const view(storage.data(), dom);
+            Kokkos::DefaultExecutionSpace::memory_space> const view(storage.data(), dom);
     TestDeviceForEachSerialDevice1D(view);
     EXPECT_EQ(
             Kokkos::Experimental::
@@ -124,7 +124,7 @@ void TestDeviceForEachSerialDevice2D(
                 int,
                 DDomXY,
                 Kokkos::layout_right,
-                typename Kokkos::DefaultExecutionSpace::memory_space> view)
+                Kokkos::DefaultExecutionSpace::memory_space> view)
 {
     ddc::parallel_for_each(
             Kokkos::DefaultExecutionSpace(),
@@ -143,7 +143,7 @@ TEST(DeviceForEachSerialDevice, TwoDimensions)
             int,
             DDomXY,
             Kokkos::layout_right,
-            typename Kokkos::DefaultExecutionSpace::memory_space> const view(storage.data(), dom);
+            Kokkos::DefaultExecutionSpace::memory_space> const view(storage.data(), dom);
     TestDeviceForEachSerialDevice2D(view);
     EXPECT_EQ(
             Kokkos::Experimental::

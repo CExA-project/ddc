@@ -15,9 +15,16 @@
 #    include <lapacke.h>
 #endif
 
-#include <KokkosBatched_Util.hpp>
+// The two following headers are necessary to workaround missing includes in KokkosBatched_Getrs.hpp.
+// They must be placed before `#include <KokkosBatched_Getrs.hpp>`.
+// This is fixed in Kokkos Kernels >=5.1.
+// clang-format off
+#include <KokkosBatched_Laswp.hpp>
+#include <KokkosBatched_Trsm_Decl.hpp>
+// clang-format on
 
-#include "kokkos-kernels-ext/KokkosBatched_Getrs.hpp"
+#include <KokkosBatched_Getrs.hpp>
+#include <KokkosBatched_Util.hpp>
 
 #include "splines_linear_problem.hpp"
 #include "splines_linear_problem_dense.hpp"
@@ -105,7 +112,7 @@ void SplinesLinearProblemDense<ExecSpace>::solve(MultiRHS const b, bool const tr
                     auto sub_b = Kokkos::subview(b, Kokkos::ALL, i);
                     KokkosBatched::SerialGetrs<
                             KokkosBatched::Trans::Transpose,
-                            KokkosBatched::Algo::Level3::Unblocked>::
+                            KokkosBatched::Algo::Getrs::Unblocked>::
                             invoke(a_device, ipiv_device, sub_b);
                 });
     } else {
@@ -116,7 +123,7 @@ void SplinesLinearProblemDense<ExecSpace>::solve(MultiRHS const b, bool const tr
                     auto sub_b = Kokkos::subview(b, Kokkos::ALL, i);
                     KokkosBatched::SerialGetrs<
                             KokkosBatched::Trans::NoTranspose,
-                            KokkosBatched::Algo::Level3::Unblocked>::
+                            KokkosBatched::Algo::Getrs::Unblocked>::
                             invoke(a_device, ipiv_device, sub_b);
                 });
     }

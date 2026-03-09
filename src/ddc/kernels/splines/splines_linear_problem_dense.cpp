@@ -17,7 +17,7 @@
 
 // The two following headers are necessary to workaround missing includes in KokkosBatched_Getrs.hpp.
 // They must be placed before `#include <KokkosBatched_Getrs.hpp>`.
-// This is fixed in Kokkos Kernels >5.0.2.
+// This is fixed in Kokkos Kernels >=5.1.
 // clang-format off
 #include <KokkosBatched_Laswp.hpp>
 #include <KokkosBatched_Trsm_Decl.hpp>

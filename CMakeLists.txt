@@ -126,7 +126,7 @@ endif()
 add_library(ddc_core)
 add_library(DDC::core ALIAS ddc_core)
 configure_file(cmake/config.hpp.in generated/ddc/config.hpp NO_SOURCE_PERMISSIONS @ONLY)
-target_compile_features(ddc_core PUBLIC cxx_std_17)
+target_compile_features(ddc_core INTERFACE cxx_std_17 PRIVATE cxx_std_20)
 target_link_libraries(ddc_core PUBLIC Kokkos::kokkos)
 target_sources(
     ddc_core
@@ -134,6 +134,7 @@ target_sources(
         src/ddc/discrete_space.cpp
         src/ddc/discrete_element.cpp
         src/ddc/discrete_vector.cpp
+        src/ddc/save_npy.cpp
         src/ddc/print.cpp
     INTERFACE
         FILE_SET HEADERS
@@ -172,6 +173,7 @@ target_sources(
                 src/ddc/print.hpp
                 src/ddc/real_type.hpp
                 src/ddc/reducer.hpp
+                src/ddc/save_npy.hpp
                 src/ddc/scope_guard.hpp
                 src/ddc/sparse_discrete_domain.hpp
                 src/ddc/strided_discrete_domain.hpp

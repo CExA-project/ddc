@@ -41,6 +41,7 @@ add_executable(
     reducer.cpp
     relocatable_device_code.cpp
     relocatable_device_code_initialization.cpp
+    save_npy.cpp
     sparse_discrete_domain.cpp
     strided_discrete_domain.cpp
     tagged_vector.cpp

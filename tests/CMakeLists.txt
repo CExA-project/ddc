@@ -6,6 +6,8 @@ include(GoogleTest)
 
 add_subdirectory(discrete_space)
 
+add_subdirectory(save_npy)
+
 add_library(ddc_gtest_main)
 target_compile_features(ddc_gtest_main PRIVATE cxx_std_20)
 target_link_libraries(ddc_gtest_main PRIVATE DDC::core GTest::gtest)
@@ -42,6 +44,7 @@ add_executable(
     reducer.cpp
     relocatable_device_code.cpp
     relocatable_device_code_initialization.cpp
+    save_npy.cpp
     sparse_discrete_domain.cpp
     strided_discrete_domain.cpp
     tagged_vector.cpp

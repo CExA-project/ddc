@@ -113,9 +113,7 @@ jobs:
           path: ginkgo
       - name: Install Ginkgo
         run: |
-          # Ginkgo 1.8 needs the flags "-undefined dynamic_lookup" to link, recent versions should not need it
           cmake \
-            -D CMAKE_SHARED_LINKER_FLAGS="-undefined dynamic_lookup" \
             -D GINKGO_BUILD_BENCHMARKS=OFF \
             -D GINKGO_BUILD_EXAMPLES=OFF \
             -D GINKGO_BUILD_MPI=OFF \

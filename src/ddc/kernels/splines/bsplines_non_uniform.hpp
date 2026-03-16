@@ -404,6 +404,13 @@ struct is_non_uniform_bsplines : public std::is_base_of<detail::NonUniformBSplin
 template <class DDim>
 constexpr bool is_non_uniform_bsplines_v = is_non_uniform_bsplines<DDim>::value;
 
+namespace concepts {
+
+template <class DDim>
+concept non_uniform_bsplines = is_non_uniform_bsplines_v<DDim>;
+
+}
+
 template <class CDim, std::size_t D>
 template <class DDim, class MemorySpace>
 template <class RandomIt>

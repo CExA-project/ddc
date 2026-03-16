@@ -42,8 +42,9 @@ class GrevilleInterpolationPoints
     {
     };
 
-    template <class Sampling, typename U = BSplines, class = std::enable_if_t<U::is_uniform()>>
+    template <class Sampling>
     static auto uniform_greville_points()
+        requires(BSplines::is_uniform())
     {
         using SamplingImpl = typename Sampling::template Impl<Sampling, Kokkos::HostSpace>;
 
@@ -57,13 +58,14 @@ class GrevilleInterpolationPoints
                 ddc::Coordinate<continuous_dimension_type>(dx));
     }
 
-    template <class Sampling, typename U = BSplines, class = std::enable_if_t<!U::is_uniform()>>
+    template <class Sampling>
     static auto non_uniform_greville_points()
+        requires(!BSplines::is_uniform())
     {
         using SamplingImpl = typename Sampling::template Impl<Sampling, Kokkos::HostSpace>;
 
         int n_greville_points = 0;
-        if constexpr (U::is_periodic()) {
+        if constexpr (BSplines::is_periodic()) {
             n_greville_points = ddc::discrete_space<BSplines>().nbasis() + 1;
         } else {
             n_greville_points = ddc::discrete_space<BSplines>().nbasis();
@@ -92,7 +94,7 @@ class GrevilleInterpolationPoints
         });
 
         // Use periodicity to ensure all points are in the domain
-        if constexpr (U::is_periodic()) {
+        if constexpr (BSplines::is_periodic()) {
             std::vector<double> temp_knots(BSplines::degree());
             int npoints(0);
             // Count the number of interpolation points that need shifting to preserve the ordering
@@ -136,14 +138,9 @@ public:
      *
      * @returns The mesh of uniform Greville points.
      */
-    template <
-            class Sampling,
-            typename U = BSplines,
-            std::enable_if_t<
-                    is_uniform_discrete_dimension_v<U>,
-                    bool>
-            = true> // U must be in condition for SFINAE
+    template <class Sampling>
     static auto get_sampling()
+        requires(is_uniform_discrete_dimension_v<BSplines>)
     {
         return uniform_greville_points<Sampling>();
     }
@@ -155,17 +152,12 @@ public:
      *
      * @returns The mesh of non-uniform Greville points.
      */
-    template <
-            class Sampling,
-            typename U = BSplines,
-            std::enable_if_t<
-                    !is_uniform_discrete_dimension_v<U>,
-                    bool>
-            = true> // U must be in condition for SFINAE
+    template <class Sampling>
     static auto get_sampling()
+        requires(!is_uniform_discrete_dimension_v<BSplines>)
     {
         using SamplingImpl = typename Sampling::template Impl<Sampling, Kokkos::HostSpace>;
-        if constexpr (U::is_uniform()) {
+        if constexpr (BSplines::is_uniform()) {
             using IntermediateSampling = IntermediateUniformSampling<Sampling>;
             auto points_wo_bcs = uniform_greville_points<IntermediateSampling>();
             int const n_break_points = ddc::discrete_space<BSplines>().ncells() + 1;

@@ -109,14 +109,14 @@ public:
     {
     }
 
-    template <std::size_t N = sizeof...(Idx), std::enable_if_t<(N == 0), bool> = true>
     KOKKOS_FUNCTION void operator()(index_type<0> /*id*/, typename Reducer::value_type& a) const
+        requires(sizeof...(Idx) == 0)
     {
         a = m_reducer(a, m_functor(m_support(typename Support::discrete_vector_type())));
     }
 
-    template <std::size_t N = sizeof...(Idx), std::enable_if_t<(N > 0), bool> = true>
     KOKKOS_FUNCTION void operator()(index_type<Idx>... ids, typename Reducer::value_type& a) const
+        requires(sizeof...(Idx) > 0)
     {
         a = m_reducer(a, m_functor(m_support(typename Support::discrete_vector_type(ids...))));
     }
@@ -194,12 +194,13 @@ T parallel_transform_reduce(
  *            range. The return type must be acceptable as input to reduce
  */
 template <class ExecSpace, class Support, class T, class BinaryReductionOp, class UnaryTransformOp>
-std::enable_if_t<Kokkos::is_execution_space_v<ExecSpace>, T> parallel_transform_reduce(
+T parallel_transform_reduce(
         ExecSpace const& execution_space,
         Support const& domain,
         T neutral,
         BinaryReductionOp&& reduce,
         UnaryTransformOp&& transform) noexcept
+    requires(Kokkos::is_execution_space_v<ExecSpace>)
 {
     return detail::transform_reduce_kokkos(
             "ddc_parallel_transform_reduce_default",

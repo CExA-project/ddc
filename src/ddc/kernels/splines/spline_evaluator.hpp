@@ -63,9 +63,7 @@ public:
      *
      * @tparam The batched discrete domain on which the interpolation points are defined.
      */
-    template <
-            class BatchedInterpolationDDom,
-            class = std::enable_if_t<ddc::is_discrete_domain_v<BatchedInterpolationDDom>>>
+    template <concepts::discrete_domain BatchedInterpolationDDom>
     using batched_evaluation_domain_type = BatchedInterpolationDDom;
 
     /// @brief The type of the 1D spline domain corresponding to the dimension of interest.
@@ -77,9 +75,7 @@ public:
      *
      * @tparam The batched discrete domain on which the interpolation points are defined.
      */
-    template <
-            class BatchedInterpolationDDom,
-            class = std::enable_if_t<ddc::is_discrete_domain_v<BatchedInterpolationDDom>>>
+    template <concepts::discrete_domain BatchedInterpolationDDom>
     using batch_domain_type
             = ddc::remove_dims_of_t<BatchedInterpolationDDom, evaluation_discrete_dimension_type>;
 
@@ -89,9 +85,7 @@ public:
      *
      * @tparam The batched discrete domain on which the interpolation points are defined.
      */
-    template <
-            class BatchedInterpolationDDom,
-            class = std::enable_if_t<ddc::is_discrete_domain_v<BatchedInterpolationDDom>>>
+    template <concepts::discrete_domain BatchedInterpolationDDom>
     using batched_spline_domain_type = ddc::replace_dim_of_t<
             BatchedInterpolationDDom,
             evaluation_discrete_dimension_type,

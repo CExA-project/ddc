@@ -4,7 +4,6 @@
 
 #pragma once
 
-#include <type_traits>
 #include <utility>
 
 #include <Kokkos_Macros.hpp>
@@ -29,12 +28,13 @@ using CoordinateElement = Real;
 template <class... CDims>
 using Coordinate = detail::TaggedVector<CoordinateElement, CDims...>;
 
-template <class... DDim, std::enable_if_t<(sizeof...(DDim) > 1), int> = 0>
-KOKKOS_FUNCTION Coordinate<typename DDim::continuous_dimension_type...> coordinate(
-        DiscreteElement<DDim...> const& c)
+template <class... DDims>
+KOKKOS_FUNCTION Coordinate<typename DDims::continuous_dimension_type...> coordinate(
+        DiscreteElement<DDims...> const& c)
+    requires(sizeof...(DDims) > 1)
 {
-    return Coordinate<typename DDim::continuous_dimension_type...>(
-            coordinate(DiscreteElement<DDim>(c))...);
+    return Coordinate<typename DDims::continuous_dimension_type...>(
+            coordinate(DiscreteElement<DDims>(c))...);
 }
 
 // Gives access to the type of the coordinates of a discrete element

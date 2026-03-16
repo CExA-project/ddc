@@ -38,6 +38,12 @@ struct is_strided_discrete_domain<StridedDiscreteDomain<Tags...>> : std::true_ty
 template <class T>
 inline constexpr bool is_strided_discrete_domain_v = is_strided_discrete_domain<T>::value;
 
+namespace concepts {
+
+template <class T>
+concept strided_discrete_domain = is_strided_discrete_domain_v<T>;
+
+}
 
 namespace detail {
 
@@ -97,9 +103,7 @@ public:
     KOKKOS_DEFAULTED_FUNCTION StridedDiscreteDomain() = default;
 
     /// Construct a StridedDiscreteDomain by copies and merge of domains
-    template <
-            class... DDoms,
-            class = std::enable_if_t<(is_strided_discrete_domain_v<DDoms> && ...)>>
+    template <concepts::strided_discrete_domain... DDoms>
     KOKKOS_FUNCTION constexpr explicit StridedDiscreteDomain(DDoms const&... domains)
         : m_element_begin(domains.front()...)
         , m_extents(domains.extents()...)
@@ -269,52 +273,44 @@ public:
         return !empty();
     }
 
-    template <
-            std::size_t N = sizeof...(DDims),
-            class DDim0 = std::enable_if_t<N == 1, std::tuple_element_t<0, std::tuple<DDims...>>>>
     KOKKOS_FUNCTION auto begin() const
+        requires(sizeof...(DDims) == 1)
     {
-        return StridedDiscreteDomainIterator<DDim0>(front(), m_strides);
+        return StridedDiscreteDomainIterator<
+                std::tuple_element_t<0, std::tuple<DDims...>>>(front(), m_strides);
     }
 
-    template <
-            std::size_t N = sizeof...(DDims),
-            class DDim0 = std::enable_if_t<N == 1, std::tuple_element_t<0, std::tuple<DDims...>>>>
     KOKKOS_FUNCTION auto end() const
+        requires(sizeof...(DDims) == 1)
     {
-        return StridedDiscreteDomainIterator<
-                DDim0>(m_element_begin + m_extents * m_strides, m_strides);
+        return StridedDiscreteDomainIterator<std::tuple_element_t<
+                0,
+                std::tuple<DDims...>>>(m_element_begin + m_extents * m_strides, m_strides);
     }
 
-    template <
-            std::size_t N = sizeof...(DDims),
-            class DDim0 = std::enable_if_t<N == 1, std::tuple_element_t<0, std::tuple<DDims...>>>>
     KOKKOS_FUNCTION auto cbegin() const
-    {
-        return StridedDiscreteDomainIterator<DDim0>(front(), m_strides);
-    }
-
-    template <
-            std::size_t N = sizeof...(DDims),
-            class DDim0 = std::enable_if_t<N == 1, std::tuple_element_t<0, std::tuple<DDims...>>>>
-    KOKKOS_FUNCTION auto cend() const
+        requires(sizeof...(DDims) == 1)
     {
         return StridedDiscreteDomainIterator<
-                DDim0>(m_element_begin + m_extents * m_strides, m_strides);
+                std::tuple_element_t<0, std::tuple<DDims...>>>(front(), m_strides);
     }
 
-    template <
-            std::size_t N = sizeof...(DDims),
-            class = std::enable_if_t<N == 1, std::tuple_element_t<0, std::tuple<DDims...>>>>
+    KOKKOS_FUNCTION auto cend() const
+        requires(sizeof...(DDims) == 1)
+    {
+        return StridedDiscreteDomainIterator<std::tuple_element_t<
+                0,
+                std::tuple<DDims...>>>(m_element_begin + m_extents * m_strides, m_strides);
+    }
+
     KOKKOS_FUNCTION constexpr decltype(auto) operator[](std::size_t n)
+        requires(sizeof...(DDims) == 1)
     {
         return begin()[n];
     }
 
-    template <
-            std::size_t N = sizeof...(DDims),
-            class = std::enable_if_t<N == 1, std::tuple_element_t<0, std::tuple<DDims...>>>>
     KOKKOS_FUNCTION constexpr decltype(auto) operator[](std::size_t n) const
+        requires(sizeof...(DDims) == 1)
     {
         return begin()[n];
     }

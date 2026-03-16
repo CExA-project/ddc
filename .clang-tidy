@@ -48,6 +48,7 @@ Checks: >
   modernize-*,
   -modernize-pass-by-value,
   -modernize-use-auto,
+  -modernize-use-integer-sign-comparison,
   -modernize-use-nodiscard,
   -modernize-use-trailing-return-type,
   performance-*,

@@ -24,6 +24,13 @@ inline constexpr bool is_borrowed_chunk_v
           && (std::is_lvalue_reference_v<T>
               || enable_borrowed_chunk<std::remove_cv_t<std::remove_reference_t<T>>>);
 
+namespace concepts {
+
+template <class T>
+concept borrowed_chunk = is_borrowed_chunk_v<T>;
+
+}
+
 template <class T>
 struct chunk_traits
 {

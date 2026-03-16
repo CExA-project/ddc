@@ -5,6 +5,7 @@
 #pragma once
 
 #include <array>
+#include <concepts>
 #include <cstddef>
 #include <iosfwd>
 #include <type_traits>
@@ -36,6 +37,12 @@ struct is_discrete_element<DiscreteElement<Tags...>> : std::true_type
 template <class T>
 inline constexpr bool is_discrete_element_v = is_discrete_element<T>::value;
 
+namespace concepts {
+
+template <class T>
+concept discrete_element = is_discrete_element_v<T>;
+
+}
 
 namespace detail {
 
@@ -105,12 +112,8 @@ KOKKOS_FUNCTION constexpr DiscreteElement<QueryTags...> select(
 /// Returns a reference towards the DiscreteElement that contains the QueryTag
 template <
         class QueryTag,
-        class HeadDElem,
-        class... TailDElems,
-        std::enable_if_t<
-                is_discrete_element_v<HeadDElem> && (is_discrete_element_v<TailDElems> && ...),
-                int>
-        = 1>
+        concepts::discrete_element HeadDElem,
+        concepts::discrete_element... TailDElems>
 KOKKOS_FUNCTION constexpr auto const& take(HeadDElem const& head, TailDElems const&... tail)
 {
     DDC_IF_NVCC_THEN_PUSH_AND_SUPPRESS(implicit_return_from_non_void_function)
@@ -189,15 +192,13 @@ public:
 
     KOKKOS_DEFAULTED_FUNCTION constexpr DiscreteElement(DiscreteElement&&) = default;
 
-    template <class... DElems, class = std::enable_if_t<(is_discrete_element_v<DElems> && ...)>>
+    template <concepts::discrete_element... DElems>
     KOKKOS_FUNCTION constexpr explicit DiscreteElement(DElems const&... delems) noexcept
         : m_values {take<Tags>(delems...).template uid<Tags>()...}
     {
     }
 
-    template <
-            class IntegerType,
-            class = std::enable_if_t<std::is_convertible_v<IntegerType, DiscreteElementType>>>
+    template <std::convertible_to<DiscreteElementType> IntegerType>
     KOKKOS_FUNCTION constexpr explicit DiscreteElement(
             std::array<IntegerType, sizeof...(Tags)> const& values) noexcept
         : m_values(
@@ -206,12 +207,9 @@ public:
     {
     }
 
-    template <
-            class... Params,
-            class = std::enable_if_t<(!is_discrete_element_v<Params> && ...)>,
-            class = std::enable_if_t<(std::is_convertible_v<Params, DiscreteElementType> && ...)>,
-            class = std::enable_if_t<sizeof...(Params) == sizeof...(Tags)>>
+    template <std::convertible_to<DiscreteElementType>... Params>
     KOKKOS_FUNCTION constexpr explicit DiscreteElement(Params const&... params) noexcept
+        requires((!is_discrete_element_v<Params> && ...) && sizeof...(Params) == sizeof...(Tags))
         : m_values {static_cast<DiscreteElementType>(params)...}
     {
     }
@@ -236,42 +234,42 @@ public:
         return m_values[type_seq_rank_v<QueryTag, tags_seq>];
     }
 
-    template <std::size_t N = sizeof...(Tags)>
-    KOKKOS_FUNCTION constexpr std::enable_if_t<N == 1, value_type&> uid() noexcept
+    KOKKOS_FUNCTION constexpr value_type& uid() noexcept
+        requires(sizeof...(Tags) == 1)
     {
         return m_values[0];
     }
 
-    template <std::size_t N = sizeof...(Tags)>
-    KOKKOS_FUNCTION constexpr std::enable_if_t<N == 1, value_type const&> uid() const noexcept
+    KOKKOS_FUNCTION constexpr value_type const& uid() const noexcept
+        requires(sizeof...(Tags) == 1)
     {
         return m_values[0];
     }
 
-    template <std::size_t N = sizeof...(Tags), class = std::enable_if_t<N == 1>>
     KOKKOS_FUNCTION constexpr DiscreteElement& operator++()
+        requires(sizeof...(Tags) == 1)
     {
         ++m_values[0];
         return *this;
     }
 
-    template <std::size_t N = sizeof...(Tags), class = std::enable_if_t<N == 1>>
     KOKKOS_FUNCTION constexpr DiscreteElement operator++(int)
+        requires(sizeof...(Tags) == 1)
     {
         DiscreteElement const tmp = *this;
         ++m_values[0];
         return tmp;
     }
 
-    template <std::size_t N = sizeof...(Tags), class = std::enable_if_t<N == 1>>
     KOKKOS_FUNCTION constexpr DiscreteElement& operator--()
+        requires(sizeof...(Tags) == 1)
     {
         --m_values[0];
         return *this;
     }
 
-    template <std::size_t N = sizeof...(Tags), class = std::enable_if_t<N == 1>>
     KOKKOS_FUNCTION constexpr DiscreteElement operator--(int)
+        requires(sizeof...(Tags) == 1)
     {
         DiscreteElement const tmp = *this;
         --m_values[0];
@@ -286,12 +284,9 @@ public:
         return *this;
     }
 
-    template <
-            class IntegralType,
-            std::size_t N = sizeof...(Tags),
-            class = std::enable_if_t<N == 1>,
-            class = std::enable_if_t<std::is_integral_v<IntegralType>>>
+    template <std::integral IntegralType>
     KOKKOS_FUNCTION constexpr DiscreteElement& operator+=(IntegralType const& rhs)
+        requires(sizeof...(Tags) == 1)
     {
         m_values[0] += rhs;
         return *this;
@@ -305,12 +300,9 @@ public:
         return *this;
     }
 
-    template <
-            class IntegralType,
-            std::size_t N = sizeof...(Tags),
-            class = std::enable_if_t<N == 1>,
-            class = std::enable_if_t<std::is_integral_v<IntegralType>>>
+    template <std::integral IntegralType>
     KOKKOS_FUNCTION constexpr DiscreteElement& operator-=(IntegralType const& rhs)
+        requires(sizeof...(Tags) == 1)
     {
         m_values[0] -= rhs;
         return *this;
@@ -397,14 +389,11 @@ KOKKOS_FUNCTION constexpr DiscreteElement<Tags...> operator+(
     return result;
 }
 
-template <
-        class Tag,
-        class IntegralType,
-        class = std::enable_if_t<std::is_integral_v<IntegralType>>,
-        class = std::enable_if_t<!is_discrete_vector_v<IntegralType>>>
+template <class Tag, std::integral IntegralType>
 KOKKOS_FUNCTION constexpr DiscreteElement<Tag> operator+(
         DiscreteElement<Tag> const& lhs,
         IntegralType const& rhs)
+    requires(!is_discrete_vector_v<IntegralType>)
 {
     DiscreteElement<Tag> result(lhs);
     result += rhs;
@@ -423,14 +412,11 @@ KOKKOS_FUNCTION constexpr DiscreteElement<Tags...> operator-(
     return result;
 }
 
-template <
-        class Tag,
-        class IntegralType,
-        class = std::enable_if_t<std::is_integral_v<IntegralType>>,
-        class = std::enable_if_t<!is_discrete_vector_v<IntegralType>>>
+template <class Tag, std::integral IntegralType>
 KOKKOS_FUNCTION constexpr DiscreteElement<Tag> operator-(
         DiscreteElement<Tag> const& lhs,
         IntegralType const& rhs)
+    requires(!is_discrete_vector_v<IntegralType>)
 {
     DiscreteElement<Tag> result(lhs);
     result -= rhs;

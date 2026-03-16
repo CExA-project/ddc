@@ -145,7 +145,6 @@ target_sources(
                 src/ddc/detail/macros.hpp
                 src/ddc/detail/tagged_vector.hpp
                 src/ddc/detail/type_seq.hpp
-                src/ddc/detail/type_traits.hpp
                 src/ddc/detail/utils.hpp
                 src/ddc/aligned_allocator.hpp
                 src/ddc/chunk.hpp

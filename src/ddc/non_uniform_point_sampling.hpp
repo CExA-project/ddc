@@ -198,53 +198,56 @@ struct is_non_uniform_point_sampling
 template <class DDim>
 constexpr bool is_non_uniform_point_sampling_v = is_non_uniform_point_sampling<DDim>::value;
 
-template <
-        class DDimImpl,
-        std::enable_if_t<
-                is_non_uniform_point_sampling_v<typename DDimImpl::discrete_dimension_type>,
-                int>
-        = 0>
+namespace concepts {
+
+template <class DDim>
+concept non_uniform_point_sampling = is_non_uniform_point_sampling_v<DDim>;
+
+}
+
+template <class DDimImpl>
 std::ostream& operator<<(std::ostream& out, DDimImpl const& mesh)
+    requires(concepts::non_uniform_point_sampling<typename DDimImpl::discrete_dimension_type>)
 {
     return out << "NonUniformPointSampling(" << mesh.size() << ")";
 }
 
-template <class DDim, std::enable_if_t<is_non_uniform_point_sampling_v<DDim>, int> = 0>
+template <concepts::non_uniform_point_sampling DDim>
 KOKKOS_FUNCTION Coordinate<typename DDim::continuous_dimension_type> coordinate(
         DiscreteElement<DDim> const& c)
 {
     return discrete_space<DDim>().coordinate(c);
 }
 
-template <class DDim, std::enable_if_t<is_non_uniform_point_sampling_v<DDim>, int> = 0>
+template <concepts::non_uniform_point_sampling DDim>
 KOKKOS_FUNCTION Coordinate<typename DDim::continuous_dimension_type> distance_at_left(
         DiscreteElement<DDim> i)
 {
     return coordinate(i) - coordinate(i - 1);
 }
 
-template <class DDim, std::enable_if_t<is_non_uniform_point_sampling_v<DDim>, int> = 0>
+template <concepts::non_uniform_point_sampling DDim>
 KOKKOS_FUNCTION Coordinate<typename DDim::continuous_dimension_type> distance_at_right(
         DiscreteElement<DDim> i)
 {
     return coordinate(i + 1) - coordinate(i);
 }
 
-template <class DDim, std::enable_if_t<is_non_uniform_point_sampling_v<DDim>, int> = 0>
+template <concepts::non_uniform_point_sampling DDim>
 KOKKOS_FUNCTION Coordinate<typename DDim::continuous_dimension_type> rmin(
         DiscreteDomain<DDim> const& d)
 {
     return coordinate(d.front());
 }
 
-template <class DDim, std::enable_if_t<is_non_uniform_point_sampling_v<DDim>, int> = 0>
+template <concepts::non_uniform_point_sampling DDim>
 KOKKOS_FUNCTION Coordinate<typename DDim::continuous_dimension_type> rmax(
         DiscreteDomain<DDim> const& d)
 {
     return coordinate(d.back());
 }
 
-template <class DDim, std::enable_if_t<is_non_uniform_point_sampling_v<DDim>, int> = 0>
+template <concepts::non_uniform_point_sampling DDim>
 KOKKOS_FUNCTION Coordinate<typename DDim::continuous_dimension_type> rlength(
         DiscreteDomain<DDim> const& d)
 {

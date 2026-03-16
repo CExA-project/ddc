@@ -38,7 +38,7 @@ If you want to know more, join un on [Slack](https://ddc-lib.slack.com/join/shar
 
 To use DDC core, one needs the following dependencies:
 
-* a C++17-compliant compiler
+* a C++20-compliant compiler
 * CMake 3.25
 * Kokkos 4.4...<6
 * (optional, micro benchmarking) Benchmark 1.8...<2

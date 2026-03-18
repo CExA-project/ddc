@@ -134,7 +134,7 @@ void test_deriv(
         DElem const& deriv_order,
         std::size_t const ncells)
 {
-    using domain = decltype(spline_eval_deriv.domain());
+    using domain = typename SplineDerivSpan::discrete_domain_type;
     using I1 = typename DDimI1::continuous_dimension_type;
     using I2 = typename DDimI2::continuous_dimension_type;
 

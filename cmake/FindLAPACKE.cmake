@@ -151,9 +151,9 @@ if(NOT _lapacke_bundled)
     find_library(LAPACKE_LIBRARY
         NAMES lapacke
         HINTS
-            ${LAPACKE_ROOT}
+            "${LAPACKE_ROOT}"
             ENV LAPACKE_ROOT
-            ${LAPACK_ROOT}
+            "${LAPACK_ROOT}"
             ENV LAPACK_ROOT
         PATH_SUFFIXES lib lib64 lib/x86_64-linux-gnu lib/aarch64-linux-gnu
     )
@@ -161,7 +161,7 @@ if(NOT _lapacke_bundled)
     if(LAPACKE_LIBRARY)
         # Verify the symbols are really there (guards against empty stub libs).
         set(_saved_req_libs "${CMAKE_REQUIRED_LIBRARIES}")
-        set(CMAKE_REQUIRED_LIBRARIES "${LAPACKE_LIBRARY}" ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
+        set(CMAKE_REQUIRED_LIBRARIES "${LAPACKE_LIBRARY};${LAPACK_LIBRARIES};${BLAS_LIBRARIES}")
         check_function_exists(LAPACKE_dgetrf _lapacke_standalone_check)
         set(CMAKE_REQUIRED_LIBRARIES "${_saved_req_libs}")
 
@@ -182,9 +182,9 @@ endif()
 find_path(LAPACKE_INCLUDE_DIR
     NAMES lapacke.h
     HINTS
-        ${LAPACKE_ROOT}
+        "${LAPACKE_ROOT}"
         ENV LAPACKE_ROOT
-        ${LAPACK_ROOT}
+        "${LAPACK_ROOT}"
         ENV LAPACK_ROOT
     PATH_SUFFIXES include include/openblas include/lapacke include/lapack
 )

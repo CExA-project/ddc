@@ -64,7 +64,7 @@ jobs:
       PDI_ROOT: ${{github.workspace}}/opt/pdi
       CMAKE_BUILD_PARALLEL_LEVEL: 4
       PKG_CONFIG_PATH: /opt/homebrew/opt/lapack/lib/pkgconfig
-      LAPACKE_DIR: /opt/homebrew/opt/lapack
+      LAPACKE_ROOT: /opt/homebrew/opt/lapack
       CC: ${{matrix.backend.c_compiler}}
       CXX: ${{matrix.backend.cxx_compiler}}
       CMAKE_BUILD_TYPE: ${{matrix.cmake_build_type}}

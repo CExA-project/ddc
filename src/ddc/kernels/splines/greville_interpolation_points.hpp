@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <cassert>
 #include <cstddef>
 #include <type_traits>
 #include <vector>
@@ -62,7 +63,7 @@ class GrevilleInterpolationPoints
     {
         using SamplingImpl = typename Sampling::template Impl<Sampling, Kokkos::HostSpace>;
 
-        int n_greville_points = 0;
+        std::size_t n_greville_points = 0;
         if constexpr (U::is_periodic()) {
             n_greville_points = ddc::discrete_space<BSplines>().nbasis() + 1;
         } else {
@@ -94,9 +95,10 @@ class GrevilleInterpolationPoints
         // Use periodicity to ensure all points are in the domain
         if constexpr (U::is_periodic()) {
             std::vector<double> temp_knots(BSplines::degree());
-            int npoints(0);
+            std::size_t npoints(0);
             // Count the number of interpolation points that need shifting to preserve the ordering
             while (greville_points[npoints] < ddc::discrete_space<BSplines>().rmin()) {
+                assert(npoints < BSplines::degree());
                 temp_knots[npoints]
                         = greville_points[npoints] + ddc::discrete_space<BSplines>().length();
                 ++npoints;
@@ -105,7 +107,7 @@ class GrevilleInterpolationPoints
             for (std::size_t i = 0; i < ddc::discrete_space<BSplines>().nbasis() - npoints; ++i) {
                 greville_points[i] = greville_points[i + npoints];
             }
-            for (int i = 0; i < npoints; ++i) {
+            for (std::size_t i = 0; i < npoints; ++i) {
                 greville_points[ddc::discrete_space<BSplines>().nbasis() - npoints + i]
                         = temp_knots[i];
             }
@@ -168,7 +170,8 @@ public:
         if constexpr (U::is_uniform()) {
             using IntermediateSampling = IntermediateUniformSampling<Sampling>;
             auto points_wo_bcs = uniform_greville_points<IntermediateSampling>();
-            int const n_break_points = ddc::discrete_space<BSplines>().ncells() + 1;
+            std::size_t const n_break_points = ddc::discrete_space<BSplines>().ncells() + 1;
+            assert(ddc::discrete_space<BSplines>().nbasis() >= static_cast<std::size_t>(N_BE_MIN + N_BE_MAX));
             int const npoints = ddc::discrete_space<BSplines>().nbasis() - N_BE_MIN - N_BE_MAX;
             std::vector<double> points_with_bcs(npoints);
 
@@ -185,7 +188,7 @@ public:
                             n_knots_in_domain);
                     ddc::host_for_each(
                             sub_domain,
-                            [&](DiscreteElement<UniformBsplinesKnots<BSplines>> ik) {
+                            [&](ddc::DiscreteElement<UniformBsplinesKnots<BSplines>> ik) {
                                 points_with_bcs[i] += ddc::coordinate(ik);
                             });
                     points_with_bcs[i] /= BSplines::degree();
@@ -220,7 +223,7 @@ public:
                             n_knots_in_domain);
                     ddc::host_for_each(
                             sub_domain,
-                            [&](DiscreteElement<UniformBsplinesKnots<BSplines>> ik) {
+                            [&](ddc::DiscreteElement<UniformBsplinesKnots<BSplines>> ik) {
                                 points_with_bcs[npoints - 1 - i] += ddc::coordinate(ik);
                             });
                     points_with_bcs[npoints - 1 - i] /= BSplines::degree();

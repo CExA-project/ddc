@@ -1,6 +1,12 @@
-# Copyright (C) The DDC development team, see COPYRIGHT.md file
-#
-# SPDX-License-Identifier: MIT
+<!--
+Copyright (C) The DDC development team, see below
+
+SPDX-License-Identifier: MIT
+-->
+
+# Authors
+
+## Major contributions
 
 Multiple people have contributed to DDC. To show our appreciation for their
 public spirit, we list here in alphabetical order a condensed list of their
@@ -10,40 +16,49 @@ While individual authors are listed here, they might not be the actual
 copyright holders. If you are instead looking for the list of copyright
 holders, please look at the COPYRIGHT.md file.
 
-Antoun Thierry - CEA (thierry.antoun@cea.fr)
+Antoun Thierry - CEA
+
 * Work on Documentation
 * Work on adding new features
 
-Bigot Julien - CEA (julien.bigot@cea.fr)
-* Co-maintainer
+Bigot Julien - CEA (<julien.bigot@cea.fr>)
+
 * Initial designer and first development steps
 * Co-developer
 * Participation to DDC-based redesign of splines
 
-Bourne Emily - CEA (emily.bourne@cea.fr)
+Bourne Emily - CEA (<emily.bourne@epfl.ch>)
+
 * Work on splines and linear algebra
 * Work on documentation requirements in CI
 
-Gannay Paul - CEA (paul.gannay@cea.fr)
+Gannay Paul - CEA
+
 * Functions to print ChunkSpans
 * Implementation of device_for_each and device_transform_reduce algorithms
 
-Kannan Hariprasad - CEA (hariprasad.kannan@cea.fr)
+Kannan Hariprasad - CEA
+
 * Implementation of 3d splines
 
-Legouix Baptiste - CEA (baptiste.legouix@cea.fr)
+Legouix Baptiste - CEA
+
 * FFT kernel
 * Performance portability of splines kernel, batching
 * Ginkgo and KokkosKernels backends for splines linear algebra
 * Implementation of device_for_each and device_transform_reduce algorithms
 
-Morvany Trévis - CEA (trevis.morvany@cea.fr)
+Morvany Trévis - CEA
+
 * Work on splines
 * Implementation of 3d splines
 * Implementation of n-th order derivatives of splines
 
-Padioleau Thomas - CEA (thomas.padioleau@cea.fr)
+Padioleau Thomas - CEA (<thomas.padioleau@cea.fr>)
+
 * Maintainer
 * Co-designer
 * Main developer
 * Redesign and reimplementation of splines using DDC
+
+## Minor contributions

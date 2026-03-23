@@ -48,7 +48,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
-      - uses: jidicula/clang-format-action@3a18028048f01a66653b4e3bf8d968d2e7e2cb8b  # v4.17.0
+      - uses: jidicula/clang-format-action@654a770daa28443dd111d133e4083e21c1075674  # v4.18.0
         with:
           clang-format-version: '21'
       - name: Prefer 'if defined'/'if !defined' over 'ifdef'/'ifndef'
@@ -191,7 +191,7 @@ jobs:
             ghcr.io/cexa-project/ddc/${{matrix.image}}_${{matrix.backend.name}}:${GITHUB_SHA:0:7} \
             bash run.sh
       - name: Upload coverage reports to Codecov with GitHub Action
-        uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de  # v5.5.2
+        uses: codecov/codecov-action@1af58845a975a7985b0beb0cbe6fbbb71a41dbad  # v5.5.3
         with:
           files: coverage.lcov
           disable_search: true

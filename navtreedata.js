@@ -94,6 +94,7 @@ var NAVTREE =
         [ "Enumerations", "namespacemembers_enum.html", null ]
       ] ]
     ] ],
+    [ "Concepts", "concepts.html", "concepts" ],
     [ "Classes", "annotated.html", [
       [ "Class List", "annotated.html", "annotated_dup" ],
       [ "Class Index", "classes.html", null ],
@@ -112,14 +113,14 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"classddc_1_1ChunkSpan.html#a6c85ad4bb4fc9107708d2072ea9038fb",
+"classddc_1_1ChunkSpan.html#a758a958129f2b0b33fc649bece0bd767",
 "classddc_1_1DiscreteVector.html#afb3c8c9ab49ebd9923116eda48657037",
-"classddc_1_1SparseDiscreteDomain.html#a20f0cff53d1c5f29d52e96a7b86272bb",
-"classddc_1_1SplineBuilder3D.html#a302c715f12851b09c304dcdb7719e3bc",
+"classddc_1_1SparseDiscreteDomain.html#a2632e7616140d50f3ca8d634c38cd2d1",
+"classddc_1_1SplineBuilder3D.html#a2d5e34be67816d15e71efcc44733992f",
 "classddc_1_1SplineEvaluator3D.html#a7da4b254329b357322b2943ccae8f923",
 "classddc_1_1UniformPointSampling_1_1Impl.html#ab0ae79ae8ffb7aebe902a522d819ddbf",
-"namespaceddc.html#a8e2613950c42e1ccad3eb14379df6fa2",
-"structddc_1_1is__spline__evaluator2d.html"
+"namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d",
+"structddc_1_1is__evaluator__admissible_3_01SplineBuilder_3_01ExecSpace_00_01MemorySpace_00_01BSp49a3b5cca1e507a8a1b59ab9867f3f9b.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

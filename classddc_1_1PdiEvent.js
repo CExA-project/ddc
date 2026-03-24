@@ -6,8 +6,8 @@ var classddc_1_1PdiEvent =
     [ "~PdiEvent", "classddc_1_1PdiEvent.html#a515f802992d76072a6933e3185b5ae95", null ],
     [ "operator=", "classddc_1_1PdiEvent.html#a53df67a1b132b4127377b4810d76d0e1", null ],
     [ "operator=", "classddc_1_1PdiEvent.html#a4d05bd0db8022f1c59e9b92cdbb60855", null ],
-    [ "with", "classddc_1_1PdiEvent.html#ada4058655f4cadaf359894d0a544d3b8", null ],
-    [ "with", "classddc_1_1PdiEvent.html#ac52d3155e073493a6c1d93cc3938434a", null ],
     [ "with", "classddc_1_1PdiEvent.html#abe26c98bf242fc1140c668a830ee9a43", null ],
-    [ "with", "classddc_1_1PdiEvent.html#aa6da8de102bba2ca52f6ce201cf2b915", null ]
+    [ "with", "classddc_1_1PdiEvent.html#a14f717cd893a3319daebefda8011ee19", null ],
+    [ "with", "classddc_1_1PdiEvent.html#af20a32ded433dbdedcaf1fbc93e41308", null ],
+    [ "with", "classddc_1_1PdiEvent.html#af766c7fa21438aec465fb8220b2a4323", null ]
 ];

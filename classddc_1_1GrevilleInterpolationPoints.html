@@ -149,14 +149,16 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a5db23f8d9cb7cae226ab0917c7acf65f" id="r_a5db23f8d9cb7cae226ab0917c7acf65f"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Sampling</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">U</a>  = BSplines, std::enable_if_t&lt; is_uniform_discrete_dimension_v&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">U</a> &gt;, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">bool</a> &gt;  = true&gt; </td></tr>
-<tr class="memitem:a5db23f8d9cb7cae226ab0917c7acf65f"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">static</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1GrevilleInterpolationPoints.html#a5db23f8d9cb7cae226ab0917c7acf65f">get_sampling</a> ()</td></tr>
-<tr class="memdesc:a5db23f8d9cb7cae226ab0917c7acf65f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the <a class="el" href="classddc_1_1UniformPointSampling.html" title="UniformPointSampling models a uniform discretization of the provided continuous dimension.">UniformPointSampling</a> defining the Greville points.  <br /></td></tr>
-<tr class="separator:a5db23f8d9cb7cae226ab0917c7acf65f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5db23f8d9cb7cae226ab0917c7acf65f" id="r_a5db23f8d9cb7cae226ab0917c7acf65f"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Sampling</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">U</a>  = BSplines, std::enable_if_t&lt; !is_uniform_discrete_dimension_v&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">U</a> &gt;, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">bool</a> &gt;  = true&gt; </td></tr>
-<tr class="memitem:a5db23f8d9cb7cae226ab0917c7acf65f"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">static</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1GrevilleInterpolationPoints.html#a5db23f8d9cb7cae226ab0917c7acf65f">get_sampling</a> ()</td></tr>
-<tr class="memdesc:a5db23f8d9cb7cae226ab0917c7acf65f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the <a class="el" href="classddc_1_1NonUniformPointSampling.html" title="NonUniformPointSampling models a non-uniform discretization of the CDim segment .">NonUniformPointSampling</a> defining the Greville points.  <br /></td></tr>
-<tr class="separator:a5db23f8d9cb7cae226ab0917c7acf65f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a64efe1dac5058d3f577b394bda0d022c" id="r_a64efe1dac5058d3f577b394bda0d022c"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Sampling</a> &gt; <br />
+requires (is_uniform_discrete_dimension_v&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BSplines</a>&gt;)</td></tr>
+<tr class="memitem:a64efe1dac5058d3f577b394bda0d022c"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">static</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1GrevilleInterpolationPoints.html#a64efe1dac5058d3f577b394bda0d022c">get_sampling</a> ()</td></tr>
+<tr class="memdesc:a64efe1dac5058d3f577b394bda0d022c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the <a class="el" href="classddc_1_1UniformPointSampling.html" title="UniformPointSampling models a uniform discretization of the provided continuous dimension.">UniformPointSampling</a> defining the Greville points.  <br /></td></tr>
+<tr class="separator:a64efe1dac5058d3f577b394bda0d022c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae16ac6a8b05a23334da8e1cada443c90" id="r_ae16ac6a8b05a23334da8e1cada443c90"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Sampling</a> &gt; <br />
+requires (!is_uniform_discrete_dimension_v&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BSplines</a>&gt;)</td></tr>
+<tr class="memitem:ae16ac6a8b05a23334da8e1cada443c90"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">static</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1GrevilleInterpolationPoints.html#ae16ac6a8b05a23334da8e1cada443c90">get_sampling</a> ()</td></tr>
+<tr class="memdesc:ae16ac6a8b05a23334da8e1cada443c90"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the <a class="el" href="classddc_1_1NonUniformPointSampling.html" title="NonUniformPointSampling models a non-uniform discretization of the CDim segment .">NonUniformPointSampling</a> defining the Greville points.  <br /></td></tr>
+<tr class="separator:ae16ac6a8b05a23334da8e1cada443c90"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a240f9ad5ec3ac1e8e295bd76e49de9fb" id="r_a240f9ad5ec3ac1e8e295bd76e49de9fb"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Sampling</a> &gt; </td></tr>
 <tr class="memitem:a240f9ad5ec3ac1e8e295bd76e49de9fb"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">static</a> <a class="el" href="classddc_1_1DiscreteDomain.html">ddc::DiscreteDomain</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Sampling</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1GrevilleInterpolationPoints.html#a240f9ad5ec3ac1e8e295bd76e49de9fb">get_domain</a> ()</td></tr>
 <tr class="memdesc:a240f9ad5ec3ac1e8e295bd76e49de9fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the domain which gives us access to all of the Greville points.  <br /></td></tr>
@@ -193,20 +195,21 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 <p>The type of the mesh. </p>
 <p>This is either <a class="el" href="classddc_1_1NonUniformPointSampling.html" title="NonUniformPointSampling models a non-uniform discretization of the CDim segment .">NonUniformPointSampling</a> or <a class="el" href="classddc_1_1UniformPointSampling.html" title="UniformPointSampling models a uniform discretization of the provided continuous dimension.">UniformPointSampling</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="greville__interpolation__points_8hpp_source.html#l00268">268</a> of file <a class="el" href="greville__interpolation__points_8hpp_source.html">greville_interpolation_points.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="greville__interpolation__points_8hpp_source.html#l00260">260</a> of file <a class="el" href="greville__interpolation__points_8hpp_source.html">greville_interpolation_points.hpp</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a5db23f8d9cb7cae226ab0917c7acf65f" name="a5db23f8d9cb7cae226ab0917c7acf65f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5db23f8d9cb7cae226ab0917c7acf65f">&#9670;&#160;</a></span>get_sampling() <span class="overload">[1/2]</span></h2>
+<a id="a64efe1dac5058d3f577b394bda0d022c" name="a64efe1dac5058d3f577b394bda0d022c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a64efe1dac5058d3f577b394bda0d022c">&#9670;&#160;</a></span>get_sampling() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BSplines</a> , <a class="el" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744a">ddc::BoundCond</a> BcLower, <a class="el" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744a">ddc::BoundCond</a> BcUpper&gt; </div>
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Sampling</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">U</a>  = BSplines, std::enable_if_t&lt; is_uniform_discrete_dimension_v&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">U</a> &gt;, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">bool</a> &gt;  = true&gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Sampling</a> &gt; <br />
+requires (is_uniform_discrete_dimension_v&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BSplines</a>&gt;)</div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -235,19 +238,20 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The mesh of uniform Greville points. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="greville__interpolation__points_8hpp_source.html#l00146">146</a> of file <a class="el" href="greville__interpolation__points_8hpp_source.html">greville_interpolation_points.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="greville__interpolation__points_8hpp_source.html#l00142">142</a> of file <a class="el" href="greville__interpolation__points_8hpp_source.html">greville_interpolation_points.hpp</a>.</p>
 
 </div>
 </div>
-<a id="a5db23f8d9cb7cae226ab0917c7acf65f" name="a5db23f8d9cb7cae226ab0917c7acf65f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5db23f8d9cb7cae226ab0917c7acf65f">&#9670;&#160;</a></span>get_sampling() <span class="overload">[2/2]</span></h2>
+<a id="ae16ac6a8b05a23334da8e1cada443c90" name="ae16ac6a8b05a23334da8e1cada443c90"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae16ac6a8b05a23334da8e1cada443c90">&#9670;&#160;</a></span>get_sampling() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BSplines</a> , <a class="el" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744a">ddc::BoundCond</a> BcLower, <a class="el" href="namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744a">ddc::BoundCond</a> BcUpper&gt; </div>
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Sampling</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">U</a>  = BSplines, std::enable_if_t&lt; !is_uniform_discrete_dimension_v&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">U</a> &gt;, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">bool</a> &gt;  = true&gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Sampling</a> &gt; <br />
+requires (!is_uniform_discrete_dimension_v&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BSplines</a>&gt;)</div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -275,7 +279,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The mesh of non-uniform Greville points. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="greville__interpolation__points_8hpp_source.html#l00165">165</a> of file <a class="el" href="greville__interpolation__points_8hpp_source.html">greville_interpolation_points.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="greville__interpolation__points_8hpp_source.html#l00156">156</a> of file <a class="el" href="greville__interpolation__points_8hpp_source.html">greville_interpolation_points.hpp</a>.</p>
 
 </div>
 </div>
@@ -315,7 +319,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The domain of the Greville points. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="greville__interpolation__points_8hpp_source.html#l00281">281</a> of file <a class="el" href="greville__interpolation__points_8hpp_source.html">greville_interpolation_points.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="greville__interpolation__points_8hpp_source.html#l00273">273</a> of file <a class="el" href="greville__interpolation__points_8hpp_source.html">greville_interpolation_points.hpp</a>.</p>
 
 </div>
 </div>

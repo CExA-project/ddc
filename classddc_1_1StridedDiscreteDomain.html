@@ -150,10 +150,10 @@ Public Types</h2></td></tr>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a7580b47b57db64c84ca9e661d7055ef4" id="r_a7580b47b57db64c84ca9e661d7055ef4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_DEFAULTED_FUNCTION</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1StridedDiscreteDomain.html#a7580b47b57db64c84ca9e661d7055ef4">StridedDiscreteDomain</a> ()=<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">default</a></td></tr>
 <tr class="separator:a7580b47b57db64c84ca9e661d7055ef4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3bab5809e582d33f4cc389b5219f147a" id="r_a3bab5809e582d33f4cc389b5219f147a"><td class="memTemplParams" colspan="2">template&lt;class... DDoms, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a>  = std::enable_if_t&lt;(is_strided_discrete_domain_v&lt;DDoms&gt; &amp;&amp; ...)&gt;&gt; </td></tr>
-<tr class="memitem:a3bab5809e582d33f4cc389b5219f147a"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1StridedDiscreteDomain.html#a3bab5809e582d33f4cc389b5219f147a">StridedDiscreteDomain</a> (<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDoms</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;... <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">domains</a>)</td></tr>
-<tr class="memdesc:a3bab5809e582d33f4cc389b5219f147a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a <a class="el" href="classddc_1_1StridedDiscreteDomain.html">StridedDiscreteDomain</a> by copies and merge of domains.  <br /></td></tr>
-<tr class="separator:a3bab5809e582d33f4cc389b5219f147a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad99ca6e9ed5917899640a2e7bd4ddbe0" id="r_ad99ca6e9ed5917899640a2e7bd4ddbe0"><td class="memTemplParams" colspan="2">template&lt;concepts::strided_discrete_domain... DDoms&gt; </td></tr>
+<tr class="memitem:ad99ca6e9ed5917899640a2e7bd4ddbe0"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1StridedDiscreteDomain.html#ad99ca6e9ed5917899640a2e7bd4ddbe0">StridedDiscreteDomain</a> (<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDoms</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;... <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">domains</a>)</td></tr>
+<tr class="memdesc:ad99ca6e9ed5917899640a2e7bd4ddbe0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a <a class="el" href="classddc_1_1StridedDiscreteDomain.html">StridedDiscreteDomain</a> by copies and merge of domains.  <br /></td></tr>
+<tr class="separator:ad99ca6e9ed5917899640a2e7bd4ddbe0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af89761c4a5ae85f50c7a8161f3116ab5" id="r_af89761c4a5ae85f50c7a8161f3116ab5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1StridedDiscreteDomain.html#af89761c4a5ae85f50c7a8161f3116ab5">StridedDiscreteDomain</a> (<a class="el" href="classddc_1_1StridedDiscreteDomain.html#a5d5a0d6c2766b8e43125fe5233bbbd46">discrete_element_type</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">element_begin</a>, <a class="el" href="classddc_1_1StridedDiscreteDomain.html#aabcfaebd9f7013f535689b78740cac77">discrete_vector_type</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="classddc_1_1StridedDiscreteDomain.html#a07368d8c3be3adb721da92311a906b0b">extents</a>, <a class="el" href="classddc_1_1StridedDiscreteDomain.html#aabcfaebd9f7013f535689b78740cac77">discrete_vector_type</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="classddc_1_1StridedDiscreteDomain.html#a4d8426043900c4d010f7318f0948c864">strides</a>)</td></tr>
 <tr class="memdesc:af89761c4a5ae85f50c7a8161f3116ab5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a <a class="el" href="classddc_1_1StridedDiscreteDomain.html">StridedDiscreteDomain</a> starting from element_begin with size points.  <br /></td></tr>
 <tr class="separator:af89761c4a5ae85f50c7a8161f3116ab5"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -208,24 +208,18 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:aedcce403194ae78312472e1b32f3d7e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a128bd793b520e9ecf74d727df4060c49" id="r_a128bd793b520e9ecf74d727df4060c49"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1StridedDiscreteDomain.html#a128bd793b520e9ecf74d727df4060c49">operator bool</a> ()</td></tr>
 <tr class="separator:a128bd793b520e9ecf74d727df4060c49"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a818734b5d4ab91ddcd0ca6d87f8bba79" id="r_a818734b5d4ab91ddcd0ca6d87f8bba79"><td class="memTemplParams" colspan="2">template&lt;std::size_t N = sizeof...(DDims), <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim0</a>  = std::enable_if_t&lt;N == 1, std::tuple_element_t&lt;0, std::tuple&lt;DDims...&gt;&gt;&gt;&gt; </td></tr>
-<tr class="memitem:a818734b5d4ab91ddcd0ca6d87f8bba79"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1StridedDiscreteDomain.html#a818734b5d4ab91ddcd0ca6d87f8bba79">begin</a> () <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a></td></tr>
-<tr class="separator:a818734b5d4ab91ddcd0ca6d87f8bba79"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8a38121da6d4978f479d27c3fb7a69ab" id="r_a8a38121da6d4978f479d27c3fb7a69ab"><td class="memTemplParams" colspan="2">template&lt;std::size_t N = sizeof...(DDims), <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim0</a>  = std::enable_if_t&lt;N == 1, std::tuple_element_t&lt;0, std::tuple&lt;DDims...&gt;&gt;&gt;&gt; </td></tr>
-<tr class="memitem:a8a38121da6d4978f479d27c3fb7a69ab"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1StridedDiscreteDomain.html#a8a38121da6d4978f479d27c3fb7a69ab">end</a> () <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a></td></tr>
-<tr class="separator:a8a38121da6d4978f479d27c3fb7a69ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad6a185f36e9964cd94fe057ef6f51716" id="r_ad6a185f36e9964cd94fe057ef6f51716"><td class="memTemplParams" colspan="2">template&lt;std::size_t N = sizeof...(DDims), <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim0</a>  = std::enable_if_t&lt;N == 1, std::tuple_element_t&lt;0, std::tuple&lt;DDims...&gt;&gt;&gt;&gt; </td></tr>
-<tr class="memitem:ad6a185f36e9964cd94fe057ef6f51716"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1StridedDiscreteDomain.html#ad6a185f36e9964cd94fe057ef6f51716">cbegin</a> () <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a></td></tr>
-<tr class="separator:ad6a185f36e9964cd94fe057ef6f51716"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a37031b6e9d853bea57b9869145712fd4" id="r_a37031b6e9d853bea57b9869145712fd4"><td class="memTemplParams" colspan="2">template&lt;std::size_t N = sizeof...(DDims), <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim0</a>  = std::enable_if_t&lt;N == 1, std::tuple_element_t&lt;0, std::tuple&lt;DDims...&gt;&gt;&gt;&gt; </td></tr>
-<tr class="memitem:a37031b6e9d853bea57b9869145712fd4"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1StridedDiscreteDomain.html#a37031b6e9d853bea57b9869145712fd4">cend</a> () <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a></td></tr>
-<tr class="separator:a37031b6e9d853bea57b9869145712fd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acbfd83ba080ff32128fcc252819d96b7" id="r_acbfd83ba080ff32128fcc252819d96b7"><td class="memTemplParams" colspan="2">template&lt;std::size_t N = sizeof...(DDims), <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a>  = std::enable_if_t&lt;N == 1, std::tuple_element_t&lt;0, std::tuple&lt;DDims...&gt;&gt;&gt;&gt; </td></tr>
-<tr class="memitem:acbfd83ba080ff32128fcc252819d96b7"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">decltype</a>(<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">auto</a>)&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1StridedDiscreteDomain.html#acbfd83ba080ff32128fcc252819d96b7">operator[]</a> (std::size_t <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">n</a>)</td></tr>
-<tr class="separator:acbfd83ba080ff32128fcc252819d96b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af32cdee3d15151dcbb4c3d34bf74f835" id="r_af32cdee3d15151dcbb4c3d34bf74f835"><td class="memTemplParams" colspan="2">template&lt;std::size_t N = sizeof...(DDims), <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a>  = std::enable_if_t&lt;N == 1, std::tuple_element_t&lt;0, std::tuple&lt;DDims...&gt;&gt;&gt;&gt; </td></tr>
-<tr class="memitem:af32cdee3d15151dcbb4c3d34bf74f835"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">decltype</a>(<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">auto</a>)&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1StridedDiscreteDomain.html#af32cdee3d15151dcbb4c3d34bf74f835">operator[]</a> (std::size_t <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">n</a>) <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a></td></tr>
-<tr class="separator:af32cdee3d15151dcbb4c3d34bf74f835"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a062e8449149eb5ba4360408c86285ae3" id="r_a062e8449149eb5ba4360408c86285ae3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">auto</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1StridedDiscreteDomain.html#a062e8449149eb5ba4360408c86285ae3">begin</a> () <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a></td></tr>
+<tr class="separator:a062e8449149eb5ba4360408c86285ae3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6a3d0658f57b24aa6a53447469a16d2b" id="r_a6a3d0658f57b24aa6a53447469a16d2b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">auto</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1StridedDiscreteDomain.html#a6a3d0658f57b24aa6a53447469a16d2b">end</a> () <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a></td></tr>
+<tr class="separator:a6a3d0658f57b24aa6a53447469a16d2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7dffa90a41dfd8bf3f392969bff4e39a" id="r_a7dffa90a41dfd8bf3f392969bff4e39a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">auto</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1StridedDiscreteDomain.html#a7dffa90a41dfd8bf3f392969bff4e39a">cbegin</a> () <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a></td></tr>
+<tr class="separator:a7dffa90a41dfd8bf3f392969bff4e39a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0cea3f1efd14a9eb5aa085073bf8dd26" id="r_a0cea3f1efd14a9eb5aa085073bf8dd26"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">auto</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1StridedDiscreteDomain.html#a0cea3f1efd14a9eb5aa085073bf8dd26">cend</a> () <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a></td></tr>
+<tr class="separator:a0cea3f1efd14a9eb5aa085073bf8dd26"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7c2ed37af7a8430cc92627111af1b540" id="r_a7c2ed37af7a8430cc92627111af1b540"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">decltype</a>(<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">auto</a>)&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1StridedDiscreteDomain.html#a7c2ed37af7a8430cc92627111af1b540">operator[]</a> (std::size_t <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">n</a>)</td></tr>
+<tr class="separator:a7c2ed37af7a8430cc92627111af1b540"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaf4275e1377521af2d425a823ef35051" id="r_aaf4275e1377521af2d425a823ef35051"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">decltype</a>(<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">auto</a>)&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1StridedDiscreteDomain.html#aaf4275e1377521af2d425a823ef35051">operator[]</a> (std::size_t <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">n</a>) <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a></td></tr>
+<tr class="separator:aaf4275e1377521af2d425a823ef35051"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -241,7 +235,7 @@ Friends</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;class... DDims&gt;<br />
 class ddc::StridedDiscreteDomain&lt; DDims &gt;</div>
-<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00070">70</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00076">76</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="a5d5a0d6c2766b8e43125fe5233bbbd46" name="a5d5a0d6c2766b8e43125fe5233bbbd46"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a5d5a0d6c2766b8e43125fe5233bbbd46">&#9670;&#160;</a></span>discrete_element_type</h2>
@@ -257,7 +251,7 @@ template&lt;class... DDims&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00080">80</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00086">86</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
 
 </div>
 </div>
@@ -275,7 +269,7 @@ template&lt;class... DDims&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00082">82</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00088">88</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
 
 </div>
 </div>
@@ -307,15 +301,15 @@ template&lt;class... DDims&gt; </div>
 
 </div>
 </div>
-<a id="a3bab5809e582d33f4cc389b5219f147a" name="a3bab5809e582d33f4cc389b5219f147a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3bab5809e582d33f4cc389b5219f147a">&#9670;&#160;</a></span>StridedDiscreteDomain() <span class="overload">[2/5]</span></h2>
+<a id="ad99ca6e9ed5917899640a2e7bd4ddbe0" name="ad99ca6e9ed5917899640a2e7bd4ddbe0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad99ca6e9ed5917899640a2e7bd4ddbe0">&#9670;&#160;</a></span>StridedDiscreteDomain() <span class="overload">[2/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class... DDims&gt; </div>
 <div class="memtemplate">
-template&lt;class... DDoms, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a>  = std::enable_if_t&lt;(is_strided_discrete_domain_v&lt;DDoms&gt; &amp;&amp; ...)&gt;&gt; </div>
+template&lt;concepts::strided_discrete_domain... DDoms&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -337,7 +331,7 @@ template&lt;class... DDoms, <a class="el" href="namespaceddc.html#a70f12a43ed0af
 
 <p>Construct a <a class="el" href="classddc_1_1StridedDiscreteDomain.html">StridedDiscreteDomain</a> by copies and merge of domains. </p>
 
-<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00103">103</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00107">107</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
 
 </div>
 </div>
@@ -393,7 +387,7 @@ template&lt;class... DDims&gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00115">115</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00119">119</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
 
 </div>
 </div>
@@ -506,7 +500,7 @@ template&lt;class... DDims&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00092">92</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00098">98</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
 
 </div>
 </div>
@@ -594,7 +588,7 @@ template&lt;class... ODims&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00137">137</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00141">141</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
 
 </div>
 </div>
@@ -626,7 +620,7 @@ template&lt;class... ODims&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00149">149</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00153">153</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
 
 </div>
 </div>
@@ -655,7 +649,7 @@ template&lt;class... DDims&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00155">155</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00159">159</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
 
 </div>
 </div>
@@ -684,7 +678,7 @@ template&lt;class... DDims&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00160">160</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00164">164</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
 
 </div>
 </div>
@@ -713,7 +707,7 @@ template&lt;class... DDims&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00165">165</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00169">169</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
 
 </div>
 </div>
@@ -744,7 +738,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00171">171</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00175">175</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
 
 </div>
 </div>
@@ -773,7 +767,7 @@ template&lt;class... DDims&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00176">176</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00180">180</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
 
 </div>
 </div>
@@ -802,7 +796,7 @@ template&lt;class... DDims&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00181">181</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00185">185</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
 
 </div>
 </div>
@@ -832,7 +826,7 @@ template&lt;class... DDims&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00188">188</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00192">192</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
 
 </div>
 </div>
@@ -862,7 +856,7 @@ template&lt;class... DDims&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00193">193</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00197">197</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
 
 </div>
 </div>
@@ -892,7 +886,7 @@ template&lt;class... DDims&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00198">198</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00202">202</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
 
 </div>
 </div>
@@ -922,7 +916,7 @@ template&lt;class... DDims&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00203">203</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00207">207</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
 
 </div>
 </div>
@@ -962,7 +956,7 @@ template&lt;class... DDims&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00208">208</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00212">212</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
 
 </div>
 </div>
@@ -992,7 +986,7 @@ template&lt;class... DDims&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00215">215</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00219">219</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
 
 </div>
 </div>
@@ -1024,7 +1018,7 @@ template&lt;class... DElems&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00222">222</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00226">226</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
 
 </div>
 </div>
@@ -1056,7 +1050,7 @@ template&lt;class... DElems&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00248">248</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00252">252</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
 
 </div>
 </div>
@@ -1085,7 +1079,7 @@ template&lt;class... DDims&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00262">262</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00266">266</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
 
 </div>
 </div>
@@ -1114,19 +1108,17 @@ template&lt;class... DDims&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00267">267</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00271">271</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
 
 </div>
 </div>
-<a id="a818734b5d4ab91ddcd0ca6d87f8bba79" name="a818734b5d4ab91ddcd0ca6d87f8bba79"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a818734b5d4ab91ddcd0ca6d87f8bba79">&#9670;&#160;</a></span>begin()</h2>
+<a id="a062e8449149eb5ba4360408c86285ae3" name="a062e8449149eb5ba4360408c86285ae3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a062e8449149eb5ba4360408c86285ae3">&#9670;&#160;</a></span>begin()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class... DDims&gt; </div>
-<div class="memtemplate">
-template&lt;std::size_t N = sizeof...(DDims), <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim0</a>  = std::enable_if_t&lt;N == 1, std::tuple_element_t&lt;0, std::tuple&lt;DDims...&gt;&gt;&gt;&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -1145,19 +1137,17 @@ template&lt;std::size_t N = sizeof...(DDims), <a class="el" href="namespaceddc.h
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00275">275</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00276">276</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
 
 </div>
 </div>
-<a id="a8a38121da6d4978f479d27c3fb7a69ab" name="a8a38121da6d4978f479d27c3fb7a69ab"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8a38121da6d4978f479d27c3fb7a69ab">&#9670;&#160;</a></span>end()</h2>
+<a id="a6a3d0658f57b24aa6a53447469a16d2b" name="a6a3d0658f57b24aa6a53447469a16d2b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6a3d0658f57b24aa6a53447469a16d2b">&#9670;&#160;</a></span>end()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class... DDims&gt; </div>
-<div class="memtemplate">
-template&lt;std::size_t N = sizeof...(DDims), <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim0</a>  = std::enable_if_t&lt;N == 1, std::tuple_element_t&lt;0, std::tuple&lt;DDims...&gt;&gt;&gt;&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -1180,15 +1170,13 @@ template&lt;std::size_t N = sizeof...(DDims), <a class="el" href="namespaceddc.h
 
 </div>
 </div>
-<a id="ad6a185f36e9964cd94fe057ef6f51716" name="ad6a185f36e9964cd94fe057ef6f51716"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad6a185f36e9964cd94fe057ef6f51716">&#9670;&#160;</a></span>cbegin()</h2>
+<a id="a7dffa90a41dfd8bf3f392969bff4e39a" name="a7dffa90a41dfd8bf3f392969bff4e39a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7dffa90a41dfd8bf3f392969bff4e39a">&#9670;&#160;</a></span>cbegin()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class... DDims&gt; </div>
-<div class="memtemplate">
-template&lt;std::size_t N = sizeof...(DDims), <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim0</a>  = std::enable_if_t&lt;N == 1, std::tuple_element_t&lt;0, std::tuple&lt;DDims...&gt;&gt;&gt;&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -1207,19 +1195,17 @@ template&lt;std::size_t N = sizeof...(DDims), <a class="el" href="namespaceddc.h
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00292">292</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00291">291</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
 
 </div>
 </div>
-<a id="a37031b6e9d853bea57b9869145712fd4" name="a37031b6e9d853bea57b9869145712fd4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a37031b6e9d853bea57b9869145712fd4">&#9670;&#160;</a></span>cend()</h2>
+<a id="a0cea3f1efd14a9eb5aa085073bf8dd26" name="a0cea3f1efd14a9eb5aa085073bf8dd26"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0cea3f1efd14a9eb5aa085073bf8dd26">&#9670;&#160;</a></span>cend()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class... DDims&gt; </div>
-<div class="memtemplate">
-template&lt;std::size_t N = sizeof...(DDims), <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim0</a>  = std::enable_if_t&lt;N == 1, std::tuple_element_t&lt;0, std::tuple&lt;DDims...&gt;&gt;&gt;&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -1238,19 +1224,17 @@ template&lt;std::size_t N = sizeof...(DDims), <a class="el" href="namespaceddc.h
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00300">300</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00298">298</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
 
 </div>
 </div>
-<a id="acbfd83ba080ff32128fcc252819d96b7" name="acbfd83ba080ff32128fcc252819d96b7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acbfd83ba080ff32128fcc252819d96b7">&#9670;&#160;</a></span>operator[]() <span class="overload">[1/2]</span></h2>
+<a id="a7c2ed37af7a8430cc92627111af1b540" name="a7c2ed37af7a8430cc92627111af1b540"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7c2ed37af7a8430cc92627111af1b540">&#9670;&#160;</a></span>operator[]() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class... DDims&gt; </div>
-<div class="memtemplate">
-template&lt;std::size_t N = sizeof...(DDims), <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a>  = std::enable_if_t&lt;N == 1, std::tuple_element_t&lt;0, std::tuple&lt;DDims...&gt;&gt;&gt;&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -1270,19 +1254,17 @@ template&lt;std::size_t N = sizeof...(DDims), <a class="el" href="namespaceddc.h
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00309">309</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00306">306</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
 
 </div>
 </div>
-<a id="af32cdee3d15151dcbb4c3d34bf74f835" name="af32cdee3d15151dcbb4c3d34bf74f835"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af32cdee3d15151dcbb4c3d34bf74f835">&#9670;&#160;</a></span>operator[]() <span class="overload">[2/2]</span></h2>
+<a id="aaf4275e1377521af2d425a823ef35051" name="aaf4275e1377521af2d425a823ef35051"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaf4275e1377521af2d425a823ef35051">&#9670;&#160;</a></span>operator[]() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class... DDims&gt; </div>
-<div class="memtemplate">
-template&lt;std::size_t N = sizeof...(DDims), <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a>  = std::enable_if_t&lt;N == 1, std::tuple_element_t&lt;0, std::tuple&lt;DDims...&gt;&gt;&gt;&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -1302,7 +1284,7 @@ template&lt;std::size_t N = sizeof...(DDims), <a class="el" href="namespaceddc.h
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00317">317</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00312">312</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
 
 </div>
 </div>
@@ -1331,7 +1313,7 @@ template&lt;class... &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00073">73</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="strided__discrete__domain_8hpp_source.html#l00079">79</a> of file <a class="el" href="strided__discrete__domain_8hpp_source.html">strided_discrete_domain.hpp</a>.</p>
 
 </div>
 </div>

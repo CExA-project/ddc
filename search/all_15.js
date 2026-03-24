@@ -15,7 +15,7 @@ var searchData=
   ['replace_5fdim_5fof_5ft_12',['replace_dim_of_t',['../namespaceddc.html#a96c227ae91aaf95ceaf1a7a79353b276',1,'ddc']]],
   ['resolution_13',['Differences with the uniform problem resolution',['../going_further.html#autotoc_md14',1,'']]],
   ['restrict_5fwith_14',['restrict_with',['../classddc_1_1DiscreteDomain.html#a3d7a05b7eb67262b9b2ccae8296eb261',1,'ddc::DiscreteDomain::restrict_with()'],['../classddc_1_1DiscreteDomain_3_4.html#aeba346ace0740c62900ab64b8447c1de',1,'ddc::DiscreteDomain&lt;&gt;::restrict_with()']]],
-  ['rlength_15',['rlength',['../namespaceddc.html#a9843ffde244885e82a6307449cc13682',1,'ddc']]],
-  ['rmax_16',['rmax',['../classddc_1_1NonUniformBSplines_1_1Impl.html#afd3f4b038576095bd9af482c5558a44f',1,'ddc::NonUniformBSplines::Impl::rmax()'],['../namespaceddc.html#a0f6fdedc3306e0a0b5a34f6446db1294',1,'ddc::rmax()'],['../classddc_1_1UniformBSplines_1_1Impl.html#a24b9621c7a03174130420452ea0934c7',1,'ddc::UniformBSplines::Impl::rmax() const noexcept']]],
-  ['rmin_17',['rmin',['../classddc_1_1UniformBSplines_1_1Impl.html#a3aaff28144f0724ec6d22be0aa3407b5',1,'ddc::UniformBSplines::Impl::rmin()'],['../classddc_1_1NonUniformBSplines_1_1Impl.html#a20dd3da81cc2b0ce313cf8ca12564c16',1,'ddc::NonUniformBSplines::Impl::rmin()'],['../namespaceddc.html#a9ffe1925cf2fc3ccaac25eece7ab84e4',1,'ddc::rmin()']]]
+  ['rlength_15',['rlength',['../namespaceddc.html#a1addf8bd8cc62fe6ff7f1db82fc96585',1,'ddc']]],
+  ['rmax_16',['rmax',['../classddc_1_1NonUniformBSplines_1_1Impl.html#afd3f4b038576095bd9af482c5558a44f',1,'ddc::NonUniformBSplines::Impl::rmax()'],['../namespaceddc.html#af903a38f5fb44af4fa393e0f3db15c8f',1,'ddc::rmax()'],['../classddc_1_1UniformBSplines_1_1Impl.html#a24b9621c7a03174130420452ea0934c7',1,'ddc::UniformBSplines::Impl::rmax() const noexcept']]],
+  ['rmin_17',['rmin',['../classddc_1_1UniformBSplines_1_1Impl.html#a3aaff28144f0724ec6d22be0aa3407b5',1,'ddc::UniformBSplines::Impl::rmin()'],['../classddc_1_1NonUniformBSplines_1_1Impl.html#a20dd3da81cc2b0ce313cf8ca12564c16',1,'ddc::NonUniformBSplines::Impl::rmin()'],['../namespaceddc.html#a61330d2b60cc10d1f9ef500e14a67204',1,'ddc::rmin()']]]
 ];

@@ -122,7 +122,7 @@ class GrevilleInterpolationPoints
         return SamplingImpl(greville_points);
     }
 
-    static constexpr std : size_t N_BE_MIN = n_boundary_equations(BcLower, BSplines::degree());
+    static constexpr std::size_t N_BE_MIN = n_boundary_equations(BcLower, BSplines::degree());
     static constexpr std::size_t N_BE_MAX = n_boundary_equations(BcUpper, BSplines::degree());
     template <class U>
     static constexpr bool is_uniform_discrete_dimension_v

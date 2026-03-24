@@ -131,15 +131,20 @@ target_link_libraries(ddc_core PUBLIC Kokkos::kokkos)
 target_sources(
     ddc_core
     PRIVATE
-        src/ddc/discrete_space.cpp
         src/ddc/discrete_element.cpp
+        src/ddc/discrete_space.cpp
         src/ddc/discrete_vector.cpp
         src/ddc/print.cpp
+    PUBLIC
+        FILE_SET core_public
+            TYPE HEADERS
+            BASE_DIRS ${CMAKE_CURRENT_BINARY_DIR}/generated
+            FILES ${CMAKE_CURRENT_BINARY_DIR}/generated/ddc/config.hpp
     INTERFACE
-        FILE_SET HEADERS
-            BASE_DIRS src ${CMAKE_CURRENT_BINARY_DIR}/generated
+        FILE_SET core_interface
+            TYPE HEADERS
+            BASE_DIRS src
             FILES
-                ${CMAKE_CURRENT_BINARY_DIR}/generated/ddc/config.hpp
                 src/ddc/detail/dual_discretization.hpp
                 src/ddc/detail/kokkos.hpp
                 src/ddc/detail/macros.hpp
@@ -180,7 +185,7 @@ target_sources(
 )
 
 set_target_properties(ddc_core PROPERTIES EXPORT_NAME core)
-install(TARGETS ddc_core EXPORT DDCCoreTargets FILE_SET HEADERS)
+install(TARGETS ddc_core EXPORT DDCCoreTargets FILE_SET core_interface FILE_SET core_public)
 install(EXPORT DDCCoreTargets NAMESPACE DDC:: DESTINATION ${DDC_INSTALL_CMAKEDIR})
 
 # Link library to DDC

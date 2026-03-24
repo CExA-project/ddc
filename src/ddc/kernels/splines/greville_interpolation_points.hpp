@@ -122,7 +122,7 @@ class GrevilleInterpolationPoints
         return SamplingImpl(greville_points);
     }
 
-    static constexpr std:size_t N_BE_MIN = n_boundary_equations(BcLower, BSplines::degree());
+    static constexpr std : size_t N_BE_MIN = n_boundary_equations(BcLower, BSplines::degree());
     static constexpr std::size_t N_BE_MAX = n_boundary_equations(BcUpper, BSplines::degree());
     template <class U>
     static constexpr bool is_uniform_discrete_dimension_v
@@ -163,8 +163,10 @@ public:
             using IntermediateSampling = IntermediateUniformSampling<Sampling>;
             auto points_wo_bcs = uniform_greville_points<IntermediateSampling>();
             std::size_t const n_break_points = ddc::discrete_space<BSplines>().ncells() + 1;
-            assert(ddc::discrete_space<BSplines>().nbasis() >= static_cast<std::size_t>(N_BE_MIN + N_BE_MAX));
-            std::size_t const npoints = ddc::discrete_space<BSplines>().nbasis() - N_BE_MIN - N_BE_MAX;
+            assert(ddc::discrete_space<BSplines>().nbasis()
+                   >= static_cast<std::size_t>(N_BE_MIN + N_BE_MAX));
+            std::size_t const npoints
+                    = ddc::discrete_space<BSplines>().nbasis() - N_BE_MIN - N_BE_MAX;
             std::vector<double> points_with_bcs(npoints);
 
             // Construct Greville-like points at the edge

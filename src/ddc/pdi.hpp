@@ -70,10 +70,7 @@ public:
     /// @{
     /// API with access argument
 
-    template <
-            PDI_inout_t Access,
-            class BorrowedChunk,
-            std::enable_if_t<is_borrowed_chunk_v<BorrowedChunk>, int> = 0>
+    template <PDI_inout_t Access, concepts::borrowed_chunk BorrowedChunk>
     PdiEvent& with(std::string const& name, BorrowedChunk&& data)
     {
         static_assert(
@@ -92,16 +89,14 @@ public:
         return *this;
     }
 
-    template <
-            PDI_inout_t Access,
-            class Arithmetic,
-            std::enable_if_t<std::is_arithmetic_v<std::remove_reference_t<Arithmetic>>, int> = 0>
+    template <PDI_inout_t Access, class Arithmetic>
     PdiEvent& with(std::string const& name, Arithmetic&& data)
+        requires(std::is_arithmetic_v<std::remove_reference_t<Arithmetic>>)
     {
         static_assert(
                 !(Access & PDI_IN) || (default_access_v<Arithmetic> & PDI_IN),
                 "Invalid access for constant data");
-        using value_type = std::remove_cv_t<std::remove_reference_t<Arithmetic>>;
+        using value_type = std::remove_cvref_t<Arithmetic>;
         // NOLINTNEXTLINE(misc-const-correctness)
         value_type* data_ptr = const_cast<value_type*>(&data);
         // for read-only data, we share a copy instead of the data itself in case we received a ref on a temporary,
@@ -117,17 +112,16 @@ public:
     /// @{
 
     /// Borrowed chunk overload (Chunk (const)& or ChunkSpan&& or ChunkSpan (const)&)
-    template <class BorrowedChunk, std::enable_if_t<is_borrowed_chunk_v<BorrowedChunk>, int> = 0>
+    template <concepts::borrowed_chunk BorrowedChunk>
     PdiEvent& with(std::string const& name, BorrowedChunk&& data)
     {
         return with<chunk_default_access_v<BorrowedChunk>>(name, std::forward<BorrowedChunk>(data));
     }
 
     /// Arithmetic overload
-    template <
-            class Arithmetic,
-            std::enable_if_t<std::is_arithmetic_v<std::remove_reference_t<Arithmetic>>, int> = 0>
+    template <class Arithmetic>
     PdiEvent& with(std::string const& name, Arithmetic&& data)
+        requires(std::is_arithmetic_v<std::remove_reference_t<Arithmetic>>)
     {
         return with<default_access_v<Arithmetic>>(name, std::forward<Arithmetic>(data));
     }

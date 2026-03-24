@@ -126,7 +126,7 @@ endif()
 add_library(ddc_core)
 add_library(DDC::core ALIAS ddc_core)
 configure_file(cmake/config.hpp.in generated/ddc/config.hpp NO_SOURCE_PERMISSIONS @ONLY)
-target_compile_features(ddc_core PUBLIC cxx_std_17)
+target_compile_features(ddc_core PUBLIC cxx_std_20)
 target_link_libraries(ddc_core PUBLIC Kokkos::kokkos)
 target_sources(
     ddc_core
@@ -145,7 +145,6 @@ target_sources(
                 src/ddc/detail/macros.hpp
                 src/ddc/detail/tagged_vector.hpp
                 src/ddc/detail/type_seq.hpp
-                src/ddc/detail/type_traits.hpp
                 src/ddc/detail/utils.hpp
                 src/ddc/aligned_allocator.hpp
                 src/ddc/chunk.hpp
@@ -219,7 +218,7 @@ if("${DDC_BUILD_KERNELS_FFT}")
 
     add_library(ddc_fft)
     add_library(DDC::fft ALIAS ddc_fft)
-    target_compile_features(ddc_fft PUBLIC cxx_std_17)
+    target_compile_features(ddc_fft PUBLIC cxx_std_20)
     target_link_libraries(ddc_fft PUBLIC DDC::core Kokkos::kokkos KokkosFFT::fft)
     target_sources(
         ddc_fft
@@ -269,7 +268,7 @@ if("${DDC_BUILD_KERNELS_SPLINES}")
 
     add_library(ddc_splines)
     add_library(DDC::splines ALIAS ddc_splines)
-    target_compile_features(ddc_splines INTERFACE cxx_std_17)
+    target_compile_features(ddc_splines INTERFACE cxx_std_20)
     target_link_libraries(
         ddc_splines
         INTERFACE DDC::core
@@ -342,7 +341,7 @@ if("${DDC_BUILD_PDI_WRAPPER}")
 
     add_library(ddc_pdi)
     add_library(DDC::pdi ALIAS ddc_pdi)
-    target_compile_features(ddc_pdi PUBLIC cxx_std_17)
+    target_compile_features(ddc_pdi PUBLIC cxx_std_20)
     target_link_libraries(ddc_pdi PUBLIC DDC::core PDI::PDI_C)
     target_sources(
         ddc_pdi

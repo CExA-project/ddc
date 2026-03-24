@@ -6,7 +6,6 @@
 
 #include <cstddef>
 #include <string>
-#include <type_traits>
 #include <utility>
 
 #include <Kokkos_Core.hpp>
@@ -38,14 +37,14 @@ public:
     {
     }
 
-    template <std::size_t N = sizeof...(Idx), std::enable_if_t<(N == 0), bool> = true>
     KOKKOS_FUNCTION void operator()(index_type<0> /*id*/) const
+        requires(sizeof...(Idx) == 0)
     {
         m_f(m_support(typename Support::discrete_vector_type()));
     }
 
-    template <std::size_t N = sizeof...(Idx), std::enable_if_t<(N > 0), bool> = true>
     KOKKOS_FUNCTION void operator()(index_type<Idx>... ids) const
+        requires(sizeof...(Idx) > 0)
     {
         m_f(m_support(typename Support::discrete_vector_type(ids...)));
     }
@@ -91,10 +90,11 @@ void parallel_for_each(
  * @param[in] f      a functor taking an index as parameter
  */
 template <class ExecSpace, class Support, class Functor>
-std::enable_if_t<Kokkos::is_execution_space_v<ExecSpace>> parallel_for_each(
+void parallel_for_each(
         ExecSpace const& execution_space,
         Support const& domain,
         Functor&& f) noexcept
+    requires(Kokkos::is_execution_space_v<ExecSpace>)
 {
     detail::for_each_kokkos(
             "ddc_for_each_default",

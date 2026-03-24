@@ -13,7 +13,6 @@
 #include "detail/kokkos.hpp"
 #include "detail/macros.hpp"
 #include "detail/type_seq.hpp"
-#include "detail/type_traits.hpp"
 
 #include "chunk_common.hpp"
 #include "discrete_domain.hpp"
@@ -166,21 +165,18 @@ public:
 
     /** Forbids to construct a ChunkSpan from a rvalue of type Chunk.
      */
-    template <
-            class OElementType,
-            class Allocator,
-            class = std::enable_if_t<std::is_same_v<typename Allocator::memory_space, MemorySpace>>>
-    ChunkSpan(Chunk<OElementType, SupportType, Allocator>&& other) noexcept = delete;
+    template <class OElementType, class Allocator>
+    ChunkSpan(Chunk<OElementType, SupportType, Allocator>&& other) noexcept
+        requires(std::is_same_v<typename Allocator::memory_space, MemorySpace>)
+    = delete;
 
     /** Constructs a new ChunkSpan from a Chunk, yields a new view to the same data
      * @param other the Chunk to view
      */
-    template <
-            class OElementType,
-            class Allocator,
-            class = std::enable_if_t<std::is_same_v<typename Allocator::memory_space, MemorySpace>>>
+    template <class OElementType, class Allocator>
     KOKKOS_FUNCTION constexpr explicit ChunkSpan(
             Chunk<OElementType, SupportType, Allocator>& other) noexcept
+        requires(std::is_same_v<typename Allocator::memory_space, MemorySpace>)
         : base_type(other.m_allocation_mdspan, other.m_domain)
     {
     }
@@ -188,15 +184,13 @@ public:
     /** Constructs a new ChunkSpan from a Chunk, yields a new view to the same data
      * @param other the Chunk to view
      */
-    // Disabled by SFINAE in the case of `ElementType` is not `const` to avoid write access
-    template <
-            class OElementType,
-            class SFINAEElementType = ElementType,
-            class = std::enable_if_t<std::is_const_v<SFINAEElementType>>,
-            class Allocator,
-            class = std::enable_if_t<std::is_same_v<typename Allocator::memory_space, MemorySpace>>>
+    // Disabled in the case of `ElementType` is not `const` to avoid write access
+    template <class OElementType, class Allocator>
     KOKKOS_FUNCTION constexpr explicit ChunkSpan(
             Chunk<OElementType, SupportType, Allocator> const& other) noexcept
+        requires(
+                std::is_const_v<ElementType>
+                && std::is_same_v<typename Allocator::memory_space, MemorySpace>)
         : base_type(other.m_allocation_mdspan, other.m_domain)
     {
     }
@@ -215,10 +209,8 @@ public:
      * @param ptr the allocation pointer to the data
      * @param domain the domain that sustains the view
      */
-    template <
-            class Mapping = mapping_type,
-            std::enable_if_t<std::is_constructible_v<Mapping, extents_type>, int> = 0>
     KOKKOS_FUNCTION constexpr ChunkSpan(ElementType* const ptr, SupportType const& domain)
+        requires(std::is_constructible_v<mapping_type, extents_type>)
         : base_type(ptr, domain)
     {
     }
@@ -243,8 +235,9 @@ public:
      * @param view the Kokkos view
      * @param domain the domain that sustains the view
      */
-    template <class KokkosView, class = std::enable_if_t<Kokkos::is_view_v<KokkosView>>>
+    template <class KokkosView>
     KOKKOS_FUNCTION constexpr ChunkSpan(KokkosView const& view, SupportType const& domain) noexcept
+        requires(Kokkos::is_view_v<KokkosView>)
         : ChunkSpan(
                   detail::build_mdspan(view, std::make_index_sequence<SupportType::rank()> {}),
                   domain)
@@ -305,11 +298,9 @@ public:
 
     /** Restrict to a subdomain, only valid when SupportType is a DiscreteDomain
      */
-    template <
-            class... QueryDDims,
-            class SFINAESupportType = SupportType,
-            std::enable_if_t<is_discrete_domain_v<SFINAESupportType>, int> = 0>
+    template <class... QueryDDims>
     KOKKOS_FUNCTION constexpr auto operator[](DiscreteDomain<QueryDDims...> const& odomain) const
+        requires(is_discrete_domain_v<SupportType>)
     {
         KOKKOS_ASSERT(
                 odomain.empty()
@@ -343,9 +334,7 @@ public:
      * @param delems discrete elements
      * @return reference to this element
      */
-    template <
-            class... DElems,
-            std::enable_if_t<detail::all_of_v<is_discrete_element_v<DElems>...>, int> = 0>
+    template <concepts::discrete_element... DElems>
     KOKKOS_FUNCTION constexpr reference operator()(DElems const&... delems) const noexcept
     {
         static_assert(
@@ -361,11 +350,9 @@ public:
      * @param dvects discrete vectors
      * @return reference to this element
      */
-    template <
-            class... DVects,
-            std::enable_if_t<detail::all_of_v<is_discrete_vector_v<DVects>...>, int> = 0,
-            std::enable_if_t<sizeof...(DVects) != 0, int> = 0>
+    template <concepts::discrete_vector... DVects>
     KOKKOS_FUNCTION constexpr reference operator()(DVects const&... dvects) const noexcept
+        requires(sizeof...(DVects) != 0)
     {
         static_assert(
                 SupportType::rank() == (0 + ... + DVects::size()),

@@ -6,7 +6,6 @@
 
 #include <array>
 #include <cstddef>
-#include <type_traits>
 
 #include <ddc/ddc.hpp>
 
@@ -121,8 +120,8 @@ public:
      *
      * @param[in] eval_pos Coordinate in the dimension given inside the domain where we will evaluate each points outside the domain.
      */
-    template <class SFINAEDimNI = DimNI, std::enable_if_t<SFINAEDimNI::PERIODIC, int> = 0>
     explicit ConstantExtrapolationRule(ddc::Coordinate<DimI> eval_pos)
+        requires(DimNI::PERIODIC)
         : m_eval_pos(eval_pos)
         , m_eval_pos_not_interest_min(0.)
         , m_eval_pos_not_interest_max(0.)

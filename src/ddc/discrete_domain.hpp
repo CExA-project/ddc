@@ -39,6 +39,12 @@ struct is_discrete_domain<DiscreteDomain<Tags...>> : std::true_type
 template <class T>
 inline constexpr bool is_discrete_domain_v = is_discrete_domain<T>::value;
 
+namespace concepts {
+
+template <class T>
+concept discrete_domain = is_discrete_domain_v<T>;
+
+}
 
 namespace detail {
 
@@ -88,7 +94,7 @@ public:
     KOKKOS_DEFAULTED_FUNCTION DiscreteDomain() = default;
 
     /// Construct a DiscreteDomain by copies and merge of domains
-    template <class... DDoms, class = std::enable_if_t<(is_discrete_domain_v<DDoms> && ...)>>
+    template <concepts::discrete_domain... DDoms>
     KOKKOS_FUNCTION constexpr explicit DiscreteDomain(DDoms const&... domains)
         : m_element_begin(domains.front()...)
         , m_element_end((domains.front() + domains.extents())...)
@@ -256,50 +262,38 @@ public:
         return !empty();
     }
 
-    template <
-            std::size_t N = sizeof...(DDims),
-            class DDim0 = std::enable_if_t<N == 1, std::tuple_element_t<0, std::tuple<DDims...>>>>
     KOKKOS_FUNCTION auto begin() const
+        requires(sizeof...(DDims) == 1)
     {
-        return DiscreteDomainIterator<DDim0>(front());
+        return DiscreteDomainIterator<std::tuple_element_t<0, std::tuple<DDims...>>>(front());
     }
 
-    template <
-            std::size_t N = sizeof...(DDims),
-            class DDim0 = std::enable_if_t<N == 1, std::tuple_element_t<0, std::tuple<DDims...>>>>
     KOKKOS_FUNCTION auto end() const
+        requires(sizeof...(DDims) == 1)
     {
-        return DiscreteDomainIterator<DDim0>(m_element_end);
+        return DiscreteDomainIterator<std::tuple_element_t<0, std::tuple<DDims...>>>(m_element_end);
     }
 
-    template <
-            std::size_t N = sizeof...(DDims),
-            class DDim0 = std::enable_if_t<N == 1, std::tuple_element_t<0, std::tuple<DDims...>>>>
     KOKKOS_FUNCTION auto cbegin() const
+        requires(sizeof...(DDims) == 1)
     {
-        return DiscreteDomainIterator<DDim0>(front());
+        return DiscreteDomainIterator<std::tuple_element_t<0, std::tuple<DDims...>>>(front());
     }
 
-    template <
-            std::size_t N = sizeof...(DDims),
-            class DDim0 = std::enable_if_t<N == 1, std::tuple_element_t<0, std::tuple<DDims...>>>>
     KOKKOS_FUNCTION auto cend() const
+        requires(sizeof...(DDims) == 1)
     {
-        return DiscreteDomainIterator<DDim0>(m_element_end);
+        return DiscreteDomainIterator<std::tuple_element_t<0, std::tuple<DDims...>>>(m_element_end);
     }
 
-    template <
-            std::size_t N = sizeof...(DDims),
-            class = std::enable_if_t<N == 1, std::tuple_element_t<0, std::tuple<DDims...>>>>
     KOKKOS_FUNCTION constexpr decltype(auto) operator[](std::size_t n)
+        requires(sizeof...(DDims) == 1)
     {
         return begin()[n];
     }
 
-    template <
-            std::size_t N = sizeof...(DDims),
-            class = std::enable_if_t<N == 1, std::tuple_element_t<0, std::tuple<DDims...>>>>
     KOKKOS_FUNCTION constexpr decltype(auto) operator[](std::size_t n) const
+        requires(sizeof...(DDims) == 1)
     {
         return begin()[n];
     }
@@ -324,8 +318,9 @@ public:
     KOKKOS_DEFAULTED_FUNCTION constexpr DiscreteDomain() = default;
 
     /// Construct a DiscreteDomain by copies and merge of domains
-    template <class... DDoms, class = std::enable_if_t<(is_discrete_domain_v<DDoms> && ...)>>
+    template <class... DDoms>
     KOKKOS_FUNCTION constexpr explicit DiscreteDomain(DDoms const&... /*domains*/)
+        requires(is_discrete_domain_v<DDoms> && ...)
     {
     }
 

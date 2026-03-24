@@ -5,6 +5,7 @@
 #pragma once
 
 #include <array>
+#include <concepts>
 #include <cstddef>
 #include <ostream>
 #include <type_traits>
@@ -34,6 +35,13 @@ struct is_tagged_vector<TaggedVector<ElementType, Tags...>> : std::true_type
 
 template <class T>
 inline constexpr bool is_tagged_vector_v = is_tagged_vector<T>::value;
+
+namespace concepts {
+
+template <class T>
+concept tagged_vector = is_tagged_vector_v<T>;
+
+}
 
 template <class ElementType, class... Tags>
 struct ToTypeSeq<TaggedVector<ElementType, Tags...>>
@@ -96,29 +104,21 @@ KOKKOS_FUNCTION constexpr auto operator+(
     return detail::TaggedVector<RElementType, Tags...>((get<Tags>(lhs) + get<Tags>(rhs))...);
 }
 
-template <
-        class ElementType,
-        class Tag,
-        class OElementType,
-        class = std::enable_if_t<!detail::is_tagged_vector_v<OElementType>>,
-        class = std::enable_if_t<std::is_convertible_v<OElementType, ElementType>>>
+template <class ElementType, class Tag, std::convertible_to<ElementType> OElementType>
 KOKKOS_FUNCTION constexpr auto operator+(
         detail::TaggedVector<ElementType, Tag> const& lhs,
         OElementType const& rhs)
+    requires(!detail::is_tagged_vector_v<OElementType>)
 {
     using RElementType = decltype(std::declval<ElementType>() + std::declval<OElementType>());
     return detail::TaggedVector<RElementType, Tag>(get<Tag>(lhs) + rhs);
 }
 
-template <
-        class ElementType,
-        class Tag,
-        class OElementType,
-        class = std::enable_if_t<!detail::is_tagged_vector_v<OElementType>>,
-        class = std::enable_if_t<std::is_convertible_v<ElementType, OElementType>>>
+template <class ElementType, class Tag, std::convertible_to<ElementType> OElementType>
 KOKKOS_FUNCTION constexpr auto operator+(
         OElementType const& lhs,
         detail::TaggedVector<ElementType, Tag> const& rhs)
+    requires(!detail::is_tagged_vector_v<OElementType>)
 {
     using RElementType = decltype(std::declval<ElementType>() + std::declval<OElementType>());
     return detail::TaggedVector<RElementType, Tag>(lhs + get<Tag>(rhs));
@@ -134,29 +134,21 @@ KOKKOS_FUNCTION constexpr auto operator-(
     return detail::TaggedVector<RElementType, Tags...>((get<Tags>(lhs) - get<Tags>(rhs))...);
 }
 
-template <
-        class ElementType,
-        class Tag,
-        class OElementType,
-        class = std::enable_if_t<!detail::is_tagged_vector_v<OElementType>>,
-        class = std::enable_if_t<std::is_convertible_v<OElementType, ElementType>>>
+template <class ElementType, class Tag, std::convertible_to<ElementType> OElementType>
 KOKKOS_FUNCTION constexpr auto operator-(
         detail::TaggedVector<ElementType, Tag> const& lhs,
         OElementType const& rhs)
+    requires(!detail::is_tagged_vector_v<OElementType>)
 {
     using RElementType = decltype(std::declval<ElementType>() + std::declval<OElementType>());
     return detail::TaggedVector<RElementType, Tag>(get<Tag>(lhs) - rhs);
 }
 
-template <
-        class ElementType,
-        class Tag,
-        class OElementType,
-        class = std::enable_if_t<!detail::is_tagged_vector_v<OElementType>>,
-        class = std::enable_if_t<std::is_convertible_v<ElementType, OElementType>>>
+template <class ElementType, class Tag, std::convertible_to<ElementType> OElementType>
 KOKKOS_FUNCTION constexpr auto operator-(
         OElementType const& lhs,
         detail::TaggedVector<ElementType, Tag> const& rhs)
+    requires(!detail::is_tagged_vector_v<OElementType>)
 {
     using RElementType = decltype(std::declval<ElementType>() + std::declval<OElementType>());
     return detail::TaggedVector<RElementType, Tag>(lhs - get<Tag>(rhs));
@@ -164,15 +156,11 @@ KOKKOS_FUNCTION constexpr auto operator-(
 
 /// external left binary operator: *
 
-template <
-        class ElementType,
-        class OElementType,
-        class... Tags,
-        class = std::enable_if_t<!detail::is_tagged_vector_v<OElementType>>,
-        class = std::enable_if_t<std::is_convertible_v<ElementType, OElementType>>>
+template <class ElementType, std::convertible_to<ElementType> OElementType, class... Tags>
 KOKKOS_FUNCTION constexpr auto operator*(
         ElementType const& lhs,
         detail::TaggedVector<OElementType, Tags...> const& rhs)
+    requires(!detail::is_tagged_vector_v<OElementType>)
 {
     using RElementType = decltype(std::declval<ElementType>() * std::declval<OElementType>());
     return detail::TaggedVector<RElementType, Tags...>((lhs * get<Tags>(rhs))...);
@@ -199,13 +187,8 @@ namespace detail {
 /// Returns a reference towards the DiscreteElement that contains the QueryTag
 template <
         class QueryTag,
-        class HeadTaggedVector,
-        class... TailTaggedVectors,
-        std::enable_if_t<
-                is_tagged_vector_v<HeadTaggedVector>
-                        && (is_tagged_vector_v<TailTaggedVectors> && ...),
-                int>
-        = 1>
+        concepts::tagged_vector HeadTaggedVector,
+        concepts::tagged_vector... TailTaggedVectors>
 KOKKOS_FUNCTION constexpr auto const& take(
         HeadTaggedVector const& head,
         TailTaggedVectors const&... tail)
@@ -272,18 +255,15 @@ public:
 
     KOKKOS_DEFAULTED_FUNCTION constexpr TaggedVector(TaggedVector&&) = default;
 
-    template <class... TVectors, class = std::enable_if_t<(is_tagged_vector_v<TVectors> && ...)>>
+    template <concepts::tagged_vector... TVectors>
     KOKKOS_FUNCTION constexpr explicit TaggedVector(TVectors const&... delems) noexcept
         : m_values {static_cast<ElementType>(take<Tags>(delems...).template get<Tags>())...}
     {
     }
 
-    template <
-            class... Params,
-            class = std::enable_if_t<(!is_tagged_vector_v<Params> && ...)>,
-            class = std::enable_if_t<(std::is_convertible_v<Params, ElementType> && ...)>,
-            class = std::enable_if_t<sizeof...(Params) == sizeof...(Tags)>>
+    template <std::convertible_to<ElementType>... Params>
     KOKKOS_FUNCTION constexpr explicit TaggedVector(Params const&... params) noexcept
+        requires((!is_tagged_vector_v<Params> && ...) && sizeof...(Params) == sizeof...(Tags))
         : m_values {static_cast<ElementType>(params)...}
     {
     }
@@ -359,8 +339,8 @@ public:
         DDC_IF_NVCC_THEN_POP
     }
 
-    template <std::size_t N = sizeof...(Tags)>
-    KOKKOS_FUNCTION constexpr std::enable_if_t<N == 1, ElementType const&> value() const noexcept
+    KOKKOS_FUNCTION constexpr ElementType const& value() const noexcept
+        requires(sizeof...(Tags) == 1)
     {
         return m_values[0];
     }
@@ -374,9 +354,7 @@ public:
         return *this;
     }
 
-    template <
-            class OElementType,
-            class = std::enable_if_t<std::is_convertible_v<OElementType, ElementType>>>
+    template <std::convertible_to<ElementType> OElementType>
     KOKKOS_FUNCTION constexpr TaggedVector& operator+=(OElementType const& rhs)
     {
         ((m_values[type_seq_rank_v<Tags, tags_seq>] += rhs), ...);
@@ -392,9 +370,7 @@ public:
         return *this;
     }
 
-    template <
-            class OElementType,
-            class = std::enable_if_t<std::is_convertible_v<OElementType, ElementType>>>
+    template <std::convertible_to<ElementType> OElementType>
     KOKKOS_FUNCTION constexpr TaggedVector& operator-=(OElementType const& rhs)
     {
         ((m_values[type_seq_rank_v<Tags, tags_seq>] -= rhs), ...);

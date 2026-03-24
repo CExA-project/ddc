@@ -254,76 +254,77 @@ struct is_periodic_sampling : public std::is_base_of<detail::PeriodicSamplingBas
 template <class DDim>
 constexpr bool is_periodic_sampling_v = is_periodic_sampling<DDim>::value;
 
-template <
-        class DDimImpl,
-        std::enable_if_t<is_periodic_sampling_v<typename DDimImpl::discrete_dimension_type>, int>
-        = 0>
+namespace concepts {
+
+template <class DDim>
+concept periodic_sampling = is_periodic_sampling_v<DDim>;
+
+}
+
+template <class DDimImpl>
 std::ostream& operator<<(std::ostream& out, DDimImpl const& mesh)
+    requires(concepts::periodic_sampling<typename DDimImpl::discrete_dimension_type>)
 {
     return out << "PeriodicSampling( origin=" << mesh.origin() << ", step=" << mesh.step() << " )";
 }
 
 /// @brief Lower bound index of the mesh
-template <class DDim>
-KOKKOS_FUNCTION std::enable_if_t<
-        is_periodic_sampling_v<DDim>,
-        Coordinate<typename DDim::continuous_dimension_type>>
-origin() noexcept
+template <concepts::periodic_sampling DDim>
+KOKKOS_FUNCTION Coordinate<typename DDim::continuous_dimension_type> origin() noexcept
 {
     return discrete_space<DDim>().origin();
 }
 
 /// @brief Lower bound index of the mesh
-template <class DDim>
-KOKKOS_FUNCTION std::enable_if_t<is_periodic_sampling_v<DDim>, DiscreteElement<DDim>>
-front() noexcept
+template <concepts::periodic_sampling DDim>
+KOKKOS_FUNCTION DiscreteElement<DDim> front() noexcept
 {
     return discrete_space<DDim>().front();
 }
 
 /// @brief Spacing step of the mesh
-template <class DDim>
-KOKKOS_FUNCTION std::enable_if_t<is_periodic_sampling_v<DDim>, Real> step() noexcept
+template <concepts::periodic_sampling DDim>
+KOKKOS_FUNCTION Real step() noexcept
 {
     return discrete_space<DDim>().step();
 }
 
-template <class DDim, std::enable_if_t<is_periodic_sampling_v<DDim>, int> = 0>
+template <concepts::periodic_sampling DDim>
 KOKKOS_FUNCTION Coordinate<typename DDim::continuous_dimension_type> coordinate(
         DiscreteElement<DDim> const& c)
 {
     return discrete_space<DDim>().coordinate(c);
 }
 
-template <class DDim, std::enable_if_t<is_periodic_sampling_v<DDim>, int> = 0>
+template <concepts::periodic_sampling DDim>
 KOKKOS_FUNCTION Coordinate<typename DDim::continuous_dimension_type> distance_at_left(
         DiscreteElement<DDim>)
 {
     return Coordinate<typename DDim::continuous_dimension_type>(step<DDim>());
 }
 
-template <class DDim, std::enable_if_t<is_periodic_sampling_v<DDim>, int> = 0>
+template <concepts::periodic_sampling DDim>
 KOKKOS_FUNCTION Coordinate<typename DDim::continuous_dimension_type> distance_at_right(
         DiscreteElement<DDim>)
 {
     return Coordinate<typename DDim::continuous_dimension_type>(step<DDim>());
 }
 
-template <class DDim, std::enable_if_t<is_periodic_sampling_v<DDim>, int> = 0>
+template <concepts::periodic_sampling DDim>
 KOKKOS_FUNCTION Coordinate<typename DDim::continuous_dimension_type> rmin(
         DiscreteDomain<DDim> const& d)
 {
     return coordinate(d.front());
 }
 
-template <class DDim, std::enable_if_t<is_periodic_sampling_v<DDim>, int> = 0>
+template <concepts::periodic_sampling DDim>
 KOKKOS_FUNCTION Coordinate<typename DDim::continuous_dimension_type> rmax(
         DiscreteDomain<DDim> const& d)
 {
     return coordinate(d.back());
 }
 
-template <class DDim, std::enable_if_t<is_periodic_sampling_v<DDim>, int> = 0>
+template <concepts::periodic_sampling DDim>
 KOKKOS_FUNCTION Coordinate<typename DDim::continuous_dimension_type> rlength(
         DiscreteDomain<DDim> const& d)
 {

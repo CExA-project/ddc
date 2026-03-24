@@ -17,7 +17,7 @@ add_executable(
     spline_traits.cpp
     view.cpp
 )
-target_compile_features(splines_tests PRIVATE cxx_std_17)
+target_compile_features(splines_tests PRIVATE cxx_std_20)
 target_link_libraries(splines_tests PRIVATE ddc_gtest_main DDC::core DDC::splines GTest::gtest)
 gtest_discover_tests(splines_tests NO_PRETTY_TYPES DISCOVERY_MODE PRE_TEST)
 
@@ -33,7 +33,7 @@ foreach(degree RANGE "${DDC_SPLINES_TEST_DEGREE_MIN}" "${DDC_SPLINES_TEST_DEGREE
             "${test_name}"
             PRIVATE -D${degree_macro} -D${bsplines_type_macro}
         )
-        target_compile_features("${test_name}" PRIVATE cxx_std_17)
+        target_compile_features("${test_name}" PRIVATE cxx_std_20)
         target_link_libraries(
             "${test_name}"
             PRIVATE ddc_gtest_main DDC::core DDC::splines GTest::gtest
@@ -67,7 +67,7 @@ foreach(bcl "greville" "hermite")
                             -D${degree_macro}
                             -D${bsplines_type_macro}
                     )
-                    target_compile_features("${test_name}" PRIVATE cxx_std_17)
+                    target_compile_features("${test_name}" PRIVATE cxx_std_20)
                     target_link_libraries(
                         "${test_name}"
                         PRIVATE ddc_gtest_main DDC::core DDC::splines GTest::gtest
@@ -97,7 +97,7 @@ foreach(bc "periodic" "greville")
                     "${test_name}"
                     PRIVATE -D${bc_macro} -D${degree_macro} -D${bsplines_type_macro} -D${er_macro}
                 )
-                target_compile_features("${test_name}" PRIVATE cxx_std_17)
+                target_compile_features("${test_name}" PRIVATE cxx_std_20)
                 target_link_libraries(
                     "${test_name}"
                     PRIVATE ddc_gtest_main DDC::core DDC::splines GTest::gtest
@@ -139,7 +139,7 @@ foreach(solver "ginkgo" "lapack")
                         -D${degree_macro}
                         -D${bsplines_type_macro}
                 )
-                target_compile_features("${test_name}" PRIVATE cxx_std_17)
+                target_compile_features("${test_name}" PRIVATE cxx_std_20)
                 target_link_libraries(
                     "${test_name}"
                     PRIVATE ddc_gtest_main DDC::core DDC::splines GTest::gtest
@@ -157,7 +157,7 @@ foreach(degree RANGE "${DDC_SPLINES_TEST_DEGREE_MIN}" "${DDC_SPLINES_TEST_DEGREE
 
     add_executable("${test_name}" "${test_filename}.cpp")
     target_compile_definitions("${test_name}" PRIVATE -D${degree_macro})
-    target_compile_features("${test_name}" PRIVATE cxx_std_17)
+    target_compile_features("${test_name}" PRIVATE cxx_std_20)
     target_link_libraries("${test_name}" PRIVATE ddc_gtest_main DDC::core DDC::splines GTest::gtest)
     gtest_discover_tests("${test_name}" DISCOVERY_MODE PRE_TEST)
 endforeach()
@@ -174,7 +174,7 @@ foreach(degree RANGE "${DDC_SPLINES_TEST_DEGREE_MIN}" "${DDC_SPLINES_TEST_DEGREE
             "${test_name}"
             PRIVATE -D${degree_macro} -D${bsplines_type_macro}
         )
-        target_compile_features("${test_name}" PRIVATE cxx_std_17)
+        target_compile_features("${test_name}" PRIVATE cxx_std_20)
         target_link_libraries(
             "${test_name}"
             PRIVATE ddc_gtest_main DDC::core DDC::splines GTest::gtest
@@ -205,7 +205,7 @@ foreach(bc "periodic" "greville" "hermite")
                         -D${degree_macro}
                         -D${bsplines_type_macro}
                 )
-                target_compile_features("${test_name}" PRIVATE cxx_std_17)
+                target_compile_features("${test_name}" PRIVATE cxx_std_20)
                 target_link_libraries(
                     "${test_name}"
                     PRIVATE ddc_gtest_main DDC::core DDC::splines GTest::gtest
@@ -238,7 +238,7 @@ foreach(bc "periodic" "greville" "hermite")
                         -D${degree_macro}
                         -D${bsplines_type_macro}
                 )
-                target_compile_features("${test_name}" PRIVATE cxx_std_17)
+                target_compile_features("${test_name}" PRIVATE cxx_std_20)
                 target_link_libraries(
                     "${test_name}"
                     PRIVATE ddc_gtest_main DDC::core DDC::splines GTest::gtest
@@ -271,7 +271,7 @@ foreach(solver "ginkgo" "lapack")
                         -D${degree_macro}
                         -D${bsplines_type_macro}
                 )
-                target_compile_features("${test_name}" PRIVATE cxx_std_17)
+                target_compile_features("${test_name}" PRIVATE cxx_std_20)
                 target_link_libraries(
                     "${test_name}"
                     PRIVATE ddc_gtest_main DDC::core DDC::splines GTest::gtest
@@ -304,7 +304,7 @@ foreach(bc "periodic" "greville" "hermite")
                         -D${degree_macro}
                         -D${bsplines_type_macro}
                 )
-                target_compile_features("${test_name}" PRIVATE cxx_std_17)
+                target_compile_features("${test_name}" PRIVATE cxx_std_20)
                 target_link_libraries(
                     "${test_name}"
                     PRIVATE ddc_gtest_main DDC::core DDC::splines GTest::gtest
@@ -327,7 +327,7 @@ foreach(degree RANGE "${DDC_SPLINES_TEST_DEGREE_MIN}" "${DDC_SPLINES_TEST_DEGREE
             "${test_name}"
             PRIVATE -D${degree_macro} -D${bsplines_type_macro}
         )
-        target_compile_features("${test_name}" PRIVATE cxx_std_17)
+        target_compile_features("${test_name}" PRIVATE cxx_std_20)
         target_link_libraries(
             "${test_name}"
             PRIVATE ddc_gtest_main DDC::core DDC::splines GTest::gtest
@@ -348,7 +348,7 @@ foreach(degree RANGE "${DDC_SPLINES_TEST_DEGREE_MIN}" "${DDC_SPLINES_TEST_DEGREE
             "${test_name}"
             PRIVATE -D${degree_macro} -D${bsplines_type_macro}
         )
-        target_compile_features("${test_name}" PRIVATE cxx_std_17)
+        target_compile_features("${test_name}" PRIVATE cxx_std_20)
         target_link_libraries(
             "${test_name}"
             PRIVATE ddc_gtest_main DDC::core DDC::splines GTest::gtest
@@ -369,7 +369,7 @@ foreach(degree RANGE "${DDC_SPLINES_TEST_DEGREE_MIN}" "${DDC_SPLINES_TEST_DEGREE
             "${test_name}"
             PRIVATE -D${degree_macro} -D${bsplines_type_macro}
         )
-        target_compile_features("${test_name}" PRIVATE cxx_std_17)
+        target_compile_features("${test_name}" PRIVATE cxx_std_20)
         target_link_libraries(
             "${test_name}"
             PRIVATE ddc_gtest_main DDC::core DDC::splines GTest::gtest

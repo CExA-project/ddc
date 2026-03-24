@@ -95,7 +95,7 @@ class GrevilleInterpolationPoints
         // Use periodicity to ensure all points are in the domain
         if constexpr (U::is_periodic()) {
             std::vector<double> temp_knots(BSplines::degree());
-            std::size_t npoints(0);
+            std::size_t npoints = 0;
             // Count the number of interpolation points that need shifting to preserve the ordering
             while (greville_points[npoints] < ddc::discrete_space<BSplines>().rmin()) {
                 assert(npoints < BSplines::degree());

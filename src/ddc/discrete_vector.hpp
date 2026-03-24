@@ -5,6 +5,7 @@
 #pragma once
 
 #include <array>
+#include <concepts>
 #include <cstddef>
 #include <iosfwd>
 #include <type_traits>
@@ -34,6 +35,12 @@ struct is_discrete_vector<DiscreteVector<Tags...>> : std::true_type
 template <class T>
 inline constexpr bool is_discrete_vector_v = is_discrete_vector<T>::value;
 
+namespace concepts {
+
+template <class T>
+concept discrete_vector = is_discrete_vector_v<T>;
+
+}
 
 namespace detail {
 
@@ -136,7 +143,7 @@ KOKKOS_FUNCTION constexpr auto operator-(
     }
 }
 
-template <class Tag, class IntegralType, class = std::enable_if_t<std::is_integral_v<IntegralType>>>
+template <class Tag, std::integral IntegralType>
 KOKKOS_FUNCTION constexpr DiscreteVector<Tag> operator+(
         DiscreteVector<Tag> const& lhs,
         IntegralType const& rhs)
@@ -144,7 +151,7 @@ KOKKOS_FUNCTION constexpr DiscreteVector<Tag> operator+(
     return DiscreteVector<Tag>(get<Tag>(lhs) + rhs);
 }
 
-template <class IntegralType, class Tag, class = std::enable_if_t<std::is_integral_v<IntegralType>>>
+template <std::integral IntegralType, class Tag>
 KOKKOS_FUNCTION constexpr DiscreteVector<Tag> operator+(
         IntegralType const& lhs,
         DiscreteVector<Tag> const& rhs)
@@ -152,7 +159,7 @@ KOKKOS_FUNCTION constexpr DiscreteVector<Tag> operator+(
     return DiscreteVector<Tag>(lhs + get<Tag>(rhs));
 }
 
-template <class Tag, class IntegralType, class = std::enable_if_t<std::is_integral_v<IntegralType>>>
+template <class Tag, std::integral IntegralType>
 KOKKOS_FUNCTION constexpr DiscreteVector<Tag> operator-(
         DiscreteVector<Tag> const& lhs,
         IntegralType const& rhs)
@@ -160,7 +167,7 @@ KOKKOS_FUNCTION constexpr DiscreteVector<Tag> operator-(
     return DiscreteVector<Tag>(get<Tag>(lhs) - rhs);
 }
 
-template <class IntegralType, class Tag, class = std::enable_if_t<std::is_integral_v<IntegralType>>>
+template <std::integral IntegralType, class Tag>
 KOKKOS_FUNCTION constexpr DiscreteVector<Tag> operator-(
         IntegralType const& lhs,
         DiscreteVector<Tag> const& rhs)
@@ -170,10 +177,7 @@ KOKKOS_FUNCTION constexpr DiscreteVector<Tag> operator-(
 
 /// external left binary operator: *
 
-template <
-        class IntegralType,
-        class... Tags,
-        class = std::enable_if_t<std::is_integral_v<IntegralType>>>
+template <std::integral IntegralType, class... Tags>
 KOKKOS_FUNCTION constexpr auto operator*(
         IntegralType const& lhs,
         DiscreteVector<Tags...> const& rhs)
@@ -198,12 +202,8 @@ KOKKOS_FUNCTION constexpr DiscreteVector<QueryTags...> select(
 /// Returns a reference towards the DiscreteVector that contains the QueryTag
 template <
         class QueryTag,
-        class HeadDVect,
-        class... TailDVects,
-        std::enable_if_t<
-                is_discrete_vector_v<HeadDVect> && (is_discrete_vector_v<TailDVects> && ...),
-                int>
-        = 1>
+        concepts::discrete_vector HeadDVect,
+        concepts::discrete_vector... TailDVects>
 KOKKOS_FUNCTION constexpr auto const& take(HeadDVect const& head, TailDVects const&... tail)
 {
     DDC_IF_NVCC_THEN_PUSH_AND_SUPPRESS(implicit_return_from_non_void_function)
@@ -299,15 +299,13 @@ public:
 
     KOKKOS_DEFAULTED_FUNCTION constexpr DiscreteVector(DiscreteVector&&) = default;
 
-    template <class... DVects, class = std::enable_if_t<(is_discrete_vector_v<DVects> && ...)>>
+    template <concepts::discrete_vector... DVects>
     KOKKOS_FUNCTION constexpr explicit DiscreteVector(DVects const&... delems) noexcept
         : m_values {take<Tags>(delems...).template get<Tags>()...}
     {
     }
 
-    template <
-            class IntegerType,
-            class = std::enable_if_t<std::is_convertible_v<IntegerType, DiscreteVectorElement>>>
+    template <std::convertible_to<DiscreteVectorElement> IntegerType>
     KOKKOS_FUNCTION constexpr explicit DiscreteVector(
             std::array<IntegerType, sizeof...(Tags)> const& values) noexcept
         : m_values(
@@ -317,12 +315,9 @@ public:
     {
     }
 
-    template <
-            class... Params,
-            class = std::enable_if_t<(!is_discrete_vector_v<Params> && ...)>,
-            class = std::enable_if_t<(std::is_convertible_v<Params, DiscreteVectorElement> && ...)>,
-            class = std::enable_if_t<sizeof...(Params) == sizeof...(Tags)>>
+    template <std::convertible_to<DiscreteVectorElement>... Params>
     KOKKOS_FUNCTION constexpr explicit DiscreteVector(Params const&... params) noexcept
+        requires((!is_discrete_vector_v<Params> && ...) && sizeof...(Params) == sizeof...(Tags))
         : m_values {static_cast<DiscreteVectorElement>(params)...}
     {
     }
@@ -376,37 +371,36 @@ public:
         DDC_IF_NVCC_THEN_POP
     }
 
-    template <std::size_t N = sizeof...(Tags)>
-    KOKKOS_FUNCTION constexpr std::enable_if_t<N == 1, DiscreteVectorElement const&> value()
-            const noexcept
+    KOKKOS_FUNCTION constexpr DiscreteVectorElement const& value() const noexcept
+        requires(sizeof...(Tags) == 1)
     {
         return m_values[0];
     }
 
-    template <std::size_t N = sizeof...(Tags), class = std::enable_if_t<N == 1>>
     KOKKOS_FUNCTION constexpr DiscreteVector& operator++()
+        requires(sizeof...(Tags) == 1)
     {
         ++m_values[0];
         return *this;
     }
 
-    template <std::size_t N = sizeof...(Tags), class = std::enable_if_t<N == 1>>
     KOKKOS_FUNCTION constexpr DiscreteVector operator++(int)
+        requires(sizeof...(Tags) == 1)
     {
         DiscreteVector const tmp = *this;
         ++m_values[0];
         return tmp;
     }
 
-    template <std::size_t N = sizeof...(Tags), class = std::enable_if_t<N == 1>>
     KOKKOS_FUNCTION constexpr DiscreteVector& operator--()
+        requires(sizeof...(Tags) == 1)
     {
         --m_values[0];
         return *this;
     }
 
-    template <std::size_t N = sizeof...(Tags), class = std::enable_if_t<N == 1>>
     KOKKOS_FUNCTION constexpr DiscreteVector operator--(int)
+        requires(sizeof...(Tags) == 1)
     {
         DiscreteVector const tmp = *this;
         --m_values[0];
@@ -421,12 +415,9 @@ public:
         return *this;
     }
 
-    template <
-            class IntegralType,
-            std::size_t N = sizeof...(Tags),
-            class = std::enable_if_t<N == 1>,
-            class = std::enable_if_t<std::is_integral_v<IntegralType>>>
+    template <std::integral IntegralType>
     KOKKOS_FUNCTION constexpr DiscreteVector& operator+=(IntegralType const& rhs)
+        requires(sizeof...(Tags) == 1)
     {
         m_values[0] += rhs;
         return *this;
@@ -440,12 +431,9 @@ public:
         return *this;
     }
 
-    template <
-            class IntegralType,
-            std::size_t N = sizeof...(Tags),
-            class = std::enable_if_t<N == 1>,
-            class = std::enable_if_t<std::is_integral_v<IntegralType>>>
+    template <std::integral IntegralType>
     KOKKOS_FUNCTION constexpr DiscreteVector& operator-=(IntegralType const& rhs)
+        requires(sizeof...(Tags) == 1)
     {
         m_values[0] -= rhs;
         return *this;

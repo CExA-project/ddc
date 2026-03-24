@@ -7,12 +7,12 @@ FROM ubuntu:jammy@sha256:3ba65aa20f86a0fad9df2b2c259c613df006b2e6d0bfcc8a146afb8
 LABEL "org.opencontainers.image.source"="https://github.com/CExA-project/ddc"
 
 ARG BACKEND
-ARG AMDGPU_VERSION=5.7.3
+ARG AMDGPU_VERSION=6.2.4
 ARG CMAKE_VERSION=3.25.3
-ARG CUDA_MAJOR_VERSION=11
-ARG CUDA_MINOR_VERSION=8
+ARG CUDA_MAJOR_VERSION=12
+ARG CUDA_MINOR_VERSION=2
 ARG GINKGO_VERSION=1.8.0
-ARG ROCM_VERSION=5.7.3
+ARG ROCM_VERSION=6.2.4
 
 COPY bash_run /bin/
 ENV BASH_ENV=/etc/profile
@@ -66,6 +66,7 @@ RUN chmod +x /bin/bash_run \
       apt-get install -y --no-install-recommends \
       clang \
  ;; "cuda") \
+      # libnvjitlink seems to be a missing dependency of cusparse
       apt-get install -y --no-install-recommends \
       cuda-minimal-build-${CUDA_MAJOR_VERSION}-${CUDA_MINOR_VERSION} \
       cuda-nvtx-${CUDA_MAJOR_VERSION}-${CUDA_MINOR_VERSION} \
@@ -73,12 +74,12 @@ RUN chmod +x /bin/bash_run \
       libcufft-dev-${CUDA_MAJOR_VERSION}-${CUDA_MINOR_VERSION} \
       libcurand-dev-${CUDA_MAJOR_VERSION}-${CUDA_MINOR_VERSION} \
       libcusparse-dev-${CUDA_MAJOR_VERSION}-${CUDA_MINOR_VERSION} \
-      gcc-10 \
-      g++-10 \
+      libnvjitlink-${CUDA_MAJOR_VERSION}-${CUDA_MINOR_VERSION} \
  ;; "hip") \
       apt-get install -y --no-install-recommends \
       hipblas-dev${ROCM_VERSION} \
       hipfft-dev${ROCM_VERSION} \
+      hiprand-dev${ROCM_VERSION} \
       hipsparse-dev${ROCM_VERSION} \
       rocm-hip-runtime-dev${ROCM_VERSION} \
       rocrand-dev${ROCM_VERSION} \
@@ -95,9 +96,13 @@ RUN chmod +x /bin/bash_run \
     "cpu") \
       cmake -DCMAKE_BUILD_TYPE=Release -DGINKGO_BUILD_OMP=ON -DGINKGO_BUILD_TESTS=OFF -DGINKGO_BUILD_EXAMPLES=OFF -DGINKGO_BUILD_BENCHMARKS=OFF -B ginkgo/build -S ginkgo \
  ;; "cuda") \
-      cmake -DCMAKE_C_COMPILER=gcc-10 -DCMAKE_CXX_COMPILER=g++-10 -DCMAKE_CUDA_HOST_COMPILER=g++-10 -DCMAKE_BUILD_TYPE=Release -DGINKGO_CUDA_ARCHITECTURES=70 -DGINKGO_BUILD_CUDA=ON -DGINKGO_BUILD_TESTS=OFF -DGINKGO_BUILD_EXAMPLES=OFF -DGINKGO_BUILD_BENCHMARKS=OFF -B ginkgo/build -S ginkgo \
+      cmake -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -DCMAKE_CUDA_HOST_COMPILER=g++ -DCMAKE_BUILD_TYPE=Release -DGINKGO_CUDA_ARCHITECTURES=70 -DGINKGO_BUILD_CUDA=ON -DGINKGO_BUILD_TESTS=OFF -DGINKGO_BUILD_EXAMPLES=OFF -DGINKGO_BUILD_BENCHMARKS=OFF -B ginkgo/build -S ginkgo \
  ;; "hip") \
-      cmake -DCMAKE_PREFIX_PATH=/opt/rocm -DCMAKE_BUILD_TYPE=Release -DCMAKE_HIP_ARCHITECTURES=gfx90a -DGINKGO_BUILD_HIP=ON -DGINKGO_BUILD_TESTS=OFF -DGINKGO_BUILD_EXAMPLES=OFF -DGINKGO_BUILD_BENCHMARKS=OFF -B ginkgo/build -S ginkgo \
+      # HIP_PATH needs to be set to avoid Ginkgo defining it (https://github.com/ginkgo-project/ginkgo/blob/develop/cmake/hip_path.cmake).
+      # The Ginkgo <1.9 heuristic does not seem to be compatible with the new HIP v6 directory layout.
+      # This makes amdclang++ fail during cmake compiler test (https://releases.llvm.org/18.1.0/tools/clang/docs/HIPSupport.html#order-of-precedence-for-hip-path)
+      export HIP_PATH=`hipconfig --path` \
+      && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_HIP_ARCHITECTURES=gfx90a -DGINKGO_BUILD_HIP=ON -DGINKGO_BUILD_TESTS=OFF -DGINKGO_BUILD_EXAMPLES=OFF -DGINKGO_BUILD_BENCHMARKS=OFF -B ginkgo/build -S ginkgo \
  ;; esac \
  && cmake --build ginkgo/build \
  && cmake --install ginkgo/build --prefix /usr \
@@ -113,8 +118,8 @@ RUN chmod +x /bin/bash_run \
  && rm -rf /var/lib/apt/lists/* \
  && useradd -d /data -m -U ci \
  && if [ "xcuda" = "x${BACKEND}" ] \
-  ; then echo 'CUDA_GCC=gcc-10' > /etc/profile.d/ddc-cuda.sh \
-       ; echo 'CUDA_GXX=g++-10' >> /etc/profile.d/ddc-cuda.sh \
+  ; then echo 'CUDA_GCC=gcc' > /etc/profile.d/ddc-cuda.sh \
+       ; echo 'CUDA_GXX=g++' >> /etc/profile.d/ddc-cuda.sh \
  ;  fi
 
 USER ci:ci

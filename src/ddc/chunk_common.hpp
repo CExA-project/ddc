@@ -119,10 +119,10 @@ public:
     }
 
 private:
-    template <class Mapping = mapping_type>
-    static KOKKOS_FUNCTION constexpr std::
-            enable_if_t<std::is_constructible_v<Mapping, extents_type>, allocation_mdspan_type>
-            make_allocation_mdspan(ElementType* ptr, SupportType const& domain)
+    static KOKKOS_FUNCTION constexpr allocation_mdspan_type make_allocation_mdspan(
+            ElementType* ptr,
+            SupportType const& domain)
+        requires(std::is_constructible_v<mapping_type, extents_type>)
     {
         return allocation_mdspan_type(ptr, detail::array(domain.extents()));
     }
@@ -212,10 +212,7 @@ protected:
      * @param ptr the allocation pointer to the data
      * @param domain the domain that sustains the view
      */
-    template <
-            class Mapping = mapping_type,
-            std::enable_if_t<std::is_constructible_v<Mapping, extents_type>, int> = 0>
-    KOKKOS_FUNCTION constexpr ChunkCommon(ElementType* ptr, SupportType const& domain)
+    KOKKOS_FUNCTION constexpr ChunkCommon(ElementType* ptr, SupportType const& domain) requires(std::is_constructible_v<mapping_type, extents_type>)
         : m_allocation_mdspan(make_allocation_mdspan(ptr, domain))
         , m_domain(domain)
     {

@@ -382,6 +382,13 @@ struct is_uniform_bsplines : public std::is_base_of<detail::UniformBSplinesBase,
 template <class DDim>
 constexpr bool is_uniform_bsplines_v = is_uniform_bsplines<DDim>::value;
 
+namespace concepts {
+
+template <class DDim>
+concept uniform_bsplines = is_uniform_bsplines_v<DDim>;
+
+}
+
 template <class CDim, std::size_t D>
 template <class DDim, class MemorySpace>
 KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<CDim, D>::

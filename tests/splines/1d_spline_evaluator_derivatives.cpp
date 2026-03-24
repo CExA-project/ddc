@@ -132,7 +132,7 @@ void test_deriv(
         DElem const& deriv_order,
         std::size_t const ncells)
 {
-    using domain = decltype(spline_eval_deriv.domain());
+    using domain = typename SplineDerivSpan::discrete_domain_type;
     using I = typename DDimI::continuous_dimension_type;
 
     ddc::parallel_fill(exec_space, spline_eval_deriv, 0.0);

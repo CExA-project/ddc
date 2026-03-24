@@ -40,6 +40,12 @@ struct is_sparse_discrete_domain<SparseDiscreteDomain<Tags...>> : std::true_type
 template <class T>
 inline constexpr bool is_sparse_discrete_domain_v = is_sparse_discrete_domain<T>::value;
 
+namespace concepts {
+
+template <class T>
+concept sparse_discrete_domain = is_sparse_discrete_domain_v<T>;
+
+}
 
 namespace detail {
 
@@ -148,7 +154,7 @@ public:
     KOKKOS_DEFAULTED_FUNCTION SparseDiscreteDomain() = default;
 
     /// Construct a SparseDiscreteDomain by copies and merge of domains
-    template <class... DDoms, class = std::enable_if_t<(is_sparse_discrete_domain_v<DDoms> && ...)>>
+    template <concepts::sparse_discrete_domain... DDoms>
     KOKKOS_FUNCTION constexpr explicit SparseDiscreteDomain(DDoms const&... domains)
         : m_views(domains.m_views...)
     {
@@ -323,50 +329,42 @@ public:
         return !empty();
     }
 
-    template <
-            std::size_t N = sizeof...(DDims),
-            class DDim0 = std::enable_if_t<N == 1, std::tuple_element_t<0, std::tuple<DDims...>>>>
     KOKKOS_FUNCTION auto begin() const
+        requires(sizeof...(DDims) == 1)
     {
+        using DDim0 = std::tuple_element_t<0, std::tuple<DDims...>>;
         return get<DDim0>(m_views).data();
     }
 
-    template <
-            std::size_t N = sizeof...(DDims),
-            class DDim0 = std::enable_if_t<N == 1, std::tuple_element_t<0, std::tuple<DDims...>>>>
     KOKKOS_FUNCTION auto end() const
+        requires(sizeof...(DDims) == 1)
     {
+        using DDim0 = std::tuple_element_t<0, std::tuple<DDims...>>;
         return get<DDim0>(m_views).data() + get<DDim0>(m_views).size();
     }
 
-    template <
-            std::size_t N = sizeof...(DDims),
-            class DDim0 = std::enable_if_t<N == 1, std::tuple_element_t<0, std::tuple<DDims...>>>>
     KOKKOS_FUNCTION auto cbegin() const
+        requires(sizeof...(DDims) == 1)
     {
+        using DDim0 = std::tuple_element_t<0, std::tuple<DDims...>>;
         return get<DDim0>(m_views).data();
     }
 
-    template <
-            std::size_t N = sizeof...(DDims),
-            class DDim0 = std::enable_if_t<N == 1, std::tuple_element_t<0, std::tuple<DDims...>>>>
     KOKKOS_FUNCTION auto cend() const
+        requires(sizeof...(DDims) == 1)
     {
+        using DDim0 = std::tuple_element_t<0, std::tuple<DDims...>>;
         return get<DDim0>(m_views).data() + get<DDim0>(m_views).size();
     }
 
-    template <
-            std::size_t N = sizeof...(DDims),
-            class = std::enable_if_t<N == 1, std::tuple_element_t<0, std::tuple<DDims...>>>>
     KOKKOS_FUNCTION constexpr decltype(auto) operator[](std::size_t n)
+        requires(sizeof...(DDims) == 1)
     {
         return begin()[n];
     }
 
-    template <
-            std::size_t N = sizeof...(DDims),
-            class = std::enable_if_t<N == 1, std::tuple_element_t<0, std::tuple<DDims...>>>>
     KOKKOS_FUNCTION constexpr decltype(auto) operator[](std::size_t n) const
+        requires(sizeof...(DDims) == 1)
     {
         return begin()[n];
     }

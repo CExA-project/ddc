@@ -12,7 +12,6 @@
 #include <stdexcept>
 #include <string>
 #include <tuple>
-#include <type_traits>
 #include <utility>
 
 #include <ddc/ddc.hpp>
@@ -98,9 +97,7 @@ public:
      *
      * @tparam The batched discrete domain on which the interpolation points are defined.
      */
-    template <
-            class BatchedInterpolationDDom,
-            class = std::enable_if_t<ddc::is_discrete_domain_v<BatchedInterpolationDDom>>>
+    template <concepts::discrete_domain BatchedInterpolationDDom>
     using batched_interpolation_domain_type = BatchedInterpolationDDom;
 
     /**
@@ -112,9 +109,7 @@ public:
      * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z> and a dimension of interest Y,
      * this is DiscreteDomain<X,Z>
      */
-    template <
-            class BatchedInterpolationDDom,
-            class = std::enable_if_t<ddc::is_discrete_domain_v<BatchedInterpolationDDom>>>
+    template <concepts::discrete_domain BatchedInterpolationDDom>
     using batch_domain_type = ddc::
             remove_dims_of_t<BatchedInterpolationDDom, interpolation_discrete_dimension_type>;
 
@@ -127,9 +122,7 @@ public:
      * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z> and a dimension of interest Y
      * (associated to a B-splines tag BSplinesY), this is DiscreteDomain<X,BSplinesY,Z>.
      */
-    template <
-            class BatchedInterpolationDDom,
-            class = std::enable_if_t<ddc::is_discrete_domain_v<BatchedInterpolationDDom>>>
+    template <concepts::discrete_domain BatchedInterpolationDDom>
     using batched_spline_domain_type = ddc::replace_dim_of_t<
             BatchedInterpolationDDom,
             interpolation_discrete_dimension_type,
@@ -145,9 +138,7 @@ private:
      * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z> and a dimension of interest Y
      * (associated to a B-splines tag BSplinesY), this is DiscreteDomain<BSplinesY,X,Z>.
      */
-    template <
-            class BatchedInterpolationDDom,
-            class = std::enable_if_t<ddc::is_discrete_domain_v<BatchedInterpolationDDom>>>
+    template <concepts::discrete_domain BatchedInterpolationDDom>
     using batched_spline_tr_domain_type =
             typename ddc::detail::convert_type_seq_to_discrete_domain_t<ddc::type_seq_merge_t<
                     ddc::detail::TypeSeq<bsplines_type>,
@@ -165,9 +156,7 @@ public:
      * Example: For batched_interpolation_domain_type = DiscreteDomain<X,Y,Z> and a dimension of interest Y,
      * this is DiscreteDomain<X,Deriv<Y>,Z>
      */
-    template <
-            class BatchedInterpolationDDom,
-            class = std::enable_if_t<ddc::is_discrete_domain_v<BatchedInterpolationDDom>>>
+    template <concepts::discrete_domain BatchedInterpolationDDom>
     using batched_derivs_domain_type = ddc::replace_dim_of_t<
             BatchedInterpolationDDom,
             interpolation_discrete_dimension_type,
@@ -279,9 +268,7 @@ public:
      *
      * @see MatrixSparse
      */
-    template <
-            class BatchedInterpolationDDom,
-            class = std::enable_if_t<ddc::is_discrete_domain_v<BatchedInterpolationDDom>>>
+    template <concepts::discrete_domain BatchedInterpolationDDom>
     explicit SplineBuilder(
             BatchedInterpolationDDom const& batched_interpolation_domain,
             std::optional<std::size_t> cols_per_chunk = std::nullopt,
@@ -338,9 +325,7 @@ public:
      *
      * @return The domain for the interpolation mesh.
      */
-    template <
-            class BatchedInterpolationDDom,
-            class = std::enable_if_t<ddc::is_discrete_domain_v<BatchedInterpolationDDom>>>
+    template <concepts::discrete_domain BatchedInterpolationDDom>
     BatchedInterpolationDDom batched_interpolation_domain(
             BatchedInterpolationDDom const& batched_interpolation_domain) const noexcept
     {

@@ -2,6 +2,7 @@
 //
 // SPDX-License-Identifier: MIT
 
+#include <cstring>
 #include <string>
 #include <utility>
 #include <vector>
@@ -30,6 +31,13 @@ PdiEvent::~PdiEvent() noexcept
     for (std::string const& one_name : m_names) {
         PDI_reclaim(one_name.c_str());
     }
+}
+
+PdiEvent& PdiEvent::with(std::string const& name, char const* const c_string)
+{
+    PDI_share(store_name(name + "_size"), store_scalar(std::strlen(c_string)), PDI_OUT);
+    PDI_share(store_name(name), c_string, PDI_OUT);
+    return *this;
 }
 
 } // namespace ddc

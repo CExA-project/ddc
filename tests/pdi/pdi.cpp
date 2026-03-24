@@ -27,7 +27,7 @@ struct DDimY
 
 extern "C" {
 
-void test_ddc_expose()
+void test_ddc_expose_chunk()
 {
     // pdi_chunk_label_rank
     void* pdi_chunk_label_rank_ptr;
@@ -70,7 +70,7 @@ void test_ddc_expose()
 
 TEST(Pdi, ChunkAndChunkSpan)
 {
-    std::string const pdi_cfg = R"PDI_CFG(
+    char const* const pdi_cfg = R"PDI_CFG(
 metadata:
   pdi_chunk_label_rank: size_t
   pdi_chunk_label_extents:
@@ -89,10 +89,10 @@ plugins:
   user_code:
     on_event:
       some_event:
-        test_ddc_expose: {}
+        test_ddc_expose_chunk: {}
 )PDI_CFG";
 
-    PC_tree_t pdi_conf = PC_parse_string(pdi_cfg.c_str());
+    PC_tree_t pdi_conf = PC_parse_string(pdi_cfg);
     PDI_init(pdi_conf);
 
     PDI_errhandler(PDI_NULL_HANDLER);
@@ -122,6 +122,73 @@ plugins:
                 .with("nb_event_called", nb_event_called);
 
         EXPECT_EQ(nb_event_called, 3);
+    }
+
+    PDI_finalize();
+    PC_tree_destroy(&pdi_conf);
+}
+
+extern "C" {
+
+void test_ddc_expose_c_string()
+{
+    // c_string_size
+    void* c_string_size_ptr;
+    ASSERT_EQ(PDI_access("c_string_size", &c_string_size_ptr, PDI_IN), PDI_OK);
+    std::size_t const* const c_string_size = static_cast<std::size_t*>(c_string_size_ptr);
+    ASSERT_EQ(*c_string_size, 3);
+
+    // c_string
+    void* c_string_ptr;
+    ASSERT_EQ(PDI_access("c_string", &c_string_ptr, PDI_IN), PDI_OK);
+    std::string_view const c_string(
+            static_cast<char*>(c_string_ptr),
+            static_cast<char*>(c_string_ptr) + *c_string_size);
+    EXPECT_EQ(c_string, "foo");
+
+    EXPECT_EQ(PDI_reclaim("c_string_size"), PDI_OK);
+    EXPECT_EQ(PDI_reclaim("c_string"), PDI_OK);
+
+    // nb_event_called
+    void* nb_event_called_ptr;
+    ASSERT_EQ(PDI_access("nb_event_called", &nb_event_called_ptr, PDI_INOUT), PDI_OK);
+    int* const nb_event_called = static_cast<int*>(nb_event_called_ptr);
+    *nb_event_called += 1;
+
+    EXPECT_EQ(PDI_reclaim("nb_event_called"), PDI_OK);
+}
+}
+
+TEST(Pdi, CString)
+{
+    char const* const pdi_cfg = R"PDI_CFG(
+metadata:
+  c_string_size: size_t
+  c_string: {type: array, subtype: char, size: "$c_string_size"}
+
+data:
+  nb_event_called: int
+
+plugins:
+  user_code:
+    on_event:
+      some_event:
+        test_ddc_expose_c_string: {}
+)PDI_CFG";
+
+    PC_tree_t pdi_conf = PC_parse_string(pdi_cfg);
+    PDI_init(pdi_conf);
+
+    PDI_errhandler(PDI_NULL_HANDLER);
+
+    {
+        int nb_event_called = 0;
+
+        ddc::PdiEvent("some_event")
+                .with("c_string", "foo")
+                .with("nb_event_called", nb_event_called);
+
+        EXPECT_EQ(nb_event_called, 1);
     }
 
     PDI_finalize();

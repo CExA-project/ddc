@@ -1,5 +1,7 @@
 var NAVTREEINDEX7 =
 {
+"namespaceddc.html#a6d5c456ec24ce19e1fef731322d831b4":[4,0,0,174],
+"namespaceddc.html#a6f856b258e5bd40d0c4a6d3f0fc1b9d1":[4,0,0,251],
 "namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d":[4,0,0,153],
 "namespaceddc.html#a70f6a7634ef3f77720ba76b015de2008":[4,0,0,132],
 "namespaceddc.html#a7123be229effc95925eb3e4ccae71f0e":[4,0,0,148],
@@ -247,7 +249,5 @@ var NAVTREEINDEX7 =
 "structddc_1_1is__discrete__vector_3_01DiscreteVector_3_01Tags_8_8_8_01_4_01_4.html":[4,0,0,28],
 "structddc_1_1is__discrete__vector_3_01DiscreteVector_3_01Tags_8_8_8_01_4_01_4.html":[6,0,0,27],
 "structddc_1_1is__evaluator__admissible.html":[4,0,0,29],
-"structddc_1_1is__evaluator__admissible.html":[6,0,0,28],
-"structddc_1_1is__evaluator__admissible_3_01SplineBuilder2D_3_01ExecSpace_00_01MemorySpace_00_01B3b9a0a284ab7d992c4eb7eb3baab8cf1.html":[4,0,0,30],
-"structddc_1_1is__evaluator__admissible_3_01SplineBuilder2D_3_01ExecSpace_00_01MemorySpace_00_01B3b9a0a284ab7d992c4eb7eb3baab8cf1.html":[6,0,0,29]
+"structddc_1_1is__evaluator__admissible.html":[6,0,0,28]
 };

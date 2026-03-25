@@ -9,5 +9,6 @@ var classddc_1_1PdiEvent =
     [ "with", "classddc_1_1PdiEvent.html#abe26c98bf242fc1140c668a830ee9a43", null ],
     [ "with", "classddc_1_1PdiEvent.html#a14f717cd893a3319daebefda8011ee19", null ],
     [ "with", "classddc_1_1PdiEvent.html#af20a32ded433dbdedcaf1fbc93e41308", null ],
-    [ "with", "classddc_1_1PdiEvent.html#af766c7fa21438aec465fb8220b2a4323", null ]
+    [ "with", "classddc_1_1PdiEvent.html#af766c7fa21438aec465fb8220b2a4323", null ],
+    [ "with", "classddc_1_1PdiEvent.html#af824e4bbb30ba1124c1065d7dd7fe898", null ]
 ];

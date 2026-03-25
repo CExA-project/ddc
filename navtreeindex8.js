@@ -1,5 +1,7 @@
 var NAVTREEINDEX8 =
 {
+"structddc_1_1is__evaluator__admissible_3_01SplineBuilder2D_3_01ExecSpace_00_01MemorySpace_00_01B3b9a0a284ab7d992c4eb7eb3baab8cf1.html":[4,0,0,30],
+"structddc_1_1is__evaluator__admissible_3_01SplineBuilder2D_3_01ExecSpace_00_01MemorySpace_00_01B3b9a0a284ab7d992c4eb7eb3baab8cf1.html":[6,0,0,29],
 "structddc_1_1is__evaluator__admissible_3_01SplineBuilder_3_01ExecSpace_00_01MemorySpace_00_01BSp49a3b5cca1e507a8a1b59ab9867f3f9b.html":[6,0,0,30],
 "structddc_1_1is__evaluator__admissible_3_01SplineBuilder_3_01ExecSpace_00_01MemorySpace_00_01BSp49a3b5cca1e507a8a1b59ab9867f3f9b.html":[4,0,0,31],
 "structddc_1_1is__non__uniform__bsplines.html":[4,0,0,32],

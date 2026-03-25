@@ -126,6 +126,9 @@ public:
         return with<default_access_v<Arithmetic>>(name, std::forward<Arithmetic>(data));
     }
 
+    /// C-string overload
+    PdiEvent& with(std::string const& name, char const* c_string);
+
     /// @}
 };
 

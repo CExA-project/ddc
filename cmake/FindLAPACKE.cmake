@@ -45,69 +45,18 @@
 # * The check_function_exists() probes require try_compile, so the C language
 #   must be enabled in the calling project.
 
+# Early exit: if a previous call already succeeded, do not redo all the work.
+# LAPACKE_FOUND is cached by find_package_handle_standard_args on success.
+if(LAPACKE_FOUND)
+    return()
+endif()
+
 if(CMAKE_VERSION VERSION_LESS "3.25")
     message(FATAL_ERROR "CMake >= 3.25 required")
 endif()
 
 include(CheckFunctionExists)
 include(FindPackageHandleStandardArgs)
-
-# ---------------------------------------------------------------------------
-# Internal helper: look for lapacke.h relative to a given library path.
-#
-# Usage:  _lapacke_find_header_near_lib(<lib_path> <out_var>)
-#
-# Sets <out_var> in the caller's scope to the directory containing lapacke.h,
-# or leaves it unset when the header cannot be found.
-#
-# find_path is used with NO_DEFAULT_PATH so the search is strictly anchored to
-# the prefix that owns the library; system-wide include directories are not
-# considered here (the top-level find_path call handles those).
-# The result variable is unset from the cache after each call so that repeated
-# invocations for different libraries are not short-circuited by a cached hit.
-# ---------------------------------------------------------------------------
-function(_lapacke_find_header_near_lib lib_path out_var)
-    if(NOT lib_path)
-        return()
-    endif()
-
-    # Resolve symlinks so we always work with the real filesystem layout.
-    get_filename_component(_lib_real "${lib_path}" REALPATH)
-    get_filename_component(_lib_dir  "${_lib_real}" DIRECTORY)
-
-    # Build the set of prefix roots to search under:
-    #   <prefix>/lib/              ->  <prefix>/          (standard)
-    #   <prefix>/lib64/            ->  <prefix>/          (standard 64-bit)
-    #   <prefix>/lib/<arch>/       ->  <prefix>/          (multiarch, e.g. Debian)
-    #   <prefix>/lib/<arch>/       ->  <prefix>/lib/      (OpenBLAS multiarch layout)
-    #   <lib_dir> itself           ->                     (header next to .so, rare)
-    #
-    # PATH_SUFFIXES then appends the well-known include sub-directories under
-    # each root.  The empty suffix "" lets find_path test the root itself,
-    # which covers the case where <lib_dir> is already an include directory.
-    find_path(_lapacke_header_near_lib_result
-        NAMES lapacke.h
-        HINTS
-            "${_lib_dir}/.."        # lib/ or lib64/ -> prefix root
-            "${_lib_dir}/../.."     # lib/<arch>/    -> prefix root (multiarch)
-            "${_lib_dir}"           # header shipped next to the .so (rare)
-        PATH_SUFFIXES
-            include
-            include/openblas
-            include/lapacke
-            include/lapack
-            ""                      # test the hint directory itself
-        NO_DEFAULT_PATH
-        NO_CACHE
-    )
-
-    if(_lapacke_header_near_lib_result)
-        set(${out_var} "${_lapacke_header_near_lib_result}")
-    endif()
-
-    # Propagate <out_var> (set or unset) to the caller without PARENT_SCOPE.
-    return(PROPAGATE ${out_var})
-endfunction()
 
 # ---------------------------------------------------------------------------
 # Step 1 – Locate LAPACK (and its transitive BLAS dependency).
@@ -123,14 +72,13 @@ find_package(LAPACK QUIET)
 set(_lapacke_bundled FALSE)
 
 if(LAPACK_FOUND)
-    # Save/restore CMAKE_REQUIRED_* to avoid polluting the caller's state.
+    # Save/restore CMAKE_REQUIRED_LIBRARIES to avoid polluting the caller's state.
+    # Only LAPACK_LIBRARIES is needed: a correctly built shared library encodes
+    # its BLAS dependency as a DT_NEEDED entry, so the dynamic linker resolves
+    # it without an explicit -lblas flag. Passing BLAS_LIBRARIES here would mask
+    # a liblapack with missing DT_NEEDED entries.
     set(_saved_req_libs "${CMAKE_REQUIRED_LIBRARIES}")
     set(CMAKE_REQUIRED_LIBRARIES ${LAPACK_LIBRARIES})
-
-    # LAPACK_LIBRARIES may already contain the BLAS libraries; if not, add them.
-    if(BLAS_LIBRARIES)
-        list(APPEND CMAKE_REQUIRED_LIBRARIES ${BLAS_LIBRARIES})
-    endif()
 
     # LAPACKE_dgetrf (LU factorisation) is a fundamental routine present in
     # every complete LAPACKE implementation and a reliable probe symbol.
@@ -160,8 +108,12 @@ if(NOT _lapacke_bundled)
 
     if(LAPACKE_LIBRARY)
         # Verify the symbols are really there (guards against empty stub libs).
+        # Only liblapacke itself is needed: a correctly built shared library
+        # encodes its LAPACK/BLAS dependencies as DT_NEEDED entries, so the
+        # dynamic linker resolves them without explicit -llapack/-lblas flags.
+        # Passing them here would mask a liblapacke with missing DT_NEEDED.
         set(_saved_req_libs "${CMAKE_REQUIRED_LIBRARIES}")
-        set(CMAKE_REQUIRED_LIBRARIES "${LAPACKE_LIBRARY};${LAPACK_LIBRARIES};${BLAS_LIBRARIES}")
+        set(CMAKE_REQUIRED_LIBRARIES "${LAPACKE_LIBRARY}")
         check_function_exists(LAPACKE_dgetrf _lapacke_standalone_check)
         set(CMAKE_REQUIRED_LIBRARIES "${_saved_req_libs}")
 
@@ -188,30 +140,6 @@ find_path(LAPACKE_INCLUDE_DIR
         ENV LAPACK_ROOT
     PATH_SUFFIXES include include/openblas include/lapacke include/lapack
 )
-
-if(NOT LAPACKE_INCLUDE_DIR)
-    # Derive the header location from the library path when the standard search
-    # above came up empty (common with non-system OpenBLAS installs).
-    if(_lapacke_bundled)
-        # Bundled case: probe relative to each library in LAPACK_LIBRARIES.
-        foreach(_lib IN LISTS LAPACK_LIBRARIES)
-            if(EXISTS "${_lib}")          # skip flags like "-lpthread"
-                _lapacke_find_header_near_lib("${_lib}" _lapacke_include_dir)
-                if(_lapacke_include_dir)
-                    set(LAPACKE_INCLUDE_DIR "${_lapacke_include_dir}" CACHE PATH
-                        "Directory containing lapacke.h" FORCE)
-                    break()
-                endif()
-            endif()
-        endforeach()
-    elseif(LAPACKE_LIBRARY)
-        _lapacke_find_header_near_lib("${LAPACKE_LIBRARY}" _lapacke_include_dir)
-        if(_lapacke_include_dir)
-            set(LAPACKE_INCLUDE_DIR "${_lapacke_include_dir}" CACHE PATH
-                "Directory containing lapacke.h" FORCE)
-        endif()
-    endif()
-endif()
 
 # ---------------------------------------------------------------------------
 # Step 5 – Assemble result variables.
@@ -258,4 +186,3 @@ unset(_lapacke_bundled)
 unset(_lapacke_bundled_check)    # regular variable; CACHE entry kept for speed
 unset(_lapacke_standalone_check) # regular variable; CACHE entry kept for speed
 unset(_lapacke_include_dir)
-unset(_lib)

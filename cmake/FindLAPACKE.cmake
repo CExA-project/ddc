@@ -84,12 +84,14 @@ if(LAPACK_FOUND)
     # every complete LAPACKE implementation and a reliable probe symbol.
     check_function_exists(LAPACKE_dgetrf _lapacke_bundled_check)
 
-    if(_lapacke_bundled_check)
+    set(CMAKE_REQUIRED_LIBRARIES "${_saved_req_libs}")
+    unset(_saved_req_libs)
+
+    if($CACHE{_lapacke_bundled_check})
         set(_lapacke_bundled TRUE)
         message(STATUS "FindLAPACKE: LAPACKE symbols found inside LAPACK libraries (bundled)")
     endif()
 
-    set(CMAKE_REQUIRED_LIBRARIES "${_saved_req_libs}")
 endif()
 
 # ---------------------------------------------------------------------------
@@ -114,10 +116,13 @@ if(NOT _lapacke_bundled)
         # Passing them here would mask a liblapacke with missing DT_NEEDED.
         set(_saved_req_libs "${CMAKE_REQUIRED_LIBRARIES}")
         set(CMAKE_REQUIRED_LIBRARIES "${LAPACKE_LIBRARY}")
-        check_function_exists(LAPACKE_dgetrf _lapacke_standalone_check)
-        set(CMAKE_REQUIRED_LIBRARIES "${_saved_req_libs}")
 
-        if(_lapacke_standalone_check)
+        check_function_exists(LAPACKE_dgetrf _lapacke_standalone_check)
+
+        set(CMAKE_REQUIRED_LIBRARIES "${_saved_req_libs}")
+        unset(_saved_req_libs)
+
+        if($CACHE{_lapacke_standalone_check})
             message(STATUS "FindLAPACKE: found standalone LAPACKE library: ${LAPACKE_LIBRARY}")
         else()
             message(WARNING "FindLAPACKE: liblapacke found at ${LAPACKE_LIBRARY} "
@@ -178,11 +183,4 @@ if(LAPACKE_FOUND AND NOT TARGET LAPACKE::LAPACKE)
     )
 endif()
 
-# Clean up all internal variables, leaving only the LAPACKE_* result variables,
-# LAPACKE_LIBRARY / LAPACKE_INCLUDE_DIR cache entries (speed up re-runs), and
-# the check_function_exists cache entries (avoid re-compiling probes).
-unset(_saved_req_libs)
 unset(_lapacke_bundled)
-unset(_lapacke_bundled_check)    # regular variable; CACHE entry kept for speed
-unset(_lapacke_standalone_check) # regular variable; CACHE entry kept for speed
-unset(_lapacke_include_dir)

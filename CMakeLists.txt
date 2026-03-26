@@ -160,10 +160,12 @@ target_sources(
                 src/ddc/create_mirror.hpp
                 src/ddc/ddc.hpp
                 src/ddc/ddc_to_kokkos_execution_policy.hpp
+                src/ddc/deepcopy.hpp
                 src/ddc/discrete_domain.hpp
                 src/ddc/discrete_element.hpp
                 src/ddc/discrete_space.hpp
                 src/ddc/discrete_vector.hpp
+                src/ddc/fill.hpp
                 src/ddc/for_each.hpp
                 src/ddc/kokkos_allocator.hpp
                 src/ddc/non_uniform_point_sampling.hpp

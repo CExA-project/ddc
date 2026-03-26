@@ -30,6 +30,7 @@ add_executable(
     discrete_vector.cpp
     for_each.cpp
     multiple_discrete_dimensions.cpp
+    nested_algorithms.cpp
     non_uniform_point_sampling.cpp
     parallel_deepcopy.cpp
     parallel_fill.cpp

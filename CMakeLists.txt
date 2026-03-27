@@ -134,6 +134,7 @@ target_sources(
         src/ddc/discrete_element.cpp
         src/ddc/discrete_space.cpp
         src/ddc/discrete_vector.cpp
+        src/ddc/save_npy.cpp
         src/ddc/print.cpp
     PUBLIC
         FILE_SET core_public
@@ -176,6 +177,7 @@ target_sources(
                 src/ddc/print.hpp
                 src/ddc/real_type.hpp
                 src/ddc/reducer.hpp
+                src/ddc/save_npy.hpp
                 src/ddc/scope_guard.hpp
                 src/ddc/sparse_discrete_domain.hpp
                 src/ddc/strided_discrete_domain.hpp

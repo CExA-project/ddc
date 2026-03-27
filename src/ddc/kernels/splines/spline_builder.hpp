@@ -1173,26 +1173,35 @@ void SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower,
         check_valid_grid()
 {
     std::size_t const n_interp_points = interpolation_domain().size();
+    assert(ddc::discrete_space<BSplines>.nbasis() >= static_cast<std::size_t>(s_nbe_xmin + s_nbe_xmax));
     std::size_t const expected_npoints
             = ddc::discrete_space<BSplines>().nbasis() - s_nbe_xmin - s_nbe_xmax;
     if (n_interp_points != expected_npoints) {
         throw std::runtime_error(
-                "Incorrect number of points supplied to NonUniformInterpolationPoints. "
+                "Incorrect number of points supplied to interpolation points. "
                 "(Received : "
                 + std::to_string(n_interp_points)
-                + ", expected : " + std::to_string(expected_npoints));
+                + ", expected : " + std::to_string(expected_npoints) + ")");
     }
-    int n_points_in_cell = 0;
+    std::size_t n_points_in_cell = 0;
     auto current_cell_end_idx = ddc::discrete_space<BSplines>().break_point_domain().front() + 1;
     ddc::host_for_each(interpolation_domain(), [&](auto idx) {
         ddc::Coordinate<continuous_dimension_type> const point = ddc::coordinate(idx);
         if (point > ddc::coordinate(current_cell_end_idx)) {
             // Check the points found in the previous cell
             check_n_points_in_cell(n_points_in_cell, current_cell_end_idx);
-            // Initialise the number of points in the subsequent cell, including the new point
-            n_points_in_cell = 1;
-            // Move to the next cell
-            current_cell_end_idx += 1;
+            n_points_in_cell = 0;
+            //advance through all empty cells until found cell containing the point.
+            while (point > ddc::coordinate(current_cell_end_idx) ) {
+                  current_cell_end_idx += 1;
+            }
+            if (point == ddc::coordinate(current_cell_end_idx)) {
+                // On the boundary of the cell reached — starts next cell
+                n_points_in_cell = 1;
+                current_cell_end_idx += 1;
+            } else {
+                n_points_in_cell = 1;
+            }
         } else if (point == ddc::coordinate(current_cell_end_idx)) {
             // Check the points found in the previous cell including the point on the boundary
             check_n_points_in_cell(n_points_in_cell + 1, current_cell_end_idx);

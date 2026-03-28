@@ -562,7 +562,7 @@ jobs:
               -B build \
               -S /src
 
-            find /src/benchmarks /src/examples /src/tests -name '*.cpp' -exec clang-tidy-21 -p build -header-filter="(/src/src/ddc/.*|/src/tests/.*)" '{}' '+'
+            find /src/benchmarks /src/examples /src/tests -name '*.cpp' -exec clang-tidy-22 -p build -header-filter="(/src/src/ddc/.*|/src/tests/.*)" '{}' '+'
           EOF
 
           docker run \

@@ -640,6 +640,9 @@ private:
                                                 - ddc::discrete_space<bsplines_type>().rmin())
                                                / ddc::discrete_space<bsplines_type>().length())
                                        * ddc::discrete_space<bsplines_type>().length();
+                if (coord_eval_interest >= ddc::discrete_space<bsplines_type>().rmax()) {
+                                              coord_eval_interest = ddc::discrete_space<bsplines_type>().rmin();
+}
             }
         } else {
             if (coord_eval_interest < ddc::discrete_space<bsplines_type>().rmin()) {

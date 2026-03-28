@@ -105,7 +105,7 @@ std::vector<Coord<X>> breaks(std::size_t ncells)
 template <class DDim>
 void interest_dim_initializer(std::size_t const ncells)
 {
-    using CDim = typename DDim::continuous_dimension_type;
+    using CDim = DDim::continuous_dimension_type;
 #if defined(BSPLINES_TYPE_UNIFORM)
     ddc::init_discrete_space<BSplines<CDim>>(x0<CDim>(), xn<CDim>(), ncells);
 #elif defined(BSPLINES_TYPE_NON_UNIFORM)
@@ -132,8 +132,8 @@ void test_deriv(
         DElem const& deriv_order,
         std::size_t const ncells)
 {
-    using domain = typename SplineDerivSpan::discrete_domain_type;
-    using I = typename DDimI::continuous_dimension_type;
+    using domain = SplineDerivSpan::discrete_domain_type;
+    using I = DDimI::continuous_dimension_type;
 
     ddc::parallel_fill(exec_space, spline_eval_deriv, 0.0);
     exec_space.fence();
@@ -147,7 +147,7 @@ void test_deriv(
             spline_eval_deriv.domain(),
             0.,
             ddc::reducer::max<double>(),
-            KOKKOS_LAMBDA(typename domain::discrete_element_type const e) {
+            KOKKOS_LAMBDA(domain::discrete_element_type const e) {
                 Coord<I> const x = ddc::coordinate(ddc::DiscreteElement<DDimI>(e));
                 return Kokkos::abs(spline_eval_deriv(e) - evaluator.deriv(x, order));
             });
@@ -182,7 +182,7 @@ void launch_deriv_tests(
         evaluator_type<DDimI> const& evaluator,
         std::size_t const ncells)
 {
-    using I = typename DDimI::continuous_dimension_type;
+    using I = DDimI::continuous_dimension_type;
 
     auto const local_test_deriv = [&](auto deriv_order) {
         test_deriv(
@@ -211,7 +211,7 @@ void launch_deriv_tests(
 template <typename ExecSpace, typename MemorySpace, typename DDimI, typename... DDims>
 void TestSplineEvaluator1dDerivatives()
 {
-    using I = typename DDimI::continuous_dimension_type;
+    using I = DDimI::continuous_dimension_type;
 
     // Instantiate execution spaces and initialize spaces
     ExecSpace const exec_space;

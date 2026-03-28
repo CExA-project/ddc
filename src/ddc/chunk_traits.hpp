@@ -42,13 +42,13 @@ struct chunk_traits
 };
 
 template <class T>
-using chunk_value_t = typename chunk_traits<T>::value_type;
+using chunk_value_t = chunk_traits<T>::value_type;
 
 template <class T>
-using chunk_pointer_t = typename chunk_traits<T>::pointer_type;
+using chunk_pointer_t = chunk_traits<T>::pointer_type;
 
 template <class T>
-using chunk_reference_t = typename chunk_traits<T>::reference_type;
+using chunk_reference_t = chunk_traits<T>::reference_type;
 
 template <class T>
 inline constexpr bool is_writable_chunk_v

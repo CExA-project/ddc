@@ -72,8 +72,8 @@ TYPED_TEST_SUITE(BSplinesFixture, Cases, BSplinesFixtureNames);
 TYPED_TEST(BSplinesFixture, PartitionOfUnityUniform)
 {
     std::size_t constexpr degree = TestFixture::spline_degree;
-    using DimX = typename TestFixture::DimX;
-    using BSplinesX = typename TestFixture::UBSplinesX;
+    using DimX = TestFixture::DimX;
+    using BSplinesX = TestFixture::UBSplinesX;
     using CoordX = ddc::Coordinate<DimX>;
     CoordX const xmin(0.0);
     CoordX const xmax(0.2);
@@ -101,8 +101,8 @@ TYPED_TEST(BSplinesFixture, PartitionOfUnityUniform)
 TYPED_TEST(BSplinesFixture, PartitionOfUnityNonUniform)
 {
     std::size_t constexpr degree = TestFixture::spline_degree;
-    using DimX = typename TestFixture::DimX;
-    using BSplinesX = typename TestFixture::NUBSplinesX;
+    using DimX = TestFixture::DimX;
+    using BSplinesX = TestFixture::NUBSplinesX;
     using CoordX = ddc::Coordinate<DimX>;
     CoordX const xmin(0.0);
     CoordX const xmax(0.2);
@@ -153,8 +153,8 @@ TEST(KnotDiscreteDimension, Type)
 TYPED_TEST(BSplinesFixture, RoundingNonUniform)
 {
     std::size_t constexpr degree = TestFixture::spline_degree;
-    using DimX = typename TestFixture::DimX;
-    using BSplinesX = typename TestFixture::NUBSplinesX;
+    using DimX = TestFixture::DimX;
+    using BSplinesX = TestFixture::NUBSplinesX;
     using CoordX = ddc::Coordinate<DimX>;
     CoordX const xmin(0.0);
     CoordX const xmax(0.2);
@@ -187,8 +187,8 @@ TYPED_TEST(BSplinesFixture, RoundingNonUniform)
 TYPED_TEST(BSplinesFixture, RoundingUniform)
 {
     std::size_t constexpr degree = TestFixture::spline_degree;
-    using DimX = typename TestFixture::DimX;
-    using BSplinesX = typename TestFixture::UBSplinesX;
+    using DimX = TestFixture::DimX;
+    using BSplinesX = TestFixture::UBSplinesX;
     using CoordX = ddc::Coordinate<DimX>;
     CoordX const xmin(0.0);
     CoordX const xmax(0.2);

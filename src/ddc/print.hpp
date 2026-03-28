@@ -284,8 +284,8 @@ std::ostream& print_content(
     auto h_chunk_span = create_mirror_view_and_copy(Kokkos::HostSpace(), chunk_span);
 
     using chunkspan_type = std::remove_cv_t<std::remove_reference_t<decltype(h_chunk_span)>>;
-    using mdspan_type = typename chunkspan_type::allocation_mdspan_type;
-    using extents = typename mdspan_type::extents_type;
+    using mdspan_type = chunkspan_type::allocation_mdspan_type;
+    using extents = mdspan_type::extents_type;
 
     mdspan_type const allocated_mdspan = h_chunk_span.allocation_mdspan();
 

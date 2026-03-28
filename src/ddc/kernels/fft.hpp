@@ -67,7 +67,7 @@ struct RealType<Kokkos::complex<T>>
 };
 
 template <typename T>
-using real_type_t = typename RealType<T>::type;
+using real_type_t = RealType<T>::type;
 
 // is_complex : trait to determine if type is Kokkos::complex<something>
 template <typename T>
@@ -249,7 +249,7 @@ namespace ddc {
  * @see PeriodicSampling
  */
 template <typename DDimFx, typename DDimX>
-typename DDimFx::template Impl<DDimFx, Kokkos::HostSpace> init_fourier_space(
+DDimFx::template Impl<DDimFx, Kokkos::HostSpace> init_fourier_space(
         ddc::DiscreteDomain<DDimX> x_mesh)
 {
     static_assert(
@@ -258,8 +258,8 @@ typename DDimFx::template Impl<DDimFx, Kokkos::HostSpace> init_fourier_space(
     static_assert(
             is_periodic_sampling_v<DDimFx>,
             "DDimFx dimension must derive from PeriodicSampling");
-    using CDimFx = typename DDimFx::continuous_dimension_type;
-    using CDimX = typename DDimX::continuous_dimension_type;
+    using CDimFx = DDimFx::continuous_dimension_type;
+    using CDimX = DDimX::continuous_dimension_type;
     static_assert(
             std::is_same_v<CDimFx, ddc::Fourier<CDimX>>,
             "DDimX and DDimFx dimensions must be defined over the same continuous dimension");

@@ -481,8 +481,8 @@ struct ConvertTypeSeqToStridedDiscreteDomain<detail::TypeSeq<DDims...>>
 };
 
 template <class T>
-using convert_type_seq_to_strided_discrete_domain_t =
-        typename ConvertTypeSeqToStridedDiscreteDomain<T>::type;
+using convert_type_seq_to_strided_discrete_domain_t
+        = ConvertTypeSeqToStridedDiscreteDomain<T>::type;
 
 } // namespace detail
 

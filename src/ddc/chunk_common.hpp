@@ -46,27 +46,27 @@ public:
             Kokkos::dextents<std::size_t, SupportType::rank()>,
             LayoutStridedPolicy>;
 
-    using discrete_element_type = typename discrete_domain_type::discrete_element_type;
+    using discrete_element_type = discrete_domain_type::discrete_element_type;
 
-    using discrete_vector_type = typename discrete_domain_type::discrete_vector_type;
+    using discrete_vector_type = discrete_domain_type::discrete_vector_type;
 
-    using extents_type = typename allocation_mdspan_type::extents_type;
+    using extents_type = allocation_mdspan_type::extents_type;
 
-    using layout_type = typename allocation_mdspan_type::layout_type;
+    using layout_type = allocation_mdspan_type::layout_type;
 
-    using accessor_type = typename allocation_mdspan_type::accessor_type;
+    using accessor_type = allocation_mdspan_type::accessor_type;
 
-    using mapping_type = typename allocation_mdspan_type::mapping_type;
+    using mapping_type = allocation_mdspan_type::mapping_type;
 
-    using element_type = typename allocation_mdspan_type::element_type;
+    using element_type = allocation_mdspan_type::element_type;
 
-    using value_type = typename allocation_mdspan_type::value_type;
+    using value_type = allocation_mdspan_type::value_type;
 
-    using size_type = typename allocation_mdspan_type::size_type;
+    using size_type = allocation_mdspan_type::size_type;
 
-    using data_handle_type = typename allocation_mdspan_type::data_handle_type;
+    using data_handle_type = allocation_mdspan_type::data_handle_type;
 
-    using reference = typename allocation_mdspan_type::reference;
+    using reference = allocation_mdspan_type::reference;
 
     // ChunkCommon, ChunkSpan and Chunk need to access to m_allocation_mdspan_mdspan and m_domain of other template versions
     template <class, class, class>
@@ -133,7 +133,7 @@ public:
         return m_allocation_mdspan.accessor();
     }
 
-    KOKKOS_FUNCTION constexpr typename SupportType::discrete_vector_type extents() const noexcept
+    KOKKOS_FUNCTION constexpr SupportType::discrete_vector_type extents() const noexcept
     {
         return m_domain.extents();
     }

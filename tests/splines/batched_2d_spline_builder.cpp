@@ -140,7 +140,7 @@ std::vector<Coord<X>> breaks(std::size_t ncells)
 template <class DDim>
 void interest_dim_initializer(std::size_t const ncells)
 {
-    using CDim = typename DDim::continuous_dimension_type;
+    using CDim = DDim::continuous_dimension_type;
 #if defined(BSPLINES_TYPE_UNIFORM)
     ddc::init_discrete_space<BSplines<CDim>>(x0<CDim>(), xn<CDim>(), ncells);
 #elif defined(BSPLINES_TYPE_NON_UNIFORM)
@@ -159,8 +159,8 @@ template <
         typename... DDims>
 void TestBatched2dSpline()
 {
-    using I1 = typename DDimI1::continuous_dimension_type;
-    using I2 = typename DDimI2::continuous_dimension_type;
+    using I1 = DDimI1::continuous_dimension_type;
+    using I2 = DDimI2::continuous_dimension_type;
 
     // Instantiate execution spaces and initialize spaces
     ExecSpace const exec_space;
@@ -257,8 +257,7 @@ void TestBatched2dSpline()
         ddc::parallel_for_each(
                 exec_space,
                 derivs_1d_lhs.domain(),
-                KOKKOS_LAMBDA(
-                        typename decltype(derivs_1d_lhs.domain())::discrete_element_type const e) {
+                KOKKOS_LAMBDA(decltype(derivs_1d_lhs.domain())::discrete_element_type const e) {
                     derivs_1d_lhs(e) = derivs_1d_lhs1(DElem<ddc::Deriv<I1>, DDimI2>(e));
                 });
     }
@@ -284,8 +283,7 @@ void TestBatched2dSpline()
         ddc::parallel_for_each(
                 exec_space,
                 derivs_1d_rhs.domain(),
-                KOKKOS_LAMBDA(
-                        typename decltype(derivs_1d_rhs.domain())::discrete_element_type const e) {
+                KOKKOS_LAMBDA(decltype(derivs_1d_rhs.domain())::discrete_element_type const e) {
                     derivs_1d_rhs(e) = derivs_1d_rhs1(DElem<ddc::Deriv<I1>, DDimI2>(e));
                 });
     }
@@ -311,8 +309,7 @@ void TestBatched2dSpline()
         ddc::parallel_for_each(
                 exec_space,
                 derivs2_lhs.domain(),
-                KOKKOS_LAMBDA(
-                        typename decltype(derivs2_lhs.domain())::discrete_element_type const e) {
+                KOKKOS_LAMBDA(decltype(derivs2_lhs.domain())::discrete_element_type const e) {
                     derivs2_lhs(e) = derivs2_lhs1(DElem<DDimI1, ddc::Deriv<I2>>(e));
                 });
     }
@@ -338,8 +335,7 @@ void TestBatched2dSpline()
         ddc::parallel_for_each(
                 exec_space,
                 derivs2_rhs.domain(),
-                KOKKOS_LAMBDA(
-                        typename decltype(derivs2_rhs.domain())::discrete_element_type const e) {
+                KOKKOS_LAMBDA(decltype(derivs2_rhs.domain())::discrete_element_type const e) {
                     derivs2_rhs(e) = derivs2_rhs1(DElem<DDimI1, ddc::Deriv<I2>>(e));
                 });
     }
@@ -393,7 +389,7 @@ void TestBatched2dSpline()
         ddc::parallel_for_each(
                 exec_space,
                 dom_derivs,
-                KOKKOS_LAMBDA(typename decltype(dom_derivs)::discrete_element_type const e) {
+                KOKKOS_LAMBDA(decltype(dom_derivs)::discrete_element_type const e) {
                     derivs_mixed_lhs_lhs(e)
                             = derivs_mixed_lhs_lhs1(DElem<ddc::Deriv<I1>, ddc::Deriv<I2>>(e));
                     derivs_mixed_rhs_lhs(e)

@@ -68,55 +68,52 @@ public:
             Solver>;
 
     /// @brief The type of the first interpolation continuous dimension.
-    using continuous_dimension_type1 = typename builder_type1::continuous_dimension_type;
+    using continuous_dimension_type1 = builder_type1::continuous_dimension_type;
 
     /// @brief The type of the second interpolation continuous dimension.
-    using continuous_dimension_type2 = typename builder_type_2_3::continuous_dimension_type1;
+    using continuous_dimension_type2 = builder_type_2_3::continuous_dimension_type1;
 
     /// @brief The type of the third interpolation continuous dimension.
-    using continuous_dimension_type3 = typename builder_type_2_3::continuous_dimension_type2;
+    using continuous_dimension_type3 = builder_type_2_3::continuous_dimension_type2;
 
     /// @brief The type of the first interpolation discrete dimension.
-    using interpolation_discrete_dimension_type1 =
-            typename builder_type1::interpolation_discrete_dimension_type;
+    using interpolation_discrete_dimension_type1
+            = builder_type1::interpolation_discrete_dimension_type;
 
     /// @brief The type of the second interpolation discrete dimension.
-    using interpolation_discrete_dimension_type2 =
-            typename builder_type_2_3::interpolation_discrete_dimension_type1;
+    using interpolation_discrete_dimension_type2
+            = builder_type_2_3::interpolation_discrete_dimension_type1;
 
     /// @brief The type of the third interpolation discrete dimension.
-    using interpolation_discrete_dimension_type3 =
-            typename builder_type_2_3::interpolation_discrete_dimension_type2;
+    using interpolation_discrete_dimension_type3
+            = builder_type_2_3::interpolation_discrete_dimension_type2;
 
     /// @brief The type of the B-splines in the first dimension.
-    using bsplines_type1 = typename builder_type1::bsplines_type;
+    using bsplines_type1 = builder_type1::bsplines_type;
 
     /// @brief The type of the B-splines in the second dimension.
-    using bsplines_type2 = typename builder_type_2_3::bsplines_type1;
+    using bsplines_type2 = builder_type_2_3::bsplines_type1;
 
     /// @brief The type of the B-splines in the third dimension.
-    using bsplines_type3 = typename builder_type_2_3::bsplines_type2;
+    using bsplines_type3 = builder_type_2_3::bsplines_type2;
 
     /// @brief The type of the Deriv domain on boundaries in the first dimension.
-    using deriv_type1 = typename builder_type1::deriv_type;
+    using deriv_type1 = builder_type1::deriv_type;
 
     /// @brief The type of the Deriv domain on boundaries in the second dimension.
-    using deriv_type2 = typename builder_type_2_3::deriv_type1;
+    using deriv_type2 = builder_type_2_3::deriv_type1;
 
     /// @brief The type of the Deriv domain on boundaries in the third dimension.
-    using deriv_type3 = typename builder_type_2_3::deriv_type2;
+    using deriv_type3 = builder_type_2_3::deriv_type2;
 
     /// @brief The type of the domain for the interpolation mesh in the first dimension.
-    using interpolation_domain_type1 =
-            typename builder_type1::interpolation_discrete_dimension_type;
+    using interpolation_domain_type1 = builder_type1::interpolation_discrete_dimension_type;
 
     /// @brief The type of the domain for the interpolation mesh in the second dimension.
-    using interpolation_domain_type2 =
-            typename builder_type_2_3::interpolation_discrete_dimension_type1;
+    using interpolation_domain_type2 = builder_type_2_3::interpolation_discrete_dimension_type1;
 
     /// @brief The type of the domain for the interpolation mesh in the third dimension.
-    using interpolation_domain_type3 =
-            typename builder_type_2_3::interpolation_discrete_dimension_type2;
+    using interpolation_domain_type3 = builder_type_2_3::interpolation_discrete_dimension_type2;
 
     /// @brief The type of the domain for the interpolation mesh in the 3D dimension.
     using interpolation_domain_type = ddc::DiscreteDomain<

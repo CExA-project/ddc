@@ -26,6 +26,6 @@ struct KnotDiscreteDimension
 
 /// Helper type to easily access `KnotDiscreteDimension<DDim>::type`
 template <class DDim>
-using knot_discrete_dimension_t = typename KnotDiscreteDimension<DDim>::type;
+using knot_discrete_dimension_t = KnotDiscreteDimension<DDim>::type;
 
 } // namespace ddc

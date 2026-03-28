@@ -153,7 +153,7 @@ std::vector<Coord<X>> breaks(std::size_t ncells)
 template <class DDim>
 void interest_dim_initializer(std::size_t const ncells)
 {
-    using CDim = typename DDim::continuous_dimension_type;
+    using CDim = DDim::continuous_dimension_type;
 #if defined(BSPLINES_TYPE_UNIFORM)
     ddc::init_discrete_space<BSplines<CDim>>(x0<CDim>(), xn<CDim>(), ncells);
 #elif defined(BSPLINES_TYPE_NON_UNIFORM)
@@ -173,9 +173,9 @@ template <
         typename... DDims>
 void TestBatched3dSpline()
 {
-    using I1 = typename DDimI1::continuous_dimension_type;
-    using I2 = typename DDimI2::continuous_dimension_type;
-    using I3 = typename DDimI3::continuous_dimension_type;
+    using I1 = DDimI1::continuous_dimension_type;
+    using I2 = DDimI2::continuous_dimension_type;
+    using I3 = DDimI3::continuous_dimension_type;
 
     // Instantiate execution spaces and initialize spaces
     ExecSpace const exec_space;
@@ -303,9 +303,7 @@ void TestBatched3dSpline()
         ddc::parallel_for_each(
                 exec_space,
                 derivs1_lhs_view.domain(),
-                KOKKOS_LAMBDA(
-                        typename decltype(derivs1_lhs_view
-                                                  .domain())::discrete_element_type const e) {
+                KOKKOS_LAMBDA(decltype(derivs1_lhs_view.domain())::discrete_element_type const e) {
                     derivs1_lhs_view(e) = derivs1_lhs(DElem<ddc::Deriv<I1>, DDimI2, DDimI3>(e));
                 });
     }
@@ -334,9 +332,7 @@ void TestBatched3dSpline()
         ddc::parallel_for_each(
                 exec_space,
                 derivs1_rhs_view.domain(),
-                KOKKOS_LAMBDA(
-                        typename decltype(derivs1_rhs_view
-                                                  .domain())::discrete_element_type const e) {
+                KOKKOS_LAMBDA(decltype(derivs1_rhs_view.domain())::discrete_element_type const e) {
                     derivs1_rhs_view(e) = derivs1_rhs(DElem<ddc::Deriv<I1>, DDimI2, DDimI3>(e));
                 });
     }
@@ -366,9 +362,7 @@ void TestBatched3dSpline()
         ddc::parallel_for_each(
                 exec_space,
                 derivs2_lhs_view.domain(),
-                KOKKOS_LAMBDA(
-                        typename decltype(derivs2_lhs_view
-                                                  .domain())::discrete_element_type const e) {
+                KOKKOS_LAMBDA(decltype(derivs2_lhs_view.domain())::discrete_element_type const e) {
                     derivs2_lhs_view(e) = derivs2_lhs(DElem<DDimI1, ddc::Deriv<I2>, DDimI3>(e));
                 });
     }
@@ -398,9 +392,7 @@ void TestBatched3dSpline()
         ddc::parallel_for_each(
                 exec_space,
                 derivs2_rhs_view.domain(),
-                KOKKOS_LAMBDA(
-                        typename decltype(derivs2_rhs_view
-                                                  .domain())::discrete_element_type const e) {
+                KOKKOS_LAMBDA(decltype(derivs2_rhs_view.domain())::discrete_element_type const e) {
                     derivs2_rhs_view(e) = derivs2_rhs(DElem<DDimI1, ddc::Deriv<I2>, DDimI3>(e));
                 });
     }
@@ -431,9 +423,7 @@ void TestBatched3dSpline()
         ddc::parallel_for_each(
                 exec_space,
                 derivs3_lhs_view.domain(),
-                KOKKOS_LAMBDA(
-                        typename decltype(derivs3_lhs_view
-                                                  .domain())::discrete_element_type const e) {
+                KOKKOS_LAMBDA(decltype(derivs3_lhs_view.domain())::discrete_element_type const e) {
                     derivs3_lhs_view(e) = derivs3_lhs(DElem<DDimI1, DDimI2, ddc::Deriv<I3>>(e));
                 });
     }
@@ -464,9 +454,7 @@ void TestBatched3dSpline()
         ddc::parallel_for_each(
                 exec_space,
                 derivs3_rhs_view.domain(),
-                KOKKOS_LAMBDA(
-                        typename decltype(derivs3_rhs_view
-                                                  .domain())::discrete_element_type const e) {
+                KOKKOS_LAMBDA(decltype(derivs3_rhs_view.domain())::discrete_element_type const e) {
                     derivs3_rhs_view(e) = derivs3_rhs(DElem<DDimI1, DDimI2, ddc::Deriv<I3>>(e));
                 });
     }
@@ -539,7 +527,7 @@ void TestBatched3dSpline()
         ddc::parallel_for_each(
                 exec_space,
                 dom_derivs12,
-                KOKKOS_LAMBDA(typename decltype(dom_derivs12)::discrete_element_type const e) {
+                KOKKOS_LAMBDA(decltype(dom_derivs12)::discrete_element_type const e) {
                     derivs_mixed_lhs1_lhs2_view(e) = derivs_mixed_lhs1_lhs2(
                             DElem<ddc::Deriv<I1>, ddc::Deriv<I2>, DDimI3>(e));
                     derivs_mixed_rhs1_lhs2_view(e) = derivs_mixed_rhs1_lhs2(
@@ -619,7 +607,7 @@ void TestBatched3dSpline()
         ddc::parallel_for_each(
                 exec_space,
                 dom_derivs23,
-                KOKKOS_LAMBDA(typename decltype(dom_derivs23)::discrete_element_type const e) {
+                KOKKOS_LAMBDA(decltype(dom_derivs23)::discrete_element_type const e) {
                     derivs_mixed_lhs2_lhs3_view(e) = derivs_mixed_lhs2_lhs3(
                             DElem<DDimI1, ddc::Deriv<I2>, ddc::Deriv<I3>>(e));
                     derivs_mixed_rhs2_lhs3_view(e) = derivs_mixed_rhs2_lhs3(
@@ -699,7 +687,7 @@ void TestBatched3dSpline()
         ddc::parallel_for_each(
                 exec_space,
                 dom_derivs13,
-                KOKKOS_LAMBDA(typename decltype(dom_derivs13)::discrete_element_type const e) {
+                KOKKOS_LAMBDA(decltype(dom_derivs13)::discrete_element_type const e) {
                     derivs_mixed_lhs1_lhs3_view(e) = derivs_mixed_lhs1_lhs3(
                             DElem<ddc::Deriv<I1>, DDimI2, ddc::Deriv<I3>>(e));
                     derivs_mixed_rhs1_lhs3_view(e) = derivs_mixed_rhs1_lhs3(
@@ -855,7 +843,7 @@ void TestBatched3dSpline()
         ddc::parallel_for_each(
                 exec_space,
                 dom_derivs_all,
-                KOKKOS_LAMBDA(typename decltype(dom_derivs_all)::discrete_element_type const e) {
+                KOKKOS_LAMBDA(decltype(dom_derivs_all)::discrete_element_type const e) {
                     derivs_mixed_lhs1_lhs2_lhs3_view(e) = derivs_mixed_lhs1_lhs2_lhs3(
                             DElem<ddc::Deriv<I1>, ddc::Deriv<I2>, ddc::Deriv<I3>>(e));
                     derivs_mixed_rhs1_lhs2_lhs3_view(e) = derivs_mixed_rhs1_lhs2_lhs3(

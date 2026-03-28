@@ -208,20 +208,20 @@ constexpr std::size_t type_seq_rank_v<QueryTag, detail::TypeSeq<Tags...>>
         = detail::TypeSeqRank<detail::SingleType<QueryTag>, detail::TypeSeq<Tags...>>::val;
 
 template <std::size_t I, class TagSeq>
-using type_seq_element_t = typename detail::TypeSeqElement<I, TagSeq>::type;
+using type_seq_element_t = detail::TypeSeqElement<I, TagSeq>::type;
 
 template <class TagSeqA, class TagSeqB>
-using type_seq_remove_t = typename detail::TypeSeqRemove<TagSeqA, TagSeqB, detail::TypeSeq<>>::type;
+using type_seq_remove_t = detail::TypeSeqRemove<TagSeqA, TagSeqB, detail::TypeSeq<>>::type;
 
 template <class TagSeqA, class TagSeqB>
-using type_seq_merge_t = typename detail::TypeSeqMerge<TagSeqA, TagSeqB, TagSeqA>::type;
+using type_seq_merge_t = detail::TypeSeqMerge<TagSeqA, TagSeqB, TagSeqA>::type;
 
 template <class TagSeqA, class TagSeqB>
-using type_seq_cat_t = typename detail::TypeSeqCat<TagSeqA, TagSeqB>::type;
+using type_seq_cat_t = detail::TypeSeqCat<TagSeqA, TagSeqB>::type;
 
 template <class TagSeqA, class TagSeqB, class TagSeqC>
-using type_seq_replace_t =
-        typename detail::TypeSeqReplace<TagSeqA, TagSeqB, TagSeqC, detail::TypeSeq<>>::type;
+using type_seq_replace_t
+        = detail::TypeSeqReplace<TagSeqA, TagSeqB, TagSeqC, detail::TypeSeq<>>::type;
 
 template <class... Tags>
 constexpr bool type_seq_is_unique_v<detail::TypeSeq<Tags...>>
@@ -230,6 +230,6 @@ constexpr bool type_seq_is_unique_v<detail::TypeSeq<Tags...>>
            && ...);
 
 template <class T>
-using to_type_seq_t = typename detail::ToTypeSeq<T>::type;
+using to_type_seq_t = detail::ToTypeSeq<T>::type;
 
 } // namespace ddc

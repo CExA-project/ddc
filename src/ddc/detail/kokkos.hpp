@@ -63,7 +63,7 @@ struct KokkosToMdspanLayout<Kokkos::LayoutStride>
 
 /// Alias template to transform a mdspan layout type to a Kokkos layout type
 template <class KokkosLP>
-using kokkos_to_mdspan_layout_t = typename KokkosToMdspanLayout<KokkosLP>::type;
+using kokkos_to_mdspan_layout_t = KokkosToMdspanLayout<KokkosLP>::type;
 
 
 template <class MdspanLP>
@@ -94,7 +94,7 @@ struct MdspanToKokkosLayout<Kokkos::layout_stride>
 
 /// Alias template to transform a Kokkos layout type to a mdspan layout type
 template <class MdspanLP>
-using mdspan_to_kokkos_layout_t = typename MdspanToKokkosLayout<MdspanLP>::type;
+using mdspan_to_kokkos_layout_t = MdspanToKokkosLayout<MdspanLP>::type;
 
 template <class ET, std::size_t N>
 struct MdspanToKokkosElement
@@ -108,7 +108,7 @@ struct MdspanToKokkosElement
 /// Alias template to transform a mdspan element type to a Kokkos element type
 /// Only dynamic dimensions is supported for now i.e. `double[4]*` is not yet covered.
 template <class ET, std::size_t N>
-using mdspan_to_kokkos_element_t = typename MdspanToKokkosElement<ET, N>::type;
+using mdspan_to_kokkos_element_t = MdspanToKokkosElement<ET, N>::type;
 
 template <class ET>
 struct KokkosToMdspanElement
@@ -122,7 +122,7 @@ struct KokkosToMdspanElement
 /// Alias template to transform a Kokkos element type to a mdspan element type
 /// Only dynamic dimensions is supported for now i.e. `double[4]*` is not yet covered.
 template <class ET>
-using kokkos_to_mdspan_element_t = typename KokkosToMdspanElement<ET>::type;
+using kokkos_to_mdspan_element_t = KokkosToMdspanElement<ET>::type;
 
 
 template <std::size_t... Is>
@@ -162,7 +162,7 @@ KOKKOS_FUNCTION mdspan_to_kokkos_layout_t<typename MP::layout_type> build_kokkos
 template <class DataType, class... Properties>
 KOKKOS_FUNCTION bool is_kokkos_layout_compatible(Kokkos::View<DataType, Properties...> const& view)
 {
-    using layout_type = typename Kokkos::View<DataType, Properties...>::array_layout;
+    using layout_type = Kokkos::View<DataType, Properties...>::array_layout;
     if (std::is_same_v<layout_type, Kokkos::LayoutLeft>
         || std::is_same_v<layout_type, Kokkos::LayoutRight>) {
         return view.span_is_contiguous();
@@ -181,7 +181,7 @@ KOKKOS_FUNCTION auto build_mdspan(
     using extents_type = Kokkos::dextents<std::size_t, Kokkos::View<DataType, Properties...>::rank>;
     using layout_type = kokkos_to_mdspan_layout_t<
             typename Kokkos::View<DataType, Properties...>::array_layout>;
-    using mapping_type = typename layout_type::template mapping<extents_type>;
+    using mapping_type = layout_type::template mapping<extents_type>;
     extents_type const exts(view.extent(Is)...);
     if constexpr (std::is_same_v<layout_type, Kokkos::layout_stride>) {
         return Kokkos::mdspan(view.data(), mapping_type(exts, std::array {view.stride(Is)...}));

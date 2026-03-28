@@ -84,7 +84,7 @@ struct ddc_to_kokkos_reducer<reducer::minmax<T>>
 
 /// Alias template to transform a DDC reducer type to a Kokkos reducer type
 template <class Reducer>
-using ddc_to_kokkos_reducer_t = typename ddc_to_kokkos_reducer<Reducer>::type;
+using ddc_to_kokkos_reducer_t = ddc_to_kokkos_reducer<Reducer>::type;
 
 template <class Reducer, class Functor, class Support, class IndexSequence>
 class TransformReducerKokkosLambdaAdapter;
@@ -109,13 +109,13 @@ public:
     {
     }
 
-    KOKKOS_FUNCTION void operator()(index_type<0> /*id*/, typename Reducer::value_type& a) const
+    KOKKOS_FUNCTION void operator()(index_type<0> /*id*/, Reducer::value_type& a) const
         requires(sizeof...(Idx) == 0)
     {
         a = m_reducer(a, m_functor(m_support(typename Support::discrete_vector_type())));
     }
 
-    KOKKOS_FUNCTION void operator()(index_type<Idx>... ids, typename Reducer::value_type& a) const
+    KOKKOS_FUNCTION void operator()(index_type<Idx>... ids, Reducer::value_type& a) const
         requires(sizeof...(Idx) > 0)
     {
         a = m_reducer(a, m_functor(m_support(typename Support::discrete_vector_type(ids...))));

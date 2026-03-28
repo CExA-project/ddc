@@ -60,36 +60,36 @@ public:
     /// type of a view of this full chunk
     using view_type = ChunkSpan<ElementType const, SupportType, LayoutStridedPolicy, MemorySpace>;
 
-    using discrete_domain_type = typename base_type::discrete_domain_type;
+    using discrete_domain_type = base_type::discrete_domain_type;
 
     using memory_space = MemorySpace;
 
     /// The dereferenceable part of the co-domain but with a different domain, starting at 0
-    using allocation_mdspan_type = typename base_type::allocation_mdspan_type;
+    using allocation_mdspan_type = base_type::allocation_mdspan_type;
 
-    using const_allocation_mdspan_type = typename base_type::const_allocation_mdspan_type;
+    using const_allocation_mdspan_type = base_type::const_allocation_mdspan_type;
 
-    using discrete_element_type = typename discrete_domain_type::discrete_element_type;
+    using discrete_element_type = discrete_domain_type::discrete_element_type;
 
-    using discrete_vector_type = typename discrete_domain_type::discrete_vector_type;
+    using discrete_vector_type = discrete_domain_type::discrete_vector_type;
 
-    using extents_type = typename base_type::extents_type;
+    using extents_type = base_type::extents_type;
 
-    using layout_type = typename base_type::layout_type;
+    using layout_type = base_type::layout_type;
 
-    using accessor_type = typename base_type::accessor_type;
+    using accessor_type = base_type::accessor_type;
 
-    using mapping_type = typename base_type::mapping_type;
+    using mapping_type = base_type::mapping_type;
 
-    using element_type = typename base_type::element_type;
+    using element_type = base_type::element_type;
 
-    using value_type = typename base_type::value_type;
+    using value_type = base_type::value_type;
 
-    using size_type = typename base_type::size_type;
+    using size_type = base_type::size_type;
 
-    using data_handle_type = typename base_type::data_handle_type;
+    using data_handle_type = base_type::data_handle_type;
 
-    using reference = typename base_type::reference;
+    using reference = base_type::reference;
 
     template <class, class, class, class>
     friend class ChunkSpan;
@@ -265,17 +265,17 @@ public:
             DiscreteElement<QueryDDims...> const& slice_spec) const
     {
         using detail::TypeSeq;
-        using QueryDDom = typename detail::RebindDomain<SupportType, TypeSeq<QueryDDims...>>::type;
+        using QueryDDom = detail::RebindDomain<SupportType, TypeSeq<QueryDDims...>>::type;
         KOKKOS_ASSERT(QueryDDom(this->m_domain).contains(slice_spec))
         slicer<to_type_seq_t<SupportType>> const slicer;
         auto subview = slicer(
                 this->allocation_mdspan(),
                 QueryDDom(this->m_domain).distance_from_front(slice_spec));
-        using layout_type = typename decltype(subview)::layout_type;
-        using extents_type = typename decltype(subview)::extents_type;
+        using layout_type = decltype(subview)::layout_type;
+        using extents_type = decltype(subview)::extents_type;
         using OutTypeSeqDDims
                 = type_seq_remove_t<to_type_seq_t<SupportType>, TypeSeq<QueryDDims...>>;
-        using OutDDom = typename detail::RebindDomain<SupportType, OutTypeSeqDDims>::type;
+        using OutDDom = detail::RebindDomain<SupportType, OutTypeSeqDDims>::type;
         if constexpr (
                 std::is_same_v<layout_type, Kokkos::Experimental::layout_left_padded<>>
                 || std::is_same_v<layout_type, Kokkos::Experimental::layout_right_padded<>>) {
@@ -308,8 +308,8 @@ public:
                     && DiscreteDomain<QueryDDims...>(this->m_domain).contains(odomain.back())))
         slicer<to_type_seq_t<SupportType>> const slicer;
         auto subview = slicer(this->allocation_mdspan(), odomain, this->m_domain);
-        using layout_type = typename decltype(subview)::layout_type;
-        using extents_type = typename decltype(subview)::extents_type;
+        using layout_type = decltype(subview)::layout_type;
+        using extents_type = decltype(subview)::extents_type;
         if constexpr (
                 std::is_same_v<layout_type, Kokkos::Experimental::layout_left_padded<>>
                 || std::is_same_v<layout_type, Kokkos::Experimental::layout_right_padded<>>) {

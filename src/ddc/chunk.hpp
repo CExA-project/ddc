@@ -49,33 +49,33 @@ public:
             typename Allocator::memory_space>;
 
     /// The dereferenceable part of the co-domain but with indexing starting at 0
-    using allocation_mdspan_type = typename base_type::allocation_mdspan_type;
+    using allocation_mdspan_type = base_type::allocation_mdspan_type;
 
-    using const_allocation_mdspan_type = typename base_type::const_allocation_mdspan_type;
+    using const_allocation_mdspan_type = base_type::const_allocation_mdspan_type;
 
-    using discrete_domain_type = typename base_type::discrete_domain_type;
+    using discrete_domain_type = base_type::discrete_domain_type;
 
-    using memory_space = typename Allocator::memory_space;
+    using memory_space = Allocator::memory_space;
 
-    using discrete_element_type = typename base_type::discrete_element_type;
+    using discrete_element_type = base_type::discrete_element_type;
 
-    using discrete_vector_type = typename base_type::discrete_vector_type;
+    using discrete_vector_type = base_type::discrete_vector_type;
 
-    using extents_type = typename base_type::extents_type;
+    using extents_type = base_type::extents_type;
 
-    using layout_type = typename base_type::layout_type;
+    using layout_type = base_type::layout_type;
 
-    using mapping_type = typename base_type::mapping_type;
+    using mapping_type = base_type::mapping_type;
 
-    using element_type = typename base_type::element_type;
+    using element_type = base_type::element_type;
 
-    using value_type = typename base_type::value_type;
+    using value_type = base_type::value_type;
 
-    using size_type = typename base_type::size_type;
+    using size_type = base_type::size_type;
 
-    using data_handle_type = typename base_type::data_handle_type;
+    using data_handle_type = base_type::data_handle_type;
 
-    using reference = typename base_type::reference;
+    using reference = base_type::reference;
 
     template <class, class, class>
     friend class Chunk;

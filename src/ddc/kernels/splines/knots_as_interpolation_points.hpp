@@ -39,7 +39,7 @@ class KnotsAsInterpolationPoints
     static_assert(BcLower != ddc::BoundCond::GREVILLE);
     static_assert(BcUpper != ddc::BoundCond::GREVILLE);
 
-    using continuous_dimension_type = typename BSplines::continuous_dimension_type;
+    using continuous_dimension_type = BSplines::continuous_dimension_type;
 
 public:
     /**
@@ -57,7 +57,7 @@ public:
                                             ddc::DiscreteVector<Sampling>(
                                                     ddc::discrete_space<BSplines>().ncells() + 1)));
         } else {
-            using SamplingImpl = typename Sampling::template Impl<Sampling, Kokkos::HostSpace>;
+            using SamplingImpl = Sampling::template Impl<Sampling, Kokkos::HostSpace>;
             std::vector<double> knots(ddc::discrete_space<BSplines>().npoints());
             ddc::DiscreteDomain<knot_discrete_dimension_t<BSplines>> break_point_domain(
                     ddc::discrete_space<BSplines>().break_point_domain());

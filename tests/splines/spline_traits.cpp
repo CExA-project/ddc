@@ -49,8 +49,8 @@ struct BSplinesTraits<std::tuple<
 {
     using execution_space1 = ExecSpace1;
     using execution_space2 = ExecSpace2;
-    using memory_space1 = typename ExecSpace1::memory_space;
-    using memory_space2 = typename ExecSpace2::memory_space;
+    using memory_space1 = ExecSpace1::memory_space;
+    using memory_space2 = ExecSpace2::memory_space;
     static constexpr std::size_t m_spline_degree1 = D1;
     static constexpr std::size_t m_spline_degree2 = D2;
 
@@ -189,10 +189,10 @@ TYPED_TEST_SUITE(BSplinesTraits, TestTypes, BSplinesTraitsNames);
 
 TYPED_TEST(BSplinesTraits, IsSplineBuilder)
 {
-    using Builder1D = typename TestFixture::Builder1D_1;
-    using Evaluator1D = typename TestFixture::Evaluator1D_1;
-    using Builder2D = typename TestFixture::Builder2D_1;
-    using Evaluator2D = typename TestFixture::Evaluator2D_1;
+    using Builder1D = TestFixture::Builder1D_1;
+    using Evaluator1D = TestFixture::Evaluator1D_1;
+    using Builder2D = TestFixture::Builder2D_1;
+    using Evaluator2D = TestFixture::Evaluator2D_1;
     EXPECT_TRUE(ddc::is_spline_builder_v<Builder1D>);
     EXPECT_FALSE(ddc::is_spline_builder_v<Builder2D>);
     EXPECT_FALSE(ddc::is_spline_builder_v<Evaluator1D>);
@@ -201,10 +201,10 @@ TYPED_TEST(BSplinesTraits, IsSplineBuilder)
 
 TYPED_TEST(BSplinesTraits, IsSplineBuilder2D)
 {
-    using Builder1D = typename TestFixture::Builder1D_1;
-    using Evaluator1D = typename TestFixture::Evaluator1D_1;
-    using Builder2D = typename TestFixture::Builder2D_1;
-    using Evaluator2D = typename TestFixture::Evaluator2D_1;
+    using Builder1D = TestFixture::Builder1D_1;
+    using Evaluator1D = TestFixture::Evaluator1D_1;
+    using Builder2D = TestFixture::Builder2D_1;
+    using Evaluator2D = TestFixture::Evaluator2D_1;
     EXPECT_FALSE(ddc::is_spline_builder2d_v<Builder1D>);
     EXPECT_TRUE(ddc::is_spline_builder2d_v<Builder2D>);
     EXPECT_FALSE(ddc::is_spline_builder2d_v<Evaluator1D>);
@@ -213,10 +213,10 @@ TYPED_TEST(BSplinesTraits, IsSplineBuilder2D)
 
 TYPED_TEST(BSplinesTraits, IsSplineEvaluator)
 {
-    using Builder1D = typename TestFixture::Builder1D_1;
-    using Evaluator1D = typename TestFixture::Evaluator1D_1;
-    using Builder2D = typename TestFixture::Builder2D_1;
-    using Evaluator2D = typename TestFixture::Evaluator2D_1;
+    using Builder1D = TestFixture::Builder1D_1;
+    using Evaluator1D = TestFixture::Evaluator1D_1;
+    using Builder2D = TestFixture::Builder2D_1;
+    using Evaluator2D = TestFixture::Evaluator2D_1;
     EXPECT_FALSE(ddc::is_spline_evaluator_v<Builder1D>);
     EXPECT_FALSE(ddc::is_spline_evaluator_v<Builder2D>);
     EXPECT_TRUE(ddc::is_spline_evaluator_v<Evaluator1D>);
@@ -225,10 +225,10 @@ TYPED_TEST(BSplinesTraits, IsSplineEvaluator)
 
 TYPED_TEST(BSplinesTraits, IsSplineEvaluator2D)
 {
-    using Builder1D = typename TestFixture::Builder1D_1;
-    using Evaluator1D = typename TestFixture::Evaluator1D_1;
-    using Builder2D = typename TestFixture::Builder2D_1;
-    using Evaluator2D = typename TestFixture::Evaluator2D_1;
+    using Builder1D = TestFixture::Builder1D_1;
+    using Evaluator1D = TestFixture::Evaluator1D_1;
+    using Builder2D = TestFixture::Builder2D_1;
+    using Evaluator2D = TestFixture::Evaluator2D_1;
     EXPECT_FALSE(ddc::is_spline_evaluator2d_v<Builder1D>);
     EXPECT_FALSE(ddc::is_spline_evaluator2d_v<Builder2D>);
     EXPECT_FALSE(ddc::is_spline_evaluator2d_v<Evaluator1D>);
@@ -237,10 +237,10 @@ TYPED_TEST(BSplinesTraits, IsSplineEvaluator2D)
 
 TYPED_TEST(BSplinesTraits, IsAdmissible1D)
 {
-    using Builder1D_1 = typename TestFixture::Builder1D_1;
-    using Evaluator1D_1 = typename TestFixture::Evaluator1D_1;
-    using Builder1D_2 = typename TestFixture::Builder1D_2;
-    using Evaluator1D_2 = typename TestFixture::Evaluator1D_2;
+    using Builder1D_1 = TestFixture::Builder1D_1;
+    using Evaluator1D_1 = TestFixture::Evaluator1D_1;
+    using Builder1D_2 = TestFixture::Builder1D_2;
+    using Evaluator1D_2 = TestFixture::Evaluator1D_2;
 
     // Builders are not compatible
     EXPECT_FALSE((ddc::is_evaluator_admissible_v<Builder1D_1, Builder1D_1>));
@@ -261,8 +261,8 @@ TYPED_TEST(BSplinesTraits, IsAdmissible1D)
     EXPECT_FALSE((ddc::is_evaluator_admissible_v<Evaluator1D_2, Builder1D_2>));
 
     // Incompatible builder and evaluator pairs
-    using execution_space1 = typename TestFixture::execution_space1;
-    using execution_space2 = typename TestFixture::execution_space2;
+    using execution_space1 = TestFixture::execution_space1;
+    using execution_space2 = TestFixture::execution_space2;
     std::size_t constexpr m_spline_degree1 = TestFixture::m_spline_degree1;
     std::size_t constexpr m_spline_degree2 = TestFixture::m_spline_degree2;
 
@@ -277,10 +277,10 @@ TYPED_TEST(BSplinesTraits, IsAdmissible1D)
 
 TYPED_TEST(BSplinesTraits, IsAdmissible2D)
 {
-    using Builder2D_1 = typename TestFixture::Builder2D_1;
-    using Evaluator2D_1 = typename TestFixture::Evaluator2D_1;
-    using Builder2D_2 = typename TestFixture::Builder2D_2;
-    using Evaluator2D_2 = typename TestFixture::Evaluator2D_2;
+    using Builder2D_1 = TestFixture::Builder2D_1;
+    using Evaluator2D_1 = TestFixture::Evaluator2D_1;
+    using Builder2D_2 = TestFixture::Builder2D_2;
+    using Evaluator2D_2 = TestFixture::Evaluator2D_2;
 
     // Builders are not compatible
     EXPECT_FALSE((ddc::is_evaluator_admissible_v<Builder2D_1, Builder2D_1>));
@@ -301,8 +301,8 @@ TYPED_TEST(BSplinesTraits, IsAdmissible2D)
     EXPECT_FALSE((ddc::is_evaluator_admissible_v<Evaluator2D_2, Builder2D_2>));
 
     // Incompatible builder and evaluator pairs
-    using execution_space1 = typename TestFixture::execution_space1;
-    using execution_space2 = typename TestFixture::execution_space2;
+    using execution_space1 = TestFixture::execution_space1;
+    using execution_space2 = TestFixture::execution_space2;
     std::size_t constexpr m_spline_degree1 = TestFixture::m_spline_degree1;
     std::size_t constexpr m_spline_degree2 = TestFixture::m_spline_degree2;
 

@@ -516,8 +516,8 @@ jobs:
         image: ['latest']
         backend:
           - name: 'cpu'
-            c_compiler: 'clang-21'
-            cxx_compiler: 'clang++-21'
+            c_compiler: 'clang-22'
+            cxx_compiler: 'clang++-22'
         cxx_version: ['20']
         cmake_build_type: ['Release']
     runs-on: ubuntu-latest

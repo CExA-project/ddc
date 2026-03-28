@@ -78,7 +78,7 @@ public:
     using memory_space = MemorySpace;
 
     /// @brief The type of the interpolation continuous dimension (continuous dimension of interest) used by this class.
-    using continuous_dimension_type = typename InterpolationDDim::continuous_dimension_type;
+    using continuous_dimension_type = InterpolationDDim::continuous_dimension_type;
 
     /// @brief The type of the interpolation discrete dimension (discrete dimension of interest) used by this class.
     using interpolation_discrete_dimension_type = InterpolationDDim;
@@ -139,8 +139,8 @@ private:
      * (associated to a B-splines tag BSplinesY), this is DiscreteDomain<BSplinesY,X,Z>.
      */
     template <concepts::discrete_domain BatchedInterpolationDDom>
-    using batched_spline_tr_domain_type =
-            typename ddc::detail::convert_type_seq_to_discrete_domain_t<ddc::type_seq_merge_t<
+    using batched_spline_tr_domain_type
+            = ddc::detail::convert_type_seq_to_discrete_domain_t<ddc::type_seq_merge_t<
                     ddc::detail::TypeSeq<bsplines_type>,
                     ddc::type_seq_remove_t<
                             ddc::to_type_seq_t<BatchedInterpolationDDom>,
@@ -862,8 +862,7 @@ operator()(
                 exec_space(),
                 batch_domain(batched_interpolation_domain),
                 KOKKOS_LAMBDA(
-                        typename batch_domain_type<BatchedInterpolationDDom>::discrete_element_type
-                                j) {
+                        batch_domain_type<BatchedInterpolationDDom>::discrete_element_type j) {
                     for (int i = 0; i < s_nbe_xmin; ++i) {
                         spline(ddc::DiscreteElement<bsplines_type>(i), j)
                                 = derivs_xmin_values(
@@ -917,8 +916,7 @@ operator()(
                 exec_space(),
                 batch_domain(batched_interpolation_domain),
                 KOKKOS_LAMBDA(
-                        typename batch_domain_type<BatchedInterpolationDDom>::discrete_element_type
-                                j) {
+                        batch_domain_type<BatchedInterpolationDDom>::discrete_element_type j) {
                     for (int i = 0; i < s_nbe_xmax; ++i) {
                         spline(ddc::DiscreteElement<bsplines_type>(nbasis_proxy - s_nbe_xmax + i),
                                j)
@@ -948,8 +946,7 @@ operator()(
             exec_space(),
             batch_domain(batched_interpolation_domain),
             KOKKOS_LAMBDA(
-                    typename batch_domain_type<
-                            BatchedInterpolationDDom>::discrete_element_type const j) {
+                    batch_domain_type<BatchedInterpolationDDom>::discrete_element_type const j) {
                 for (std::size_t i = 0; i < nbasis_proxy; ++i) {
                     spline_tr(ddc::DiscreteElement<bsplines_type>(i), j)
                             = spline(ddc::DiscreteElement<bsplines_type>(i + offset_proxy), j);
@@ -968,8 +965,7 @@ operator()(
             exec_space(),
             batch_domain(batched_interpolation_domain),
             KOKKOS_LAMBDA(
-                    typename batch_domain_type<
-                            BatchedInterpolationDDom>::discrete_element_type const j) {
+                    batch_domain_type<BatchedInterpolationDDom>::discrete_element_type const j) {
                 for (std::size_t i = 0; i < nbasis_proxy; ++i) {
                     spline(ddc::DiscreteElement<bsplines_type>(i + offset_proxy), j)
                             = spline_tr(ddc::DiscreteElement<bsplines_type>(i), j);
@@ -983,8 +979,8 @@ operator()(
                 exec_space(),
                 batch_domain(batched_interpolation_domain),
                 KOKKOS_LAMBDA(
-                        typename batch_domain_type<
-                                BatchedInterpolationDDom>::discrete_element_type const j) {
+                        batch_domain_type<BatchedInterpolationDDom>::discrete_element_type const
+                                j) {
                     if (offset_proxy != 0) {
                         for (int i = 0; i < offset_proxy; ++i) {
                             spline(ddc::DiscreteElement<bsplines_type>(i), j) = spline(

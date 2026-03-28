@@ -91,9 +91,9 @@ TYPED_TEST_SUITE(UniformBSplinesFixture, Cases, UniformBSplinesFixtureNames);
 
 TYPED_TEST(UniformBSplinesFixture, KnotsAsInterpolationPoints)
 {
-    using DimX = typename TestFixture::DimX;
-    using DDimX = typename TestFixture::DDimX;
-    using BSplinesX = typename TestFixture::BSplinesX;
+    using DimX = TestFixture::DimX;
+    using DDimX = TestFixture::DDimX;
+    using BSplinesX = TestFixture::BSplinesX;
     using CoordX = ddc::Coordinate<DimX>;
     ddc::BoundCond const Bc = TestFixture::Bc;
     using KnotsAsInterpolationPoints = ddc::KnotsAsInterpolationPoints<BSplinesX, Bc, Bc>;
@@ -124,9 +124,9 @@ TYPED_TEST_SUITE(NonUniformBSplinesFixture, Cases, );
 
 TYPED_TEST(NonUniformBSplinesFixture, KnotsAsInterpolationPoints)
 {
-    using DimX = typename TestFixture::DimX;
-    using DDimX = typename TestFixture::DDimX;
-    using BSplinesX = typename TestFixture::BSplinesX;
+    using DimX = TestFixture::DimX;
+    using DDimX = TestFixture::DDimX;
+    using BSplinesX = TestFixture::BSplinesX;
     using CoordX = ddc::Coordinate<DimX>;
     constexpr ddc::BoundCond Bc = TestFixture::Bc;
     using KnotsAsInterpolationPoints = ddc::KnotsAsInterpolationPoints<BSplinesX, Bc, Bc>;

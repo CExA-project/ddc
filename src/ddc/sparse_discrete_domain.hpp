@@ -76,10 +76,7 @@ KOKKOS_FUNCTION bool equal(InputIt1 first1, InputIt1 last1, InputIt2 first2)
     return true;
 }
 
-template <
-        class ForwardIt,
-        class T = typename std::iterator_traits<ForwardIt>::value_type,
-        class Compare>
+template <class ForwardIt, class T = std::iterator_traits<ForwardIt>::value_type, class Compare>
 KOKKOS_FUNCTION ForwardIt lower_bound(ForwardIt first, ForwardIt last, T const& value, Compare comp)
 {
     ForwardIt it;
@@ -100,10 +97,7 @@ KOKKOS_FUNCTION ForwardIt lower_bound(ForwardIt first, ForwardIt last, T const& 
     return first;
 }
 
-template <
-        class ForwardIt,
-        class T = typename std::iterator_traits<ForwardIt>::value_type,
-        class Compare>
+template <class ForwardIt, class T = std::iterator_traits<ForwardIt>::value_type, class Compare>
 KOKKOS_FUNCTION bool binary_search(ForwardIt first, ForwardIt last, T const& value, Compare comp)
 {
     first = ::ddc::detail::lower_bound(first, last, value, comp);
@@ -522,8 +516,7 @@ struct ConvertTypeSeqToSparseDiscreteDomain<detail::TypeSeq<DDims...>>
 };
 
 template <class T>
-using convert_type_seq_to_sparse_discrete_domain_t =
-        typename ConvertTypeSeqToSparseDiscreteDomain<T>::type;
+using convert_type_seq_to_sparse_discrete_domain_t = ConvertTypeSeqToSparseDiscreteDomain<T>::type;
 
 } // namespace detail
 

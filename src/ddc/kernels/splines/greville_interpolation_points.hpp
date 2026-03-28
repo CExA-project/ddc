@@ -29,7 +29,7 @@ namespace ddc {
 template <class BSplines, ddc::BoundCond BcLower, ddc::BoundCond BcUpper>
 class GrevilleInterpolationPoints
 {
-    using continuous_dimension_type = typename BSplines::continuous_dimension_type;
+    using continuous_dimension_type = BSplines::continuous_dimension_type;
 
     template <class Sampling>
     struct IntermediateUniformSampling
@@ -47,7 +47,7 @@ class GrevilleInterpolationPoints
     static auto uniform_greville_points()
         requires(BSplines::is_uniform())
     {
-        using SamplingImpl = typename Sampling::template Impl<Sampling, Kokkos::HostSpace>;
+        using SamplingImpl = Sampling::template Impl<Sampling, Kokkos::HostSpace>;
 
         double constexpr shift = (BSplines::degree() % 2 == 0) ? 0.5 : 0.0;
         double const dx
@@ -63,7 +63,7 @@ class GrevilleInterpolationPoints
     static auto non_uniform_greville_points()
         requires(!BSplines::is_uniform())
     {
-        using SamplingImpl = typename Sampling::template Impl<Sampling, Kokkos::HostSpace>;
+        using SamplingImpl = Sampling::template Impl<Sampling, Kokkos::HostSpace>;
 
         std::size_t n_greville_points = 0;
         if constexpr (BSplines::is_periodic()) {
@@ -158,7 +158,7 @@ public:
     static auto get_sampling()
         requires(!is_uniform_discrete_dimension_v<BSplines>)
     {
-        using SamplingImpl = typename Sampling::template Impl<Sampling, Kokkos::HostSpace>;
+        using SamplingImpl = Sampling::template Impl<Sampling, Kokkos::HostSpace>;
         if constexpr (BSplines::is_uniform()) {
             using IntermediateSampling = IntermediateUniformSampling<Sampling>;
             auto points_wo_bcs = uniform_greville_points<IntermediateSampling>();

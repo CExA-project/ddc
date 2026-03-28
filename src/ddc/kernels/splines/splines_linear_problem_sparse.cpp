@@ -33,7 +33,7 @@ template <class KokkosViewType>
 auto to_gko_dense(std::shared_ptr<gko::Executor const> const& gko_exec, KokkosViewType const& view)
 {
     static_assert(Kokkos::is_view_v<KokkosViewType> && KokkosViewType::rank == 2);
-    using value_type = typename KokkosViewType::traits::value_type;
+    using value_type = KokkosViewType::traits::value_type;
 
     if (view.stride(1) != 1) {
         throw std::runtime_error("The view needs to be contiguous in the second dimension");
@@ -132,7 +132,7 @@ template <class ExecSpace>
 class SplinesLinearProblemSparse<ExecSpace>::Impl
 {
 public:
-    using MultiRHS = typename SplinesLinearProblem<ExecSpace>::MultiRHS;
+    using MultiRHS = SplinesLinearProblem<ExecSpace>::MultiRHS;
 
 private:
     using matrix_sparse_type = gko::matrix::Csr<double, gko::int32>;

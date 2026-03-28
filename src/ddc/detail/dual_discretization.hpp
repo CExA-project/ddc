@@ -22,9 +22,9 @@ using GlobalVariableDeviceSpace = Kokkos::SYCLDeviceUSMSpace;
 template <class DDim>
 class DualDiscretization
 {
-    using DDimImplHost = typename DDim::template Impl<DDim, Kokkos::HostSpace>;
+    using DDimImplHost = DDim::template Impl<DDim, Kokkos::HostSpace>;
 #if defined(KOKKOS_ENABLE_CUDA) || defined(KOKKOS_ENABLE_HIP) || defined(KOKKOS_ENABLE_SYCL)
-    using DDimImplDevice = typename DDim::template Impl<DDim, GlobalVariableDeviceSpace>;
+    using DDimImplDevice = DDim::template Impl<DDim, GlobalVariableDeviceSpace>;
 #else
     using DDimImplDevice = DDimImplHost;
 #endif
@@ -45,7 +45,7 @@ public:
     }
 
     template <class MemorySpace>
-    typename DDim::template Impl<DDim, MemorySpace> const& get()
+    DDim::template Impl<DDim, MemorySpace> const& get()
     {
         if constexpr (std::is_same_v<MemorySpace, Kokkos::HostSpace>) {
             return m_host;

@@ -52,7 +52,7 @@ void device_throw_on_error(
 #endif
 
 template <class DDim, class MemorySpace>
-using ddim_impl_t = typename DDim::template Impl<DDim, MemorySpace>;
+using ddim_impl_t = DDim::template Impl<DDim, MemorySpace>;
 
 template <class T>
 class GpuProxy

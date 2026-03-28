@@ -13,7 +13,7 @@ ARG CUDA_MAJOR_VERSION=12
 ARG CUDA_MINOR_VERSION=9
 ARG GCOVR_VERSION=8.6
 ARG GINKGO_VERSION=1.11.0
-ARG LLVM_VERSION=21
+ARG LLVM_VERSION=22
 ARG ROCM_VERSION=6.4.4
 
 COPY bash_run /bin/
@@ -71,10 +71,11 @@ RUN chmod +x /bin/bash_run \
  && case "${BACKEND}" in \
     "cpu") \
       apt-get install -y --no-install-recommends \
-      clang \
       clang-${LLVM_VERSION} \
-      clang-tidy \
       clang-tidy-${LLVM_VERSION} \
+      && update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-${LLVM_VERSION} 100 \
+      && update-alternatives --install /usr/bin/clang clang /usr/bin/clang-${LLVM_VERSION} 100 \
+      && update-alternatives --install /usr/bin/clang-tidy clang-tidy /usr/bin/clang-tidy-${LLVM_VERSION} 100 \
  ;; "cuda") \
       # libnvjitlink seems to be a missing dependency of cusparse
       apt-get install -y --no-install-recommends \

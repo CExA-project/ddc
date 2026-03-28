@@ -33,6 +33,7 @@ Checks: >
   -cppcoreguidelines-pro-type-reinterpret-cast,
   google-*,
   -google-readability-todo,
+  -google-runtime-float,
   -google-runtime-int,
   hicpp-*,
   -hicpp-explicit-conversions,

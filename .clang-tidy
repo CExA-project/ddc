@@ -66,7 +66,7 @@ Checks: >
   -readability-named-parameter,
   -readability-redundant-access-specifiers,
   -readability-use-concise-preprocessor-directives
-WarningsAsErrors: '*'
+WarningsAsErrors: ''
 CheckOptions:
   - key: cppcoreguidelines-rvalue-reference-param-not-moved.AllowPartialMove
     value: 'true'

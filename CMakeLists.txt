@@ -273,7 +273,7 @@ if("${DDC_BUILD_KERNELS_SPLINES}")
 
     add_library(ddc_splines)
     add_library(DDC::splines ALIAS ddc_splines)
-    target_compile_features(ddc_splines INTERFACE cxx_std_20)
+    target_compile_features(ddc_splines PUBLIC cxx_std_20)
     target_link_libraries(
         ddc_splines
         INTERFACE DDC::core

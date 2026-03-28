@@ -20,9 +20,11 @@ namespace ddc::detail {
 template <class ExecSpace>
 class SplinesLinearProblem
 {
+    using memory_space_type = ExecSpace::memory_space;
+
 public:
     /// @brief The type of a Kokkos::View storing multiple right-hand sides.
-    using MultiRHS = Kokkos::View<double**, Kokkos::LayoutRight, typename ExecSpace::memory_space>;
+    using MultiRHS = Kokkos::View<double**, Kokkos::LayoutRight, memory_space_type>;
 
 private:
     std::size_t m_size;

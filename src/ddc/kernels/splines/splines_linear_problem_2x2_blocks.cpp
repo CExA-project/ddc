@@ -18,19 +18,21 @@ namespace ddc::detail {
 template <class ExecSpace>
 struct SplinesLinearProblem2x2Blocks<ExecSpace>::Coo
 {
+    using memory_space_type = ExecSpace::memory_space;
+
     std::size_t m_nrows;
     std::size_t m_ncols;
-    Kokkos::View<int*, Kokkos::LayoutRight, typename ExecSpace::memory_space> m_rows_idx;
-    Kokkos::View<int*, Kokkos::LayoutRight, typename ExecSpace::memory_space> m_cols_idx;
-    Kokkos::View<double*, Kokkos::LayoutRight, typename ExecSpace::memory_space> m_values;
+    Kokkos::View<int*, Kokkos::LayoutRight, memory_space_type> m_rows_idx;
+    Kokkos::View<int*, Kokkos::LayoutRight, memory_space_type> m_cols_idx;
+    Kokkos::View<double*, Kokkos::LayoutRight, memory_space_type> m_values;
 
     Coo() : m_nrows(0), m_ncols(0) {}
 
     Coo(std::size_t const nrows_,
         std::size_t const ncols_,
-        Kokkos::View<int*, Kokkos::LayoutRight, typename ExecSpace::memory_space> rows_idx_,
-        Kokkos::View<int*, Kokkos::LayoutRight, typename ExecSpace::memory_space> cols_idx_,
-        Kokkos::View<double*, Kokkos::LayoutRight, typename ExecSpace::memory_space> values_)
+        Kokkos::View<int*, Kokkos::LayoutRight, memory_space_type> rows_idx_,
+        Kokkos::View<int*, Kokkos::LayoutRight, memory_space_type> cols_idx_,
+        Kokkos::View<double*, Kokkos::LayoutRight, memory_space_type> values_)
         : m_nrows(nrows_)
         , m_ncols(ncols_)
         , m_rows_idx(std::move(rows_idx_))
@@ -56,20 +58,17 @@ struct SplinesLinearProblem2x2Blocks<ExecSpace>::Coo
         return m_ncols;
     }
 
-    KOKKOS_FUNCTION Kokkos::View<int*, Kokkos::LayoutRight, typename ExecSpace::memory_space>
-    rows_idx() const
+    KOKKOS_FUNCTION Kokkos::View<int*, Kokkos::LayoutRight, memory_space_type> rows_idx() const
     {
         return m_rows_idx;
     }
 
-    KOKKOS_FUNCTION Kokkos::View<int*, Kokkos::LayoutRight, typename ExecSpace::memory_space>
-    cols_idx() const
+    KOKKOS_FUNCTION Kokkos::View<int*, Kokkos::LayoutRight, memory_space_type> cols_idx() const
     {
         return m_cols_idx;
     }
 
-    KOKKOS_FUNCTION Kokkos::View<double*, Kokkos::LayoutRight, typename ExecSpace::memory_space>
-    values() const
+    KOKKOS_FUNCTION Kokkos::View<double*, Kokkos::LayoutRight, memory_space_type> values() const
     {
         return m_values;
     }
@@ -149,18 +148,17 @@ void SplinesLinearProblem2x2Blocks<ExecSpace>::set_element(
 template <class ExecSpace>
 std::unique_ptr<typename SplinesLinearProblem2x2Blocks<ExecSpace>::Coo>
 SplinesLinearProblem2x2Blocks<ExecSpace>::dense2coo(
-        Kokkos::View<double const**, Kokkos::LayoutRight, typename ExecSpace::memory_space>
-                dense_matrix,
+        Kokkos::View<double const**, Kokkos::LayoutRight, memory_space_type> dense_matrix,
         double const tol)
 {
-    Kokkos::View<int*, Kokkos::LayoutRight, typename ExecSpace::memory_space>
+    Kokkos::View<int*, Kokkos::LayoutRight, memory_space_type>
             rows_idx("ddc_splines_coo_rows_idx", dense_matrix.extent(0) * dense_matrix.extent(1));
-    Kokkos::View<int*, Kokkos::LayoutRight, typename ExecSpace::memory_space>
+    Kokkos::View<int*, Kokkos::LayoutRight, memory_space_type>
             cols_idx("ddc_splines_coo_cols_idx", dense_matrix.extent(0) * dense_matrix.extent(1));
-    Kokkos::View<double*, Kokkos::LayoutRight, typename ExecSpace::memory_space>
+    Kokkos::View<double*, Kokkos::LayoutRight, memory_space_type>
             values("ddc_splines_coo_values", dense_matrix.extent(0) * dense_matrix.extent(1));
 
-    Kokkos::DualView<std::size_t, Kokkos::LayoutRight, typename ExecSpace::memory_space> n_nonzeros(
+    Kokkos::DualView<std::size_t, Kokkos::LayoutRight, memory_space_type> n_nonzeros(
             "ddc_splines_n_nonzeros");
     n_nonzeros.view_host()() = 0;
     n_nonzeros.modify_host();

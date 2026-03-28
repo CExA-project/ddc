@@ -34,12 +34,14 @@ public:
     using typename SplinesLinearProblem<ExecSpace>::MultiRHS;
     using SplinesLinearProblem<ExecSpace>::size;
 
+    using memory_space_type = ExecSpace::memory_space;
+
 protected:
     std::size_t m_kl; // no. of subdiagonals
     std::size_t m_ku; // no. of superdiagonals
-    Kokkos::DualView<double**, Kokkos::LayoutRight, typename ExecSpace::memory_space>
+    Kokkos::DualView<double**, Kokkos::LayoutRight, memory_space_type>
             m_q; // band matrix representation
-    Kokkos::DualView<int*, typename ExecSpace::memory_space> m_ipiv; // pivot indices
+    Kokkos::DualView<int*, memory_space_type> m_ipiv; // pivot indices
 
 public:
     /**

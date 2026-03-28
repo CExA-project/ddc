@@ -33,8 +33,10 @@ public:
     using typename SplinesLinearProblem<ExecSpace>::MultiRHS;
     using SplinesLinearProblem<ExecSpace>::size;
 
+    using memory_space_type = ExecSpace::memory_space;
+
 protected:
-    Kokkos::DualView<double**, Kokkos::LayoutRight, typename ExecSpace::memory_space>
+    Kokkos::DualView<double**, Kokkos::LayoutRight, memory_space_type>
             m_q; // pds band matrix representation
 
 public:

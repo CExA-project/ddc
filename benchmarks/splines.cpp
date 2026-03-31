@@ -12,6 +12,7 @@
 #include <mutex>
 #include <optional>
 #include <string>
+#include <string_view>
 #include <thread>
 #include <type_traits>
 #include <utility>
@@ -280,7 +281,7 @@ unsigned int preconditioner_max_block_size_ref = 32U;
 std::size_t ny_ref = 1000;
 
 // Sweep on spline order
-std::string name = "degree_x";
+std::string_view name = "degree_x";
 // NOLINTBEGIN(misc-use-anonymous-namespace)
 BENCHMARK(characteristics_advection)
         ->RangeMultiplier(2)
@@ -298,7 +299,7 @@ BENCHMARK(characteristics_advection)
 
 /*
 // Sweep on ny
-std::string name = "ny";
+std::string_view name = "ny";
 BENCHMARK(characteristics_advection)
         ->RangeMultiplier(2)
         ->Ranges(
@@ -314,7 +315,7 @@ BENCHMARK(characteristics_advection)
 */
 /*
 // Sweep on cols_per_chunk
-std::string name = "cols_per_chunk";
+std::string_view name = "cols_per_chunk";
 BENCHMARK(characteristics_advection)
         ->RangeMultiplier(2)
         ->Ranges(
@@ -330,7 +331,7 @@ BENCHMARK(characteristics_advection)
 */
 /*
 // Sweep on preconditioner_max_block_size
-std::string name = "preconditioner_max_block_size";
+std::string_view name = "preconditioner_max_block_size";
 BENCHMARK(characteristics_advection)
         ->RangeMultiplier(2)
         ->Ranges(
@@ -348,7 +349,7 @@ BENCHMARK(characteristics_advection)
 int main(int argc, char** argv)
 {
     ::benchmark::Initialize(&argc, argv);
-    ::benchmark::AddCustomContext("name", name);
+    ::benchmark::AddCustomContext("name", std::string(name));
     ::benchmark::
             AddCustomContext("backend", Backend == ddc::SplineSolver::GINKGO ? "GINKGO" : "LAPACK");
     ::benchmark::AddCustomContext("cols_per_chunk_ref", std::to_string(cols_per_chunk_ref));

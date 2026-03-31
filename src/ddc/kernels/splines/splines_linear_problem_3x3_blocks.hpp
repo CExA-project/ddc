@@ -35,6 +35,7 @@ template <class ExecSpace>
 class SplinesLinearProblem3x3Blocks : public SplinesLinearProblem2x2Blocks<ExecSpace>
 {
 public:
+    using typename SplinesLinearProblem<ExecSpace>::memory_space;
     using typename SplinesLinearProblem2x2Blocks<ExecSpace>::MultiRHS;
     using SplinesLinearProblem2x2Blocks<ExecSpace>::size;
     using SplinesLinearProblem2x2Blocks<ExecSpace>::solve;

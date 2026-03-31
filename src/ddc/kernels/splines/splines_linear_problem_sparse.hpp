@@ -25,6 +25,7 @@ template <class ExecSpace>
 class SplinesLinearProblemSparse : public SplinesLinearProblem<ExecSpace>
 {
 public:
+    using typename SplinesLinearProblem<ExecSpace>::memory_space;
     using typename SplinesLinearProblem<ExecSpace>::MultiRHS;
     using SplinesLinearProblem<ExecSpace>::size;
 

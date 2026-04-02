@@ -597,7 +597,7 @@ $(document).ready(function(){initNavTree('discrete__domain_8hpp_source.html','')
 <div class="line"><a id="l00468" name="l00468"></a><span class="lineno">  468</span>};</div>
 <div class="line"><a id="l00469" name="l00469"></a><span class="lineno">  469</span> </div>
 <div class="line"><a id="l00470" name="l00470"></a><span class="lineno">  470</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;</div>
-<div class="line"><a id="l00471" name="l00471"></a><span class="lineno">  471</span><span class="keyword">using</span> convert_type_seq_to_discrete_domain_t = <span class="keyword">typename</span> ConvertTypeSeqToDiscreteDomain&lt;T&gt;::type;</div>
+<div class="line"><a id="l00471" name="l00471"></a><span class="lineno">  471</span><span class="keyword">using</span> convert_type_seq_to_discrete_domain_t = ConvertTypeSeqToDiscreteDomain&lt;T&gt;::type;</div>
 <div class="line"><a id="l00472" name="l00472"></a><span class="lineno">  472</span> </div>
 <div class="line"><a id="l00473" name="l00473"></a><span class="lineno">  473</span>} <span class="comment">// namespace detail</span></div>
 <div class="line"><a id="l00474" name="l00474"></a><span class="lineno">  474</span> </div>
@@ -609,7 +609,7 @@ $(document).ready(function(){initNavTree('discrete__domain_8hpp_source.html','')
 <div class="line"><a id="l00480" name="l00480"></a><span class="lineno">  480</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span>... DDims1, <span class="keyword">typename</span>... DDims2, <span class="keyword">typename</span>... DDomsTail&gt;</div>
 <div class="line"><a id="l00481" name="l00481"></a><span class="lineno">  481</span><span class="keyword">struct</span> cartesian_prod&lt;<a class="code hl_friend" href="classddc_1_1DiscreteDomain.html#a5cdbd7cda4dd9c4369a8810c88cf3bed">DiscreteDomain</a>&lt;DDims1...&gt;, <a class="code hl_friend" href="classddc_1_1DiscreteDomain.html#a5cdbd7cda4dd9c4369a8810c88cf3bed">DiscreteDomain</a>&lt;DDims2...&gt;, DDomsTail...&gt;</div>
 <div class="line"><a id="l00482" name="l00482"></a><span class="lineno">  482</span>{</div>
-<div class="line"><a id="l00483" name="l00483"></a><span class="lineno">  483</span>    <span class="keyword">using</span> type = <span class="keyword">typename</span> cartesian_prod&lt;<a class="code hl_friend" href="classddc_1_1DiscreteDomain.html#a5cdbd7cda4dd9c4369a8810c88cf3bed">DiscreteDomain</a>&lt;DDims1..., DDims2...&gt;, DDomsTail...&gt;::type;</div>
+<div class="line"><a id="l00483" name="l00483"></a><span class="lineno">  483</span>    <span class="keyword">using</span> type = cartesian_prod&lt;<a class="code hl_friend" href="classddc_1_1DiscreteDomain.html#a5cdbd7cda4dd9c4369a8810c88cf3bed">DiscreteDomain</a>&lt;DDims1..., DDims2...&gt;, DDomsTail...&gt;::type;</div>
 <div class="line"><a id="l00484" name="l00484"></a><span class="lineno">  484</span>};</div>
 <div class="line"><a id="l00485" name="l00485"></a><span class="lineno">  485</span> </div>
 <div class="line"><a id="l00486" name="l00486"></a><span class="lineno">  486</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span>... DDims&gt;</div>
@@ -625,7 +625,7 @@ $(document).ready(function(){initNavTree('discrete__domain_8hpp_source.html','')
 <div class="line"><a id="l00496" name="l00496"></a><span class="lineno">  496</span>};</div>
 <div class="line"><a id="l00497" name="l00497"></a><span class="lineno">  497</span> </div>
 <div class="line"><a id="l00498" name="l00498"></a><span class="lineno">  498</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span>... DDoms&gt;</div>
-<div class="line"><a id="l00499" name="l00499"></a><span class="lineno">  499</span><span class="keyword">using</span> cartesian_prod_t = <span class="keyword">typename</span> cartesian_prod&lt;DDoms...&gt;::type;</div>
+<div class="line"><a id="l00499" name="l00499"></a><span class="lineno">  499</span><span class="keyword">using</span> cartesian_prod_t = cartesian_prod&lt;DDoms...&gt;::type;</div>
 <div class="line"><a id="l00500" name="l00500"></a><span class="lineno">  500</span> </div>
 <div class="line"><a id="l00501" name="l00501"></a><span class="lineno">  501</span><span class="comment">// Computes the subtraction DDom_a - DDom_b in the sense of linear spaces(retained dimensions are those in DDom_a which are not in DDom_b)</span></div>
 <div class="line"><a id="l00502" name="l00502"></a><span class="lineno">  502</span><span class="keyword">template</span> &lt;<span class="keyword">class</span>... DDimsA, <span class="keyword">class</span>... DDimsB&gt;</div>

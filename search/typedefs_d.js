@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['size_5ftype_0',['size_type',['../classddc_1_1Chunk.html#a74411cd85b7e3766b17aab96b5b6067b',1,'ddc::Chunk::size_type'],['../classddc_1_1ChunkCommon.html#acdcd6797def1ab0e44d1874b57c49541',1,'ddc::ChunkCommon::size_type'],['../classddc_1_1ChunkSpan.html#a6c85ad4bb4fc9107708d2072ea9038fb',1,'ddc::ChunkSpan::size_type']]],
+  ['size_5ftype_0',['size_type',['../classddc_1_1Chunk.html#a86adc3a6e20250b8d55fe118e7b7672e',1,'ddc::Chunk::size_type'],['../classddc_1_1ChunkCommon.html#a7bb59947f38dcce1155927f77cd2f697',1,'ddc::ChunkCommon::size_type'],['../classddc_1_1ChunkSpan.html#a42f5c7afbafab3c84babf42698e9b97f',1,'ddc::ChunkSpan::size_type']]],
   ['span1d_1',['Span1D',['../namespaceddc.html#a90a3ae31ee9a0b37dfd96a2d942b300f',1,'ddc']]],
   ['span2d_2',['Span2D',['../namespaceddc.html#aff4173d4e6a9546b3325d06ae290f250',1,'ddc']]],
   ['span_5ftype_3',['span_type',['../classddc_1_1Chunk.html#a9ca05ee7a51caa3cddb484fa0dc28541',1,'ddc::Chunk::span_type'],['../classddc_1_1ChunkSpan.html#a505ad43f1499fe845d1361985e02322c',1,'ddc::ChunkSpan::span_type']]],

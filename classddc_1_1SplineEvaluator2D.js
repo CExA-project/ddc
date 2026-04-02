@@ -1,7 +1,7 @@
 var classddc_1_1SplineEvaluator2D =
 [
-    [ "continuous_dimension_type1", "classddc_1_1SplineEvaluator2D.html#aa875b246a469a139fb191088e3e22cb8", null ],
-    [ "continuous_dimension_type2", "classddc_1_1SplineEvaluator2D.html#a6b0f9d1d4c58575a2775bac28ee8c8cd", null ],
+    [ "continuous_dimension_type1", "classddc_1_1SplineEvaluator2D.html#af0bc0926ce0f83ec71c753c446db94f1", null ],
+    [ "continuous_dimension_type2", "classddc_1_1SplineEvaluator2D.html#a0206945ddc128cd328fb1c0adc12a6d7", null ],
     [ "exec_space", "classddc_1_1SplineEvaluator2D.html#af396d41b4f83caedd7b28b3b0548988d", null ],
     [ "memory_space", "classddc_1_1SplineEvaluator2D.html#a44eb689fe171ee11a259ad083a6b3ae8", null ],
     [ "evaluation_discrete_dimension_type1", "classddc_1_1SplineEvaluator2D.html#ac97aa4ee0f9472ff2911b885a20f9ac4", null ],
@@ -15,8 +15,8 @@ var classddc_1_1SplineEvaluator2D =
     [ "spline_domain_type1", "classddc_1_1SplineEvaluator2D.html#acbb0b34aa41726b674d60ed36d0fcf70", null ],
     [ "spline_domain_type2", "classddc_1_1SplineEvaluator2D.html#a4bda9bcd78c8bb9b909cfec5c664f6d8", null ],
     [ "spline_domain_type", "classddc_1_1SplineEvaluator2D.html#a881c037b548b5a59fbbf8206214f42cc", null ],
-    [ "batch_domain_type", "classddc_1_1SplineEvaluator2D.html#a20107e2b5e9010bb0e7bb5ddf44822d0", null ],
-    [ "batched_spline_domain_type", "classddc_1_1SplineEvaluator2D.html#ab11eab5a37ae1be6e5a9e89c9de8991d", null ],
+    [ "batch_domain_type", "classddc_1_1SplineEvaluator2D.html#aeaca35d820f19bda9cc3c4434b9a8afa", null ],
+    [ "batched_spline_domain_type", "classddc_1_1SplineEvaluator2D.html#ac1b71ac2bc2a007521c6b084675035f2", null ],
     [ "lower_extrapolation_rule_1_type", "classddc_1_1SplineEvaluator2D.html#a81b62d4145f7e4dff376b9b544c41ead", null ],
     [ "upper_extrapolation_rule_1_type", "classddc_1_1SplineEvaluator2D.html#a48e530373c941433235a91adb1636218", null ],
     [ "lower_extrapolation_rule_2_type", "classddc_1_1SplineEvaluator2D.html#a0d4fe98acd1b39df0ab44399bf12add9", null ],

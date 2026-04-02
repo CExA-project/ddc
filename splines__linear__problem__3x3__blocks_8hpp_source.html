@@ -164,106 +164,107 @@ $(document).ready(function(){initNavTree('splines__linear__problem__3x3__blocks_
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="keyword">class</span> SplinesLinearProblem3x3Blocks : <span class="keyword">public</span> SplinesLinearProblem2x2Blocks&lt;ExecSpace&gt;</div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>{</div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    <span class="keyword">using</span> <span class="keyword">typename</span> SplinesLinearProblem2x2Blocks&lt;ExecSpace&gt;::MultiRHS;</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    <span class="keyword">using</span> SplinesLinearProblem2x2Blocks&lt;ExecSpace&gt;::size;</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="keyword">using</span> SplinesLinearProblem2x2Blocks&lt;ExecSpace&gt;::solve;</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="keyword">using</span> SplinesLinearProblem2x2Blocks&lt;ExecSpace&gt;::m_top_left_block;</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="keyword">protected</span>:</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    std::size_t m_top_size;</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="comment">/**</span></div>
-<div class="line"><span class="lineno">   48</span><span class="comment">     * @brief SplinesLinearProblem3x3Blocks constructor.</span></div>
-<div class="line"><span class="lineno">   49</span><span class="comment">     *</span></div>
-<div class="line"><span class="lineno">   50</span><span class="comment">     * @param mat_size The size of one of the dimensions of the square matrix.</span></div>
-<div class="line"><span class="lineno">   51</span><span class="comment">     * @param top_size The size of one of the dimensions of the top-left square block.</span></div>
-<div class="line"><span class="lineno">   52</span><span class="comment">     * @param center_block A pointer toward the center SplinesLinearProblem. `setup_solver` must not have been called on it.</span></div>
-<div class="line"><span class="lineno">   53</span><span class="comment">     */</span></div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <span class="keyword">explicit</span> SplinesLinearProblem3x3Blocks(</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>            std::size_t mat_size,</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>            std::size_t top_size,</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>            std::unique_ptr&lt;SplinesLinearProblem&lt;ExecSpace&gt;&gt; center_block);</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    SplinesLinearProblem3x3Blocks(SplinesLinearProblem3x3Blocks <span class="keyword">const</span>&amp; rhs) = <span class="keyword">delete</span>;</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    SplinesLinearProblem3x3Blocks(SplinesLinearProblem3x3Blocks&amp;&amp; rhs) = <span class="keyword">delete</span>;</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    ~SplinesLinearProblem3x3Blocks() <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span> </div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    SplinesLinearProblem3x3Blocks&amp; operator=(SplinesLinearProblem3x3Blocks <span class="keyword">const</span>&amp; rhs) = <span class="keyword">delete</span>;</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    SplinesLinearProblem3x3Blocks&amp; operator=(SplinesLinearProblem3x3Blocks&amp;&amp; rhs) = <span class="keyword">delete</span>;</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span> </div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    <span class="comment">/// @brief Adjust indices, governs the row &amp; columns interchanges to restructure the 3x3-blocks matrix into a 2x2-blocks matrix.</span></div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    <span class="keywordtype">void</span> adjust_indices(std::size_t&amp; i, std::size_t&amp; j) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span> </div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    <span class="keywordtype">double</span> get_element(std::size_t i, std::size_t j) <span class="keyword">const</span> <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span> </div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    <span class="keywordtype">void</span> set_element(std::size_t i, std::size_t j, <span class="keywordtype">double</span> aij) <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span> </div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    <span class="comment">/**</span></div>
-<div class="line"><span class="lineno">   80</span><span class="comment">     * @brief Perform row interchanges on multiple right-hand sides to get a 2-blocks structure (matching the requirements</span></div>
-<div class="line"><span class="lineno">   81</span><span class="comment">     * of the SplinesLinearProblem2x2Blocks solver).</span></div>
-<div class="line"><span class="lineno">   82</span><span class="comment">     *</span></div>
-<div class="line"><span class="lineno">   83</span><span class="comment">     * |  b_top   |    |    -     |</span></div>
-<div class="line"><span class="lineno">   84</span><span class="comment">     * | b_center | -&gt; | b_center |</span></div>
-<div class="line"><span class="lineno">   85</span><span class="comment">     * | b_bottom |    |  b_top   | -- Considered as a</span></div>
-<div class="line"><span class="lineno">   86</span><span class="comment">     * |    -     |    | b_bottom | -- single bottom block</span></div>
-<div class="line"><span class="lineno">   87</span><span class="comment">     *</span></div>
-<div class="line"><span class="lineno">   88</span><span class="comment">     * @param b The multiple right-hand sides.</span></div>
-<div class="line"><span class="lineno">   89</span><span class="comment">     */</span></div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    <span class="keywordtype">void</span> interchange_rows_from_3_to_2_blocks_rhs(MultiRHS b) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span> </div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    <span class="comment">/**</span></div>
-<div class="line"><span class="lineno">   93</span><span class="comment">     * @brief Perform row interchanges on multiple right-hand sides to restore its 3-blocks structure.</span></div>
-<div class="line"><span class="lineno">   94</span><span class="comment">     *</span></div>
-<div class="line"><span class="lineno">   95</span><span class="comment">     * |    -     |    |  b_top   |</span></div>
-<div class="line"><span class="lineno">   96</span><span class="comment">     * | b_center | -&gt; | b_center |</span></div>
-<div class="line"><span class="lineno">   97</span><span class="comment">     * |  b_top   |    | b_bottom |</span></div>
-<div class="line"><span class="lineno">   98</span><span class="comment">     * | b_bottom |    |    -     |</span></div>
-<div class="line"><span class="lineno">   99</span><span class="comment">     *</span></div>
-<div class="line"><span class="lineno">  100</span><span class="comment">     * @param b The multiple right-hand sides.</span></div>
-<div class="line"><span class="lineno">  101</span><span class="comment">     */</span></div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>    <span class="keywordtype">void</span> interchange_rows_from_2_to_3_blocks_rhs(MultiRHS b) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span> </div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    <span class="comment">/**</span></div>
-<div class="line"><span class="lineno">  106</span><span class="comment">     * @brief Solve the multiple right-hand sides linear problem Ax=b or its transposed version A^tx=b inplace.</span></div>
-<div class="line"><span class="lineno">  107</span><span class="comment">     *</span></div>
-<div class="line"><span class="lineno">  108</span><span class="comment">     * Perform row interchanges on multiple right-hand sides to obtain a 2x2-blocks linear problem and call the SplinesLinearProblem2x2Blocks solver.</span></div>
-<div class="line"><span class="lineno">  109</span><span class="comment">     *</span></div>
-<div class="line"><span class="lineno">  110</span><span class="comment">     * This class requires an additional allocation corresponding to top_size rows for internal operation.</span></div>
-<div class="line"><span class="lineno">  111</span><span class="comment">     *</span></div>
-<div class="line"><span class="lineno">  112</span><span class="comment">     * @param[in, out] b A 2D Kokkos::View storing the multiple right-hand sides (+ additional garbage allocation) of the problem and receiving the corresponding solution.</span></div>
-<div class="line"><span class="lineno">  113</span><span class="comment">     * @param transpose Choose between the direct or transposed version of the linear problem.</span></div>
-<div class="line"><span class="lineno">  114</span><span class="comment">     */</span></div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    <span class="keywordtype">void</span> solve(MultiRHS b, <span class="keywordtype">bool</span> transpose) <span class="keyword">const</span> <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span> </div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>    std::size_t impl_required_number_of_rhs_rows() <span class="keyword">const</span> <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>};</div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span> </div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span><span class="preprocessor">#</span><span class="preprocessor">if</span> <span class="preprocessor">defined</span><span class="preprocessor">(</span>KOKKOS_ENABLE_SERIAL<span class="preprocessor">)</span></div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span><span class="keyword">extern</span> <span class="keyword">template</span> <span class="keyword">class</span> SplinesLinearProblem3x3Blocks&lt;Kokkos::Serial&gt;;</div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span><span class="preprocessor">#</span><span class="preprocessor">endif</span></div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span><span class="preprocessor">#</span><span class="preprocessor">if</span> <span class="preprocessor">defined</span><span class="preprocessor">(</span><span class="preprocessor">KOKKOS_ENABLE_OPENMP</span><span class="preprocessor">)</span></div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span><span class="keyword">extern</span> <span class="keyword">template</span> <span class="keyword">class</span> SplinesLinearProblem3x3Blocks&lt;Kokkos::OpenMP&gt;;</div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span><span class="preprocessor">#</span><span class="preprocessor">endif</span></div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span><span class="preprocessor">#</span><span class="preprocessor">if</span> <span class="preprocessor">defined</span><span class="preprocessor">(</span><span class="preprocessor">KOKKOS_ENABLE_CUDA</span><span class="preprocessor">)</span></div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span><span class="keyword">extern</span> <span class="keyword">template</span> <span class="keyword">class</span> SplinesLinearProblem3x3Blocks&lt;Kokkos::Cuda&gt;;</div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span><span class="preprocessor">#</span><span class="preprocessor">endif</span></div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span><span class="preprocessor">#</span><span class="preprocessor">if</span> <span class="preprocessor">defined</span><span class="preprocessor">(</span><span class="preprocessor">KOKKOS_ENABLE_HIP</span><span class="preprocessor">)</span></div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span><span class="keyword">extern</span> <span class="keyword">template</span> <span class="keyword">class</span> SplinesLinearProblem3x3Blocks&lt;Kokkos::HIP&gt;;</div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span><span class="preprocessor">#</span><span class="preprocessor">endif</span></div>
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span><span class="preprocessor">#</span><span class="preprocessor">if</span> <span class="preprocessor">defined</span><span class="preprocessor">(</span><span class="preprocessor">KOKKOS_ENABLE_SYCL</span><span class="preprocessor">)</span></div>
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span><span class="keyword">extern</span> <span class="keyword">template</span> <span class="keyword">class</span> SplinesLinearProblem3x3Blocks&lt;Kokkos::SYCL&gt;;</div>
-<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span><span class="preprocessor">#</span><span class="preprocessor">endif</span></div>
-<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span> </div>
-<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>} <span class="comment">// namespace ddc::detail</span></div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    <span class="keyword">using</span> <span class="keyword">typename</span> SplinesLinearProblem&lt;ExecSpace&gt;::memory_space;</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    <span class="keyword">using</span> <span class="keyword">typename</span> SplinesLinearProblem2x2Blocks&lt;ExecSpace&gt;::MultiRHS;</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="keyword">using</span> SplinesLinearProblem2x2Blocks&lt;ExecSpace&gt;::size;</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="keyword">using</span> SplinesLinearProblem2x2Blocks&lt;ExecSpace&gt;::solve;</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <span class="keyword">using</span> SplinesLinearProblem2x2Blocks&lt;ExecSpace&gt;::m_top_left_block;</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="keyword">protected</span>:</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    std::size_t m_top_size;</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <span class="comment">/**</span></div>
+<div class="line"><span class="lineno">   49</span><span class="comment">     * @brief SplinesLinearProblem3x3Blocks constructor.</span></div>
+<div class="line"><span class="lineno">   50</span><span class="comment">     *</span></div>
+<div class="line"><span class="lineno">   51</span><span class="comment">     * @param mat_size The size of one of the dimensions of the square matrix.</span></div>
+<div class="line"><span class="lineno">   52</span><span class="comment">     * @param top_size The size of one of the dimensions of the top-left square block.</span></div>
+<div class="line"><span class="lineno">   53</span><span class="comment">     * @param center_block A pointer toward the center SplinesLinearProblem. `setup_solver` must not have been called on it.</span></div>
+<div class="line"><span class="lineno">   54</span><span class="comment">     */</span></div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="keyword">explicit</span> SplinesLinearProblem3x3Blocks(</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>            std::size_t mat_size,</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>            std::size_t top_size,</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>            std::unique_ptr&lt;SplinesLinearProblem&lt;ExecSpace&gt;&gt; center_block);</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    SplinesLinearProblem3x3Blocks(SplinesLinearProblem3x3Blocks <span class="keyword">const</span>&amp; rhs) = <span class="keyword">delete</span>;</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span> </div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    SplinesLinearProblem3x3Blocks(SplinesLinearProblem3x3Blocks&amp;&amp; rhs) = <span class="keyword">delete</span>;</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    ~SplinesLinearProblem3x3Blocks() <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    SplinesLinearProblem3x3Blocks&amp; operator=(SplinesLinearProblem3x3Blocks <span class="keyword">const</span>&amp; rhs) = <span class="keyword">delete</span>;</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span> </div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    SplinesLinearProblem3x3Blocks&amp; operator=(SplinesLinearProblem3x3Blocks&amp;&amp; rhs) = <span class="keyword">delete</span>;</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    <span class="comment">/// @brief Adjust indices, governs the row &amp; columns interchanges to restructure the 3x3-blocks matrix into a 2x2-blocks matrix.</span></div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    <span class="keywordtype">void</span> adjust_indices(std::size_t&amp; i, std::size_t&amp; j) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span> </div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    <span class="keywordtype">double</span> get_element(std::size_t i, std::size_t j) <span class="keyword">const</span> <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span> </div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    <span class="keywordtype">void</span> set_element(std::size_t i, std::size_t j, <span class="keywordtype">double</span> aij) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span> </div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    <span class="comment">/**</span></div>
+<div class="line"><span class="lineno">   81</span><span class="comment">     * @brief Perform row interchanges on multiple right-hand sides to get a 2-blocks structure (matching the requirements</span></div>
+<div class="line"><span class="lineno">   82</span><span class="comment">     * of the SplinesLinearProblem2x2Blocks solver).</span></div>
+<div class="line"><span class="lineno">   83</span><span class="comment">     *</span></div>
+<div class="line"><span class="lineno">   84</span><span class="comment">     * |  b_top   |    |    -     |</span></div>
+<div class="line"><span class="lineno">   85</span><span class="comment">     * | b_center | -&gt; | b_center |</span></div>
+<div class="line"><span class="lineno">   86</span><span class="comment">     * | b_bottom |    |  b_top   | -- Considered as a</span></div>
+<div class="line"><span class="lineno">   87</span><span class="comment">     * |    -     |    | b_bottom | -- single bottom block</span></div>
+<div class="line"><span class="lineno">   88</span><span class="comment">     *</span></div>
+<div class="line"><span class="lineno">   89</span><span class="comment">     * @param b The multiple right-hand sides.</span></div>
+<div class="line"><span class="lineno">   90</span><span class="comment">     */</span></div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    <span class="keywordtype">void</span> interchange_rows_from_3_to_2_blocks_rhs(MultiRHS b) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span> </div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    <span class="comment">/**</span></div>
+<div class="line"><span class="lineno">   94</span><span class="comment">     * @brief Perform row interchanges on multiple right-hand sides to restore its 3-blocks structure.</span></div>
+<div class="line"><span class="lineno">   95</span><span class="comment">     *</span></div>
+<div class="line"><span class="lineno">   96</span><span class="comment">     * |    -     |    |  b_top   |</span></div>
+<div class="line"><span class="lineno">   97</span><span class="comment">     * | b_center | -&gt; | b_center |</span></div>
+<div class="line"><span class="lineno">   98</span><span class="comment">     * |  b_top   |    | b_bottom |</span></div>
+<div class="line"><span class="lineno">   99</span><span class="comment">     * | b_bottom |    |    -     |</span></div>
+<div class="line"><span class="lineno">  100</span><span class="comment">     *</span></div>
+<div class="line"><span class="lineno">  101</span><span class="comment">     * @param b The multiple right-hand sides.</span></div>
+<div class="line"><span class="lineno">  102</span><span class="comment">     */</span></div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    <span class="keywordtype">void</span> interchange_rows_from_2_to_3_blocks_rhs(MultiRHS b) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span> </div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>    <span class="comment">/**</span></div>
+<div class="line"><span class="lineno">  107</span><span class="comment">     * @brief Solve the multiple right-hand sides linear problem Ax=b or its transposed version A^tx=b inplace.</span></div>
+<div class="line"><span class="lineno">  108</span><span class="comment">     *</span></div>
+<div class="line"><span class="lineno">  109</span><span class="comment">     * Perform row interchanges on multiple right-hand sides to obtain a 2x2-blocks linear problem and call the SplinesLinearProblem2x2Blocks solver.</span></div>
+<div class="line"><span class="lineno">  110</span><span class="comment">     *</span></div>
+<div class="line"><span class="lineno">  111</span><span class="comment">     * This class requires an additional allocation corresponding to top_size rows for internal operation.</span></div>
+<div class="line"><span class="lineno">  112</span><span class="comment">     *</span></div>
+<div class="line"><span class="lineno">  113</span><span class="comment">     * @param[in, out] b A 2D Kokkos::View storing the multiple right-hand sides (+ additional garbage allocation) of the problem and receiving the corresponding solution.</span></div>
+<div class="line"><span class="lineno">  114</span><span class="comment">     * @param transpose Choose between the direct or transposed version of the linear problem.</span></div>
+<div class="line"><span class="lineno">  115</span><span class="comment">     */</span></div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    <span class="keywordtype">void</span> solve(MultiRHS b, <span class="keywordtype">bool</span> transpose) <span class="keyword">const</span> <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span> </div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>    std::size_t impl_required_number_of_rhs_rows() <span class="keyword">const</span> <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>};</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span> </div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span><span class="preprocessor">#</span><span class="preprocessor">if</span> <span class="preprocessor">defined</span><span class="preprocessor">(</span>KOKKOS_ENABLE_SERIAL<span class="preprocessor">)</span></div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span><span class="keyword">extern</span> <span class="keyword">template</span> <span class="keyword">class</span> SplinesLinearProblem3x3Blocks&lt;Kokkos::Serial&gt;;</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span><span class="preprocessor">#</span><span class="preprocessor">endif</span></div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span><span class="preprocessor">#</span><span class="preprocessor">if</span> <span class="preprocessor">defined</span><span class="preprocessor">(</span><span class="preprocessor">KOKKOS_ENABLE_OPENMP</span><span class="preprocessor">)</span></div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span><span class="keyword">extern</span> <span class="keyword">template</span> <span class="keyword">class</span> SplinesLinearProblem3x3Blocks&lt;Kokkos::OpenMP&gt;;</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span><span class="preprocessor">#</span><span class="preprocessor">endif</span></div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span><span class="preprocessor">#</span><span class="preprocessor">if</span> <span class="preprocessor">defined</span><span class="preprocessor">(</span><span class="preprocessor">KOKKOS_ENABLE_CUDA</span><span class="preprocessor">)</span></div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span><span class="keyword">extern</span> <span class="keyword">template</span> <span class="keyword">class</span> SplinesLinearProblem3x3Blocks&lt;Kokkos::Cuda&gt;;</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span><span class="preprocessor">#</span><span class="preprocessor">endif</span></div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span><span class="preprocessor">#</span><span class="preprocessor">if</span> <span class="preprocessor">defined</span><span class="preprocessor">(</span><span class="preprocessor">KOKKOS_ENABLE_HIP</span><span class="preprocessor">)</span></div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span><span class="keyword">extern</span> <span class="keyword">template</span> <span class="keyword">class</span> SplinesLinearProblem3x3Blocks&lt;Kokkos::HIP&gt;;</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span><span class="preprocessor">#</span><span class="preprocessor">endif</span></div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span><span class="preprocessor">#</span><span class="preprocessor">if</span> <span class="preprocessor">defined</span><span class="preprocessor">(</span><span class="preprocessor">KOKKOS_ENABLE_SYCL</span><span class="preprocessor">)</span></div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span><span class="keyword">extern</span> <span class="keyword">template</span> <span class="keyword">class</span> SplinesLinearProblem3x3Blocks&lt;Kokkos::SYCL&gt;;</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span><span class="preprocessor">#</span><span class="preprocessor">endif</span></div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span> </div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>} <span class="comment">// namespace ddc::detail</span></div>
 <div class="ttc" id="aclassddc_1_1ChunkCommon_html_a0214c802aca8ce0770988bb2784f104a"><div class="ttname"><a href="classddc_1_1ChunkCommon.html#a0214c802aca8ce0770988bb2784f104a">ddc::ChunkCommon::ChunkSpan</a></div><div class="ttdeci">friend class ChunkSpan</div><div class="ttdef"><b>Definition</b> <a href="chunk__common_8hpp_source.html#l00076">chunk_common.hpp:76</a></div></div>
 <div class="ttc" id="aclassddc_1_1Chunk_html_aa299fb96adef4e448d8d35a354e71806"><div class="ttname"><a href="classddc_1_1Chunk.html#aa299fb96adef4e448d8d35a354e71806">ddc::Chunk::Chunk</a></div><div class="ttdeci">friend class Chunk</div><div class="ttdef"><b>Definition</b> <a href="chunk_8hpp_source.html#l00081">chunk.hpp:81</a></div></div>
 <div class="ttc" id="aclassddc_1_1DiscreteDomain_html_a5cdbd7cda4dd9c4369a8810c88cf3bed"><div class="ttname"><a href="classddc_1_1DiscreteDomain.html#a5cdbd7cda4dd9c4369a8810c88cf3bed">ddc::DiscreteDomain::DiscreteDomain</a></div><div class="ttdeci">friend class DiscreteDomain</div><div class="ttdef"><b>Definition</b> <a href="discrete__domain_8hpp_source.html#l00072">discrete_domain.hpp:72</a></div></div>
@@ -308,7 +309,7 @@ $(document).ready(function(){initNavTree('splines__linear__problem__3x3__blocks_
 <div class="ttc" id="aclassddc_1_1SplineBuilder_html_a0df06f3d0d141b6d288e9d5748e53cd2"><div class="ttname"><a href="classddc_1_1SplineBuilder.html#a0df06f3d0d141b6d288e9d5748e53cd2">ddc::SplineBuilder::batched_derivs_xmax_domain</a></div><div class="ttdeci">batched_derivs_domain_type&lt; BatchedInterpolationDDom &gt; batched_derivs_xmax_domain(BatchedInterpolationDDom const &amp;batched_interpolation_domain) const noexcept</div><div class="ttdoc">Get the whole domain on which derivatives on upper boundary are defined.</div><div class="ttdef"><b>Definition</b> <a href="spline__builder_8hpp_source.html#l00440">spline_builder.hpp:440</a></div></div>
 <div class="ttc" id="aclassddc_1_1SplineBuilder_html_a12ef471bd615ff07310704d66b409884"><div class="ttname"><a href="classddc_1_1SplineBuilder.html#a12ef471bd615ff07310704d66b409884">ddc::SplineBuilder::s_spline_solver</a></div><div class="ttdeci">static constexpr SplineSolver s_spline_solver</div><div class="ttdoc">The SplineSolver giving the backend used to perform the spline approximation.</div><div class="ttdef"><b>Definition</b> <a href="spline__builder_8hpp_source.html#l00191">spline_builder.hpp:191</a></div></div>
 <div class="ttc" id="aclassddc_1_1SplineBuilder_html_a1a31706d9f249e62e3194fca304e5488"><div class="ttname"><a href="classddc_1_1SplineBuilder.html#a1a31706d9f249e62e3194fca304e5488">ddc::SplineBuilder::batch_domain</a></div><div class="ttdeci">batch_domain_type&lt; BatchedInterpolationDDom &gt; batch_domain(BatchedInterpolationDDom const &amp;batched_interpolation_domain) const noexcept</div><div class="ttdoc">Get the batch domain.</div><div class="ttdef"><b>Definition</b> <a href="spline__builder_8hpp_source.html#l00346">spline_builder.hpp:346</a></div></div>
-<div class="ttc" id="aclassddc_1_1SplineBuilder_html_a1b1ac5fcd696479b0a79f047edd85d02"><div class="ttname"><a href="classddc_1_1SplineBuilder.html#a1b1ac5fcd696479b0a79f047edd85d02">ddc::SplineBuilder::quadrature_coefficients</a></div><div class="ttdeci">std::tuple&lt; ddc::Chunk&lt; double, ddc::DiscreteDomain&lt; ddc::Deriv&lt; typename InterpolationDDim::continuous_dimension_type &gt; &gt;, ddc::KokkosAllocator&lt; double, OutMemorySpace &gt; &gt;, ddc::Chunk&lt; double, ddc::DiscreteDomain&lt; InterpolationDDim &gt;, ddc::KokkosAllocator&lt; double, OutMemorySpace &gt; &gt;, ddc::Chunk&lt; double, ddc::DiscreteDomain&lt; ddc::Deriv&lt; typename InterpolationDDim::continuous_dimension_type &gt; &gt;, ddc::KokkosAllocator&lt; double, OutMemorySpace &gt; &gt; &gt; quadrature_coefficients() const</div><div class="ttdoc">Compute the quadrature coefficients associated to the b-splines used by this SplineBuilder.</div><div class="ttdef"><b>Definition</b> <a href="spline__builder_8hpp_source.html#l01033">spline_builder.hpp:1034</a></div></div>
+<div class="ttc" id="aclassddc_1_1SplineBuilder_html_a1b1ac5fcd696479b0a79f047edd85d02"><div class="ttname"><a href="classddc_1_1SplineBuilder.html#a1b1ac5fcd696479b0a79f047edd85d02">ddc::SplineBuilder::quadrature_coefficients</a></div><div class="ttdeci">std::tuple&lt; ddc::Chunk&lt; double, ddc::DiscreteDomain&lt; ddc::Deriv&lt; typename InterpolationDDim::continuous_dimension_type &gt; &gt;, ddc::KokkosAllocator&lt; double, OutMemorySpace &gt; &gt;, ddc::Chunk&lt; double, ddc::DiscreteDomain&lt; InterpolationDDim &gt;, ddc::KokkosAllocator&lt; double, OutMemorySpace &gt; &gt;, ddc::Chunk&lt; double, ddc::DiscreteDomain&lt; ddc::Deriv&lt; typename InterpolationDDim::continuous_dimension_type &gt; &gt;, ddc::KokkosAllocator&lt; double, OutMemorySpace &gt; &gt; &gt; quadrature_coefficients() const</div><div class="ttdoc">Compute the quadrature coefficients associated to the b-splines used by this SplineBuilder.</div><div class="ttdef"><b>Definition</b> <a href="spline__builder_8hpp_source.html#l01029">spline_builder.hpp:1030</a></div></div>
 <div class="ttc" id="aclassddc_1_1SplineBuilder_html_a21b85ea7e2212aaddc1fd2d45149e374"><div class="ttname"><a href="classddc_1_1SplineBuilder.html#a21b85ea7e2212aaddc1fd2d45149e374">ddc::SplineBuilder::operator=</a></div><div class="ttdeci">SplineBuilder &amp; operator=(SplineBuilder const &amp;x)=delete</div><div class="ttdoc">Copy-assignment is deleted.</div></div>
 <div class="ttc" id="aclassddc_1_1SplineBuilder_html_a38931bda99af0c3c052ce007512ffaa7"><div class="ttname"><a href="classddc_1_1SplineBuilder.html#a38931bda99af0c3c052ce007512ffaa7">ddc::SplineBuilder::SplineBuilder</a></div><div class="ttdeci">SplineBuilder(SplineBuilder &amp;&amp;x)=default</div><div class="ttdoc">Move-constructs.</div></div>
 <div class="ttc" id="aclassddc_1_1SplineBuilder_html_a38ece00e99bf386de694ccd99329d744"><div class="ttname"><a href="classddc_1_1SplineBuilder.html#a38ece00e99bf386de694ccd99329d744">ddc::SplineBuilder::s_nbe_xmax</a></div><div class="ttdeci">static constexpr int s_nbe_xmax</div><div class="ttdoc">The number of equations defining the boundary condition at the upper bound.</div><div class="ttdef"><b>Definition</b> <a href="spline__builder_8hpp_source.html#l00172">spline_builder.hpp:172</a></div></div>

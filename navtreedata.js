@@ -113,11 +113,11 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"classddc_1_1ChunkSpan.html#a758a958129f2b0b33fc649bece0bd767",
+"classddc_1_1ChunkSpan.html#a8aaed50f667ca1e88576e4e8ef580b1b",
 "classddc_1_1DiscreteVector.html#afb3c8c9ab49ebd9923116eda48657037",
 "classddc_1_1SparseDiscreteDomain.html#a20f0cff53d1c5f29d52e96a7b86272bb",
-"classddc_1_1SplineBuilder3D.html#a27d5a3c580851d9a772a20800991d9d2",
-"classddc_1_1SplineEvaluator3D.html#a7aa751ca6f76d7bd9e482c23a5b0deab",
+"classddc_1_1SplineBuilder3D.html#a25224b2081f7ee67bddecf3760009162",
+"classddc_1_1SplineEvaluator3D.html#a7da4b254329b357322b2943ccae8f923",
 "classddc_1_1UniformPointSampling_1_1Impl.html#a7bde99588d41326a7965c07597df22cc",
 "namespaceddc.html#a6d5c456ec24ce19e1fef731322d831b4",
 "structddc_1_1is__evaluator__admissible_3_01SplineBuilder2D_3_01ExecSpace_00_01MemorySpace_00_01B3b9a0a284ab7d992c4eb7eb3baab8cf1.html"

@@ -2,7 +2,7 @@ var classddc_1_1SplineBuilder =
 [
     [ "exec_space", "classddc_1_1SplineBuilder.html#aadbb23857c555ab27217d867460f7110", null ],
     [ "memory_space", "classddc_1_1SplineBuilder.html#aa25c67a47f83299e0243db27fcd098bc", null ],
-    [ "continuous_dimension_type", "classddc_1_1SplineBuilder.html#a872b6c87ce8ca70b8456e18d97bd2ac0", null ],
+    [ "continuous_dimension_type", "classddc_1_1SplineBuilder.html#ae61a0bf3e96650499c6285da3604647d", null ],
     [ "interpolation_discrete_dimension_type", "classddc_1_1SplineBuilder.html#a705148b16c50390dd42be3bc5c889595", null ],
     [ "bsplines_type", "classddc_1_1SplineBuilder.html#a98eba8911eeec943d201a1b63e91836a", null ],
     [ "deriv_type", "classddc_1_1SplineBuilder.html#ae083166483903beecc017be291da4d0d", null ],

@@ -3,7 +3,7 @@ var searchData=
   ['label_0',['label',['../classddc_1_1Chunk.html#a1e2f35381f1bdd8792388ac9e986b54f',1,'ddc::Chunk']]],
   ['land_1',['land',['../structddc_1_1reducer_1_1land.html',1,'ddc::reducer']]],
   ['lapack_2',['LAPACK',['../namespaceddc.html#a36c0210a850dde0979ad8b5772ee730ca7015270b41ffefb4e67d40c8bd451a4d',1,'ddc']]],
-  ['layout_5ftype_3',['layout_type',['../classddc_1_1Chunk.html#a0859e9e11ba8dd18664a49cbf2df47af',1,'ddc::Chunk::layout_type'],['../classddc_1_1ChunkCommon.html#a26af65c8ae4222c61665750050491d80',1,'ddc::ChunkCommon::layout_type'],['../classddc_1_1ChunkSpan.html#a73e5ad0de82d64b8452547c083b8500e',1,'ddc::ChunkSpan::layout_type']]],
+  ['layout_5ftype_3',['layout_type',['../classddc_1_1Chunk.html#a36f98a2b44d0f1d114699d1772782124',1,'ddc::Chunk::layout_type'],['../classddc_1_1ChunkCommon.html#a7fd53c289aec7050d50c95ae623ad6d3',1,'ddc::ChunkCommon::layout_type'],['../classddc_1_1ChunkSpan.html#a1d7723f6019478e07745190a16dcdba1',1,'ddc::ChunkSpan::layout_type']]],
   ['length_4',['length',['../classddc_1_1NonUniformBSplines_1_1Impl.html#afb5bb54f973fb9da7fb8a0cddbfc0b0e',1,'ddc::NonUniformBSplines::Impl::length()'],['../classddc_1_1UniformBSplines_1_1Impl.html#a8b04bc695a0d386ab705fe8d7b7587bb',1,'ddc::UniformBSplines::Impl::length()']]],
   ['loop_5',['loop',['../going_further.html#autotoc_md20',1,'Time loop'],['../first_steps.html#autotoc_md11',1,'Time loop']]],
   ['lor_6',['lor',['../structddc_1_1reducer_1_1lor.html',1,'ddc::reducer']]],

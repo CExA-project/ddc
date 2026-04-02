@@ -1,8 +1,8 @@
 var classddc_1_1SplineEvaluator3D =
 [
-    [ "continuous_dimension_type1", "classddc_1_1SplineEvaluator3D.html#a881b156d23515b5d4db085971cd9bc48", null ],
-    [ "continuous_dimension_type2", "classddc_1_1SplineEvaluator3D.html#ad9984b00d0b54b9adf5d69120bdc754a", null ],
-    [ "continuous_dimension_type3", "classddc_1_1SplineEvaluator3D.html#a0b8dbe0508f9930e26f40bfca0ec9e6b", null ],
+    [ "continuous_dimension_type1", "classddc_1_1SplineEvaluator3D.html#ac3c0c3c7bbde4c8d2d3b3594f54dccc3", null ],
+    [ "continuous_dimension_type2", "classddc_1_1SplineEvaluator3D.html#ac96a52b4079fb4521d913ac483d34f9d", null ],
+    [ "continuous_dimension_type3", "classddc_1_1SplineEvaluator3D.html#ac156412ce08272ea16f74c448dff551a", null ],
     [ "exec_space", "classddc_1_1SplineEvaluator3D.html#ae7d8fe74de038e10621dc3ee63da1d2b", null ],
     [ "memory_space", "classddc_1_1SplineEvaluator3D.html#a49f393950feb3f6a0a722048006abb7f", null ],
     [ "evaluation_discrete_dimension_type1", "classddc_1_1SplineEvaluator3D.html#ab346a7327052ba881ff4162d2ff8e2f2", null ],
@@ -20,8 +20,8 @@ var classddc_1_1SplineEvaluator3D =
     [ "spline_domain_type2", "classddc_1_1SplineEvaluator3D.html#adf9cdb5f91f959c7aefc666605c58f08", null ],
     [ "spline_domain_type3", "classddc_1_1SplineEvaluator3D.html#a5998437bd5508dad3277237e158bcabd", null ],
     [ "spline_domain_type", "classddc_1_1SplineEvaluator3D.html#a1862d3b6d9e5937d0c4a56f50fb4e995", null ],
-    [ "batch_domain_type", "classddc_1_1SplineEvaluator3D.html#ada4a10849c17d02d248e6f510b3d9d95", null ],
-    [ "batched_spline_domain_type", "classddc_1_1SplineEvaluator3D.html#a69fc468f59cb5df643e9ce0c990aaa09", null ],
+    [ "batch_domain_type", "classddc_1_1SplineEvaluator3D.html#acef30a3185707536f4f313a78f0c7306", null ],
+    [ "batched_spline_domain_type", "classddc_1_1SplineEvaluator3D.html#a017672402aef6bc6fbfce1cc6bde681f", null ],
     [ "lower_extrapolation_rule_1_type", "classddc_1_1SplineEvaluator3D.html#a173412db844c325c692edc4ed286538b", null ],
     [ "upper_extrapolation_rule_1_type", "classddc_1_1SplineEvaluator3D.html#a7da4b254329b357322b2943ccae8f923", null ],
     [ "lower_extrapolation_rule_2_type", "classddc_1_1SplineEvaluator3D.html#afe47235534986b2138a0b027be49fbdb", null ],

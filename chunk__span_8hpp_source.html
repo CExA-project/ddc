@@ -189,36 +189,36 @@ $(document).ready(function(){initNavTree('chunk__span_8hpp_source.html',''); ini
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <span class="comment">/// type of a view of this full chunk</span></div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <span class="keyword">using</span> view_type = <a class="code hl_friend" href="classddc_1_1ChunkCommon.html#a0214c802aca8ce0770988bb2784f104a">ChunkSpan</a>&lt;ElementType <span class="keyword">const</span>, SupportType, LayoutStridedPolicy, MemorySpace&gt;;</div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <span class="keyword">using</span> discrete_domain_type = <span class="keyword">typename</span> base_type::discrete_domain_type;</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <span class="keyword">using</span> discrete_domain_type = base_type::discrete_domain_type;</div>
 <div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span> </div>
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    <span class="keyword">using</span> memory_space = MemorySpace;</div>
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
 <div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    <span class="comment">/// The dereferenceable part of the co-domain but with a different domain, starting at 0</span></div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    <span class="keyword">using</span> allocation_mdspan_type = <span class="keyword">typename</span> base_type::allocation_mdspan_type;</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    <span class="keyword">using</span> allocation_mdspan_type = base_type::allocation_mdspan_type;</div>
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    <span class="keyword">using</span> const_allocation_mdspan_type = <span class="keyword">typename</span> base_type::const_allocation_mdspan_type;</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    <span class="keyword">using</span> const_allocation_mdspan_type = base_type::const_allocation_mdspan_type;</div>
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    <span class="keyword">using</span> discrete_element_type = <span class="keyword">typename</span> discrete_domain_type::discrete_element_type;</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    <span class="keyword">using</span> discrete_element_type = discrete_domain_type::discrete_element_type;</div>
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span> </div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    <span class="keyword">using</span> discrete_vector_type = <span class="keyword">typename</span> discrete_domain_type::discrete_vector_type;</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    <span class="keyword">using</span> discrete_vector_type = discrete_domain_type::discrete_vector_type;</div>
 <div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span> </div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    <span class="keyword">using</span> extents_type = <span class="keyword">typename</span> base_type::extents_type;</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    <span class="keyword">using</span> extents_type = base_type::extents_type;</div>
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span> </div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    <span class="keyword">using</span> layout_type = <span class="keyword">typename</span> base_type::layout_type;</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    <span class="keyword">using</span> layout_type = base_type::layout_type;</div>
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span> </div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    <span class="keyword">using</span> accessor_type = <span class="keyword">typename</span> base_type::accessor_type;</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    <span class="keyword">using</span> accessor_type = base_type::accessor_type;</div>
 <div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span> </div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    <span class="keyword">using</span> mapping_type = <span class="keyword">typename</span> base_type::mapping_type;</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    <span class="keyword">using</span> mapping_type = base_type::mapping_type;</div>
 <div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span> </div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    <span class="keyword">using</span> element_type = <span class="keyword">typename</span> base_type::element_type;</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    <span class="keyword">using</span> element_type = base_type::element_type;</div>
 <div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span> </div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    <span class="keyword">using</span> value_type = <span class="keyword">typename</span> base_type::value_type;</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    <span class="keyword">using</span> value_type = base_type::value_type;</div>
 <div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span> </div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    <span class="keyword">using</span> size_type = <span class="keyword">typename</span> base_type::size_type;</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    <span class="keyword">using</span> size_type = base_type::size_type;</div>
 <div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span> </div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    <span class="keyword">using</span> data_handle_type = <span class="keyword">typename</span> base_type::data_handle_type;</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    <span class="keyword">using</span> data_handle_type = base_type::data_handle_type;</div>
 <div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span> </div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    <span class="keyword">using</span> reference = <span class="keyword">typename</span> base_type::reference;</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    <span class="keyword">using</span> reference = base_type::reference;</div>
 <div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span> </div>
 <div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    <span class="keyword">template</span> &lt;<span class="keyword">class</span>, <span class="keyword">class</span>, <span class="keyword">class</span>, <span class="keyword">class</span>&gt;</div>
 <div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    <span class="keyword">friend</span> <span class="keyword">class</span> <a class="code hl_friend" href="classddc_1_1ChunkCommon.html#a0214c802aca8ce0770988bb2784f104a">ChunkSpan</a>;</div>
@@ -394,17 +394,17 @@ $(document).ready(function(){initNavTree('chunk__span_8hpp_source.html',''); ini
 <div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>            DiscreteElement&lt;QueryDDims...&gt; <span class="keyword">const</span>&amp; slice_spec) <span class="keyword">const</span></div>
 <div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>    {</div>
 <div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>        <span class="keyword">using</span> detail::TypeSeq;</div>
-<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>        <span class="keyword">using</span> QueryDDom = <span class="keyword">typename</span> detail::RebindDomain&lt;SupportType, TypeSeq&lt;QueryDDims...&gt;&gt;::type;</div>
+<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>        <span class="keyword">using</span> QueryDDom = detail::RebindDomain&lt;SupportType, TypeSeq&lt;QueryDDims...&gt;&gt;::type;</div>
 <div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>        KOKKOS_ASSERT(QueryDDom(<span class="keyword">this</span>-&gt;m_domain).contains(slice_spec))</div>
 <div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>        slicer&lt;to_type_seq_t&lt;SupportType&gt;&gt; <span class="keyword">const</span> slicer;</div>
 <div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>        <span class="keyword">auto</span> subview = slicer(</div>
 <div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>                <span class="keyword">this</span>-&gt;allocation_mdspan(),</div>
 <div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>                QueryDDom(<span class="keyword">this</span>-&gt;m_domain).distance_from_front(slice_spec));</div>
-<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>        <span class="keyword">using</span> layout_type = <span class="keyword">typename</span> <span class="keyword">decltype</span>(subview)::layout_type;</div>
-<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>        <span class="keyword">using</span> extents_type = <span class="keyword">typename</span> <span class="keyword">decltype</span>(subview)::extents_type;</div>
+<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>        <span class="keyword">using</span> layout_type = <span class="keyword">decltype</span>(subview)::layout_type;</div>
+<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>        <span class="keyword">using</span> extents_type = <span class="keyword">decltype</span>(subview)::extents_type;</div>
 <div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>        <span class="keyword">using</span> OutTypeSeqDDims</div>
 <div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>                = type_seq_remove_t&lt;to_type_seq_t&lt;SupportType&gt;, TypeSeq&lt;QueryDDims...&gt;&gt;;</div>
-<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>        <span class="keyword">using</span> OutDDom = <span class="keyword">typename</span> detail::RebindDomain&lt;SupportType, OutTypeSeqDDims&gt;::type;</div>
+<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>        <span class="keyword">using</span> OutDDom = detail::RebindDomain&lt;SupportType, OutTypeSeqDDims&gt;::type;</div>
 <div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (</div>
 <div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>                std::is_same_v&lt;layout_type, Kokkos::Experimental::layout_left_padded&lt;&gt;&gt;</div>
 <div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>                || std::is_same_v&lt;layout_type, Kokkos::Experimental::layout_right_padded&lt;&gt;&gt;) {</div>
@@ -437,8 +437,8 @@ $(document).ready(function(){initNavTree('chunk__span_8hpp_source.html',''); ini
 <div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>                    &amp;&amp; <a class="code hl_friend" href="classddc_1_1DiscreteDomain.html#a5cdbd7cda4dd9c4369a8810c88cf3bed">DiscreteDomain</a>&lt;QueryDDims...&gt;(<span class="keyword">this</span>-&gt;m_domain).contains(odomain.back())))</div>
 <div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span>        slicer&lt;to_type_seq_t&lt;SupportType&gt;&gt; <span class="keyword">const</span> slicer;</div>
 <div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span>        <span class="keyword">auto</span> subview = slicer(<span class="keyword">this</span>-&gt;allocation_mdspan(), odomain, <span class="keyword">this</span>-&gt;m_domain);</div>
-<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span>        <span class="keyword">using</span> layout_type = <span class="keyword">typename</span> <span class="keyword">decltype</span>(subview)::layout_type;</div>
-<div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span>        <span class="keyword">using</span> extents_type = <span class="keyword">typename</span> <span class="keyword">decltype</span>(subview)::extents_type;</div>
+<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span>        <span class="keyword">using</span> layout_type = <span class="keyword">decltype</span>(subview)::layout_type;</div>
+<div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span>        <span class="keyword">using</span> extents_type = <span class="keyword">decltype</span>(subview)::extents_type;</div>
 <div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (</div>
 <div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span>                std::is_same_v&lt;layout_type, Kokkos::Experimental::layout_left_padded&lt;&gt;&gt;</div>
 <div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>                || std::is_same_v&lt;layout_type, Kokkos::Experimental::layout_right_padded&lt;&gt;&gt;) {</div>

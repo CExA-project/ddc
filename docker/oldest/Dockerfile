@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: MIT
 
-FROM ubuntu:jammy@sha256:3ba65aa20f86a0fad9df2b2c259c613df006b2e6d0bfcc8a146afb8c525a9751
+FROM ubuntu:jammy@sha256:ce4a593b4e323dcc3dd728e397e0a866a1bf516a1b7c31d6aa06991baec4f2e0
 
 LABEL "org.opencontainers.image.source"="https://github.com/CExA-project/ddc"
 
@@ -12,6 +12,7 @@ ARG CMAKE_VERSION=3.25.3
 ARG CUDA_MAJOR_VERSION=12
 ARG CUDA_MINOR_VERSION=2
 ARG GINKGO_VERSION=1.8.0
+ARG LLVM_VERSION=16
 ARG ROCM_VERSION=6.2.4
 
 COPY bash_run /bin/
@@ -36,7 +37,9 @@ RUN chmod +x /bin/bash_run \
     wget \
  && mkdir --parents --mode=0755 /etc/apt/keyrings \
  && wget -O /usr/share/keyrings/pdidev-archive-keyring.gpg https://repo.pdi.dev/ubuntu/pdidev-archive-keyring.gpg \
+ && wget -O /usr/share/keyrings/apt.llvm.org.asc https://apt.llvm.org/llvm-snapshot.gpg.key \
  && echo "deb [arch=amd64 signed-by=/usr/share/keyrings/pdidev-archive-keyring.gpg] https://repo.pdi.dev/ubuntu jammy main" > /etc/apt/sources.list.d/pdi.list \
+ && echo "deb [arch=amd64 signed-by=/usr/share/keyrings/apt.llvm.org.asc] http://apt.llvm.org/jammy/ llvm-toolchain-jammy-${LLVM_VERSION} main" > /etc/apt/sources.list.d/llvm.list \
  && case "x${BACKEND}" in \
     "xhip") \
       echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/rocm.gpg] https://repo.radeon.com/amdgpu/${AMDGPU_VERSION}/ubuntu jammy main" > /etc/apt/sources.list.d/amdgpu.list \
@@ -64,7 +67,9 @@ RUN chmod +x /bin/bash_run \
  && case "${BACKEND}" in \
     "cpu") \
       apt-get install -y --no-install-recommends \
-      clang \
+      clang-${LLVM_VERSION} \
+      && update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-${LLVM_VERSION} 100 \
+      && update-alternatives --install /usr/bin/clang clang /usr/bin/clang-${LLVM_VERSION} 100 \
  ;; "cuda") \
       # libnvjitlink seems to be a missing dependency of cusparse
       apt-get install -y --no-install-recommends \

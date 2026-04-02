@@ -138,7 +138,7 @@ std::vector<Coord<X>> breaks(std::size_t ncells)
 template <class DDim>
 void interest_dim_initializer(std::size_t const ncells)
 {
-    using CDim = typename DDim::continuous_dimension_type;
+    using CDim = DDim::continuous_dimension_type;
 #if defined(BSPLINES_TYPE_UNIFORM)
     ddc::init_discrete_space<BSplines<CDim>>(x0<CDim>(), xn<CDim>(), ncells);
 #elif defined(BSPLINES_TYPE_NON_UNIFORM)
@@ -156,8 +156,8 @@ template <
         typename... DDims>
 void TestExtrapolationRuleSpline()
 {
-    using I1 = typename DDimI1::continuous_dimension_type;
-    using I2 = typename DDimI2::continuous_dimension_type;
+    using I1 = DDimI1::continuous_dimension_type;
+    using I2 = DDimI2::continuous_dimension_type;
 
     // Instantiate execution spaces and initialize spaces
     ExecSpace const exec_space;

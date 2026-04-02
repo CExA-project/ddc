@@ -55,8 +55,7 @@ public:
     {
     }
 
-    KOKKOS_FUNCTION void operator()(
-            typename Support::discrete_element_type const& delem) const noexcept
+    KOKKOS_FUNCTION void operator()(Support::discrete_element_type const& delem) const noexcept
     {
         m_chunk_span(delem) += 1;
     }

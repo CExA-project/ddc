@@ -33,7 +33,7 @@ struct ToTuple<std::pair<T, U>>
 };
 
 template <class S>
-using to_tuple_t = typename ToTuple<S>::type;
+using to_tuple_t = ToTuple<S>::type;
 
 template <class TupleOfTuples, class Tuple>
 struct for_each_tuple_cat;
@@ -47,7 +47,7 @@ struct for_each_tuple_cat<std::tuple<Tuples...>, Tuple>
 
 /// Construct a tuple of tuples that is the result of the concatenation of the tuples in TupleOfTuples with Tuple.
 template <class TupleOfTuples, class Tuple>
-using for_each_tuple_cat_t = typename for_each_tuple_cat<TupleOfTuples, Tuple>::type;
+using for_each_tuple_cat_t = for_each_tuple_cat<TupleOfTuples, Tuple>::type;
 
 static_assert(std::is_same_v<
               for_each_tuple_cat_t<
@@ -81,7 +81,7 @@ struct cartesian_product_impl<std::tuple<>, OutTupleOfTuples>
 /// Generate a std::tuple cartesian product from multiple tuple-like structures (std::tuple, std::integer_sequence and std::pair)
 /// Do not rely on the ordering result.
 template <class... InTuplesLike>
-using cartesian_product_t = typename cartesian_product_impl<
+using cartesian_product_t = cartesian_product_impl<
         std::tuple<to_tuple_t<InTuplesLike>...>,
         std::tuple<std::tuple<>>>::type;
 
@@ -103,4 +103,4 @@ struct TupleToTypes<std::tuple<Args...>>
 };
 
 template <class T>
-using tuple_to_types_t = typename TupleToTypes<T>::type;
+using tuple_to_types_t = TupleToTypes<T>::type;

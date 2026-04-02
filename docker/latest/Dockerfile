@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: MIT
 
-FROM ubuntu:noble@sha256:d1e2e92c075e5ca139d51a140fff46f84315c0fdce203eab2807c7e495eff4f9
+FROM ubuntu:noble@sha256:186072bba1b2f436cbb91ef2567abca677337cfc786c86e107d25b7072feef0c
 
 LABEL "org.opencontainers.image.source"="https://github.com/CExA-project/ddc"
 
@@ -13,7 +13,7 @@ ARG CUDA_MAJOR_VERSION=12
 ARG CUDA_MINOR_VERSION=9
 ARG GCOVR_VERSION=8.6
 ARG GINKGO_VERSION=1.11.0
-ARG LLVM_VERSION=21
+ARG LLVM_VERSION=22
 ARG ROCM_VERSION=6.4.4
 
 COPY bash_run /bin/
@@ -71,10 +71,11 @@ RUN chmod +x /bin/bash_run \
  && case "${BACKEND}" in \
     "cpu") \
       apt-get install -y --no-install-recommends \
-      clang \
       clang-${LLVM_VERSION} \
-      clang-tidy \
       clang-tidy-${LLVM_VERSION} \
+      && update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-${LLVM_VERSION} 100 \
+      && update-alternatives --install /usr/bin/clang clang /usr/bin/clang-${LLVM_VERSION} 100 \
+      && update-alternatives --install /usr/bin/clang-tidy clang-tidy /usr/bin/clang-tidy-${LLVM_VERSION} 100 \
  ;; "cuda") \
       # libnvjitlink seems to be a missing dependency of cusparse
       apt-get install -y --no-install-recommends \

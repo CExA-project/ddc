@@ -12,6 +12,7 @@
 #include <mutex>
 #include <optional>
 #include <string>
+#include <string_view>
 #include <thread>
 #include <type_traits>
 #include <utility>
@@ -84,6 +85,8 @@ void monitor_memory_async(std::mutex& mutex, bool& monitorFlag, std::size_t& max
 template <typename ExecSpace, bool IsNonUniform, std::size_t DegreeX>
 void characteristics_advection_unitary(benchmark::State& state)
 {
+    using memory_space = ExecSpace::memory_space;
+
     std::size_t const nx = state.range(3);
     std::size_t const ny = state.range(4);
     int cols_per_chunk = state.range(5);
@@ -138,7 +141,7 @@ void characteristics_advection_unitary(benchmark::State& state)
             ddc::BoundCond::PERIODIC>::template get_domain<DDimX<IsNonUniform, DegreeX>>();
     ddc::Chunk density_alloc(
             ddc::DiscreteDomain<DDimX<IsNonUniform, DegreeX>, DDimY>(x_domain, y_domain),
-            ddc::KokkosAllocator<double, typename ExecSpace::memory_space>());
+            ddc::KokkosAllocator<double, memory_space>());
     ddc::ChunkSpan const density = density_alloc.span_view();
     // Initialize the density on the main domain
     ddc::DiscreteDomain<DDimX<IsNonUniform, DegreeX>, DDimY> const x_mesh
@@ -155,7 +158,7 @@ void characteristics_advection_unitary(benchmark::State& state)
             });
     ddc::SplineBuilder<
             ExecSpace,
-            typename ExecSpace::memory_space,
+            memory_space,
             BSplinesX<IsNonUniform, DegreeX>,
             DDimX<IsNonUniform, DegreeX>,
             ddc::BoundCond::PERIODIC,
@@ -164,7 +167,7 @@ void characteristics_advection_unitary(benchmark::State& state)
     ddc::PeriodicExtrapolationRule<X> const periodic_extrapolation;
     ddc::SplineEvaluator<
             ExecSpace,
-            typename ExecSpace::memory_space,
+            memory_space,
             BSplinesX<IsNonUniform, DegreeX>,
             DDimX<IsNonUniform, DegreeX>,
             ddc::PeriodicExtrapolationRule<X>,
@@ -172,11 +175,11 @@ void characteristics_advection_unitary(benchmark::State& state)
             spline_evaluator(periodic_extrapolation, periodic_extrapolation);
     ddc::Chunk coef_alloc(
             spline_builder.batched_spline_domain(x_mesh),
-            ddc::KokkosAllocator<double, typename ExecSpace::memory_space>());
+            ddc::KokkosAllocator<double, memory_space>());
     ddc::ChunkSpan const coef = coef_alloc.span_view();
     ddc::Chunk feet_coords_alloc(
             spline_builder.batched_interpolation_domain(x_mesh),
-            ddc::KokkosAllocator<ddc::Coordinate<X>, typename ExecSpace::memory_space>());
+            ddc::KokkosAllocator<ddc::Coordinate<X>, memory_space>());
     ddc::ChunkSpan const feet_coords = feet_coords_alloc.span_view();
 
     for (auto _ : state) {
@@ -280,7 +283,7 @@ unsigned int preconditioner_max_block_size_ref = 32U;
 std::size_t ny_ref = 1000;
 
 // Sweep on spline order
-std::string name = "degree_x";
+std::string_view name = "degree_x";
 // NOLINTBEGIN(misc-use-anonymous-namespace)
 BENCHMARK(characteristics_advection)
         ->RangeMultiplier(2)
@@ -298,7 +301,7 @@ BENCHMARK(characteristics_advection)
 
 /*
 // Sweep on ny
-std::string name = "ny";
+std::string_view name = "ny";
 BENCHMARK(characteristics_advection)
         ->RangeMultiplier(2)
         ->Ranges(
@@ -314,7 +317,7 @@ BENCHMARK(characteristics_advection)
 */
 /*
 // Sweep on cols_per_chunk
-std::string name = "cols_per_chunk";
+std::string_view name = "cols_per_chunk";
 BENCHMARK(characteristics_advection)
         ->RangeMultiplier(2)
         ->Ranges(
@@ -330,7 +333,7 @@ BENCHMARK(characteristics_advection)
 */
 /*
 // Sweep on preconditioner_max_block_size
-std::string name = "preconditioner_max_block_size";
+std::string_view name = "preconditioner_max_block_size";
 BENCHMARK(characteristics_advection)
         ->RangeMultiplier(2)
         ->Ranges(
@@ -348,7 +351,7 @@ BENCHMARK(characteristics_advection)
 int main(int argc, char** argv)
 {
     ::benchmark::Initialize(&argc, argv);
-    ::benchmark::AddCustomContext("name", name);
+    ::benchmark::AddCustomContext("name", std::string(name));
     ::benchmark::
             AddCustomContext("backend", Backend == ddc::SplineSolver::GINKGO ? "GINKGO" : "LAPACK");
     ::benchmark::AddCustomContext("cols_per_chunk_ref", std::to_string(cols_per_chunk_ref));

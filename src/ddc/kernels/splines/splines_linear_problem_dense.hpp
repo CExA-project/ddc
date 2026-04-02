@@ -24,12 +24,13 @@ template <class ExecSpace>
 class SplinesLinearProblemDense : public SplinesLinearProblem<ExecSpace>
 {
 public:
+    using typename SplinesLinearProblem<ExecSpace>::memory_space;
     using typename SplinesLinearProblem<ExecSpace>::MultiRHS;
     using SplinesLinearProblem<ExecSpace>::size;
 
 protected:
-    Kokkos::DualView<double**, Kokkos::LayoutRight, typename ExecSpace::memory_space> m_a;
-    Kokkos::DualView<int*, typename ExecSpace::memory_space> m_ipiv;
+    Kokkos::DualView<double**, Kokkos::LayoutRight, memory_space> m_a;
+    Kokkos::DualView<int*, memory_space> m_ipiv;
 
 public:
     /**

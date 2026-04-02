@@ -47,7 +47,7 @@ public:
     using memory_space = MemorySpace;
 
     /// @brief The type of the evaluation continuous dimension (continuous dimension of interest) used by this class.
-    using continuous_dimension_type = typename BSplines::continuous_dimension_type;
+    using continuous_dimension_type = BSplines::continuous_dimension_type;
 
     /// @brief The type of the evaluation discrete dimension (discrete dimension of interest) used by this class.
     using evaluation_discrete_dimension_type = EvaluationDDim;
@@ -282,8 +282,8 @@ public:
                 exec_space(),
                 batch_domain,
                 KOKKOS_CLASS_LAMBDA(
-                        typename batch_domain_type<
-                                BatchedInterpolationDDom>::discrete_element_type const j) {
+                        batch_domain_type<BatchedInterpolationDDom>::discrete_element_type const
+                                j) {
                     auto const spline_eval_1D = spline_eval[j];
                     auto const coords_eval_1D = coords_eval[j];
                     auto const spline_coef_1D = spline_coef[j];
@@ -329,8 +329,8 @@ public:
                 exec_space(),
                 batch_domain,
                 KOKKOS_CLASS_LAMBDA(
-                        typename batch_domain_type<
-                                BatchedInterpolationDDom>::discrete_element_type const j) {
+                        batch_domain_type<BatchedInterpolationDDom>::discrete_element_type const
+                                j) {
                     auto const spline_eval_1D = spline_eval[j];
                     auto const spline_coef_1D = spline_coef[j];
                     for (auto const i : evaluation_domain) {
@@ -517,8 +517,8 @@ public:
                 exec_space(),
                 batch_domain,
                 KOKKOS_CLASS_LAMBDA(
-                        typename batch_domain_type<
-                                BatchedInterpolationDDom>::discrete_element_type const j) {
+                        batch_domain_type<BatchedInterpolationDDom>::discrete_element_type const
+                                j) {
                     auto const spline_eval_1D = spline_eval[j];
                     auto const coords_eval_1D = coords_eval[j];
                     auto const spline_coef_1D = spline_coef[j];
@@ -565,8 +565,8 @@ public:
                 exec_space(),
                 batch_domain,
                 KOKKOS_CLASS_LAMBDA(
-                        typename batch_domain_type<
-                                BatchedInterpolationDDom>::discrete_element_type const j) {
+                        batch_domain_type<BatchedInterpolationDDom>::discrete_element_type const
+                                j) {
                     auto const spline_eval_1D = spline_eval[j];
                     auto const spline_coef_1D = spline_coef[j];
                     for (auto const i : evaluation_domain) {
@@ -615,7 +615,7 @@ public:
                 "ddc_splines_integrate",
                 exec_space(),
                 batch_domain,
-                KOKKOS_LAMBDA(typename BatchedDDom::discrete_element_type const j) {
+                KOKKOS_LAMBDA(BatchedDDom::discrete_element_type const j) {
                     integrals(j) = 0;
                     for (typename spline_domain_type::discrete_element_type const i :
                          values.domain()) {

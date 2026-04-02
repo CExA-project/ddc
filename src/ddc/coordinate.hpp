@@ -48,6 +48,6 @@ struct coordinate_of
 
 /// Helper type of \ref ddc::coordinate_of
 template <class T>
-using coordinate_of_t = typename coordinate_of<T>::type;
+using coordinate_of_t = coordinate_of<T>::type;
 
 } // namespace ddc

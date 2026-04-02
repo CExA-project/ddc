@@ -516,8 +516,8 @@ jobs:
         image: ['latest']
         backend:
           - name: 'cpu'
-            c_compiler: 'clang-21'
-            cxx_compiler: 'clang++-21'
+            c_compiler: 'clang'
+            cxx_compiler: 'clang++'
         cxx_version: ['20']
         cmake_build_type: ['Release']
     runs-on: ubuntu-latest
@@ -562,7 +562,7 @@ jobs:
               -B build \
               -S /src
 
-            find /src/benchmarks /src/examples /src/tests -name '*.cpp' -exec clang-tidy-21 -p build -header-filter="(/src/src/ddc/.*|/src/tests/.*)" '{}' '+'
+            find /src/benchmarks /src/examples /src/tests -name '*.cpp' -exec clang-tidy -p build -header-filter="(/src/src/ddc/.*|/src/tests/.*)" '{}' '+'
           EOF
 
           docker run \

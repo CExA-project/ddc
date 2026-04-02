@@ -57,13 +57,13 @@ class SplineEvaluator3D
 {
 public:
     /// @brief The type of the first evaluation continuous dimension used by this class.
-    using continuous_dimension_type1 = typename BSplines1::continuous_dimension_type;
+    using continuous_dimension_type1 = BSplines1::continuous_dimension_type;
 
     /// @brief The type of the second evaluation continuous dimension used by this class.
-    using continuous_dimension_type2 = typename BSplines2::continuous_dimension_type;
+    using continuous_dimension_type2 = BSplines2::continuous_dimension_type;
 
     /// @brief The type of the third evaluation continuous dimension used by this class.
-    using continuous_dimension_type3 = typename BSplines3::continuous_dimension_type;
+    using continuous_dimension_type3 = BSplines3::continuous_dimension_type;
 
     /// @brief The type of the Kokkos execution space used by this class.
     using exec_space = ExecSpace;
@@ -131,7 +131,7 @@ public:
      * @tparam The batched discrete domain on which the interpolation points are defined.
      */
     template <concepts::discrete_domain BatchedInterpolationDDom>
-    using batch_domain_type = typename ddc::remove_dims_of_t<
+    using batch_domain_type = ddc::remove_dims_of_t<
             BatchedInterpolationDDom,
             evaluation_discrete_dimension_type1,
             evaluation_discrete_dimension_type2,
@@ -144,8 +144,8 @@ public:
      * @tparam The batched discrete domain on which the interpolation points are defined.
      */
     template <concepts::discrete_domain BatchedInterpolationDDom>
-    using batched_spline_domain_type =
-            typename ddc::detail::convert_type_seq_to_discrete_domain_t<ddc::type_seq_replace_t<
+    using batched_spline_domain_type
+            = ddc::detail::convert_type_seq_to_discrete_domain_t<ddc::type_seq_replace_t<
                     ddc::to_type_seq_t<BatchedInterpolationDDom>,
                     ddc::detail::TypeSeq<
                             evaluation_discrete_dimension_type1,
@@ -498,8 +498,8 @@ public:
                 exec_space(),
                 batch_domain,
                 KOKKOS_CLASS_LAMBDA(
-                        typename batch_domain_type<
-                                BatchedInterpolationDDom>::discrete_element_type const j) {
+                        batch_domain_type<BatchedInterpolationDDom>::discrete_element_type const
+                                j) {
                     auto const spline_eval_3D = spline_eval[j];
                     auto const coords_eval_3D = coords_eval[j];
                     auto const spline_coef_3D = spline_coef[j];
@@ -548,8 +548,8 @@ public:
                 exec_space(),
                 batch_domain,
                 KOKKOS_CLASS_LAMBDA(
-                        typename batch_domain_type<
-                                BatchedInterpolationDDom>::discrete_element_type const j) {
+                        batch_domain_type<BatchedInterpolationDDom>::discrete_element_type const
+                                j) {
                     auto const spline_eval_3D = spline_eval[j];
                     auto const spline_coef_3D = spline_coef[j];
                     for (auto const i1 : evaluation_domain1) {
@@ -648,8 +648,8 @@ public:
                 exec_space(),
                 batch_domain,
                 KOKKOS_CLASS_LAMBDA(
-                        typename batch_domain_type<
-                                BatchedInterpolationDDom>::discrete_element_type const j) {
+                        batch_domain_type<BatchedInterpolationDDom>::discrete_element_type const
+                                j) {
                     auto const spline_eval_3D = spline_eval[j];
                     auto const coords_eval_3D = coords_eval[j];
                     auto const spline_coef_3D = spline_coef[j];
@@ -703,8 +703,8 @@ public:
                 exec_space(),
                 batch_domain,
                 KOKKOS_CLASS_LAMBDA(
-                        typename batch_domain_type<
-                                BatchedInterpolationDDom>::discrete_element_type const j) {
+                        batch_domain_type<BatchedInterpolationDDom>::discrete_element_type const
+                                j) {
                     auto const spline_eval_3D = spline_eval[j];
                     auto const spline_coef_3D = spline_coef[j];
                     for (auto const i1 : evaluation_domain1) {
@@ -777,7 +777,7 @@ public:
                 "ddc_splines_integrate_bsplines",
                 exec_space(),
                 batch_domain,
-                KOKKOS_LAMBDA(typename batch_domain_type::discrete_element_type const j) {
+                KOKKOS_LAMBDA(batch_domain_type::discrete_element_type const j) {
                     integrals(j) = 0;
                     for (typename spline_domain_type1::discrete_element_type const i1 :
                          values1.domain()) {

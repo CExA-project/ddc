@@ -37,8 +37,7 @@ public:
     {
     }
 
-    KOKKOS_FUNCTION void operator()(
-            typename SupportType::discrete_element_type const i) const noexcept
+    KOKKOS_FUNCTION void operator()(SupportType::discrete_element_type const i) const noexcept
     {
         ElementType& value = m_chunk(i);
         value = m_functor(static_cast<ElementType const&>(value));

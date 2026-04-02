@@ -30,11 +30,12 @@ template <class ExecSpace>
 class SplinesLinearProblemPDSBand : public SplinesLinearProblem<ExecSpace>
 {
 public:
+    using typename SplinesLinearProblem<ExecSpace>::memory_space;
     using typename SplinesLinearProblem<ExecSpace>::MultiRHS;
     using SplinesLinearProblem<ExecSpace>::size;
 
 protected:
-    Kokkos::DualView<double**, Kokkos::LayoutRight, typename ExecSpace::memory_space>
+    Kokkos::DualView<double**, Kokkos::LayoutRight, memory_space>
             m_q; // pds band matrix representation
 
 public:

@@ -57,38 +57,36 @@ public:
             SplineBuilder<ExecSpace, MemorySpace, BSpline1, DDimI1, BcLower1, BcUpper1, Solver>;
 
     /// @brief The type of the first interpolation continuous dimension.
-    using continuous_dimension_type1 = typename builder_type1::continuous_dimension_type;
+    using continuous_dimension_type1 = builder_type1::continuous_dimension_type;
 
     /// @brief The type of the second interpolation continuous dimension.
-    using continuous_dimension_type2 = typename builder_type2::continuous_dimension_type;
+    using continuous_dimension_type2 = builder_type2::continuous_dimension_type;
 
     /// @brief The type of the first interpolation discrete dimension.
-    using interpolation_discrete_dimension_type1 =
-            typename builder_type1::interpolation_discrete_dimension_type;
+    using interpolation_discrete_dimension_type1
+            = builder_type1::interpolation_discrete_dimension_type;
 
     /// @brief The type of the second interpolation discrete dimension.
-    using interpolation_discrete_dimension_type2 =
-            typename builder_type2::interpolation_discrete_dimension_type;
+    using interpolation_discrete_dimension_type2
+            = builder_type2::interpolation_discrete_dimension_type;
 
     /// @brief The type of the B-splines in the first dimension.
-    using bsplines_type1 = typename builder_type1::bsplines_type;
+    using bsplines_type1 = builder_type1::bsplines_type;
 
     /// @brief The type of the B-splines in the second dimension.
-    using bsplines_type2 = typename builder_type2::bsplines_type;
+    using bsplines_type2 = builder_type2::bsplines_type;
 
     /// @brief The type of the Deriv domain on boundaries in the first dimension.
-    using deriv_type1 = typename builder_type1::deriv_type;
+    using deriv_type1 = builder_type1::deriv_type;
 
     /// @brief The type of the Deriv domain on boundaries in the second dimension.
-    using deriv_type2 = typename builder_type2::deriv_type;
+    using deriv_type2 = builder_type2::deriv_type;
 
     /// @brief The type of the domain for the interpolation mesh in the first dimension.
-    using interpolation_domain_type1 =
-            typename builder_type1::interpolation_discrete_dimension_type;
+    using interpolation_domain_type1 = builder_type1::interpolation_discrete_dimension_type;
 
     /// @brief The type of the domain for the interpolation mesh in the second dimension.
-    using interpolation_domain_type2 =
-            typename builder_type2::interpolation_discrete_dimension_type;
+    using interpolation_domain_type2 = builder_type2::interpolation_discrete_dimension_type;
 
     /// @brief The type of the domain for the interpolation mesh in the 2D dimension.
     using interpolation_domain_type = ddc::DiscreteDomain<
@@ -146,8 +144,8 @@ public:
      * this is DiscreteDomain<Deriv<X>, Y, Z>.
      */
     template <concepts::discrete_domain BatchedInterpolationDDom>
-    using batched_derivs_domain_type1 =
-            typename builder_type1::template batched_derivs_domain_type<BatchedInterpolationDDom>;
+    using batched_derivs_domain_type1
+            = builder_type1::template batched_derivs_domain_type<BatchedInterpolationDDom>;
 
     /**
      * @brief The type of the whole Derivs domain (cartesian product of the 1D Deriv domain

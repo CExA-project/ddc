@@ -66,6 +66,9 @@ TEST(Print, InvalidDemangledTypeName)
 template <typename ElementType>
 void TestPrintTestCheckOutput0d()
 {
+    // Reset default print options
+    ddc::set_print_options();
+
     ddc::DiscreteDomain<> const domain_full;
 
     ddc::Chunk chunk("chunk", domain_full, ddc::DeviceAllocator<ElementType>());
@@ -89,6 +92,9 @@ TEST(Print, CheckOutput0d)
 template <typename ElementType>
 void TestPrintCheckOutput2d()
 {
+    // Reset default print options
+    ddc::set_print_options();
+
     unsigned const dim0 = 2;
     unsigned const dim1 = 2;
 
@@ -170,11 +176,13 @@ TEST(Print, CheckOutput2d)
 }
 
 template <typename ElementType>
-void TestPrintCheckoutOutput2dElision()
+void TestPrintCheckOutput2dElision()
 {
+    // Reset default print options
+    ddc::set_print_options();
+
     unsigned const dim0 = 100;
     unsigned const dim1 = 100;
-
     ddc::DiscreteDomain<Dim0> const domain_0
             = ddc::init_trivial_bounded_space(ddc::DiscreteVector<Dim0>(dim0));
     ddc::DiscreteDomain<Dim1> const domain_1
@@ -185,7 +193,7 @@ void TestPrintCheckoutOutput2dElision()
     ddc::Chunk chunk("chunk", domain_2d, ddc::DeviceAllocator<ElementType>());
     ddc::ChunkSpan const chunk_span = chunk.span_view();
 
-    // Fill the array with 0.12345 in the cells that should be visible and -0.12345 in the one that will be eluded
+    // Fill the array with 0.12345 in the cells that should be visible and -0.12345 in the one that should be elided
     // Check that the output is only aligned on 0.12345
     auto const subdom_0
             = domain_0.remove(ddc::DiscreteVector<Dim0>(3), ddc::DiscreteVector<Dim0>(3));
@@ -219,13 +227,123 @@ void TestPrintCheckoutOutput2dElision()
 
 TEST(Print, CheckOutput2dElision)
 {
-    TestPrintCheckoutOutput2dElision<float>();
-    TestPrintCheckoutOutput2dElision<double>();
+    TestPrintCheckOutput2dElision<float>();
+    TestPrintCheckOutput2dElision<double>();
 }
 
 template <typename ElementType>
-void TestPrintTestCheckoutOutput3d()
+void TestPrintCheckSetOptionsEdgeItems()
 {
+    ddc::set_print_options(2);
+
+    unsigned const dim0 = 100;
+    unsigned const dim1 = 100;
+    ddc::DiscreteDomain<Dim0> const domain_0
+            = ddc::init_trivial_bounded_space(ddc::DiscreteVector<Dim0>(dim0));
+    ddc::DiscreteDomain<Dim1> const domain_1
+            = ddc::init_trivial_bounded_space(ddc::DiscreteVector<Dim1>(dim1));
+
+    ddc::DiscreteDomain<Dim0, Dim1> const domain_2d(domain_0, domain_1);
+
+    ddc::Chunk chunk("chunk", domain_2d, ddc::DeviceAllocator<ElementType>());
+    ddc::ChunkSpan const chunk_span = chunk.span_view();
+
+    // Fill the array with 0.12345 in the cells that should be visible and -0.12345 in the one that should be elided
+    // Check that the output is only aligned on 0.12345
+    auto const subdom_0
+            = domain_0.remove(ddc::DiscreteVector<Dim0>(2), ddc::DiscreteVector<Dim0>(2));
+    auto const subdom_1
+            = domain_1.remove(ddc::DiscreteVector<Dim1>(2), ddc::DiscreteVector<Dim1>(2));
+    ddc::parallel_for_each(
+            domain_2d,
+            KOKKOS_LAMBDA(ddc::DiscreteElement<Dim0, Dim1> const i) {
+                if (subdom_0.contains(ddc::DiscreteElement<Dim0>(i))
+                    || subdom_1.contains(ddc::DiscreteElement<Dim1>(i))) {
+                    chunk_span(i) = -0.12345;
+                } else {
+                    chunk_span(i) = 0.12345;
+                }
+            });
+
+    {
+        std::stringstream ss;
+        print_content(ss, chunk_span);
+        EXPECT_EQ(
+                ss.str(),
+                "[[0.12345 0.12345 ... 0.12345 0.12345]\n"
+                " [0.12345 0.12345 ... 0.12345 0.12345]\n"
+                " ...\n"
+                " [0.12345 0.12345 ... 0.12345 0.12345]\n"
+                " [0.12345 0.12345 ... 0.12345 0.12345]]");
+    }
+}
+
+TEST(Print, CheckSetOptionsEdgeItems)
+{
+    TestPrintCheckSetOptionsEdgeItems<float>();
+    TestPrintCheckSetOptionsEdgeItems<double>();
+}
+
+template <typename ElementType>
+void TestPrintCheckSetOptionsThreshold()
+{
+    ddc::set_print_options(2, 6);
+
+    // 6 will only be elided if set_print_options works as intended
+    unsigned const dim0 = 7;
+    unsigned const dim1 = 7;
+    ddc::DiscreteDomain<Dim0> const domain_0
+            = ddc::init_trivial_bounded_space(ddc::DiscreteVector<Dim0>(dim0));
+    ddc::DiscreteDomain<Dim1> const domain_1
+            = ddc::init_trivial_bounded_space(ddc::DiscreteVector<Dim1>(dim1));
+
+    ddc::DiscreteDomain<Dim0, Dim1> const domain_2d(domain_0, domain_1);
+
+    ddc::Chunk chunk("chunk", domain_2d, ddc::DeviceAllocator<ElementType>());
+    ddc::ChunkSpan const chunk_span = chunk.span_view();
+
+    // Fill the array with 0.12345 in the cells that should be visible and -0.12345 in the one that should be elided
+    // Check that the output is only aligned on 0.12345
+    auto const subdom_0
+            = domain_0.remove(ddc::DiscreteVector<Dim0>(2), ddc::DiscreteVector<Dim0>(2));
+    auto const subdom_1
+            = domain_1.remove(ddc::DiscreteVector<Dim1>(2), ddc::DiscreteVector<Dim1>(2));
+    ddc::parallel_for_each(
+            domain_2d,
+            KOKKOS_LAMBDA(ddc::DiscreteElement<Dim0, Dim1> const i) {
+                if (subdom_0.contains(ddc::DiscreteElement<Dim0>(i))
+                    || subdom_1.contains(ddc::DiscreteElement<Dim1>(i))) {
+                    chunk_span(i) = -0.12345;
+                } else {
+                    chunk_span(i) = 0.12345;
+                }
+            });
+
+    {
+        std::stringstream ss;
+        print_content(ss, chunk_span);
+        EXPECT_EQ(
+                ss.str(),
+                "[[0.12345 0.12345 ... 0.12345 0.12345]\n"
+                " [0.12345 0.12345 ... 0.12345 0.12345]\n"
+                " ...\n"
+                " [0.12345 0.12345 ... 0.12345 0.12345]\n"
+                " [0.12345 0.12345 ... 0.12345 0.12345]]");
+    }
+}
+
+TEST(Print, CheckSetOptionsThreshold)
+{
+    TestPrintCheckSetOptionsThreshold<float>();
+    TestPrintCheckSetOptionsThreshold<double>();
+}
+
+template <typename ElementType>
+void TestPrintTestCheckOutput3d()
+{
+    // Reset default print options
+    ddc::set_print_options();
+
     unsigned const dim0 = 3;
     unsigned const dim1 = 3;
     unsigned const dim2 = 3;
@@ -265,14 +383,17 @@ void TestPrintTestCheckoutOutput3d()
 
 TEST(Print, CheckOutput3d)
 {
-    TestPrintTestCheckoutOutput3d<float>();
-    TestPrintTestCheckoutOutput3d<double>();
+    TestPrintTestCheckOutput3d<float>();
+    TestPrintTestCheckOutput3d<double>();
 }
 
 #if defined(KOKKOS_COMPILER_GNU) || defined(KOKKOS_COMPILER_CLANG)
 TEST(Print, CheckMetadata0d)
 {
     using ElementType = double;
+
+    // Reset default print options
+    ddc::set_print_options();
 
     ddc::DiscreteDomain<> const domain_0d;
 
@@ -294,6 +415,9 @@ TEST(Print, CheckMetadata0d)
 void TestPrintTestMetadata2d()
 {
     using ElementType = double;
+
+    // Reset default print options
+    ddc::set_print_options();
 
     unsigned const dim0 = 5;
     unsigned const dim1 = 5;

@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <array>
 #include <cstdlib>
+#include <mutex>
 #include <ostream>
 #include <sstream>
 #include <type_traits>
@@ -20,16 +21,34 @@
 
 namespace ddc {
 namespace detail {
-class ChunkPrinter
+/** 
+ * This class is a singleton, as it contains global printing option
+ */
+struct ChunkPrinter
 {
-    static constexpr int const s_threshold = 10;
-    // If this ever becomes modifiable by the user, we need to ensure that
-    // s_edgeitems < (s_threshold / 2) stays true.
-    static constexpr int const s_edgeitems = 3;
+    /*
+     * We use a global lock because we do not care about performance for
+     * printing and it ensure that output doesn't get mangled if trying to
+     * print from different threads.
+     */
+    std::recursive_mutex m_global_lock;
 
+    size_t m_threshold;
+    size_t m_edgeitems;
+
+    // Copy of the stream format, used to compute how much space each element of the mdspan will take when printed
     std::stringstream m_ss;
 
-    static std::ostream& alignment(std::ostream& os, int level)
+private:
+    explicit ChunkPrinter() : m_global_lock(), m_threshold(10), m_edgeitems(3) {}
+
+    ChunkPrinter(ChunkPrinter&) = delete;
+    ChunkPrinter(ChunkPrinter&&) = delete;
+
+    /**
+     * Print the spaces needed to align value to os
+     */
+    static std::ostream& align(std::ostream& os, int level)
     {
         for (int i = 0; i <= level; ++i) {
             os << ' ';
@@ -37,6 +56,9 @@ class ChunkPrinter
         return os;
     }
 
+    /**
+     * Returns the size of the elem that needs to be printed
+     */
     template <class T>
     std::size_t get_element_width(T const& elem)
     {
@@ -45,6 +67,9 @@ class ChunkPrinter
         return m_ss.tellp();
     }
 
+    /**
+     * Print an element with enough leading spaces to ensure it is aligned with the others
+     */
     template <class T>
     void display_aligned_element(std::ostream& os, T const& elem, std::size_t largest_element)
     {
@@ -56,17 +81,20 @@ class ChunkPrinter
         os << elem;
     }
 
+    /**
+     * Displays the elements from the smallest dimension of a chunk span
+     */
     template <class ElementType, class Extents, class Layout, class Accessor>
     std::ostream& base_case_display(
             std::ostream& os,
-            Kokkos::mdspan<ElementType, Extents, Layout, Accessor> const& s,
+            Kokkos::mdspan<ElementType, Extents, Layout, Accessor> const& span,
             std::size_t largest_element,
             std::size_t beginning,
             std::size_t end,
             std::size_t extent)
     {
         for (std::size_t i0 = beginning; i0 < end; ++i0) {
-            display_aligned_element(os, s[i0], largest_element);
+            display_aligned_element(os, span[i0], largest_element);
             if (i0 < extent - 1) {
                 os << " ";
             }
@@ -74,10 +102,13 @@ class ChunkPrinter
         return os;
     }
 
+    /**
+     * Recursively print the highest dimensions information of a chunk span (mostly '[' and ']'), and call base_case_display to print the smallest dimension
+     */
     template <class ElementType, class Extents, class Layout, class Accessor, std::size_t... Is>
     std::ostream& recursive_display(
             std::ostream& os,
-            Kokkos::mdspan<ElementType, Extents, Layout, Accessor> const& s,
+            Kokkos::mdspan<ElementType, Extents, Layout, Accessor> const& span,
             int level,
             std::size_t largest_element,
             std::size_t beginning,
@@ -87,7 +118,7 @@ class ChunkPrinter
         for (std::size_t i0 = beginning; i0 < end; ++i0) {
             print_impl(
                     os,
-                    Kokkos::submdspan(s, i0, ((void)Is, Kokkos::full_extent)...),
+                    Kokkos::submdspan(span, i0, ((void)Is, Kokkos::full_extent)...),
                     level + 1,
                     largest_element,
                     std::make_index_sequence<sizeof...(Is)>());
@@ -95,7 +126,7 @@ class ChunkPrinter
                 for (int ndims = 0; ndims < sizeof...(Is); ++ndims) {
                     os << '\n';
                 }
-                alignment(os, level);
+                align(os, level);
             }
         }
 
@@ -103,16 +134,22 @@ class ChunkPrinter
     }
 
 public:
+    static ChunkPrinter& getInstance()
+    {
+        static ChunkPrinter instance;
+        return instance;
+    }
+
     // 0D chunk span
     template <class ElementType, class Extents, class Layout, class Accessor>
     std::ostream& print_impl(
             std::ostream& os,
-            Kokkos::mdspan<ElementType, Extents, Layout, Accessor> const& s,
+            Kokkos::mdspan<ElementType, Extents, Layout, Accessor> const& span,
             int /*level*/,
             std::size_t /*largest_element*/,
             std::index_sequence<>)
     {
-        return os << *s.data_handle();
+        return os << *span.data_handle();
     }
 
     // Recursively parse the chunk to print it
@@ -125,18 +162,18 @@ public:
             std::size_t... Is>
     std::ostream& print_impl(
             std::ostream& os,
-            Kokkos::mdspan<ElementType, Extents, Layout, Accessor> const& s,
+            Kokkos::mdspan<ElementType, Extents, Layout, Accessor> const& span,
             int level,
             std::size_t largest_element,
             std::index_sequence<I0, Is...>)
     {
-        auto extent = s.extent(I0);
+        auto extent = span.extent(I0);
         if constexpr (sizeof...(Is) > 0) {
             os << '[';
-            if (extent < s_threshold) {
+            if (extent < m_threshold) {
                 recursive_display(
                         os,
-                        s,
+                        span,
                         level,
                         largest_element,
                         0,
@@ -145,39 +182,39 @@ public:
             } else {
                 recursive_display(
                         os,
-                        s,
+                        span,
                         level,
                         largest_element,
                         0,
-                        s_edgeitems,
+                        m_edgeitems,
                         std::make_index_sequence<sizeof...(Is)>());
                 for (int ndims = 0; ndims < sizeof...(Is); ++ndims) {
                     os << '\n';
                 }
-                alignment(os, level);
+                align(os, level);
                 os << "...";
                 for (int ndims = 0; ndims < sizeof...(Is); ++ndims) {
                     os << '\n';
                 }
-                alignment(os, level);
+                align(os, level);
                 recursive_display(
                         os,
-                        s,
+                        span,
                         level,
                         largest_element,
-                        extent - s_edgeitems,
+                        extent - m_edgeitems,
                         extent,
                         std::make_index_sequence<sizeof...(Is)>());
             }
             os << "]";
         } else {
             os << "[";
-            if (extent < s_threshold) {
-                base_case_display(os, s, largest_element, 0, extent, extent);
+            if (extent < m_threshold) {
+                base_case_display(os, span, largest_element, 0, extent, extent);
             } else {
-                base_case_display(os, s, largest_element, 0, s_edgeitems, extent);
+                base_case_display(os, span, largest_element, 0, m_edgeitems, extent);
                 os << "... ";
-                base_case_display(os, s, largest_element, extent - s_edgeitems, extent, extent);
+                base_case_display(os, span, largest_element, extent - m_edgeitems, extent, extent);
             }
             os << "]";
         }
@@ -204,47 +241,47 @@ public:
             std::size_t I0,
             std::size_t... Is>
     std::size_t find_largest_displayed_element(
-            Kokkos::mdspan<ElementType, Extents, Layout, Accessor> const& s,
+            Kokkos::mdspan<ElementType, Extents, Layout, Accessor> const& span,
             std::index_sequence<I0, Is...>)
     {
         std::size_t ret = 0;
-        auto extent = s.extent(I0);
+        auto extent = span.extent(I0);
         if constexpr (sizeof...(Is) > 0) {
-            if (extent < s_threshold) {
+            if (extent < m_threshold) {
                 for (std::size_t i0 = 0; i0 < extent; ++i0) {
                     ret = std::max(
                             ret,
                             find_largest_displayed_element(
-                                    Kokkos::submdspan(s, i0, ((void)Is, Kokkos::full_extent)...),
+                                    Kokkos::submdspan(span, i0, ((void)Is, Kokkos::full_extent)...),
                                     std::make_index_sequence<sizeof...(Is)>()));
                 }
             } else {
-                for (std::size_t i0 = 0; i0 < s_edgeitems; ++i0) {
+                for (std::size_t i0 = 0; i0 < m_edgeitems; ++i0) {
                     ret = std::max(
                             ret,
                             find_largest_displayed_element(
-                                    Kokkos::submdspan(s, i0, ((void)Is, Kokkos::full_extent)...),
+                                    Kokkos::submdspan(span, i0, ((void)Is, Kokkos::full_extent)...),
                                     std::make_index_sequence<sizeof...(Is)>()));
                 }
-                for (std::size_t i0 = extent - s_edgeitems; i0 < extent; ++i0) {
+                for (std::size_t i0 = extent - m_edgeitems; i0 < extent; ++i0) {
                     ret = std::max(
                             ret,
                             find_largest_displayed_element(
-                                    Kokkos::submdspan(s, i0, ((void)Is, Kokkos::full_extent)...),
+                                    Kokkos::submdspan(span, i0, ((void)Is, Kokkos::full_extent)...),
                                     std::make_index_sequence<sizeof...(Is)>()));
                 }
             }
         } else {
-            if (extent < s_threshold) {
+            if (extent < m_threshold) {
                 for (std::size_t i0 = 0; i0 < extent; ++i0) {
-                    ret = std::max(ret, get_element_width(s[i0]));
+                    ret = std::max(ret, get_element_width(span[i0]));
                 }
             } else {
-                for (std::size_t i0 = 0; i0 < s_edgeitems; ++i0) {
-                    ret = std::max(ret, get_element_width(s[i0]));
+                for (std::size_t i0 = 0; i0 < m_edgeitems; ++i0) {
+                    ret = std::max(ret, get_element_width(span[i0]));
                 }
-                for (std::size_t i0 = extent - s_edgeitems; i0 < extent; ++i0) {
-                    ret = std::max(ret, get_element_width(s[i0]));
+                for (std::size_t i0 = extent - m_edgeitems; i0 < extent; ++i0) {
+                    ret = std::max(ret, get_element_width(span[i0]));
                 }
             }
         }
@@ -252,12 +289,18 @@ public:
         return ret;
     }
 
-    explicit ChunkPrinter(std::ostream const& os)
+    /*
+     * Save the format that will be used in order to measure the size of the element we need to display
+     */
+    void saveformat(std::ostream& os)
     {
         m_ss.copyfmt(os);
     }
 };
 
+/*
+ * Print the demangled name of a type into a standard ostream.
+ */
 void print_demangled_type_name(std::ostream& os, char const* mangled_name);
 
 void print_dim_name(
@@ -289,7 +332,13 @@ std::ostream& print_content(
 
     mdspan_type const allocated_mdspan = h_chunk_span.allocation_mdspan();
 
-    ddc::detail::ChunkPrinter printer(os);
+
+
+    ddc::detail::ChunkPrinter& printer = ddc::detail::ChunkPrinter::getInstance();
+    printer.m_global_lock.lock();
+
+    printer.saveformat(os);
+
     std::size_t const largest_element = printer.find_largest_displayed_element(
             allocated_mdspan,
             std::make_index_sequence<extents::rank()>());
@@ -297,9 +346,11 @@ std::ostream& print_content(
     printer.print_impl(
             os,
             allocated_mdspan,
-            0,
+            0 /*level*/,
             largest_element,
             std::make_index_sequence<extents::rank()>());
+
+    printer.m_global_lock.unlock();
 
     return os;
 }
@@ -309,10 +360,15 @@ std::ostream& print_type_info(
         std::ostream& os,
         ChunkSpan<ElementType, SupportType, LayoutStridedPolicy, MemorySpace> const& chunk_span)
 {
+    ddc::detail::ChunkPrinter& printer = ddc::detail::ChunkPrinter::getInstance();
+    printer.m_global_lock.lock();
+
     ddc::detail::print_dim_name(os, chunk_span.extents());
     os << '\n';
     ddc::detail::print_demangled_type_name(os, typeid(chunk_span).name());
     os << '\n';
+
+    printer.m_global_lock.unlock();
 
     return os;
 }
@@ -322,12 +378,16 @@ std::ostream& print(
         std::ostream& os,
         ChunkSpan<ElementType, SupportType, LayoutStridedPolicy, MemorySpace> const& chunk_span)
 {
+    ddc::detail::ChunkPrinter& printer = ddc::detail::ChunkPrinter::getInstance();
+    printer.m_global_lock.lock();
+
     print_type_info(os, chunk_span);
     print_content(os, chunk_span);
 
+    printer.m_global_lock.unlock();
+
     return os;
 }
-
 
 template <class ElementType, class SupportType, class LayoutStridedPolicy, class MemorySpace>
 std::ostream& operator<<(
@@ -336,5 +396,7 @@ std::ostream& operator<<(
 {
     return print(os, chunk_span);
 }
+
+void set_print_options(size_t edgeitems = 3, size_t threshold = 10);
 
 } // namespace ddc

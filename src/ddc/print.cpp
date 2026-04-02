@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 #include <cstdlib>
+#include <iostream>
 #include <memory>
 #include <ostream>
 
@@ -15,7 +16,8 @@
 #    include <cxxabi.h>
 #endif
 
-namespace ddc::detail {
+namespace ddc {
+namespace detail {
 
 void print_demangled_type_name(std::ostream& os, char const* const mangled_name)
 {
@@ -61,4 +63,25 @@ void print_dim_name(
     }
 }
 
-} // namespace ddc::detail
+
+} // namespace detail
+
+void set_print_options(size_t edgeitems, size_t threshold)
+{
+    // Ensure that m_edgeitems < (m_threshold / 2) stays true.
+    ddc::detail::ChunkPrinter& printer = ddc::detail::ChunkPrinter::getInstance();
+    printer.m_global_lock.lock();
+
+    if (edgeitems < threshold / 2) {
+        printer.m_edgeitems = edgeitems;
+        printer.m_threshold = threshold;
+    } else {
+        std::cerr << "DDC Printer: invalid values " << edgeitems << " for edgeitems and "
+                  << threshold << " for threshold have been ignored\n"
+                  << "threshold needs to be at least twice as big as edgeitems\n";
+    }
+
+    printer.m_global_lock.unlock();
+}
+
+} // namespace ddc

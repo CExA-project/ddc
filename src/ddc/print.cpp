@@ -67,24 +67,31 @@ void print_dim_name(
 
 } // namespace detail
 
-bool set_print_options(std::size_t edgeitems, std::size_t threshold)
+PrinterOptions set_print_options(PrinterOptions const options)
 {
-    ddc::detail::ChunkPrinter& printer = ddc::detail::ChunkPrinter::getInstance();
+    ddc::detail::ChunkPrinter& printer = ddc::detail::ChunkPrinter::get_instance();
+
+    PrinterOptions old_options = printer.m_options;
 
     // Ensure options are not modified while an other thread is printing
-    std::lock_guard lock(printer.m_global_lock);
+    std::scoped_lock const lock(printer.m_global_lock);
 
     // Ensure that m_edgeitems < (m_threshold / 2) stays true.
-    if (edgeitems < threshold / 2) {
-        printer.m_edgeitems = edgeitems;
-        printer.m_threshold = threshold;
-        return true;
+    if (options.edgeitems < options.threshold / 2) {
+        printer.m_options = options;
     } else {
-        std::cerr << "DDC Printer: invalid values " << edgeitems << " for edgeitems and "
-                  << threshold << " for threshold have been ignored\n"
+        std::cerr << "DDC Printer: invalid values " << options.edgeitems << " for edgeitems and "
+                  << options.threshold << " for threshold have been ignored\n"
                   << "threshold needs to be at least twice as big as edgeitems\n";
-        return false;
     }
+
+    return old_options;
+}
+
+PrinterOptions get_print_options()
+{
+    ddc::detail::ChunkPrinter& printer = ddc::detail::ChunkPrinter::get_instance();
+    return printer.m_options;
 }
 
 } // namespace ddc

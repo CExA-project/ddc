@@ -20,6 +20,18 @@
 #include "discrete_vector.hpp"
 
 namespace ddc {
+
+struct PrinterOptions
+{
+    std::size_t threshold {10};
+    std::size_t edgeitems {3};
+
+    bool operator==(PrinterOptions const& rhs) const
+    {
+        return threshold == rhs.threshold && edgeitems == rhs.edgeitems;
+    }
+};
+
 namespace detail {
 /** 
  * This class is a singleton, as it contains global printing option
@@ -33,17 +45,16 @@ struct ChunkPrinter
      */
     std::recursive_mutex m_global_lock;
 
-    std::size_t m_threshold;
-    std::size_t m_edgeitems;
+    PrinterOptions m_options;
 
     // Copy of the stream format, used to compute how much space each element of the mdspan will take when printed
     std::stringstream m_ss;
 
-private:
-    ChunkPrinter() : m_global_lock(), m_threshold(10), m_edgeitems(3) {}
-
     ChunkPrinter(ChunkPrinter&) = delete;
     ChunkPrinter(ChunkPrinter&&) = delete;
+
+private:
+    ChunkPrinter() {}
 
     /**
      * Print the spaces needed to align value to os
@@ -134,7 +145,7 @@ private:
     }
 
 public:
-    static ChunkPrinter& getInstance()
+    static ChunkPrinter& get_instance()
     {
         static ChunkPrinter instance;
         return instance;
@@ -170,7 +181,7 @@ public:
         auto extent = span.extent(I0);
         if constexpr (sizeof...(Is) > 0) {
             os << '[';
-            if (extent < m_threshold) {
+            if (extent < m_options.threshold) {
                 recursive_display(
                         os,
                         span,
@@ -186,7 +197,7 @@ public:
                         level,
                         largest_element,
                         0,
-                        m_edgeitems,
+                        m_options.edgeitems,
                         std::make_index_sequence<sizeof...(Is)>());
                 for (int ndims = 0; ndims < sizeof...(Is); ++ndims) {
                     os << '\n';
@@ -202,19 +213,25 @@ public:
                         span,
                         level,
                         largest_element,
-                        extent - m_edgeitems,
+                        extent - m_options.edgeitems,
                         extent,
                         std::make_index_sequence<sizeof...(Is)>());
             }
             os << "]";
         } else {
             os << "[";
-            if (extent < m_threshold) {
+            if (extent < m_options.threshold) {
                 base_case_display(os, span, largest_element, 0, extent, extent);
             } else {
-                base_case_display(os, span, largest_element, 0, m_edgeitems, extent);
+                base_case_display(os, span, largest_element, 0, m_options.edgeitems, extent);
                 os << "... ";
-                base_case_display(os, span, largest_element, extent - m_edgeitems, extent, extent);
+                base_case_display(
+                        os,
+                        span,
+                        largest_element,
+                        extent - m_options.edgeitems,
+                        extent,
+                        extent);
             }
             os << "]";
         }
@@ -247,7 +264,7 @@ public:
         std::size_t ret = 0;
         auto extent = span.extent(I0);
         if constexpr (sizeof...(Is) > 0) {
-            if (extent < m_threshold) {
+            if (extent < m_options.threshold) {
                 for (std::size_t i0 = 0; i0 < extent; ++i0) {
                     ret = std::max(
                             ret,
@@ -256,14 +273,14 @@ public:
                                     std::make_index_sequence<sizeof...(Is)>()));
                 }
             } else {
-                for (std::size_t i0 = 0; i0 < m_edgeitems; ++i0) {
+                for (std::size_t i0 = 0; i0 < m_options.edgeitems; ++i0) {
                     ret = std::max(
                             ret,
                             find_largest_displayed_element(
                                     Kokkos::submdspan(span, i0, ((void)Is, Kokkos::full_extent)...),
                                     std::make_index_sequence<sizeof...(Is)>()));
                 }
-                for (std::size_t i0 = extent - m_edgeitems; i0 < extent; ++i0) {
+                for (std::size_t i0 = extent - m_options.edgeitems; i0 < extent; ++i0) {
                     ret = std::max(
                             ret,
                             find_largest_displayed_element(
@@ -272,15 +289,15 @@ public:
                 }
             }
         } else {
-            if (extent < m_threshold) {
+            if (extent < m_options.threshold) {
                 for (std::size_t i0 = 0; i0 < extent; ++i0) {
                     ret = std::max(ret, get_element_width(span[i0]));
                 }
             } else {
-                for (std::size_t i0 = 0; i0 < m_edgeitems; ++i0) {
+                for (std::size_t i0 = 0; i0 < m_options.edgeitems; ++i0) {
                     ret = std::max(ret, get_element_width(span[i0]));
                 }
-                for (std::size_t i0 = extent - m_edgeitems; i0 < extent; ++i0) {
+                for (std::size_t i0 = extent - m_options.edgeitems; i0 < extent; ++i0) {
                     ret = std::max(ret, get_element_width(span[i0]));
                 }
             }
@@ -319,6 +336,22 @@ void print_dim_name(std::ostream& os, DiscreteVector<Dims...> const& dd)
 
 } // namespace detail
 
+/**
+ * Try to set the options for the printer, returns the old format (or the
+ * current format if the option passed are invalid).
+ * option is invalid if m_edgeitems >= (m_threshold / 2), in this case the
+ * format isn't changed.
+ */
+PrinterOptions set_print_options(PrinterOptions const options = PrinterOptions());
+
+/**
+ * Return the currently used format options
+ */
+PrinterOptions get_print_options();
+
+/**
+ * Print the content of a ChunkSpan
+ */
 template <class ElementType, class SupportType, class LayoutStridedPolicy, class MemorySpace>
 std::ostream& print_content(
         std::ostream& os,
@@ -334,8 +367,8 @@ std::ostream& print_content(
 
 
 
-    ddc::detail::ChunkPrinter& printer = ddc::detail::ChunkPrinter::getInstance();
-    std::lock_guard lock(printer.m_global_lock);
+    ddc::detail::ChunkPrinter& printer = ddc::detail::ChunkPrinter::get_instance();
+    std::scoped_lock const lock(printer.m_global_lock);
 
     printer.saveformat(os);
 
@@ -353,13 +386,16 @@ std::ostream& print_content(
     return os;
 }
 
+/**
+ * Print the metadata of a ChunkSpan (size, dimension name, ...)
+ */
 template <class ElementType, class SupportType, class LayoutStridedPolicy, class MemorySpace>
 std::ostream& print_type_info(
         std::ostream& os,
         ChunkSpan<ElementType, SupportType, LayoutStridedPolicy, MemorySpace> const& chunk_span)
 {
-    ddc::detail::ChunkPrinter& printer = ddc::detail::ChunkPrinter::getInstance();
-    std::lock_guard lock(printer.m_global_lock);
+    ddc::detail::ChunkPrinter& printer = ddc::detail::ChunkPrinter::get_instance();
+    std::scoped_lock const lock(printer.m_global_lock);
 
     ddc::detail::print_dim_name(os, chunk_span.extents());
     os << '\n';
@@ -369,16 +405,42 @@ std::ostream& print_type_info(
     return os;
 }
 
+/**
+ * Print metadata and content of a ChunkSpan
+ */
 template <class ElementType, class SupportType, class LayoutStridedPolicy, class MemorySpace>
 std::ostream& print(
         std::ostream& os,
         ChunkSpan<ElementType, SupportType, LayoutStridedPolicy, MemorySpace> const& chunk_span)
 {
-    ddc::detail::ChunkPrinter& printer = ddc::detail::ChunkPrinter::getInstance();
-    std::lock_guard lock(printer.m_global_lock);
+    ddc::detail::ChunkPrinter& printer = ddc::detail::ChunkPrinter::get_instance();
+    std::scoped_lock const lock(printer.m_global_lock);
 
     print_type_info(os, chunk_span);
     print_content(os, chunk_span);
+
+    return os;
+}
+
+/**
+ * Print metadata and content of a ChunkSpan
+ * Always print without elision, regardless of options set
+ */
+template <class ElementType, class SupportType, class LayoutStridedPolicy, class MemorySpace>
+std::ostream& print_full(
+        std::ostream& os,
+        ChunkSpan<ElementType, SupportType, LayoutStridedPolicy, MemorySpace> const& chunk_span)
+{
+    ddc::detail::ChunkPrinter& printer = ddc::detail::ChunkPrinter::get_instance();
+    std::scoped_lock const lock(printer.m_global_lock);
+
+    PrinterOptions old_options
+            = set_print_options({.threshold = std::numeric_limits<size_t>::max(), .edgeitems = 1});
+
+    print_type_info(os, chunk_span);
+    print_content(os, chunk_span);
+
+    set_print_options(old_options);
 
     return os;
 }
@@ -390,11 +452,5 @@ std::ostream& operator<<(
 {
     return print(os, chunk_span);
 }
-
-/**
- * Try to set the options for the printer, returns true if the option could be
- * set and false if parameters were invalids
- */
-bool set_print_options(std::size_t edgeitems = 3, std::size_t threshold = 10);
 
 } // namespace ddc

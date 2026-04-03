@@ -63,7 +63,7 @@ template <typename ElementType>
 void TestPrintTestCheckOutput0d()
 {
     // Reset default print options
-    EXPECT_TRUE(ddc::set_print_options());
+    ddc::set_print_options();
 
     ddc::DiscreteDomain<> const domain_full;
 
@@ -89,7 +89,7 @@ template <typename ElementType>
 void TestPrintCheckOutput2d()
 {
     // Reset default print options
-    EXPECT_TRUE(ddc::set_print_options());
+    ddc::set_print_options();
 
     unsigned const dim0 = 2;
     unsigned const dim1 = 2;
@@ -175,7 +175,7 @@ template <typename ElementType>
 void TestPrintCheckOutput2dElision()
 {
     // Reset default print options
-    EXPECT_TRUE(ddc::set_print_options());
+    ddc::set_print_options();
 
     unsigned const dim0 = 100;
     unsigned const dim1 = 100;
@@ -221,6 +221,59 @@ void TestPrintCheckOutput2dElision()
     }
 }
 
+template <typename ElementType>
+void TestPrintFull()
+{
+    // Very restrictive options
+    ddc::set_print_options({.threshold = 3, .edgeitems = 1});
+    ddc::PrinterOptions options = ddc::get_print_options();
+
+    unsigned const dim0 = 6;
+    unsigned const dim1 = 6;
+    ddc::DiscreteDomain<Dim0> const domain_0
+            = ddc::init_trivial_bounded_space(ddc::DiscreteVector<Dim0>(dim0));
+    ddc::DiscreteDomain<Dim1> const domain_1
+            = ddc::init_trivial_bounded_space(ddc::DiscreteVector<Dim1>(dim1));
+
+    ddc::DiscreteDomain<Dim0, Dim1> const domain_2d(domain_0, domain_1);
+
+    ddc::Chunk chunk("chunk", domain_2d, ddc::DeviceAllocator<ElementType>());
+    ddc::ChunkSpan const chunk_span = chunk.span_view();
+
+    // Fill the array with 0.12345 in the cells that should be visible and -0.12345 in the one that should be elided
+    // Check that the output is only aligned on 0.12345
+    auto const subdom_0
+            = domain_0.remove(ddc::DiscreteVector<Dim0>(3), ddc::DiscreteVector<Dim0>(3));
+    auto const subdom_1
+            = domain_1.remove(ddc::DiscreteVector<Dim1>(3), ddc::DiscreteVector<Dim1>(3));
+    ddc::parallel_for_each(
+            domain_2d,
+            KOKKOS_LAMBDA(ddc::DiscreteElement<Dim0, Dim1> const i) {
+                if (subdom_0.contains(ddc::DiscreteElement<Dim0>(i))
+                    || subdom_1.contains(ddc::DiscreteElement<Dim1>(i))) {
+                    chunk_span(i) = -0.12345;
+                } else {
+                    chunk_span(i) = 0.12345;
+                }
+            });
+
+    {
+        std::stringstream ss;
+        ddc::print_content(ss, chunk_span);
+        EXPECT_EQ(
+                ss.str(),
+                "[[0.12345 0.12345 0.12345  0.12345 0.12345 0.12345]\n"
+                " [0.12345 0.12345 0.12345  0.12345 0.12345 0.12345]\n"
+                " [0.12345 0.12345 0.12345  0.12345 0.12345 0.12345]\n"
+                " [0.12345 0.12345 0.12345  0.12345 0.12345 0.12345]\n"
+                " [0.12345 0.12345 0.12345  0.12345 0.12345 0.12345]\n"
+                " [0.12345 0.12345 0.12345  0.12345 0.12345 0.12345]]");
+    }
+
+    // Check that options have been reset to their old value after print
+    EXPECT_EQ(options, ddc::get_print_options);
+}
+
 TEST(Print, CheckOutput2dElision)
 {
     TestPrintCheckOutput2dElision<float>();
@@ -230,7 +283,7 @@ TEST(Print, CheckOutput2dElision)
 template <typename ElementType>
 void TestPrintCheckSetOptionsEdgeItems()
 {
-    EXPECT_TRUE(ddc::set_print_options(2));
+    ddc::set_print_options({.threshold = 10, .edgeitems = 2});
 
     unsigned const dim0 = 100;
     unsigned const dim1 = 100;
@@ -283,7 +336,7 @@ TEST(Print, CheckSetOptionsEdgeItems)
 template <typename ElementType>
 void TestPrintCheckSetOptionsThreshold()
 {
-    EXPECT_TRUE(ddc::set_print_options(2, 6));
+    ddc::set_print_options({.threshold = 6, .edgeitems = 2});
 
     // 7 will only be elided if set_print_options works as intended
     unsigned const dim0 = 7;
@@ -338,15 +391,20 @@ template <typename ElementType>
 void TestPrintCheckCheckIncorrectOptions()
 {
     // Reset options
-    EXPECT_TRUE(ddc::set_print_options());
+    ddc::PrinterOptions defaultOptions = ddc::set_print_options();
+    ddc::PrinterOptions newOptions;
 
     // Test obviously wrong options
-    EXPECT_FALSE(ddc::set_print_options(5, 1));
+    ddc::set_print_options({.threshold = 1, .edgeitems = 5000});
+    newOptions = ddc::get_print_options();
+    EXPECT_EQ(newOptions, defaultOptions);
 
-    // Test slightly wrong options
-    EXPECT_FALSE(ddc::set_print_options(5, 10));
+    // Test with slightly wrong options
+    ddc::set_print_options({.threshold = 10, .edgeitems = 5});
+    newOptions = ddc::get_print_options();
+    EXPECT_EQ(newOptions, defaultOptions);
 
-    // Check that we are still using the default options
+    // Check that we are still using the default options despite trying to use an invalid option
     unsigned const dim0 = 100;
     unsigned const dim1 = 100;
     ddc::DiscreteDomain<Dim0> const domain_0
@@ -401,7 +459,7 @@ template <typename ElementType>
 void TestPrintTestCheckOutput3d()
 {
     // Reset default print options
-    EXPECT_TRUE(ddc::set_print_options());
+    ddc::set_print_options();
 
     unsigned const dim0 = 3;
     unsigned const dim1 = 3;
@@ -452,7 +510,7 @@ TEST(Print, CheckMetadata0d)
     using ElementType = double;
 
     // Reset default print options
-    EXPECT_TRUE(ddc::set_print_options());
+    ddc::set_print_options();
 
     ddc::DiscreteDomain<> const domain_0d;
 
@@ -476,7 +534,7 @@ void TestPrintTestMetadata2d()
     using ElementType = double;
 
     // Reset default print options
-    EXPECT_TRUE(ddc::set_print_options());
+    ddc::set_print_options();
 
     unsigned const dim0 = 5;
     unsigned const dim1 = 5;

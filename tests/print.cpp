@@ -335,7 +335,7 @@ TEST(Print, CheckSetOptionsThreshold)
 }
 
 template <typename ElementType>
-void TestPrintCheckCheckIncorectOptions()
+void TestPrintCheckCheckIncorrectOptions()
 {
     // Reset options
     EXPECT_TRUE(ddc::set_print_options());
@@ -393,8 +393,8 @@ void TestPrintCheckCheckIncorectOptions()
 
 TEST(Print, CheckSetInvalidOptions)
 {
-    TestPrintCheckCheckIncorectOptions<float>();
-    TestPrintCheckCheckIncorectOptions<double>();
+    TestPrintCheckCheckIncorrectOptions<float>();
+    TestPrintCheckCheckIncorrectOptions<double>();
 }
 
 template <typename ElementType>

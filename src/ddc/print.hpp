@@ -52,9 +52,13 @@ struct ChunkPrinter
 
     ChunkPrinter(ChunkPrinter&) = delete;
     ChunkPrinter(ChunkPrinter&&) = delete;
+    ChunkPrinter operator=(ChunkPrinter&&) = delete;
+    ChunkPrinter& operator=(ChunkPrinter& other) = delete;
+
+    ~ChunkPrinter() = default;
 
 private:
-    ChunkPrinter() {}
+    ChunkPrinter() = default;
 
     /**
      * Print the spaces needed to align value to os
@@ -342,7 +346,7 @@ void print_dim_name(std::ostream& os, DiscreteVector<Dims...> const& dd)
  * option is invalid if m_edgeitems >= (m_threshold / 2), in this case the
  * format isn't changed.
  */
-PrinterOptions set_print_options(PrinterOptions const options = PrinterOptions());
+PrinterOptions set_print_options(PrinterOptions options = PrinterOptions());
 
 /**
  * Return the currently used format options
@@ -434,7 +438,7 @@ std::ostream& print_full(
     ddc::detail::ChunkPrinter& printer = ddc::detail::ChunkPrinter::get_instance();
     std::scoped_lock const lock(printer.m_global_lock);
 
-    PrinterOptions old_options
+    const PrinterOptions old_options
             = set_print_options({.threshold = std::numeric_limits<size_t>::max(), .edgeitems = 1});
 
     print_type_info(os, chunk_span);

@@ -67,7 +67,7 @@ void print_dim_name(
 
 } // namespace detail
 
-PrinterOptions set_print_options(PrinterOptions const options)
+PrinterOptions set_print_options(PrinterOptions options)
 {
     ddc::detail::ChunkPrinter& printer = ddc::detail::ChunkPrinter::get_instance();
 

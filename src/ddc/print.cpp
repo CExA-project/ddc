@@ -66,7 +66,7 @@ void print_dim_name(
 
 } // namespace detail
 
-void set_print_options(size_t edgeitems, size_t threshold)
+void set_print_options(std::size_t edgeitems, std::size_t threshold)
 {
     // Ensure that m_edgeitems < (m_threshold / 2) stays true.
     ddc::detail::ChunkPrinter& printer = ddc::detail::ChunkPrinter::getInstance();

@@ -33,14 +33,14 @@ struct ChunkPrinter
      */
     std::recursive_mutex m_global_lock;
 
-    size_t m_threshold;
-    size_t m_edgeitems;
+    std::size_t m_threshold;
+    std::size_t m_edgeitems;
 
     // Copy of the stream format, used to compute how much space each element of the mdspan will take when printed
     std::stringstream m_ss;
 
 private:
-    explicit ChunkPrinter() : m_global_lock(), m_threshold(10), m_edgeitems(3) {}
+    ChunkPrinter() : m_global_lock(), m_threshold(10), m_edgeitems(3) {}
 
     ChunkPrinter(ChunkPrinter&) = delete;
     ChunkPrinter(ChunkPrinter&&) = delete;
@@ -397,6 +397,6 @@ std::ostream& operator<<(
     return print(os, chunk_span);
 }
 
-void set_print_options(size_t edgeitems = 3, size_t threshold = 10);
+void set_print_options(std::size_t edgeitems = 3, std::size_t threshold = 10);
 
 } // namespace ddc

@@ -27,7 +27,8 @@ void print_demangled_type_name(std::ostream& os, char const* const mangled_name)
     std::unique_ptr<char, decltype(std::free)*> const
             demangled_name(abi::__cxa_demangle(mangled_name, nullptr, nullptr, &status), std::free);
     if (status != 0) {
-        os << "Error demangling dimension name: " << status;
+        std::cerr << "Error demangling dimension name: " << status << std::endl;
+        os << mangled_name;
         return;
     }
 
@@ -66,22 +67,24 @@ void print_dim_name(
 
 } // namespace detail
 
-void set_print_options(std::size_t edgeitems, std::size_t threshold)
+bool set_print_options(std::size_t edgeitems, std::size_t threshold)
 {
-    // Ensure that m_edgeitems < (m_threshold / 2) stays true.
     ddc::detail::ChunkPrinter& printer = ddc::detail::ChunkPrinter::getInstance();
-    printer.m_global_lock.lock();
 
+    // Ensure options are not modified while an other thread is printing
+    std::lock_guard lock(printer.m_global_lock);
+
+    // Ensure that m_edgeitems < (m_threshold / 2) stays true.
     if (edgeitems < threshold / 2) {
         printer.m_edgeitems = edgeitems;
         printer.m_threshold = threshold;
+        return true;
     } else {
         std::cerr << "DDC Printer: invalid values " << edgeitems << " for edgeitems and "
                   << threshold << " for threshold have been ignored\n"
                   << "threshold needs to be at least twice as big as edgeitems\n";
+        return false;
     }
-
-    printer.m_global_lock.unlock();
 }
 
 } // namespace ddc

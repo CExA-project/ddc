@@ -335,7 +335,7 @@ std::ostream& print_content(
 
 
     ddc::detail::ChunkPrinter& printer = ddc::detail::ChunkPrinter::getInstance();
-    printer.m_global_lock.lock();
+    std::lock_guard lock(printer.m_global_lock);
 
     printer.saveformat(os);
 
@@ -350,8 +350,6 @@ std::ostream& print_content(
             largest_element,
             std::make_index_sequence<extents::rank()>());
 
-    printer.m_global_lock.unlock();
-
     return os;
 }
 
@@ -361,14 +359,12 @@ std::ostream& print_type_info(
         ChunkSpan<ElementType, SupportType, LayoutStridedPolicy, MemorySpace> const& chunk_span)
 {
     ddc::detail::ChunkPrinter& printer = ddc::detail::ChunkPrinter::getInstance();
-    printer.m_global_lock.lock();
+    std::lock_guard lock(printer.m_global_lock);
 
     ddc::detail::print_dim_name(os, chunk_span.extents());
     os << '\n';
     ddc::detail::print_demangled_type_name(os, typeid(chunk_span).name());
     os << '\n';
-
-    printer.m_global_lock.unlock();
 
     return os;
 }
@@ -379,12 +375,10 @@ std::ostream& print(
         ChunkSpan<ElementType, SupportType, LayoutStridedPolicy, MemorySpace> const& chunk_span)
 {
     ddc::detail::ChunkPrinter& printer = ddc::detail::ChunkPrinter::getInstance();
-    printer.m_global_lock.lock();
+    std::lock_guard lock(printer.m_global_lock);
 
     print_type_info(os, chunk_span);
     print_content(os, chunk_span);
-
-    printer.m_global_lock.unlock();
 
     return os;
 }
@@ -397,6 +391,10 @@ std::ostream& operator<<(
     return print(os, chunk_span);
 }
 
-void set_print_options(std::size_t edgeitems = 3, std::size_t threshold = 10);
+/**
+ * Try to set the options for the printer, returns true if the option could be
+ * set and false if parameters were invalids
+ */
+bool set_print_options(std::size_t edgeitems = 3, std::size_t threshold = 10);
 
 } // namespace ddc

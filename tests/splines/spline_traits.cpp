@@ -76,7 +76,7 @@ struct BSplinesTraits<std::tuple<
             DDimX,
             ddc::BoundCond::PERIODIC,
             ddc::BoundCond::PERIODIC,
-            ddc::SplineSolver::LAPACK>;
+            ddc::SplineSolver::GINKGO>;
 
     using Evaluator1D_1 = ddc::SplineEvaluator<
             execution_space1,
@@ -93,7 +93,7 @@ struct BSplinesTraits<std::tuple<
             DDimX,
             ddc::BoundCond::PERIODIC,
             ddc::BoundCond::PERIODIC,
-            ddc::SplineSolver::LAPACK>;
+            ddc::SplineSolver::GINKGO>;
 
     using Evaluator1D_2 = ddc::SplineEvaluator<
             execution_space2,
@@ -114,7 +114,7 @@ struct BSplinesTraits<std::tuple<
             ddc::BoundCond::PERIODIC,
             ddc::BoundCond::PERIODIC,
             ddc::BoundCond::PERIODIC,
-            ddc::SplineSolver::LAPACK>;
+            ddc::SplineSolver::GINKGO>;
 
     using Evaluator2D_1 = ddc::SplineEvaluator2D<
             execution_space1,
@@ -139,7 +139,7 @@ struct BSplinesTraits<std::tuple<
             ddc::BoundCond::PERIODIC,
             ddc::BoundCond::PERIODIC,
             ddc::BoundCond::PERIODIC,
-            ddc::SplineSolver::LAPACK>;
+            ddc::SplineSolver::GINKGO>;
 
     using Evaluator2D_2 = ddc::SplineEvaluator2D<
             execution_space2,

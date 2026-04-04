@@ -211,7 +211,7 @@ int main(int argc, char** argv)
             DDimX,
             BoundCond,
             BoundCond,
-            ddc::SplineSolver::LAPACK> const spline_builder(x_domain);
+            ddc::SplineSolver::GINKGO> const spline_builder(x_domain);
     ExtrapolationRule const extrapolation_rule;
     ddc::SplineEvaluator<
             Kokkos::DefaultExecutionSpace,

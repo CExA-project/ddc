@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <memory>
+#include <mutex>
 #include <ostream>
 
 #include <Kokkos_Macros.hpp>
@@ -27,7 +28,7 @@ void print_demangled_type_name(std::ostream& os, char const* const mangled_name)
     std::unique_ptr<char, decltype(std::free)*> const
             demangled_name(abi::__cxa_demangle(mangled_name, nullptr, nullptr, &status), std::free);
     if (status != 0) {
-        std::cerr << "Error demangling dimension name: " << status << std::endl;
+        std::cerr << "Error demangling dimension name: " << status << '\n' << std::flush;
         os << mangled_name;
         return;
     }
@@ -66,7 +67,7 @@ void print_dim_name(
 
 } // namespace detail
 
-PrinterOptions set_print_options(PrinterOptions options)
+PrinterOptions set_print_options(PrinterOptions const options)
 {
     ddc::detail::ChunkPrinter& printer = ddc::detail::ChunkPrinter::get_instance();
 
@@ -89,7 +90,7 @@ PrinterOptions set_print_options(PrinterOptions options)
 
 PrinterOptions get_print_options()
 {
-    ddc::detail::ChunkPrinter& printer = ddc::detail::ChunkPrinter::get_instance();
+    ddc::detail::ChunkPrinter const& printer = ddc::detail::ChunkPrinter::get_instance();
     return printer.m_options;
 }
 

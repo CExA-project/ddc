@@ -286,7 +286,7 @@ TEST(DiscreteDomainTest, SliceDomainXTooearly)
     // the error message is checked with clang & gcc only
     EXPECT_DEATH(
             dom_x_y.restrict_with(subdomain_x),
-            R"rgx([Aa]ssert.*DiscreteElement<ODDims>\(m_element_begin\).*DiscreteElement<ODDims>\(odomain\.m_element_begin\))rgx");
+            R"rgx(.ssert.*DiscreteElement<ODDims>\(m_element_begin\).*DiscreteElement<ODDims>\(odomain\.m_element_begin\))rgx");
 #else
     GTEST_SKIP();
 #endif
@@ -300,7 +300,7 @@ TEST(DiscreteDomainTest, SliceDomainXToolate)
     // the error message is checked with clang & gcc only
     EXPECT_DEATH(
             dom_x_y.restrict_with(subdomain_x),
-            R"rgx([Aa]ssert.*DiscreteElement<ODDims>\(m_element_end\).*DiscreteElement<ODDims>\(odomain\.m_element_end\).*)rgx");
+            R"rgx(.ssert.*DiscreteElement<ODDims>\(m_element_end\).*DiscreteElement<ODDims>\(odomain\.m_element_end\).*)rgx");
 #else
     GTEST_SKIP();
 #endif

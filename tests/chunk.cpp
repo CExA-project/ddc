@@ -544,7 +544,7 @@ TEST(Chunk2DTest, SliceCoordXOutOfBounds)
     ChunkXY<double> chunk(dom_x_y);
 
     char const* const death_msg
-            = R"rgx([Aa]ssert.*QueryDDom\(this->m_domain\).contains\(slice_spec\))rgx";
+            = R"rgx(.ssert.*QueryDDom\(this->m_domain\).contains\(slice_spec\))rgx";
 
     EXPECT_DEATH(chunk[dom_x.front() - 1], death_msg);
     EXPECT_DEATH(chunk[dom_x.back() + 1], death_msg);
@@ -611,7 +611,7 @@ TEST(Chunk2DTest, SliceDomainXOutOfBounds)
     ChunkXY<double> chunk(dom_x_y.remove(DVectXY(1, 0), DVectXY(1, 0)));
 
     char const* const death_msg
-            = R"rgx([Aa]ssert.*DiscreteDomain<QueryDDims...>\(this->m_domain\).contains\(odomain.front\(\)\) && DiscreteDomain<QueryDDims...>\(this->m_domain\).contains\(odomain.back\(\)\))rgx";
+            = R"rgx(.ssert.*DiscreteDomain<QueryDDims...>\(this->m_domain\).contains\(odomain.front\(\)\) && DiscreteDomain<QueryDDims...>\(this->m_domain\).contains\(odomain.back\(\)\))rgx";
 
     EXPECT_DEATH(chunk[dom_x_y.remove_last(DVectXY(1, 0))], death_msg);
     EXPECT_DEATH(chunk[dom_x_y.remove_first(DVectXY(1, 0))], death_msg);

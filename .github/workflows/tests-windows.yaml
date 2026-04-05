@@ -48,7 +48,13 @@ jobs:
       fail-fast: false
       matrix:
         cxx_version: ['20', '23']
-        config: ['Release']
+        config:
+          - build_shared_libs: 'OFF'
+            build_type: 'Release'
+            msvc_runtime: 'MultiThreaded'
+          - build_shared_libs: 'OFF'
+            build_type: 'Debug'
+            msvc_runtime: 'MultiThreadedDebug'
         os: [windows-2022, windows-2025]
     runs-on: ${{matrix.os}}
     env:
@@ -67,11 +73,12 @@ jobs:
         shell: bash
         run: |
           cmake \
-            -D CMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded \
+            -D BUILD_SHARED_LIBS=${{matrix.config.build_shared_libs}} \
+            -D CMAKE_MSVC_RUNTIME_LIBRARY=${{matrix.config.msvc_runtime}} \
             -B build \
             -S googletest
-          cmake --build build --config ${{matrix.config}}
-          cmake --install build --config ${{matrix.config}} --prefix $GTest_ROOT
+          cmake --build build --config ${{matrix.config.build_type}}
+          cmake --install build --config ${{matrix.config.build_type}} --prefix $GTest_ROOT
           rm -rf build
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
         with:
@@ -82,29 +89,31 @@ jobs:
         shell: bash
         run: |
           cmake \
-            -D CMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded \
+            -D BUILD_SHARED_LIBS=${{matrix.config.build_shared_libs}} \
+            -D CMAKE_MSVC_RUNTIME_LIBRARY=${{matrix.config.msvc_runtime}} \
             -D Kokkos_ENABLE_DEPRECATED_CODE_4=OFF \
             -D Kokkos_ENABLE_DEPRECATION_WARNINGS=OFF \
             -D Kokkos_ENABLE_SERIAL=ON \
             -B build \
             -S kokkos
-          cmake --build build --config ${{matrix.config}}
-          cmake --install build --config ${{matrix.config}} --prefix $Kokkos_ROOT
+          cmake --build build --config ${{matrix.config.build_type}}
+          cmake --install build --config ${{matrix.config.build_type}} --prefix $Kokkos_ROOT
           rm -rf build
       - name: Build DDC
         shell: bash
         run: |
           cmake \
+            -D BUILD_SHARED_LIBS=${{matrix.config.build_shared_libs}} \
             -D CMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
-            -D CMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded \
+            -D CMAKE_MSVC_RUNTIME_LIBRARY=${{matrix.config.msvc_runtime}} \
             -D DDC_GTest_DEPENDENCY_POLICY=INSTALLED \
             -D DDC_Kokkos_DEPENDENCY_POLICY=INSTALLED \
             -D DDC_BUILD_KERNELS_FFT=OFF \
             -D DDC_BUILD_KERNELS_SPLINES=OFF \
             -D DDC_BUILD_PDI_WRAPPER=OFF \
             -B build
-          cmake --build build --config ${{matrix.config}}
-          ctest --test-dir build --build-config ${{matrix.config}} --output-on-failure --timeout 10 --output-junit tests.xml
+          cmake --build build --config ${{matrix.config.build_type}}
+          ctest --test-dir build --build-config ${{matrix.config.build_type}} --output-on-failure --timeout 10 --output-junit tests.xml
       - name: Publish Test Report
         uses: mikepenz/action-junit-report@bccf2e31636835cf0874589931c4116687171386  # v6.4.0
         if: ( success() || failure() )  # always run even if the previous step fails
@@ -114,7 +123,7 @@ jobs:
       - name: Run examples
         shell: bash
         run: |
-          ./build/examples/${{matrix.config}}/game_of_life.exe
-          ./build/examples/${{matrix.config}}/heat_equation.exe
-          ./build/examples/${{matrix.config}}/non_uniform_heat_equation.exe
-          ./build/examples/${{matrix.config}}/uniform_heat_equation.exe
+          ./build/examples/${{matrix.config.build_type}}/game_of_life.exe
+          ./build/examples/${{matrix.config.build_type}}/heat_equation.exe
+          ./build/examples/${{matrix.config.build_type}}/non_uniform_heat_equation.exe
+          ./build/examples/${{matrix.config.build_type}}/uniform_heat_equation.exe

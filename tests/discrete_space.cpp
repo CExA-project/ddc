@@ -26,10 +26,10 @@ TEST(DiscreteSpace, Initialization)
 #if !defined(NDEBUG) // The assertion is only checked if NDEBUG isn't defined
     EXPECT_DEATH(
             ddc::host_discrete_space<DDimX>(),
-            R"rgx([Aa]ssert.*is_discrete_space_initialized<DDim>\(\))rgx");
+            R"rgx(.ssert.*is_discrete_space_initialized<DDim>\(\))rgx");
     EXPECT_DEATH(
             ddc::discrete_space<DDimX>(),
-            R"rgx([Aa]ssert.*is_discrete_space_initialized<DDim>\(\))rgx");
+            R"rgx(.ssert.*is_discrete_space_initialized<DDim>\(\))rgx");
 #endif
     ddc::init_discrete_space<DDimX>(DDimX::template init<DDimX>(
             ddc::Coordinate<DimX>(0),

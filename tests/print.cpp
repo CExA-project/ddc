@@ -271,7 +271,7 @@ void TestPrintFull()
     }
 
     // Check that options have been reset to their old value after print
-    EXPECT_EQ(options, ddc::get_print_options);
+    EXPECT_EQ(options, ddc::get_print_options());
 }
 
 TEST(Print, CheckOutput2dElision)

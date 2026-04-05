@@ -52,15 +52,9 @@ jobs:
           - build_shared_libs: 'OFF'
             build_type: 'Release'
             msvc_runtime: 'MultiThreaded'
-          - build_shared_libs: 'ON'
-            build_type: 'Release'
-            msvc_runtime: 'MultiThreadedDLL'
           - build_shared_libs: 'OFF'
             build_type: 'Debug'
             msvc_runtime: 'MultiThreadedDebug'
-          - build_shared_libs: 'ON'
-            build_type: 'Debug'
-            msvc_runtime: 'MultiThreadedDebugDLL'
         os: [windows-2022, windows-2025]
     runs-on: ${{matrix.os}}
     env:

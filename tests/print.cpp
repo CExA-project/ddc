@@ -226,7 +226,7 @@ void TestPrintFull()
 {
     // Very restrictive options
     ddc::set_print_options({.threshold = 3, .edgeitems = 1});
-    const ddc::PrinterOptions options = ddc::get_print_options();
+    ddc::PrinterOptions const options = ddc::get_print_options();
 
     unsigned const dim0 = 6;
     unsigned const dim1 = 6;
@@ -391,7 +391,7 @@ template <typename ElementType>
 void TestPrintCheckCheckIncorrectOptions()
 {
     // Reset options
-    const ddc::PrinterOptions defaultOptions = ddc::set_print_options();
+    ddc::PrinterOptions const defaultOptions = ddc::set_print_options();
     ddc::PrinterOptions newOptions;
 
     // Test obviously wrong options

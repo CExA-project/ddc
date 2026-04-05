@@ -33,7 +33,8 @@ struct PrinterOptions
 };
 
 namespace detail {
-/** 
+
+/**
  * This class is a singleton, as it contains global printing option
  */
 struct ChunkPrinter
@@ -50,12 +51,15 @@ struct ChunkPrinter
     // Copy of the stream format, used to compute how much space each element of the mdspan will take when printed
     std::stringstream m_ss;
 
-    ChunkPrinter(ChunkPrinter&) = delete;
-    ChunkPrinter(ChunkPrinter&&) = delete;
-    ChunkPrinter operator=(ChunkPrinter&&) = delete;
-    ChunkPrinter& operator=(ChunkPrinter& other) = delete;
+    ChunkPrinter(ChunkPrinter& rhs) = delete;
+
+    ChunkPrinter(ChunkPrinter&& rhs) = delete;
 
     ~ChunkPrinter() = default;
+
+    ChunkPrinter& operator=(ChunkPrinter&& rhs) = delete;
+
+    ChunkPrinter& operator=(ChunkPrinter& rhs) = delete;
 
 private:
     ChunkPrinter() = default;
@@ -369,8 +373,6 @@ std::ostream& print_content(
 
     mdspan_type const allocated_mdspan = h_chunk_span.allocation_mdspan();
 
-
-
     ddc::detail::ChunkPrinter& printer = ddc::detail::ChunkPrinter::get_instance();
     std::scoped_lock const lock(printer.m_global_lock);
 
@@ -438,7 +440,7 @@ std::ostream& print_full(
     ddc::detail::ChunkPrinter& printer = ddc::detail::ChunkPrinter::get_instance();
     std::scoped_lock const lock(printer.m_global_lock);
 
-    const PrinterOptions old_options
+    PrinterOptions const old_options
             = set_print_options({.threshold = std::numeric_limits<size_t>::max(), .edgeitems = 1});
 
     print_type_info(os, chunk_span);

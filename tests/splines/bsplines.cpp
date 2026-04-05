@@ -48,14 +48,14 @@ struct BSplinesFixture<std::tuple<
 struct BSplinesFixtureNames
 {
     template <typename T>
-    static std::string GetName(int)
+    static std::string GetName(int const i)
     {
         std::stringstream ss;
         ss << std::boolalpha;
-        ss << "Degree:" << std::tuple_element_t<0, T>::value;
-        ss << "/Cells:" << std::tuple_element_t<1, T>::value;
-        ss << "/Periodic:" << std::tuple_element_t<2, T>::value;
-        ss << "/0";
+        ss << "(Degree=" << std::tuple_element_t<0, T>::value;
+        ss << ",Cells=" << std::tuple_element_t<1, T>::value;
+        ss << ",Periodic=" << std::tuple_element_t<2, T>::value;
+        ss << ")/" << i;
 
         return ss.str();
     }

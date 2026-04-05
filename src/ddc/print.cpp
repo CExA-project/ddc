@@ -19,7 +19,11 @@
 
 namespace ddc {
 
-bool PrinterOptions::operator==(PrinterOptions const& rhs) const noexcept = default;
+// Workaround for nvcc, it should be `= default` but this creates a missing symbol at link stage.
+bool PrinterOptions::operator==(PrinterOptions const& rhs) const noexcept
+{
+    return threshold == rhs.threshold && edgeitems == rhs.edgeitems;
+}
 
 namespace detail {
 

@@ -26,10 +26,7 @@ struct PrinterOptions
     std::size_t threshold {10};
     std::size_t edgeitems {3};
 
-    bool operator==(PrinterOptions const& rhs) const
-    {
-        return threshold == rhs.threshold && edgeitems == rhs.edgeitems;
-    }
+    bool operator==(PrinterOptions const& rhs) const noexcept;
 };
 
 namespace detail {
@@ -55,25 +52,19 @@ struct ChunkPrinter
 
     ChunkPrinter(ChunkPrinter&& rhs) = delete;
 
-    ~ChunkPrinter() = default;
+    ~ChunkPrinter();
 
     ChunkPrinter& operator=(ChunkPrinter&& rhs) = delete;
 
     ChunkPrinter& operator=(ChunkPrinter& rhs) = delete;
 
 private:
-    ChunkPrinter() = default;
+    ChunkPrinter();
 
     /**
      * Print the spaces needed to align value to os
      */
-    static std::ostream& align(std::ostream& os, int level)
-    {
-        for (int i = 0; i <= level; ++i) {
-            os << ' ';
-        }
-        return os;
-    }
+    static std::ostream& align(std::ostream& os, int level);
 
     /**
      * Returns the size of the elem that needs to be printed
@@ -153,11 +144,7 @@ private:
     }
 
 public:
-    static ChunkPrinter& get_instance()
-    {
-        static ChunkPrinter instance;
-        return instance;
-    }
+    static ChunkPrinter& get_instance();
 
     // 0D chunk span
     template <class ElementType, class Extents, class Layout, class Accessor>
@@ -317,10 +304,7 @@ public:
     /*
      * Save the format that will be used in order to measure the size of the element we need to display
      */
-    void saveformat(std::ostream& os)
-    {
-        m_ss.copyfmt(os);
-    }
+    void saveformat(std::ostream& os);
 };
 
 /*

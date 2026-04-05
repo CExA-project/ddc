@@ -18,7 +18,33 @@
 #endif
 
 namespace ddc {
+
+bool PrinterOptions::operator==(PrinterOptions const& rhs) const noexcept = default;
+
 namespace detail {
+
+ChunkPrinter::~ChunkPrinter() = default;
+
+ChunkPrinter::ChunkPrinter() = default;
+
+void ChunkPrinter::saveformat(std::ostream& os)
+{
+    m_ss.copyfmt(os);
+}
+
+std::ostream& ChunkPrinter::align(std::ostream& os, int const level)
+{
+    for (int i = 0; i <= level; ++i) {
+        os << ' ';
+    }
+    return os;
+}
+
+ChunkPrinter& ChunkPrinter::get_instance()
+{
+    static ChunkPrinter instance;
+    return instance;
+}
 
 void print_demangled_type_name(std::ostream& os, char const* const mangled_name)
 {
@@ -30,10 +56,10 @@ void print_demangled_type_name(std::ostream& os, char const* const mangled_name)
     if (status != 0) {
         std::cerr << "Error demangling dimension name: " << status << '\n' << std::flush;
         os << mangled_name;
-        return;
+    } else {
+        os << demangled_name.get();
     }
 
-    os << demangled_name.get();
 #else
     os << mangled_name;
 #endif

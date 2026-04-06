@@ -124,6 +124,7 @@ class GrevilleInterpolationPoints
 
     static constexpr std::size_t N_BE_MIN = n_boundary_equations(BcLower, BSplines::degree());
     static constexpr std::size_t N_BE_MAX = n_boundary_equations(BcUpper, BSplines::degree());
+    static constexpr std::size_t N_BE = N_BE_MIN + N_BE_MAX;
     template <class U>
     static constexpr bool is_uniform_discrete_dimension_v
             = U::is_uniform() && ((N_BE_MIN != 0 && N_BE_MAX != 0) || U::is_periodic());
@@ -163,10 +164,10 @@ public:
             using IntermediateSampling = IntermediateUniformSampling<Sampling>;
             auto points_wo_bcs = uniform_greville_points<IntermediateSampling>();
             std::size_t const n_break_points = ddc::discrete_space<BSplines>().ncells() + 1;
-            assert(ddc::discrete_space<BSplines>().nbasis()
-                   >= static_cast<std::size_t>(N_BE_MIN + N_BE_MAX));
-            std::size_t const npoints
-                    = ddc::discrete_space<BSplines>().nbasis() - N_BE_MIN - N_BE_MAX;
+            if constexpr (N_BE > 0) {
+                assert(ddc::discrete_space<BSplines>().nbasis() >= N_BE);
+            }
+            std::size_t const npoints = ddc::discrete_space<BSplines>().nbasis() - N_BE;
             std::vector<double> points_with_bcs(npoints);
 
             // Construct Greville-like points at the edge
@@ -231,12 +232,12 @@ public:
             return SamplingImpl(points_with_bcs);
         } else {
             using IntermediateSampling = IntermediateNonUniformSampling<Sampling>;
-            if constexpr (N_BE_MIN == 0 && N_BE_MAX == 0) {
+            if constexpr (N_BE == 0) {
                 return non_uniform_greville_points<Sampling>();
             } else {
                 auto points_wo_bcs = non_uniform_greville_points<IntermediateSampling>();
                 // All points are Greville points. Extract unnecessary points near the boundary
-                std::vector<double> points_with_bcs(points_wo_bcs.size() - N_BE_MIN - N_BE_MAX);
+                std::vector<double> points_with_bcs(points_wo_bcs.size() - N_BE);
                 std::size_t constexpr n_start = N_BE_MIN;
 
                 using length = ddc::DiscreteVector<IntermediateSampling>;
@@ -277,7 +278,7 @@ public:
     template <class Sampling>
     static ddc::DiscreteDomain<Sampling> get_domain()
     {
-        std::size_t const npoints = ddc::discrete_space<BSplines>().nbasis() - N_BE_MIN - N_BE_MAX;
+        std::size_t const npoints = ddc::discrete_space<BSplines>().nbasis() - N_BE;
         return ddc::DiscreteDomain<Sampling>(
                 ddc::DiscreteElement<Sampling>(0),
                 ddc::DiscreteVector<Sampling>(npoints));

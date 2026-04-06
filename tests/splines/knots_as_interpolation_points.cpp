@@ -70,12 +70,12 @@ struct NonUniformBSplinesFixture<std::tuple<std::integral_constant<bool, IsPerio
 struct UniformBSplinesFixtureNames
 {
     template <typename T>
-    static std::string GetName(int)
+    static std::string GetName(int const i)
     {
         std::stringstream ss;
         ss << std::boolalpha;
-        ss << "Periodic:" << std::tuple_element_t<0, T>::value;
-        ss << "/0";
+        ss << "(Periodic=" << std::tuple_element_t<0, T>::value;
+        ss << ")/" << i;
 
         return ss.str();
     }

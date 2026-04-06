@@ -154,14 +154,14 @@ struct BSplinesTraits<std::tuple<
 struct BSplinesTraitsNames
 {
     template <typename T>
-    static std::string GetName(int)
+    static std::string GetName(int const i)
     {
         std::stringstream ss;
-        ss << "ExecSpace1:" << std::tuple_element_t<0, T>::name();
-        ss << "/Degree1:" << std::tuple_element_t<1, T>::value;
-        ss << "/ExecSpace2:" << std::tuple_element_t<2, T>::name();
-        ss << "/Degree2:" << std::tuple_element_t<3, T>::value;
-        ss << "/0";
+        ss << "(ExecSpace1=" << std::tuple_element_t<0, T>::name();
+        ss << ",Degree1=" << std::tuple_element_t<1, T>::value;
+        ss << ",ExecSpace2=" << std::tuple_element_t<2, T>::name();
+        ss << ",Degree2=" << std::tuple_element_t<3, T>::value;
+        ss << ")/" << i;
 
         return ss.str();
     }

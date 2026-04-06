@@ -71,6 +71,7 @@ var annotated_dup =
       [ "PdiEvent", "classddc_1_1PdiEvent.html", "classddc_1_1PdiEvent" ],
       [ "PeriodicExtrapolationRule", "structddc_1_1PeriodicExtrapolationRule.html", "structddc_1_1PeriodicExtrapolationRule" ],
       [ "PeriodicSampling", "classddc_1_1PeriodicSampling.html", "classddc_1_1PeriodicSampling" ],
+      [ "PrinterOptions", "structddc_1_1PrinterOptions.html", "structddc_1_1PrinterOptions" ],
       [ "ScopeGuard", "classddc_1_1ScopeGuard.html", "classddc_1_1ScopeGuard" ],
       [ "SparseDiscreteDomain", "classddc_1_1SparseDiscreteDomain.html", "classddc_1_1SparseDiscreteDomain" ],
       [ "SparseDiscreteDomain<>", "classddc_1_1SparseDiscreteDomain_3_4.html", "classddc_1_1SparseDiscreteDomain_3_4" ],

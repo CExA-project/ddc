@@ -14,8 +14,10 @@ var searchData=
   ['pointer_5ftype_11',['pointer_type',['../namespaceddc.html#add19ae83e32eaba2f1069e730470e047',1,'ddc::chunk_traits']]],
   ['print_12',['print',['../namespaceddc.html#aa6fd39a90a53ff87a6e839a1f8156397',1,'ddc']]],
   ['print_5fcontent_13',['print_content',['../namespaceddc.html#a43597abf7fbe2f49db6620a99dcf431c',1,'ddc']]],
-  ['print_5ftype_5finfo_14',['print_type_info',['../namespaceddc.html#ae907362bd0bfe2f35fe0f71e35380996',1,'ddc']]],
-  ['problem_20resolution_15',['Differences with the uniform problem resolution',['../going_further.html#autotoc_md14',1,'']]],
-  ['prod_16',['prod',['../structddc_1_1reducer_1_1prod.html',1,'ddc::reducer::prod&lt; T &gt;'],['../namespaceddc.html#aa559ea0e9e8d32a5114b06dabbc1544f',1,'ddc::prod()']]],
-  ['public_20targets_20and_20headers_17',['Public targets and headers',['../cmake_integration.html#autotoc_md29',1,'']]]
+  ['print_5ffull_14',['print_full',['../namespaceddc.html#ad858b1fc9443e8b0ce8ee013380ccb0f',1,'ddc']]],
+  ['print_5ftype_5finfo_15',['print_type_info',['../namespaceddc.html#ae907362bd0bfe2f35fe0f71e35380996',1,'ddc']]],
+  ['printeroptions_16',['PrinterOptions',['../structddc_1_1PrinterOptions.html',1,'ddc']]],
+  ['problem_20resolution_17',['Differences with the uniform problem resolution',['../going_further.html#autotoc_md14',1,'']]],
+  ['prod_18',['prod',['../namespaceddc.html#aa559ea0e9e8d32a5114b06dabbc1544f',1,'ddc::prod()'],['../structddc_1_1reducer_1_1prod.html',1,'ddc::reducer::prod&lt; T &gt;']]],
+  ['public_20targets_20and_20headers_19',['Public targets and headers',['../cmake_integration.html#autotoc_md29',1,'']]]
 ];

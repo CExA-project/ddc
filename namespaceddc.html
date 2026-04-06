@@ -272,6 +272,8 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1PeriodicSampling.html">PeriodicSampling</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classddc_1_1PeriodicSampling.html" title="PeriodicSampling models a periodic discretization of the provided continuous dimension.">PeriodicSampling</a> models a periodic discretization of the provided continuous dimension.  <a href="classddc_1_1PeriodicSampling.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structddc_1_1PrinterOptions.html">PrinterOptions</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1ScopeGuard.html">ScopeGuard</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1SparseDiscreteDomain.html">SparseDiscreteDomain</a></td></tr>
@@ -782,15 +784,28 @@ requires (concepts::periodic_sampling&lt;<a class="el" href="namespaceddc.html#a
 <tr class="memitem:abab880b3196a8622663de7c6e0fc96fb"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#ab25c16a5ce1c3230941216a27acb684f">Real</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#abab880b3196a8622663de7c6e0fc96fb">step</a> () <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">noexcept</a></td></tr>
 <tr class="memdesc:abab880b3196a8622663de7c6e0fc96fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Spacing step of the mesh.  <br /></td></tr>
 <tr class="separator:abab880b3196a8622663de7c6e0fc96fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af7ce6f58f00fd9682ae8aaad63bd8245" id="r_af7ce6f58f00fd9682ae8aaad63bd8245"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structddc_1_1PrinterOptions.html">PrinterOptions</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceddc.html#af7ce6f58f00fd9682ae8aaad63bd8245">set_print_options</a> (<a class="el" href="structddc_1_1PrinterOptions.html">PrinterOptions</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">options</a>=<a class="el" href="structddc_1_1PrinterOptions.html">PrinterOptions</a>())</td></tr>
+<tr class="memdesc:af7ce6f58f00fd9682ae8aaad63bd8245"><td class="mdescLeft">&#160;</td><td class="mdescRight">Try to set the options for the printer, returns the old format (or the current format if the option passed are invalid).  <br /></td></tr>
+<tr class="separator:af7ce6f58f00fd9682ae8aaad63bd8245"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad84f0e108b7f3f1c4b886992cbcfa27a" id="r_ad84f0e108b7f3f1c4b886992cbcfa27a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structddc_1_1PrinterOptions.html">PrinterOptions</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceddc.html#ad84f0e108b7f3f1c4b886992cbcfa27a">get_print_options</a> ()</td></tr>
+<tr class="memdesc:ad84f0e108b7f3f1c4b886992cbcfa27a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the currently used format options.  <br /></td></tr>
+<tr class="separator:ad84f0e108b7f3f1c4b886992cbcfa27a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a43597abf7fbe2f49db6620a99dcf431c" id="r_a43597abf7fbe2f49db6620a99dcf431c"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">SupportType</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">LayoutStridedPolicy</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt; </td></tr>
 <tr class="memitem:a43597abf7fbe2f49db6620a99dcf431c"><td class="memTemplItemLeft" align="right" valign="top">std::ostream &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a43597abf7fbe2f49db6620a99dcf431c">print_content</a> (std::ostream &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">os</a>, <a class="el" href="classddc_1_1ChunkSpan.html">ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">SupportType</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">LayoutStridedPolicy</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">chunk_span</a>)</td></tr>
+<tr class="memdesc:a43597abf7fbe2f49db6620a99dcf431c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Print the content of a <a class="el" href="classddc_1_1ChunkSpan.html">ChunkSpan</a>.  <br /></td></tr>
 <tr class="separator:a43597abf7fbe2f49db6620a99dcf431c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae907362bd0bfe2f35fe0f71e35380996" id="r_ae907362bd0bfe2f35fe0f71e35380996"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">SupportType</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">LayoutStridedPolicy</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt; </td></tr>
 <tr class="memitem:ae907362bd0bfe2f35fe0f71e35380996"><td class="memTemplItemLeft" align="right" valign="top">std::ostream &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#ae907362bd0bfe2f35fe0f71e35380996">print_type_info</a> (std::ostream &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">os</a>, <a class="el" href="classddc_1_1ChunkSpan.html">ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">SupportType</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">LayoutStridedPolicy</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">chunk_span</a>)</td></tr>
+<tr class="memdesc:ae907362bd0bfe2f35fe0f71e35380996"><td class="mdescLeft">&#160;</td><td class="mdescRight">Print the metadata of a <a class="el" href="classddc_1_1ChunkSpan.html">ChunkSpan</a> (size, dimension name, ...)  <br /></td></tr>
 <tr class="separator:ae907362bd0bfe2f35fe0f71e35380996"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa6fd39a90a53ff87a6e839a1f8156397" id="r_aa6fd39a90a53ff87a6e839a1f8156397"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">SupportType</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">LayoutStridedPolicy</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt; </td></tr>
 <tr class="memitem:aa6fd39a90a53ff87a6e839a1f8156397"><td class="memTemplItemLeft" align="right" valign="top">std::ostream &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#aa6fd39a90a53ff87a6e839a1f8156397">print</a> (std::ostream &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">os</a>, <a class="el" href="classddc_1_1ChunkSpan.html">ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">SupportType</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">LayoutStridedPolicy</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">chunk_span</a>)</td></tr>
+<tr class="memdesc:aa6fd39a90a53ff87a6e839a1f8156397"><td class="mdescLeft">&#160;</td><td class="mdescRight">Print metadata and content of a <a class="el" href="classddc_1_1ChunkSpan.html">ChunkSpan</a>.  <br /></td></tr>
 <tr class="separator:aa6fd39a90a53ff87a6e839a1f8156397"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad858b1fc9443e8b0ce8ee013380ccb0f" id="r_ad858b1fc9443e8b0ce8ee013380ccb0f"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">SupportType</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">LayoutStridedPolicy</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt; </td></tr>
+<tr class="memitem:ad858b1fc9443e8b0ce8ee013380ccb0f"><td class="memTemplItemLeft" align="right" valign="top">std::ostream &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#ad858b1fc9443e8b0ce8ee013380ccb0f">print_full</a> (std::ostream &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">os</a>, <a class="el" href="classddc_1_1ChunkSpan.html">ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">SupportType</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">LayoutStridedPolicy</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">chunk_span</a>)</td></tr>
+<tr class="memdesc:ad858b1fc9443e8b0ce8ee013380ccb0f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Print metadata and content of a <a class="el" href="classddc_1_1ChunkSpan.html">ChunkSpan</a> Always print without elision, regardless of options set.  <br /></td></tr>
+<tr class="separator:ad858b1fc9443e8b0ce8ee013380ccb0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aefd2bdcb8b42c4f833bdf7f80097d824" id="r_aefd2bdcb8b42c4f833bdf7f80097d824"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">SupportType</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">LayoutStridedPolicy</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt; </td></tr>
 <tr class="memitem:aefd2bdcb8b42c4f833bdf7f80097d824"><td class="memTemplItemLeft" align="right" valign="top">std::ostream &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#aefd2bdcb8b42c4f833bdf7f80097d824">operator&lt;&lt;</a> (std::ostream &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">os</a>, <a class="el" href="classddc_1_1ChunkSpan.html">ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">SupportType</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">LayoutStridedPolicy</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">chunk_span</a>)</td></tr>
 <tr class="separator:aefd2bdcb8b42c4f833bdf7f80097d824"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -5706,6 +5721,50 @@ template&lt;concepts::periodic_sampling DDim&gt; </div>
 
 </div>
 </div>
+<a id="af7ce6f58f00fd9682ae8aaad63bd8245" name="af7ce6f58f00fd9682ae8aaad63bd8245"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af7ce6f58f00fd9682ae8aaad63bd8245">&#9670;&#160;</a></span>set_print_options()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structddc_1_1PrinterOptions.html">PrinterOptions</a> ddc::set_print_options </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structddc_1_1PrinterOptions.html">PrinterOptions</a>&#160;</td>
+          <td class="paramname"><em>options</em> = <code><a class="el" href="structddc_1_1PrinterOptions.html">PrinterOptions</a>()</code></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Try to set the options for the printer, returns the old format (or the current format if the option passed are invalid). </p>
+<p>option is invalid if m_edgeitems &gt;= (m_threshold / 2), in this case the format isn't changed. </p>
+
+<p class="definition">Definition at line <a class="el" href="print_8cpp_source.html#l00100">100</a> of file <a class="el" href="print_8cpp_source.html">print.cpp</a>.</p>
+
+</div>
+</div>
+<a id="ad84f0e108b7f3f1c4b886992cbcfa27a" name="ad84f0e108b7f3f1c4b886992cbcfa27a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad84f0e108b7f3f1c4b886992cbcfa27a">&#9670;&#160;</a></span>get_print_options()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structddc_1_1PrinterOptions.html">PrinterOptions</a> ddc::get_print_options </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Return the currently used format options. </p>
+
+<p class="definition">Definition at line <a class="el" href="print_8cpp_source.html#l00121">121</a> of file <a class="el" href="print_8cpp_source.html">print.cpp</a>.</p>
+
+</div>
+</div>
 <a id="a43597abf7fbe2f49db6620a99dcf431c" name="a43597abf7fbe2f49db6620a99dcf431c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a43597abf7fbe2f49db6620a99dcf431c">&#9670;&#160;</a></span>print_content()</h2>
 
@@ -5734,7 +5793,9 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="print_8hpp_source.html#l00280">280</a> of file <a class="el" href="print_8hpp_source.html">print.hpp</a>.</p>
+<p>Print the content of a <a class="el" href="classddc_1_1ChunkSpan.html">ChunkSpan</a>. </p>
+
+<p class="definition">Definition at line <a class="el" href="print_8hpp_source.html#l00348">348</a> of file <a class="el" href="print_8hpp_source.html">print.hpp</a>.</p>
 
 </div>
 </div>
@@ -5766,7 +5827,9 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="print_8hpp_source.html#l00308">308</a> of file <a class="el" href="print_8hpp_source.html">print.hpp</a>.</p>
+<p>Print the metadata of a <a class="el" href="classddc_1_1ChunkSpan.html">ChunkSpan</a> (size, dimension name, ...) </p>
+
+<p class="definition">Definition at line <a class="el" href="print_8hpp_source.html#l00383">383</a> of file <a class="el" href="print_8hpp_source.html">print.hpp</a>.</p>
 
 </div>
 </div>
@@ -5798,7 +5861,43 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="print_8hpp_source.html#l00321">321</a> of file <a class="el" href="print_8hpp_source.html">print.hpp</a>.</p>
+<p>Print metadata and content of a <a class="el" href="classddc_1_1ChunkSpan.html">ChunkSpan</a>. </p>
+
+<p class="definition">Definition at line <a class="el" href="print_8hpp_source.html#l00402">402</a> of file <a class="el" href="print_8hpp_source.html">print.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ad858b1fc9443e8b0ce8ee013380ccb0f" name="ad858b1fc9443e8b0ce8ee013380ccb0f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad858b1fc9443e8b0ce8ee013380ccb0f">&#9670;&#160;</a></span>print_full()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">SupportType</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">LayoutStridedPolicy</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">std::ostream &amp; ddc::print_full </td>
+          <td>(</td>
+          <td class="paramtype">std::ostream &amp;&#160;</td>
+          <td class="paramname"><em>os</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classddc_1_1ChunkSpan.html">ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">SupportType</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">LayoutStridedPolicy</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
+          <td class="paramname"><em>chunk_span</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Print metadata and content of a <a class="el" href="classddc_1_1ChunkSpan.html">ChunkSpan</a> Always print without elision, regardless of options set. </p>
+
+<p class="definition">Definition at line <a class="el" href="print_8hpp_source.html#l00420">420</a> of file <a class="el" href="print_8hpp_source.html">print.hpp</a>.</p>
 
 </div>
 </div>
@@ -5830,7 +5929,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="print_8hpp_source.html#l00333">333</a> of file <a class="el" href="print_8hpp_source.html">print.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="print_8hpp_source.html#l00439">439</a> of file <a class="el" href="print_8hpp_source.html">print.hpp</a>.</p>
 
 </div>
 </div>

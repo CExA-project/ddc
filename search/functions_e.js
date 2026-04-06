@@ -8,6 +8,7 @@ var searchData=
   ['pdievent_5',['pdievent',['../classddc_1_1PdiEvent.html#a1e12cf2d5971fa856d8abda63f9c56f8',1,'ddc::PdiEvent::PdiEvent(PdiEvent const &amp;rhs)=delete'],['../classddc_1_1PdiEvent.html#af2227852b65ab74db0de2ca2aae6d304',1,'ddc::PdiEvent::PdiEvent(PdiEvent &amp;&amp;rhs) noexcept=delete'],['../classddc_1_1PdiEvent.html#aa694ad4ce4952cade218bfa994f98258',1,'ddc::PdiEvent::PdiEvent(std::string const &amp;event_name)']]],
   ['print_6',['print',['../namespaceddc.html#aa6fd39a90a53ff87a6e839a1f8156397',1,'ddc']]],
   ['print_5fcontent_7',['print_content',['../namespaceddc.html#a43597abf7fbe2f49db6620a99dcf431c',1,'ddc']]],
-  ['print_5ftype_5finfo_8',['print_type_info',['../namespaceddc.html#ae907362bd0bfe2f35fe0f71e35380996',1,'ddc']]],
-  ['prod_9',['prod',['../namespaceddc.html#aa559ea0e9e8d32a5114b06dabbc1544f',1,'ddc']]]
+  ['print_5ffull_8',['print_full',['../namespaceddc.html#ad858b1fc9443e8b0ce8ee013380ccb0f',1,'ddc']]],
+  ['print_5ftype_5finfo_9',['print_type_info',['../namespaceddc.html#ae907362bd0bfe2f35fe0f71e35380996',1,'ddc']]],
+  ['prod_10',['prod',['../namespaceddc.html#aa559ea0e9e8d32a5114b06dabbc1544f',1,'ddc']]]
 ];

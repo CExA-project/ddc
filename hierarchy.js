@@ -80,6 +80,7 @@ var hierarchy =
     [ "ddc::detail::PeriodicSamplingBase", null, [
       [ "ddc::PeriodicSampling< CDim >", "classddc_1_1PeriodicSampling.html", null ]
     ] ],
+    [ "ddc::PrinterOptions", "structddc_1_1PrinterOptions.html", null ],
     [ "ddc::reducer::prod< T >", "structddc_1_1reducer_1_1prod.html", null ],
     [ "ddc::AlignedAllocator< T, N >::rebind< U >", "classddc_1_1AlignedAllocator.html#structddc_1_1AlignedAllocator_1_1rebind", null ],
     [ "ddc::KokkosAllocator< T, MemorySpace >::rebind< U >", "classddc_1_1KokkosAllocator.html#structddc_1_1KokkosAllocator_1_1rebind", null ],

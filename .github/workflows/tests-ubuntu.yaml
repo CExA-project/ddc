@@ -356,7 +356,6 @@ jobs:
             rm -rf build
 
             cmake \
-              -D CMAKE_CXX_FLAGS="-Werror -Wall -Wextra -Wpedantic -Wno-sign-compare -pedantic-errors ${{matrix.build_type.cxx_flags}} ${{matrix.backend.ddc_extra_cxx_flags}}" \
               -D CMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
               -D DDC_BUILD_BENCHMARKS=ON \
               -D DDC_benchmark_DEPENDENCY_POLICY=INSTALLED \
@@ -367,6 +366,10 @@ jobs:
               -D DDC_SPLINES_TEST_DEGREE_MAX=${{env.DDC_SPLINES_TEST_DEGREE_MAX}} \
               -B build \
               -S /src
+            # Trick to pass flags after a first pass of calls to find_package
+            cmake \
+              -D CMAKE_CXX_FLAGS="-Werror -Wall -Wextra -Wpedantic -Wno-sign-compare -pedantic-errors ${{matrix.build_type.cxx_flags}} ${{matrix.backend.ddc_extra_cxx_flags}}" \
+              build
             cmake --build build
             if [ 'xcpu' = 'x${{matrix.backend.name}}' ]
             then

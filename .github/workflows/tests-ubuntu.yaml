@@ -207,21 +207,25 @@ jobs:
           - name: 'cpu'
             c_compiler: 'gcc'
             cxx_compiler: 'g++'
+            ddc_compiler: 'g++'
             ddc_extra_cxx_flags: '-Wextra-semi -Wold-style-cast'
             kokkos_extra_cmake_flags: ''
           - name: 'cpu'
             c_compiler: 'clang'
             cxx_compiler: 'clang++'
+            ddc_compiler: 'clang++'
             ddc_extra_cxx_flags: '-Wextra-semi -Wextra-semi-stmt -Wold-style-cast'
             kokkos_extra_cmake_flags: ''
           - name: 'cuda'
             c_compiler: '${CUDA_GCC}'
             cxx_compiler: '${CUDA_GXX}'
-            ddc_extra_cxx_flags: ''
+            ddc_compiler: 'nvcc_wrapper'
+            ddc_extra_cxx_flags: '-Werror all-warnings'
             kokkos_extra_cmake_flags: '-D Kokkos_ENABLE_CUDA=ON -D Kokkos_ENABLE_CUDA_CONSTEXPR=ON -D Kokkos_ENABLE_CUDA_RELOCATABLE_DEVICE_CODE=ON -D Kokkos_ARCH_AMPERE80=ON'
           - name: 'hip'
             c_compiler: 'hipcc'
             cxx_compiler: 'hipcc'
+            ddc_compiler: 'hipcc'
             ddc_extra_cxx_flags: ''
             kokkos_extra_cmake_flags: '-D Kokkos_ENABLE_HIP=ON -D Kokkos_ENABLE_HIP_RELOCATABLE_DEVICE_CODE=ON -D Kokkos_ENABLE_ROCTHRUST=OFF -D Kokkos_ARCH_AMD_GFX90A=ON'
         cxx_version: ['20', '23']
@@ -355,7 +359,11 @@ jobs:
             cmake --install build --prefix $KokkosKernels_ROOT
             rm -rf build
 
+            export PATH=$Kokkos_ROOT/bin:$PATH
+            export NVCC_WRAPPER_DEFAULT_COMPILER=${{matrix.backend.cxx_compiler}}
+
             cmake \
+              -D CMAKE_CXX_COMPILER=${{matrix.backend.ddc_compiler}} \
               -D CMAKE_CXX_FLAGS="-Werror -Wall -Wextra -Wpedantic -Wno-sign-compare -pedantic-errors ${{matrix.build_type.cxx_flags}} ${{matrix.backend.ddc_extra_cxx_flags}}" \
               -D CMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
               -D DDC_BUILD_BENCHMARKS=ON \

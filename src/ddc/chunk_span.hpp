@@ -224,10 +224,12 @@ public:
             SupportType const& domain)
         : base_type(allocation_mdspan, domain)
     {
-        for (std::size_t i = 0; i < SupportType::rank(); ++i) {
-            KOKKOS_ASSERT(
-                    allocation_mdspan.extent(i)
-                    == static_cast<std::size_t>(detail::array(domain.extents())[i]))
+        if constexpr (SupportType::rank() > 0) {
+            for (std::size_t i = 0; i < SupportType::rank(); ++i) {
+                KOKKOS_ASSERT(
+                        allocation_mdspan.extent(i)
+                        == static_cast<std::size_t>(detail::array(domain.extents())[i]))
+            }
         }
     }
 

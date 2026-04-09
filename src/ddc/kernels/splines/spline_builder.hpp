@@ -193,6 +193,8 @@ public:
 private:
     interpolation_domain_type m_interpolation_domain;
 
+    std::string m_label;
+
     int m_offset = 0;
 
     double m_dx; // average cell size for normalization of derivatives
@@ -278,6 +280,16 @@ public:
                   cols_per_chunk,
                   preconditioner_max_block_size)
     {
+    }
+
+    explicit SplineBuilder(
+            std::string const& label,
+            interpolation_domain_type const& interpolation_domain,
+            std::optional<std::size_t> cols_per_chunk = std::nullopt,
+            std::optional<unsigned int> preconditioner_max_block_size = std::nullopt)
+        : SplineBuilder(interpolation_domain, cols_per_chunk, preconditioner_max_block_size)
+    {
+        m_label = label;
     }
 
 
@@ -379,6 +391,11 @@ public:
         return ddc::replace_dim_of<
                 interpolation_discrete_dimension_type,
                 bsplines_type>(batched_interpolation_domain, spline_domain());
+    }
+
+    std::string const& label() const noexcept
+    {
+        return m_label;
     }
 
 private:

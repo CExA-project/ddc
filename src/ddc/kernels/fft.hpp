@@ -223,7 +223,10 @@ void impl(
             norm_coef = (backward_full_norm_coef(DiscreteDomain<DDimOut>(ddom_out)) * ...);
         }
 
-        ddc::parallel_transform(exec_space, out, ScaleFn<real_type_t<Tout>>(norm_coef));
+        ddc::parallel_transform(
+                "ddc_fft",
+                exec_space, out,
+                ScaleFn<real_type_t<Tout>>(norm_coef));
     }
 }
 

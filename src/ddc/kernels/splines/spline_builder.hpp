@@ -203,9 +203,13 @@ private:
     /// Calculate offset so that the matrix is diagonally dominant
     void compute_offset(interpolation_domain_type const& interpolation_domain, int& offset);
 
+    std::string m_label;
+
 public:
     /**
      * @brief Build a SplineBuilder acting on interpolation_domain.
+     *
+     * @param label A label used to tag parallel regions and memory allocations for profiling.
      *
      * @param interpolation_domain The domain on which the interpolation points are defined.
      *
@@ -221,12 +225,14 @@ public:
      * @see MatrixSparse
      */
     explicit SplineBuilder(
+            std::string const& label,
             interpolation_domain_type const& interpolation_domain,
             std::optional<std::size_t> cols_per_chunk = std::nullopt,
             std::optional<unsigned int> preconditioner_max_block_size = std::nullopt)
         : m_interpolation_domain(interpolation_domain)
         , m_dx((ddc::discrete_space<BSplines>().rmax() - ddc::discrete_space<BSplines>().rmin())
                / ddc::discrete_space<BSplines>().ncells())
+        , m_label(label)
     {
         static_assert(
                 ((BcLower == BoundCond::PERIODIC) == (BcUpper == BoundCond::PERIODIC)),
@@ -253,7 +259,37 @@ public:
     }
 
     /**
+     * @brief Build a SplineBuilder acting on interpolation_domain.
+     *
+     * @param interpolation_domain The domain on which the interpolation points are defined.
+     *
+     * @param cols_per_chunk A parameter used by the slicer (internal to the solver) to define the size
+     * of a chunk of right-hand sides of the linear problem to be computed in parallel (chunks are treated
+     * by the linear solver one-after-the-other).
+     * This value is optional. If no value is provided then the default value is chosen by the requested solver.
+     *
+     * @param preconditioner_max_block_size A parameter used by the slicer (internal to the solver) to
+     * define the size of a block used by the Block-Jacobi preconditioner.
+     * This value is optional. If no value is provided then the default value is chosen by the requested solver.
+     *
+     * @see MatrixSparse
+     */
+    explicit SplineBuilder(
+            interpolation_domain_type const& interpolation_domain,
+            std::optional<std::size_t> cols_per_chunk = std::nullopt,
+            std::optional<unsigned int> preconditioner_max_block_size = std::nullopt)
+        : SplineBuilder(
+                "no-label",
+                interpolation_domain,
+                cols_per_chunk,
+                preconditioner_max_block_size)
+    {
+    }
+
+    /**
      * @brief Build a SplineBuilder acting on the interpolation domain contained by batched_interpolation_domain.
+     *
+     * @param label A label used to tag parallel regions and memory allocations for profiling.
      *
      * @param batched_interpolation_domain The whole domain on which the interpolation points are defined.
      *
@@ -270,13 +306,46 @@ public:
      */
     template <concepts::discrete_domain BatchedInterpolationDDom>
     explicit SplineBuilder(
+            std::string const& label,
             BatchedInterpolationDDom const& batched_interpolation_domain,
             std::optional<std::size_t> cols_per_chunk = std::nullopt,
             std::optional<unsigned int> preconditioner_max_block_size = std::nullopt)
         : SplineBuilder(
-                  interpolation_domain_type(batched_interpolation_domain),
-                  cols_per_chunk,
-                  preconditioner_max_block_size)
+                label,
+                interpolation_domain_type(batched_interpolation_domain),
+                cols_per_chunk,
+                preconditioner_max_block_size)
+    {
+    }
+
+    /**
+     * @brief Build a SplineBuilder acting on the interpolation domain contained by batched_interpolation_domain.
+     *
+     * @param batched_interpolation_domain The whole domain on which the interpolation points are defined.
+     *
+     * @param cols_per_chunk A parameter used by the slicer (internal to the solver) to define the size
+     * of a chunk of right-hand sides of the linear problem to be computed in parallel (chunks are treated
+     * by the linear solver one-after-the-other).
+     * This value is optional. If no value is provided then the default value is chosen by the requested solver.
+     *
+     * @param preconditioner_max_block_size A parameter used by the slicer (internal to the solver) to
+     * define the size of a block used by the Block-Jacobi preconditioner.
+     * This value is optional. If no value is provided then the default value is chosen by the requested solver.
+     *
+     * @see MatrixSparse
+     */
+    template <
+            class BatchedInterpolationDDom,
+            class = std::enable_if_t<ddc::is_discrete_domain_v<BatchedInterpolationDDom>>>
+    explicit SplineBuilder(
+            BatchedInterpolationDDom const& batched_interpolation_domain,
+            std::optional<std::size_t> cols_per_chunk = std::nullopt,
+            std::optional<unsigned int> preconditioner_max_block_size = std::nullopt)
+        : SplineBuilder(
+                "no-label",
+                interpolation_domain_type(batched_interpolation_domain),
+                cols_per_chunk,
+                preconditioner_max_block_size)
     {
     }
 
@@ -938,11 +1007,12 @@ operator()(
     // Allocate and fill a transposed version of spline in order to get dimension of interest as last dimension (optimal for GPU, necessary for Ginkgo). Also select only relevant rows in case of periodic boundaries
     auto const& offset_proxy = m_offset;
     ddc::Chunk spline_tr_alloc(
+            m_label + " > spline_tr (ddc::SplineBuilder::operator())",
             batched_spline_tr_domain(batched_interpolation_domain),
             ddc::KokkosAllocator<double, memory_space>());
     ddc::ChunkSpan const spline_tr = spline_tr_alloc.span_view();
     ddc::parallel_for_each(
-            "ddc_splines_transpose_rhs",
+            m_label + " > ddc_splines_transpose_rhs",
             exec_space(),
             batch_domain(batched_interpolation_domain),
             KOKKOS_LAMBDA(
@@ -961,7 +1031,7 @@ operator()(
     m_matrix->solve(bcoef_section, false);
     // Transpose back spline_tr into spline.
     ddc::parallel_for_each(
-            "ddc_splines_transpose_back_rhs",
+            m_label + " > ddc_splines_transpose_back_rhs",
             exec_space(),
             batch_domain(batched_interpolation_domain),
             KOKKOS_LAMBDA(
@@ -975,7 +1045,7 @@ operator()(
     // Duplicate the lower spline coefficients to the upper side in case of periodic boundaries
     if (bsplines_type::is_periodic()) {
         ddc::parallel_for_each(
-                "ddc_splines_periodic_rows_duplicate_rhs",
+                m_label + " > ddc_splines_periodic_rows_duplicate_rhs",
                 exec_space(),
                 batch_domain(batched_interpolation_domain),
                 KOKKOS_LAMBDA(
@@ -1041,7 +1111,7 @@ SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower, BcUp
     // Allocate mirror with additional rows (cf. SplinesLinearProblem3x3Blocks documentation)
     Kokkos::View<double**, Kokkos::LayoutRight, MemorySpace> const
             integral_bsplines_mirror_with_additional_allocation(
-                    "integral_bsplines_mirror_with_additional_allocation",
+                    m_label + " > integral_bsplines_mirror_with_additional_allocation",
                     m_matrix->required_number_of_rhs_rows(),
                     1);
 

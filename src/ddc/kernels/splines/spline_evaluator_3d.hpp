@@ -758,16 +758,19 @@ public:
 
         batch_domain_type batch_domain(integrals.domain());
         ddc::Chunk values1_alloc(
+                "values1 (ddc::SplineEvaluator3D::integrate)",
                 ddc::DiscreteDomain<bsplines_type1>(spline_coef.domain()),
                 ddc::KokkosAllocator<double, memory_space>());
         ddc::ChunkSpan values1 = values1_alloc.span_view();
         ddc::integrals(exec_space(), values1);
         ddc::Chunk values2_alloc(
+                "values2 (ddc::SplineEvaluator3D::integrate)",
                 ddc::DiscreteDomain<bsplines_type2>(spline_coef.domain()),
                 ddc::KokkosAllocator<double, memory_space>());
         ddc::ChunkSpan values2 = values2_alloc.span_view();
         ddc::integrals(exec_space(), values2);
         ddc::Chunk values3_alloc(
+                "values3 (ddc::SplineEvaluator3D::integrate)",
                 ddc::DiscreteDomain<bsplines_type3>(spline_coef.domain()),
                 ddc::KokkosAllocator<double, memory_space>());
         ddc::ChunkSpan values3 = values3_alloc.span_view();

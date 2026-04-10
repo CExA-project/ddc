@@ -179,8 +179,37 @@ public:
 private:
     builder_type1 m_spline_builder1;
     builder_type2 m_spline_builder2;
+    std::string m_label;
 
 public:
+    /**
+     * @brief Build a SplineBuilder2D acting on interpolation_domain.
+     *
+     * @param label A label used to tag parallel regions and memory allocations for profiling.
+     *
+     * @param interpolation_domain The domain on which the interpolation points are defined, without the batch dimensions.
+     *
+     * @param cols_per_chunk A parameter used by the slicer (internal to the solver) to define the size
+     * of a chunk of right-hand-sides of the linear problem to be computed in parallel (chunks are treated
+     * by the linear solver one-after-the-other).
+     * This value is optional. If no value is provided then the default value is chosen by the requested solver.
+     *
+     * @param preconditioner_max_block_size A parameter used by the slicer (internal to the solver) to
+     * define the size of a block used by the Block-Jacobi preconditioner.
+     * This value is optional. If no value is provided then the default value is chosen by the requested solver.
+     *
+     * @see SplinesLinearProblemSparse
+     */
+    explicit SplineBuilder2D(
+            std::string const& label,
+            interpolation_domain_type const& interpolation_domain,
+            std::optional<std::size_t> cols_per_chunk = std::nullopt,
+            std::optional<unsigned int> preconditioner_max_block_size = std::nullopt)
+        : m_spline_builder1(label, interpolation_domain, cols_per_chunk, preconditioner_max_block_size)
+        , m_spline_builder2(label, interpolation_domain, cols_per_chunk, preconditioner_max_block_size)
+        , m_label(label)
+    {
+    }
     /**
      * @brief Build a SplineBuilder2D acting on interpolation_domain.
      *
@@ -201,8 +230,43 @@ public:
             interpolation_domain_type const& interpolation_domain,
             std::optional<std::size_t> cols_per_chunk = std::nullopt,
             std::optional<unsigned int> preconditioner_max_block_size = std::nullopt)
-        : m_spline_builder1(interpolation_domain, cols_per_chunk, preconditioner_max_block_size)
-        , m_spline_builder2(interpolation_domain, cols_per_chunk, preconditioner_max_block_size)
+        : SplineBuilder2D(
+                "no-label",
+                interpolation_domain,
+                cols_per_chunk,
+                preconditioner_max_block_size)
+    {
+    }
+
+    /**
+     * @brief Build a SplineBuilder2D acting on the interpolation domain contained in batched_interpolation_domain.
+     *
+     * @param label A label used to tag parallel regions and memory allocations for profiling.
+     *
+     * @param batched_interpolation_domain The domain on which the interpolation points are defined.
+     *
+     * @param cols_per_chunk A parameter used by the slicer (internal to the solver) to define the size
+     * of a chunk of right-hand-sides of the linear problem to be computed in parallel (chunks are treated
+     * by the linear solver one-after-the-other).
+     * This value is optional. If no value is provided then the default value is chosen by the requested solver.
+     *
+     * @param preconditioner_max_block_size A parameter used by the slicer (internal to the solver) to
+     * define the size of a block used by the Block-Jacobi preconditioner.
+     * This value is optional. If no value is provided then the default value is chosen by the requested solver.
+     *
+     * @see SplinesLinearProblemSparse
+     */
+    template <concepts::discrete_domain BatchedInterpolationDDom>
+    explicit SplineBuilder2D(
+            std::string const& label,
+            BatchedInterpolationDDom const& batched_interpolation_domain,
+            std::optional<std::size_t> cols_per_chunk = std::nullopt,
+            std::optional<unsigned int> preconditioner_max_block_size = std::nullopt)
+        : SplineBuilder2D(
+                label,
+                interpolation_domain_type(batched_interpolation_domain),
+                cols_per_chunk,
+                preconditioner_max_block_size)
     {
     }
 
@@ -222,12 +286,15 @@ public:
      *
      * @see SplinesLinearProblemSparse
      */
-    template <concepts::discrete_domain BatchedInterpolationDDom>
+    template <
+            class BatchedInterpolationDDom,
+            class = std::enable_if_t<ddc::is_discrete_domain_v<BatchedInterpolationDDom>>>
     explicit SplineBuilder2D(
             BatchedInterpolationDDom const& batched_interpolation_domain,
             std::optional<std::size_t> cols_per_chunk = std::nullopt,
             std::optional<unsigned int> preconditioner_max_block_size = std::nullopt)
         : SplineBuilder2D(
+                "no-label",
                   interpolation_domain_type(batched_interpolation_domain),
                   cols_per_chunk,
                   preconditioner_max_block_size)
@@ -530,6 +597,7 @@ operator()(
                             ddc::DiscreteVector<deriv_type2>(bsplines_type2::degree() / 2)));
 
     ddc::Chunk spline1_deriv_min_alloc(
+            m_label + " > spline1_deriv_min (ddc::SplineBuilder2D::operator())",
             m_spline_builder1.batched_spline_domain(batched_interpolation_deriv_domain),
             ddc::KokkosAllocator<double, MemorySpace>());
     auto spline1_deriv_min = spline1_deriv_min_alloc.span_view();
@@ -546,6 +614,7 @@ operator()(
 
     // Spline1-approximate vals (to spline1)
     ddc::Chunk spline1_alloc(
+            m_label + " > spline1 (ddc::SplineBuilder2D::operator())",
             m_spline_builder1.batched_spline_domain(batched_interpolation_domain),
             ddc::KokkosAllocator<double, MemorySpace>());
     ddc::ChunkSpan const spline1 = spline1_alloc.span_view();
@@ -554,6 +623,7 @@ operator()(
 
     // Spline1-approximate derivs_max2 (to spline1_deriv_max)
     ddc::Chunk spline1_deriv_max_alloc(
+            m_label + " > spline1_deriv_max (ddc::SplineBuilder2D::operator())",
             m_spline_builder1.batched_spline_domain(batched_interpolation_deriv_domain),
             ddc::KokkosAllocator<double, MemorySpace>());
     auto spline1_deriv_max = spline1_deriv_max_alloc.span_view();

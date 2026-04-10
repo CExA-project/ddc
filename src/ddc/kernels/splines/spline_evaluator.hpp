@@ -606,6 +606,7 @@ public:
 
         BatchedDDom const batch_domain(integrals.domain());
         ddc::Chunk values_alloc(
+                "values (ddc::SplineEvaluator::integrate)",
                 ddc::DiscreteDomain<bsplines_type>(spline_coef.domain()),
                 ddc::KokkosAllocator<double, memory_space>());
         ddc::ChunkSpan const values = values_alloc.span_view();

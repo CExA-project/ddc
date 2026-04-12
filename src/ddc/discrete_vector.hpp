@@ -11,6 +11,8 @@
 #include <type_traits>
 #include <utility>
 
+#include <ddc/core_export.hpp>
+
 #include <Kokkos_Macros.hpp>
 
 #include "detail/macros.hpp"
@@ -464,7 +466,10 @@ KOKKOS_FUNCTION constexpr bool operator<(DiscreteVector<Tag> const& lhs, Integra
 
 namespace detail {
 
-void print_discrete_vector(std::ostream& os, DiscreteVectorElement const* data, std::size_t n);
+DDC_CORE_EXPORT void print_discrete_vector(
+        std::ostream& os,
+        DiscreteVectorElement const* data,
+        std::size_t n);
 
 } // namespace detail
 

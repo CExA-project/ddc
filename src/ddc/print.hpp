@@ -15,6 +15,8 @@
 #include <typeinfo>
 #include <utility>
 
+#include <ddc/core_export.hpp>
+
 #include <Kokkos_Core.hpp>
 
 #include "chunk_span.hpp"
@@ -22,7 +24,7 @@
 
 namespace ddc {
 
-struct PrinterOptions
+struct DDC_CORE_EXPORT PrinterOptions
 {
     std::size_t threshold {10};
     std::size_t edgeitems {3};
@@ -53,19 +55,19 @@ struct ChunkPrinter
 
     ChunkPrinter(ChunkPrinter&& rhs) = delete;
 
-    ~ChunkPrinter();
+    DDC_CORE_EXPORT ~ChunkPrinter();
 
     ChunkPrinter& operator=(ChunkPrinter&& rhs) = delete;
 
     ChunkPrinter& operator=(ChunkPrinter& rhs) = delete;
 
 private:
-    ChunkPrinter();
+    DDC_CORE_EXPORT ChunkPrinter();
 
     /**
      * Print the spaces needed to align value to os
      */
-    static std::ostream& align(std::ostream& os, int level);
+    DDC_CORE_EXPORT static std::ostream& align(std::ostream& os, int level);
 
     /**
      * Returns the size of the elem that needs to be printed
@@ -145,7 +147,7 @@ private:
     }
 
 public:
-    static ChunkPrinter& get_instance();
+    DDC_CORE_EXPORT static ChunkPrinter& get_instance();
 
     // 0D chunk span
     template <class ElementType, class Extents, class Layout, class Accessor>
@@ -305,15 +307,15 @@ public:
     /*
      * Save the format that will be used in order to measure the size of the element we need to display
      */
-    void saveformat(std::ostream& os);
+    DDC_CORE_EXPORT void saveformat(std::ostream& os);
 };
 
 /*
  * Print the demangled name of a type into a standard ostream.
  */
-void print_demangled_type_name(std::ostream& os, char const* mangled_name);
+DDC_CORE_EXPORT void print_demangled_type_name(std::ostream& os, char const* mangled_name);
 
-void print_dim_name(
+DDC_CORE_EXPORT void print_dim_name(
         std::ostream& os,
         char const* const* dims,
         DiscreteVectorElement const* sizes,
@@ -335,12 +337,12 @@ void print_dim_name(std::ostream& os, DiscreteVector<Dims...> const& dd)
  * option is invalid if m_edgeitems >= (m_threshold / 2), in this case the
  * format isn't changed.
  */
-PrinterOptions set_print_options(PrinterOptions options = PrinterOptions());
+DDC_CORE_EXPORT PrinterOptions set_print_options(PrinterOptions options = PrinterOptions());
 
 /**
  * Return the currently used format options
  */
-PrinterOptions get_print_options();
+DDC_CORE_EXPORT PrinterOptions get_print_options();
 
 /**
  * Print the content of a ChunkSpan

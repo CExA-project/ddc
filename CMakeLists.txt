@@ -119,12 +119,21 @@ if("${DDC_BUILD_DOCUMENTATION}")
     find_package(Doxygen 1.9.8 REQUIRED OPTIONAL_COMPONENTS dot)
 endif()
 
+include(GenerateExportHeader)
+
 # Our project
 
 ## The library itself
 
 add_library(ddc_core)
 add_library(DDC::core ALIAS ddc_core)
+
+generate_export_header(
+    ddc_core
+    EXPORT_FILE_NAME generated/ddc/core_export.hpp
+    INCLUDE_GUARD_NAME CORE_EXPORT_HPP
+)
+
 configure_file(cmake/config.hpp.in generated/ddc/config.hpp NO_SOURCE_PERMISSIONS @ONLY)
 target_compile_features(ddc_core PUBLIC cxx_std_20)
 target_link_libraries(ddc_core PUBLIC Kokkos::kokkos)
@@ -139,7 +148,9 @@ target_sources(
         FILE_SET core_public
             TYPE HEADERS
             BASE_DIRS ${CMAKE_CURRENT_BINARY_DIR}/generated
-            FILES ${CMAKE_CURRENT_BINARY_DIR}/generated/ddc/config.hpp
+            FILES
+                ${CMAKE_CURRENT_BINARY_DIR}/generated/ddc/config.hpp
+                ${CMAKE_CURRENT_BINARY_DIR}/generated/ddc/core_export.hpp
     INTERFACE
         FILE_SET core_interface
             TYPE HEADERS
@@ -184,7 +195,7 @@ target_sources(
                 src/ddc/uniform_point_sampling.hpp
 )
 
-set_target_properties(ddc_core PROPERTIES EXPORT_NAME core)
+set_target_properties(ddc_core PROPERTIES CXX_VISIBILITY_PRESET hidden EXPORT_NAME core)
 install(TARGETS ddc_core EXPORT DDCCoreTargets FILE_SET core_interface FILE_SET core_public)
 install(EXPORT DDCCoreTargets NAMESPACE DDC:: DESTINATION ${DDC_INSTALL_CMAKEDIR})
 

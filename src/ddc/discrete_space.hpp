@@ -17,6 +17,8 @@
 #include <typeinfo>
 #include <utility>
 
+#include <ddc/core_export.hpp>
+
 #include <Kokkos_Core.hpp>
 
 #include "detail/dual_discretization.hpp"
@@ -91,7 +93,7 @@ public:
 };
 
 // Global CPU variable storing resetters. Required to correctly free data.
-extern std::optional<std::map<std::string, std::function<void()>>> g_discretization_store;
+extern DDC_CORE_EXPORT std::optional<std::map<std::string, std::function<void()>>> g_discretization_store;
 
 // Global CPU variable owning discrete spaces data for CPU and GPU
 template <class DDim>
@@ -114,7 +116,7 @@ SYCL_EXTERNAL inline sycl::ext::oneapi::experimental::device_global<
         g_discrete_space_device;
 #endif
 
-void display_discretization_store(std::ostream& os);
+DDC_CORE_EXPORT void display_discretization_store(std::ostream& os);
 
 template <class Tuple, std::size_t... Ids>
 auto extract_after(Tuple&& t, std::index_sequence<Ids...>)

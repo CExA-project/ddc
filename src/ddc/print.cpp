@@ -69,6 +69,8 @@ void print_demangled_type_name(std::ostream& os, char const* const mangled_name)
 #endif
 }
 
+namespace {
+
 void print_single_dim_name(
         std::ostream& os,
         char const* const dim,
@@ -77,6 +79,8 @@ void print_single_dim_name(
     print_demangled_type_name(os, dim);
     os << '(' << size << ')';
 }
+
+} // namespace
 
 void print_dim_name(
         std::ostream& os,

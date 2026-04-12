@@ -12,6 +12,8 @@
 #include <type_traits>
 #include <utility>
 
+#include <ddc/core_export.hpp>
+
 #include <Kokkos_Macros.hpp>
 
 #include "detail/macros.hpp"
@@ -313,7 +315,9 @@ public:
 
 namespace detail {
 
-void print_discrete_element(std::ostream& os, std::span<DiscreteElementType const> view);
+DDC_CORE_EXPORT void print_discrete_element(
+        std::ostream& os,
+        std::span<DiscreteElementType const> view);
 
 } // namespace detail
 

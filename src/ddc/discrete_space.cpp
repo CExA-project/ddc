@@ -9,7 +9,11 @@
 #include <string>
 #include <utility>
 
+#include <ddc/core_export.hpp>
+
 #include <Kokkos_Macros.hpp>
+
+#include "discrete_space.hpp"
 
 #if defined(KOKKOS_ENABLE_CUDA)
 #    include <sstream>
@@ -54,7 +58,7 @@ void device_throw_on_error(
 #endif
 
 // Global CPU variable storing resetters. Required to correctly free data.
-std::optional<std::map<std::string, std::function<void()>>> g_discretization_store;
+DDC_CORE_EXPORT std::optional<std::map<std::string, std::function<void()>>> g_discretization_store;
 
 void display_discretization_store(std::ostream& os)
 {

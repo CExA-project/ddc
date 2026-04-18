@@ -4,6 +4,7 @@
 
 #include <cstdint>
 #include <cstring>
+#include <string>
 #include <vector>
 
 #include <ddc/ddc.hpp>

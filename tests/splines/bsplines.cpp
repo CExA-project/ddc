@@ -5,11 +5,11 @@
 #include <array>
 #include <cmath>
 #include <cstddef>
-#include <ios>
+#include <ios> // IWYU pragma: keep
 #include <limits>
 #include <sstream>
 #include <string>
-#include <tuple>
+#include <tuple> // IWYU pragma: keep
 #include <type_traits>
 #include <utility>
 #include <vector>
@@ -220,7 +220,9 @@ TYPED_TEST(BSplinesFixture, RoundingUniform)
 
 TEST(BSplines, Concepts)
 {
-    struct DimX;
+    struct DimX
+    {
+    };
     struct UBSplinesX : ddc::UniformBSplines<DimX, 2, true>
     {
     };

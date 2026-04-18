@@ -20,6 +20,8 @@
 #include "discrete_vector.hpp"
 #include "real_type.hpp"
 
+// IWYU pragma: no_forward_declare Kokkos::HostSpace
+
 namespace ddc {
 
 namespace detail {

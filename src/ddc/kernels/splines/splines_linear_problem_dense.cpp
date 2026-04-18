@@ -19,8 +19,10 @@
 // They must be placed before `#include <KokkosBatched_Getrs.hpp>`.
 // This is fixed in Kokkos Kernels >=5.1.
 // clang-format off
+// IWYU pragma: begin_keep
 #include <KokkosBatched_Laswp.hpp>
 #include <KokkosBatched_Trsm_Decl.hpp>
+// IWYU pragma: end_keep
 // clang-format on
 
 #include <KokkosBatched_Getrs.hpp>

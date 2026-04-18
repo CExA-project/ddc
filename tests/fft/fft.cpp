@@ -4,6 +4,7 @@
 
 #include <cstddef>
 #include <stdexcept>
+#include <string>
 #include <type_traits>
 
 #include <ddc/ddc.hpp>

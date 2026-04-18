@@ -4,6 +4,7 @@
 
 #include <sstream>
 #include <stdexcept>
+#include <string>
 
 #include <ddc/kernels/splines.hpp>
 

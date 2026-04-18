@@ -8,7 +8,7 @@
 #include <mutex>
 #include <ostream>
 
-#include <Kokkos_Macros.hpp>
+#include <Kokkos_Macros.hpp> // IWYU pragma: keep (for KOKKOS_COMPILER_CLANG)
 
 #include "discrete_vector.hpp"
 #include "print.hpp"

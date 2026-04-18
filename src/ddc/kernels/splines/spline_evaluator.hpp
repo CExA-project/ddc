@@ -6,6 +6,7 @@
 
 #include <array>
 #include <cstddef>
+#include <span>
 #include <type_traits>
 
 #include <ddc/ddc.hpp>

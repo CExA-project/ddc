@@ -2,8 +2,10 @@
 //
 // SPDX-License-Identifier: MIT
 
+#include <array>
 #include <limits>
 #include <stdexcept>
+#include <string>
 #include <utility>
 
 #include <ddc/ddc.hpp>
@@ -11,8 +13,6 @@
 #include <gtest/gtest.h>
 
 #include <Kokkos_Core.hpp>
-
-#include "ddc/parallel_for_each_team.hpp"
 
 #include "helper_count.hpp"
 

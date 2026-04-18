@@ -1,0 +1,8 @@
+[
+    {"symbol": ["std::_Swallow_assign", "private", "<tuple>", "public"]},
+    {"include": ["\"gmock/gmock.h\"", "private", "<gmock/gmock.h>", "public"]},
+    { "ref": "iwyu-ginkgo.json" },
+    { "ref": "iwyu-kokkos.json" },
+    { "ref": "iwyu-kokkos-kernels.json" },
+    { "ref": "iwyu-kokkos-fft.json" }
+]

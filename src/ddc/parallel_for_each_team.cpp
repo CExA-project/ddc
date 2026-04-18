@@ -6,8 +6,6 @@
 #include <stdexcept>
 #include <utility>
 
-#include <Kokkos_Core.hpp>
-
 #include "discrete_vector.hpp"
 #include "parallel_for_each_team.hpp"
 

@@ -5,6 +5,7 @@
 #include <cstddef>
 #include <filesystem>
 #include <stdexcept>
+#include <string>
 #include <vector>
 
 #include <ddc/ddc.hpp>

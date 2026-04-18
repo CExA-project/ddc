@@ -7,7 +7,7 @@
 #include <array>
 #include <cassert>
 #include <cstddef>
-#include <initializer_list>
+#include <initializer_list> // IWYU pragma: keep
 #if !defined(NDEBUG)
 #    include <limits>
 #endif

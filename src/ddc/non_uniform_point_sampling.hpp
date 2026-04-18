@@ -7,7 +7,7 @@
 #include <algorithm>
 #include <cassert>
 #include <cstddef>
-#include <initializer_list>
+#include <initializer_list> // IWYU pragma: keep
 #include <iosfwd>
 #include <iterator>
 #include <stdexcept>

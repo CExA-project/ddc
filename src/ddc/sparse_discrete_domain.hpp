@@ -22,7 +22,7 @@
 namespace ddc {
 
 template <class... DDims>
-class SparseDiscreteDomain;
+class SparseDiscreteDomain; // IWYU pragma: keep
 
 template <class T>
 struct is_sparse_discrete_domain : std::false_type

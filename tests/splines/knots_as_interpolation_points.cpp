@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 #include <cstddef>
-#include <ios>
+#include <ios> // IWYU pragma: keep
 #include <sstream>
 #include <string>
 #include <tuple>

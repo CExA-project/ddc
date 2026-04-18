@@ -14,6 +14,7 @@
 
 #include "chunk_common.hpp"
 #include "chunk_span.hpp"
+#include "chunk_traits.hpp"
 #include "discrete_domain.hpp"
 #include "discrete_element.hpp"
 #include "discrete_vector.hpp"
@@ -21,13 +22,7 @@
 
 namespace ddc {
 
-template <class ElementType, class, class Allocator = HostAllocator<ElementType>>
-class Chunk;
-
-template <class ElementType, class SupportType, class Allocator>
-inline constexpr bool enable_chunk<Chunk<ElementType, SupportType, Allocator>> = true;
-
-template <class ElementType, class SupportType, class Allocator>
+template <class ElementType, class SupportType, class Allocator = HostAllocator<ElementType>>
 class Chunk : public ChunkCommon<ElementType, SupportType, Kokkos::layout_right>
 {
 protected:
@@ -344,6 +339,9 @@ public:
         return span_type(*this);
     }
 };
+
+template <class ElementType, class SupportType, class Allocator>
+inline constexpr bool enable_chunk<Chunk<ElementType, SupportType, Allocator>> = true;
 
 template <class SupportType, class Allocator>
 Chunk(std::string const&, SupportType const&, Allocator)

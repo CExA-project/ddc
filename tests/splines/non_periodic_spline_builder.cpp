@@ -6,6 +6,7 @@
 #include <cmath>
 #include <cstddef>
 #include <optional>
+#include <string>
 #include <tuple>
 #include <type_traits>
 #if defined(BSPLINES_TYPE_NON_UNIFORM)

@@ -1,0 +1,18 @@
+[
+    {"include": ["<ginkgo/core/base/utils_helper.hpp>", "private", "<ginkgo/ginkgo.hpp>", "public"]},
+    {"symbol": ["gko::array", "private", "<ginkgo/ginkgo.hpp>", "public"]},
+    {"symbol": ["gko::matrix::Csr", "private", "<ginkgo/ginkgo.hpp>", "public"]},
+    {"symbol": ["gko::matrix::Dense", "private", "<ginkgo/ginkgo.hpp>", "public"]},
+    {"symbol": ["gko::solver::Bicgstab", "private", "<ginkgo/ginkgo.hpp>", "public"]},
+    {"symbol": ["gko::LinOp", "private", "<ginkgo/ginkgo.hpp>", "public"]},
+    {"symbol": ["gko::dim", "private", "<ginkgo/ginkgo.hpp>", "public"]},
+    {"symbol": ["gko::matrix_data", "private", "<ginkgo/ginkgo.hpp>", "public"]},
+    {"symbol": ["gko::stop::ResidualNorm", "private", "<ginkgo/ginkgo.hpp>", "public"]},
+    {"symbol": ["gko::stop::Iteration", "private", "<ginkgo/ginkgo.hpp>", "public"]},
+    {"symbol": ["gko::log::Convergence", "private", "<ginkgo/ginkgo.hpp>", "public"]},
+    {"symbol": ["gko::int32", "private", "<ginkgo/ginkgo.hpp>", "public"]},
+    {"symbol": ["gko::Executor", "private", "<ginkgo/ginkgo.hpp>", "public"]},
+    {"symbol": ["gko::preconditioner::Jacobi", "private", "<ginkgo/ginkgo.hpp>", "public"]},
+    {"symbol": ["gko::ext::kokkos::create_executor", "private", "<ginkgo/extensions/kokkos.hpp>", "public"]},
+    {"symbol": ["gko::as", "private", "<ginkgo/ginkgo.hpp>", "public"]}
+]

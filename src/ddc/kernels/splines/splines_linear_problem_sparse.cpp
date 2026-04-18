@@ -11,6 +11,8 @@
 #include <stdexcept>
 #include <type_traits>
 
+#include <ddc/ddc.hpp>
+
 #include <ginkgo/extensions/kokkos.hpp>
 #include <ginkgo/ginkgo.hpp>
 

@@ -6,9 +6,8 @@
 
 #include <array>
 #include <cstddef>
-#include <tuple>
+#include <span>
 #include <type_traits>
-#include <utility>
 
 #include <ddc/ddc.hpp>
 

@@ -3,7 +3,10 @@
 // SPDX-License-Identifier: MIT
 
 #include <array>
+#include <initializer_list>
+#include <span>
 #include <stdexcept>
+#include <string>
 
 #include <ddc/ddc.hpp>
 

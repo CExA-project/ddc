@@ -8,8 +8,6 @@
 #include <cstddef>
 #include <span>
 
-#include <Kokkos_Core.hpp>
-
 #include "detail/type_seq.hpp"
 
 #include "discrete_element.hpp"

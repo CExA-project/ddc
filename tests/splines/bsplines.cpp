@@ -5,7 +5,7 @@
 #include <array>
 #include <cmath>
 #include <cstddef>
-#include <ios>
+#include <ios> // IWYU pragma: keep
 #include <limits>
 #include <sstream>
 #include <string>

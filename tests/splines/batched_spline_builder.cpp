@@ -7,6 +7,7 @@
 #if defined(BC_HERMITE)
 #    include <optional>
 #endif
+#include <string>
 #include <vector>
 
 #include <ddc/ddc.hpp>

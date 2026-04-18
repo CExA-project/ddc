@@ -13,7 +13,9 @@
 namespace ddc::detail {
 
 template <std::size_t N, class ElementType, bool CONTIGUOUS = true>
-struct ViewNDMaker;
+struct ViewNDMaker
+{
+};
 
 template <std::size_t N, class ElementType>
 struct ViewNDMaker<N, ElementType, true>

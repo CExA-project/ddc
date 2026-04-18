@@ -241,9 +241,15 @@ void test_fft_norm(ddc::FFT_Normalization const norm)
     EXPECT_NEAR(FFf(FFf.domain().back()), FFf_expected, epsilon);
 }
 
-struct RDimX;
-struct RDimY;
-struct RDimZ;
+struct RDimX
+{
+};
+struct RDimY
+{
+};
+struct RDimZ
+{
+};
 
 } // namespace anonymous_namespace_workaround_fft_cpp
 

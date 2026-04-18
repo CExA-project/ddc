@@ -14,14 +14,20 @@ namespace ddc {
 
 namespace detail {
 
-template <class...>
-struct TypeSeq;
+template <class... Tags>
+struct TypeSeq
+{
+};
 
-template <class>
-struct SingleType;
+template <class Tag>
+struct SingleType
+{
+};
 
-template <class...>
-struct TypeSeqRank;
+template <class QueryTagSeq, class TagSeq>
+struct TypeSeqRank
+{
+};
 
 template <class QueryTag>
 struct TypeSeqRank<SingleType<QueryTag>, TypeSeq<>>
@@ -53,7 +59,9 @@ struct TypeSeqRank<TypeSeq<QueryTags...>, TypeSeq<Tags...>>
 };
 
 template <std::size_t I, class TagSeq>
-struct TypeSeqElement;
+struct TypeSeqElement
+{
+};
 
 template <std::size_t I, class... Tags>
 struct TypeSeqElement<I, TypeSeq<Tags...>>
@@ -66,7 +74,9 @@ struct TypeSeqElement<I, TypeSeq<Tags...>>
 /// Remark 2: It is similar to the set difference in the set theory (R = A\\B).
 /// Example: A = [a, b, c], B = [z, c, y], R = [a, b]
 template <class TagSeqA, class TagSeqB, class TagSeqR>
-struct TypeSeqRemove;
+struct TypeSeqRemove
+{
+};
 
 template <class... TagsB, class... TagsR>
 struct TypeSeqRemove<TypeSeq<>, TypeSeq<TagsB...>, TypeSeq<TagsR...>>
@@ -88,7 +98,9 @@ struct TypeSeqRemove<TypeSeq<HeadTagsA, TailTagsA...>, TypeSeq<TagsB...>, TypeSe
 /// Remark 2: It is similar to the set union in the set theory (R = AUB).
 /// Example: A = [a, b, c], B = [z, c, y], R = [a, b, c, z, y]
 template <class TagSeqA, class TagSeqB, class TagSeqR>
-struct TypeSeqMerge;
+struct TypeSeqMerge
+{
+};
 
 template <class... TagsA, class... TagsR>
 struct TypeSeqMerge<TypeSeq<TagsA...>, TypeSeq<>, TypeSeq<TagsR...>>
@@ -108,7 +120,9 @@ struct TypeSeqMerge<TypeSeq<TagsA...>, TypeSeq<HeadTagsB, TailTagsB...>, TypeSeq
 /// `type` contains all elements in A then all elements in B.
 /// Example: A = [a, b, c], B = [z, c, y], returned type [a, b, c, z, c, y]
 template <class TagSeqA, class TagSeqB>
-struct TypeSeqCat;
+struct TypeSeqCat
+{
+};
 
 template <class... TagsA, class... TagsB>
 struct TypeSeqCat<TypeSeq<TagsA...>, TypeSeq<TagsB...>>
@@ -119,7 +133,9 @@ struct TypeSeqCat<TypeSeq<TagsA...>, TypeSeq<TagsB...>>
 /// A is replaced by element of C at same position than the first element of B equal to A.
 /// Remark : It may not be useful in its own, it is an helper for TypeSeqReplace
 template <class TagA, class TagSeqB, class TagSeqC>
-struct TypeSeqReplaceSingle;
+struct TypeSeqReplaceSingle
+{
+};
 
 template <class TagA>
 struct TypeSeqReplaceSingle<TagA, TypeSeq<>, TypeSeq<>>
@@ -142,7 +158,9 @@ struct TypeSeqReplaceSingle<
 /// R contains all elements of A except those of B which are replaced by those of C.
 /// Remark : This operation preserves the orders.
 template <class TagSeqA, class TagSeqB, class TagSeqC, class TagSeqR>
-struct TypeSeqReplace;
+struct TypeSeqReplace
+{
+};
 
 template <class... TagsB, class... TagsC, class... TagsR>
 struct TypeSeqReplace<TypeSeq<>, TypeSeq<TagsB...>, TypeSeq<TagsC...>, TypeSeq<TagsR...>>
@@ -169,7 +187,14 @@ struct TypeSeqReplace<
 };
 
 template <class T>
-struct ToTypeSeq;
+struct ToTypeSeq
+{
+};
+
+template <class T, class TagSeq>
+struct Rebind
+{
+};
 
 } // namespace detail
 

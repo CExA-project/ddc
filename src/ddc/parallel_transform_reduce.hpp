@@ -20,74 +20,78 @@ namespace ddc {
 namespace detail {
 
 template <class Reducer>
-struct ddc_to_kokkos_reducer;
+struct DdcToKokkosReducer
+{
+};
 
 template <class T>
-struct ddc_to_kokkos_reducer<reducer::sum<T>>
+struct DdcToKokkosReducer<reducer::sum<T>>
 {
     using type = Kokkos::Sum<T>;
 };
 
 template <class T>
-struct ddc_to_kokkos_reducer<reducer::prod<T>>
+struct DdcToKokkosReducer<reducer::prod<T>>
 {
     using type = Kokkos::Prod<T>;
 };
 
 template <class T>
-struct ddc_to_kokkos_reducer<reducer::land<T>>
+struct DdcToKokkosReducer<reducer::land<T>>
 {
     using type = Kokkos::LAnd<T>;
 };
 
 template <class T>
-struct ddc_to_kokkos_reducer<reducer::lor<T>>
+struct DdcToKokkosReducer<reducer::lor<T>>
 {
     using type = Kokkos::LOr<T>;
 };
 
 template <class T>
-struct ddc_to_kokkos_reducer<reducer::band<T>>
+struct DdcToKokkosReducer<reducer::band<T>>
 {
     using type = Kokkos::BAnd<T>;
 };
 
 template <class T>
-struct ddc_to_kokkos_reducer<reducer::bor<T>>
+struct DdcToKokkosReducer<reducer::bor<T>>
 {
     using type = Kokkos::BOr<T>;
 };
 
 template <class T>
-struct ddc_to_kokkos_reducer<reducer::bxor<T>>
+struct DdcToKokkosReducer<reducer::bxor<T>>
 {
     static_assert(std::is_same_v<T, T>, "This reducer is not yet implemented");
 };
 
 template <class T>
-struct ddc_to_kokkos_reducer<reducer::min<T>>
+struct DdcToKokkosReducer<reducer::min<T>>
 {
     using type = Kokkos::Min<T>;
 };
 
 template <class T>
-struct ddc_to_kokkos_reducer<reducer::max<T>>
+struct DdcToKokkosReducer<reducer::max<T>>
 {
     using type = Kokkos::Max<T>;
 };
 
 template <class T>
-struct ddc_to_kokkos_reducer<reducer::minmax<T>>
+struct DdcToKokkosReducer<reducer::minmax<T>>
 {
     using type = Kokkos::MinMax<T>;
 };
 
 /// Alias template to transform a DDC reducer type to a Kokkos reducer type
 template <class Reducer>
-using ddc_to_kokkos_reducer_t = ddc_to_kokkos_reducer<Reducer>::type;
+using ddc_to_kokkos_reducer_t = DdcToKokkosReducer<Reducer>::type;
 
 template <class Reducer, class Functor, class Support, class IndexSequence>
-class TransformReducerKokkosLambdaAdapter;
+class TransformReducerKokkosLambdaAdapter
+{
+};
 
 template <class Reducer, class Functor, class Support, std::size_t... Idx>
 class TransformReducerKokkosLambdaAdapter<Reducer, Functor, Support, std::index_sequence<Idx...>>

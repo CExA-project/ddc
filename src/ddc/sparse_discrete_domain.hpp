@@ -21,9 +21,6 @@
 
 namespace ddc {
 
-template <class DDim>
-struct SparseDiscreteDomainIterator;
-
 template <class... DDims>
 class SparseDiscreteDomain;
 
@@ -55,11 +52,8 @@ struct ToTypeSeq<SparseDiscreteDomain<Tags...>>
     using type = TypeSeq<Tags...>;
 };
 
-template <class T, class U>
-struct RebindDomain;
-
 template <class... DDims, class... ODDims>
-struct RebindDomain<SparseDiscreteDomain<DDims...>, detail::TypeSeq<ODDims...>>
+struct Rebind<SparseDiscreteDomain<DDims...>, detail::TypeSeq<ODDims...>>
 {
     using type = SparseDiscreteDomain<ODDims...>;
 };
@@ -507,7 +501,9 @@ KOKKOS_FUNCTION constexpr SparseDiscreteDomain<QueryDDims...> select(
 namespace detail {
 
 template <class T>
-struct ConvertTypeSeqToSparseDiscreteDomain;
+struct ConvertTypeSeqToSparseDiscreteDomain
+{
+};
 
 template <class... DDims>
 struct ConvertTypeSeqToSparseDiscreteDomain<detail::TypeSeq<DDims...>>

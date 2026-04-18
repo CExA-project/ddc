@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: MIT
 
-#include <type_traits>
-
 #include <ddc/ddc.hpp>
 
 #include <gtest/gtest.h>
@@ -319,14 +317,6 @@ TEST(DiscreteDomainTest, Transpose3DConstructor)
     EXPECT_EQ(DElemX(dom_x_y_z.back()), DElemX(dom_z_y_x.back()));
     EXPECT_EQ(DElemY(dom_x_y_z.back()), DElemY(dom_z_y_x.back()));
     EXPECT_EQ(DElemZ(dom_x_y_z.back()), DElemZ(dom_z_y_x.back()));
-}
-
-TEST(DiscreteDomainTest, CartesianProduct)
-{
-    EXPECT_TRUE((std::is_same_v<ddc::cartesian_prod_t<>, ddc::DiscreteDomain<>>));
-    EXPECT_TRUE((std::is_same_v<ddc::cartesian_prod_t<DDomX>, DDomX>));
-    EXPECT_TRUE((std::is_same_v<ddc::cartesian_prod_t<DDomX, DDomY, DDomZ>, DDomXYZ>));
-    EXPECT_TRUE((std::is_same_v<ddc::cartesian_prod_t<DDomZY, DDomX>, DDomZYX>));
 }
 
 TEST(DiscreteDomainTest, Select)

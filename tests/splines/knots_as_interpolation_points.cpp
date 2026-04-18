@@ -20,7 +20,9 @@
 inline namespace anonymous_namespace_workaround_knots_as_interpolation_points_cpp {
 
 template <class T>
-struct UniformBSplinesFixture;
+struct UniformBSplinesFixture
+{
+};
 
 template <bool IsPeriodic>
 struct UniformBSplinesFixture<std::tuple<std::integral_constant<bool, IsPeriodic>>>
@@ -44,7 +46,9 @@ struct UniformBSplinesFixture<std::tuple<std::integral_constant<bool, IsPeriodic
 };
 
 template <class T>
-struct NonUniformBSplinesFixture;
+struct NonUniformBSplinesFixture
+{
+};
 
 template <bool IsPeriodic>
 struct NonUniformBSplinesFixture<std::tuple<std::integral_constant<bool, IsPeriodic>>>

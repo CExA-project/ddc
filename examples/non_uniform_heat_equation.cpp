@@ -90,7 +90,9 @@ std::vector<double> periodic_extrapolation_right(int gw, std::vector<double> con
 }
 
 //! [X-dimension]
-struct X;
+struct X
+{
+};
 //! [X-dimension]
 
 //! [X-discretization]
@@ -100,14 +102,18 @@ struct DDimX : ddc::NonUniformPointSampling<X>
 //! [X-discretization]
 
 //! [Y-space]
-struct Y;
+struct Y
+{
+};
 struct DDimY : ddc::NonUniformPointSampling<Y>
 {
 };
 //! [Y-space]
 
 //! [time-space]
-struct T;
+struct T
+{
+};
 struct DDimT : ddc::UniformPointSampling<T>
 {
 };

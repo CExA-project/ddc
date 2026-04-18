@@ -23,7 +23,9 @@
 #include "test_utils.hpp"
 
 template <class T>
-struct BSplinesFixture;
+struct BSplinesFixture
+{
+};
 
 template <std::size_t D, std::size_t Nc, bool Periodic>
 struct BSplinesFixture<std::tuple<

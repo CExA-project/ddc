@@ -15,7 +15,9 @@
 #include <Kokkos_Core.hpp>
 
 /// Our first continuous dimension
-struct X;
+struct X
+{
+};
 
 /// A uniform discretization of X
 struct DDimX : ddc::UniformPointSampling<X>
@@ -27,7 +29,9 @@ struct DDimFx : ddc::PeriodicSampling<ddc::Fourier<X>>
 };
 
 // Our second continuous dimension
-struct Y;
+struct Y
+{
+};
 // Its uniform discretization
 struct DDimY : ddc::UniformPointSampling<Y>
 {
@@ -38,7 +42,9 @@ struct DDimFy : ddc::PeriodicSampling<ddc::Fourier<Y>>
 };
 
 // Our simulated time dimension
-struct T;
+struct T
+{
+};
 // Its uniform discretization
 struct DDimT : ddc::UniformPointSampling<T>
 {

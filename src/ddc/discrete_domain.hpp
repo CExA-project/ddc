@@ -54,11 +54,8 @@ struct ToTypeSeq<DiscreteDomain<Tags...>>
     using type = TypeSeq<Tags...>;
 };
 
-template <class T, class U>
-struct RebindDomain;
-
 template <class... DDims, class... ODDims>
-struct RebindDomain<DiscreteDomain<DDims...>, detail::TypeSeq<ODDims...>>
+struct Rebind<DiscreteDomain<DDims...>, detail::TypeSeq<ODDims...>>
 {
     using type = DiscreteDomain<ODDims...>;
 };
@@ -459,7 +456,9 @@ KOKKOS_FUNCTION constexpr DiscreteDomain<QueryDDims...> select(
 namespace detail {
 
 template <class T>
-struct ConvertTypeSeqToDiscreteDomain;
+struct ConvertTypeSeqToDiscreteDomain
+{
+};
 
 template <class... DDims>
 struct ConvertTypeSeqToDiscreteDomain<detail::TypeSeq<DDims...>>
@@ -471,32 +470,6 @@ template <class T>
 using convert_type_seq_to_discrete_domain_t = ConvertTypeSeqToDiscreteDomain<T>::type;
 
 } // namespace detail
-
-// Computes the cartesian product of DiscreteDomain types
-// Example usage : "using DDom = cartesian_prod_t<DDom1,DDom2,DDom3>;"
-template <typename... DDoms>
-struct cartesian_prod;
-
-template <typename... DDims1, typename... DDims2, typename... DDomsTail>
-struct cartesian_prod<DiscreteDomain<DDims1...>, DiscreteDomain<DDims2...>, DDomsTail...>
-{
-    using type = cartesian_prod<DiscreteDomain<DDims1..., DDims2...>, DDomsTail...>::type;
-};
-
-template <typename... DDims>
-struct cartesian_prod<DiscreteDomain<DDims...>>
-{
-    using type = DiscreteDomain<DDims...>;
-};
-
-template <>
-struct cartesian_prod<>
-{
-    using type = ddc::DiscreteDomain<>;
-};
-
-template <typename... DDoms>
-using cartesian_prod_t = cartesian_prod<DDoms...>::type;
 
 // Computes the subtraction DDom_a - DDom_b in the sense of linear spaces(retained dimensions are those in DDom_a which are not in DDom_b)
 template <class... DDimsA, class... DDimsB>
@@ -573,7 +546,7 @@ KOKKOS_FUNCTION constexpr auto replace_dim_of(
 template <typename DDom, typename DDim1, typename DDim2>
 using replace_dim_of_t = decltype(replace_dim_of<DDim1, DDim2>(
         std::declval<DDom>(),
-        std::declval<typename detail::RebindDomain<DDom, detail::TypeSeq<DDim2>>::type>()));
+        std::declval<typename detail::Rebind<DDom, detail::TypeSeq<DDim2>>::type>()));
 
 
 template <class... QueryDDims, class... DDims>

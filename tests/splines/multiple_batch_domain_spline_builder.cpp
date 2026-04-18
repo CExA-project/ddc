@@ -4,6 +4,7 @@
 
 #include <algorithm>
 #include <cstddef>
+#include <string>
 #include <tuple>
 #if defined(BC_HERMITE)
 #    include <optional>

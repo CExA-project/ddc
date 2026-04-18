@@ -23,7 +23,7 @@ template <concepts::discrete_dimension DDim>
 struct StridedDiscreteDomainIterator;
 
 template <concepts::discrete_dimension... DDims>
-class StridedDiscreteDomain;
+class StridedDiscreteDomain; // IWYU pragma: keep
 
 template <class T>
 struct is_strided_discrete_domain : std::false_type

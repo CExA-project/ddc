@@ -2,6 +2,7 @@
 //
 // SPDX-License-Identifier: MIT
 
+#include <string>
 #include <type_traits>
 #include <utility>
 

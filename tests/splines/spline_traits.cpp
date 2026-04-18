@@ -4,6 +4,7 @@
 
 #include <cstddef>
 #include <sstream>
+#include <string>
 #include <tuple>
 #include <type_traits>
 #include <utility>

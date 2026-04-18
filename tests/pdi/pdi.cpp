@@ -4,6 +4,7 @@
 
 #include <cstddef>
 #include <string>
+#include <string_view>
 
 #include <ddc/ddc.hpp>
 #include <ddc/pdi.hpp>

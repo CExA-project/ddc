@@ -12,6 +12,7 @@
 
 #include "chunk_traits.hpp"
 #include "ddc_to_kokkos_execution_policy.hpp"
+#include "discrete_dimension.hpp"
 #include "discrete_element.hpp"
 #include "discrete_vector.hpp"
 #include "parallel_transform_reduce.hpp"

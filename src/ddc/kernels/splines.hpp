@@ -4,6 +4,7 @@
 
 #pragma once
 
+// IWYU pragma: begin_exports
 #include "splines/bsplines.hpp"
 #include "splines/bsplines_non_uniform.hpp"
 #include "splines/bsplines_uniform.hpp"

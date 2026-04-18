@@ -4,6 +4,7 @@
 
 #include <array>
 #include <sstream>
+#include <string>
 
 #include <ddc/ddc.hpp>
 

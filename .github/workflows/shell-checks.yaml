@@ -11,8 +11,6 @@ on:
     paths:
       - '.github/workflows/shell-checks.yaml'
       - '**.sh'
-      - 'bin/applyreuse'
-      - 'docker/*/bash_run'
   workflow_dispatch:
 
 permissions:
@@ -28,5 +26,3 @@ jobs:
         uses: ludeeus/action-shellcheck@00cae500b08a931fb5698e11e79bfbd38e612a38  # 2.0.0
         env:
           SHELLCHECK_OPTS: -e SC1091
-        with:
-          additional_files: 'bin/applyreuse docker/*/bash_run'

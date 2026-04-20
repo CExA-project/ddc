@@ -15,7 +15,7 @@ ARG GINKGO_VERSION=1.8.0
 ARG LLVM_VERSION=16
 ARG ROCM_VERSION=6.2.4
 
-COPY bash_run /bin/
+COPY bash_run.sh /bin/
 ENV BASH_ENV=/etc/profile
 SHELL ["/bin/bash", "-c"]
 
@@ -24,7 +24,7 @@ ENV PATH="/opt/cmake-${CMAKE_VERSION}-linux-x86_64/bin${PATH:+:${PATH}}"
 ENV PATH="${PATH:+$PATH:}/opt/rocm-${ROCM_VERSION}/bin"
 ENV CMAKE_PREFIX_PATH="${CMAKE_PREFIX_PATH:+$CMAKE_PREFIX_PATH:}/opt/rocm-${ROCM_VERSION}"
 
-RUN chmod +x /bin/bash_run \
+RUN chmod +x /bin/bash_run.sh \
  && export DEBIAN_FRONTEND=noninteractive \
  && echo tzdata tzdata/Areas string Etc | debconf-set-selections \
  && echo tzdata tzdata/Zones/Etc string UTC | debconf-set-selections \
@@ -130,5 +130,5 @@ RUN chmod +x /bin/bash_run \
 USER ci:ci
 WORKDIR /data
 
-ENTRYPOINT ["/bin/bash_run"]
+ENTRYPOINT ["/bin/bash_run.sh"]
 CMD ["/bin/bash", "-li"]

@@ -117,7 +117,7 @@ template <class ExecSpace, class ChunkDst, class UnaryTransformOp>
 auto parallel_transform(
         ExecSpace const& execution_space,
         ChunkDst&& dst,
-        UnaryTransformOp&& transform)
+        UnaryTransformOp&& transform) requires(Kokkos::is_execution_space_v<ExecSpace>)
 {
     return parallel_transform(
             "ddc_parallel_transform_default",

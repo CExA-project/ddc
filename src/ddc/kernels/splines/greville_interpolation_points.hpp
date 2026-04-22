@@ -143,7 +143,7 @@ public:
      */
     template <class Sampling>
     static auto get_sampling()
-        requires(is_uniform_discrete_dimension_v<BSplines>)
+        requires(is_uniform_discrete_dimension_v<Sampling>)
     {
         return uniform_greville_points<Sampling>();
     }
@@ -157,7 +157,7 @@ public:
      */
     template <class Sampling>
     static auto get_sampling()
-        requires(!is_uniform_discrete_dimension_v<BSplines>)
+        requires(!is_uniform_discrete_dimension_v<Sampling>)
     {
         using SamplingImpl = Sampling::template Impl<Sampling, Kokkos::HostSpace>;
         if constexpr (BSplines::is_uniform()) {

@@ -50,7 +50,7 @@ public:
     template <typename Sampling, typename U = BSplines>
     static auto get_sampling()
     {
-        if constexpr (U::is_uniform()) {
+        if constexpr (Sampling::is_uniform()) {
             return std::get<0>(Sampling::
                                        init(ddc::discrete_space<BSplines>().rmin(),
                                             ddc::discrete_space<BSplines>().rmax(),

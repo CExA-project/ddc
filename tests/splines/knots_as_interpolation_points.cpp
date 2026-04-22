@@ -22,16 +22,21 @@ inline namespace anonymous_namespace_workaround_knots_as_interpolation_points_cp
 template <class T>
 struct UniformBSplinesFixture;
 
-template <bool IsPeriodic>
-struct UniformBSplinesFixture<std::tuple<std::integral_constant<bool, IsPeriodic>>>
-    : public testing::Test
+template <bool IsPeriodic, bool IsUniformInterpolation>
+struct UniformBSplinesFixture<std::tuple<
+        std::integral_constant<bool, IsPeriodic>,
+        std::integral_constant<bool, IsUniformInterpolation>>> : public testing::Test
 {
     struct DimX
     {
         static constexpr bool PERIODIC = IsPeriodic;
     };
 
-    struct DDimX : ddc::UniformPointSampling<DimX>
+    struct DDimX
+        : std::conditional_t<
+                  IsUniformInterpolation,
+                  ddc::UniformPointSampling<DimX>,
+                  ddc::NonUniformPointSampling<DimX>>
     {
     };
 
@@ -84,10 +89,11 @@ struct UniformBSplinesFixtureNames
 } // namespace anonymous_namespace_workaround_knots_as_interpolation_points_cpp
 
 using periodicity = std::integer_sequence<bool, true, false>;
+using uniformity = std::integer_sequence<bool, true, false>;
 
-using Cases = tuple_to_types_t<cartesian_product_t<periodicity>>;
+using UniformCases = tuple_to_types_t<cartesian_product_t<periodicity, uniformity>>;
 
-TYPED_TEST_SUITE(UniformBSplinesFixture, Cases, UniformBSplinesFixtureNames);
+TYPED_TEST_SUITE(UniformBSplinesFixture, UniformCases, UniformBSplinesFixtureNames);
 
 TYPED_TEST(UniformBSplinesFixture, KnotsAsInterpolationPoints)
 {
@@ -119,8 +125,9 @@ TYPED_TEST(UniformBSplinesFixture, KnotsAsInterpolationPoints)
     }
 }
 
+using NonUniformCases = tuple_to_types_t<cartesian_product_t<periodicity>>;
 // Trailing comma is needed to avoid spurious `gnu-zero-variadic-macro-arguments` warning with clang
-TYPED_TEST_SUITE(NonUniformBSplinesFixture, Cases, );
+TYPED_TEST_SUITE(NonUniformBSplinesFixture, NonUniformCases, );
 
 TYPED_TEST(NonUniformBSplinesFixture, KnotsAsInterpolationPoints)
 {

@@ -53,10 +53,19 @@ class GrevilleInterpolationPoints
         double const dx
                 = (ddc::discrete_space<BSplines>().rmax() - ddc::discrete_space<BSplines>().rmin())
                   / ddc::discrete_space<BSplines>().ncells();
-        return SamplingImpl(
-                ddc::Coordinate<continuous_dimension_type>(
-                        ddc::discrete_space<BSplines>().rmin() + shift * dx),
-                ddc::Coordinate<continuous_dimension_type>(dx));
+        if constexpr (ddc::is_uniform_point_sampling_v<Sampling>) {
+            return SamplingImpl(
+                    ddc::Coordinate<continuous_dimension_type>(
+                            ddc::discrete_space<BSplines>().rmin() + shift * dx),
+                    ddc::Coordinate<continuous_dimension_type>(dx));
+        } else {
+            std::size_t const npoints = ddc::discrete_space<BSplines>().nbasis() - N_BE;
+            std::vector<ddc::Coordinate<continuous_dimension_type>> grid_points(npoints);
+            for (std::size_t i(0); i < npoints; ++i) {
+                grid_points[i] = ddc::discrete_space<BSplines>().rmin() + (shift + i) * dx;
+            }
+            return SamplingImpl(grid_points);
+        }
     }
 
     template <class Sampling>

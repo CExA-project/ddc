@@ -53,10 +53,19 @@ class GrevilleInterpolationPoints
         double const dx
                 = (ddc::discrete_space<BSplines>().rmax() - ddc::discrete_space<BSplines>().rmin())
                   / ddc::discrete_space<BSplines>().ncells();
-        return SamplingImpl(
-                ddc::Coordinate<continuous_dimension_type>(
-                        ddc::discrete_space<BSplines>().rmin() + shift * dx),
-                ddc::Coordinate<continuous_dimension_type>(dx));
+        if constexpr (ddc::is_uniform_point_sampling_v<Sampling>) {
+            return SamplingImpl(
+                    ddc::Coordinate<continuous_dimension_type>(
+                            ddc::discrete_space<BSplines>().rmin() + shift * dx),
+                    ddc::Coordinate<continuous_dimension_type>(dx));
+        } else {
+            std::size_t const npoints = ddc::discrete_space<BSplines>().nbasis() - N_BE;
+            std::vector<ddc::Coordinate<continuous_dimension_type>> grid_points(npoints);
+            for (std::size_t i(0); i < npoints; ++i) {
+                grid_points[i] = ddc::discrete_space<BSplines>().rmin() + (shift + i) * dx;
+            }
+            return SamplingImpl(grid_points);
+        }
     }
 
     template <class Sampling>
@@ -143,7 +152,7 @@ public:
      */
     template <class Sampling>
     static auto get_sampling()
-        requires(ddc::is_uniform_point_sampling_v<Sampling>)
+        requires(is_uniform_discrete_dimension_v<BSplines>)
     {
         return uniform_greville_points<Sampling>();
     }
@@ -157,7 +166,7 @@ public:
      */
     template <class Sampling>
     static auto get_sampling()
-        requires(!ddc::is_uniform_point_sampling_v<Sampling>)
+        requires(!is_uniform_discrete_dimension_v<BSplines>)
     {
         using SamplingImpl = Sampling::template Impl<Sampling, Kokkos::HostSpace>;
         if constexpr (BSplines::is_uniform()) {
@@ -224,8 +233,8 @@ public:
                     points_with_bcs[npoints - 1 - i] /= BSplines::degree();
                 }
             } else {
-                points_with_bcs[npoints - 1] = points_wo_bcs.coordinate(
-                        ddc::DiscreteElement<IntermediateSampling>(
+                points_with_bcs[npoints - 1]
+                        = points_wo_bcs.coordinate(ddc::DiscreteElement<IntermediateSampling>(
                                 ddc::discrete_space<BSplines>().ncells() - 1
                                 + BSplines::degree() % 2));
             }

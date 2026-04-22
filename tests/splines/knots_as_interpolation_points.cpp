@@ -23,15 +23,20 @@ template <class T>
 struct UniformBSplinesFixture;
 
 template <bool IsPeriodic, bool IsUniformInterpolation>
-struct UniformBSplinesFixture<std::tuple<std::integral_constant<bool, IsPeriodic>, std::integral_constant<bool, IsUniformInterpolation>>>
-    : public testing::Test
+struct UniformBSplinesFixture<std::tuple<
+        std::integral_constant<bool, IsPeriodic>,
+        std::integral_constant<bool, IsUniformInterpolation>>> : public testing::Test
 {
     struct DimX
     {
         static constexpr bool PERIODIC = IsPeriodic;
     };
 
-    struct DDimX : std::conditional_t<IsUniformInterpolation, ddc::UniformPointSampling<DimX>, ddc::NonUniformPointSampling<DimX>>
+    struct DDimX
+        : std::conditional_t<
+                  IsUniformInterpolation,
+                  ddc::UniformPointSampling<DimX>,
+                  ddc::NonUniformPointSampling<DimX>>
     {
     };
 

@@ -66,9 +66,9 @@ public:
             ddc::host_for_each(
                     break_point_domain,
                     [&](ddc::DiscreteElement<knot_discrete_dimension_t<BSplines>> ik) {
-                        knots[ik - break_point_domain.front()] = ddc::coordinate(ik);
+                        break_points[ik - break_point_domain.front()] = ddc::coordinate(ik);
                     });
-            return SamplingImpl(knots);
+            return SamplingImpl(break_points);
         }
     }
 

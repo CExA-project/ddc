@@ -22,7 +22,7 @@ inline namespace anonymous_namespace_workaround_knots_as_interpolation_points_cp
 template <class T>
 struct UniformBSplinesFixture;
 
-template <bool IsPeriodic>
+template <bool IsPeriodic, bool IsUniformInterpolation>
 struct UniformBSplinesFixture<std::tuple<std::integral_constant<bool, IsPeriodic>, std::integral_constant<bool, IsUniformInterpolation>>>
     : public testing::Test
 {

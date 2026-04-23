@@ -314,14 +314,6 @@ TEST(StridedDiscreteDomainTest, Select)
     EXPECT_EQ(ddc::select<DDimY>(dom_x_y), dom_y);
 }
 
-// TEST(StridedDiscreteDomainTest, CartesianProduct)
-// {
-//     EXPECT_TRUE((std::is_same_v<ddc::cartesian_prod_t<>, ddc::DiscreteDomain<>>));
-//     EXPECT_TRUE((std::is_same_v<ddc::cartesian_prod_t<DDomX>, DDomX>));
-//     EXPECT_TRUE((std::is_same_v<ddc::cartesian_prod_t<DDomX, DDomY, DDomZ>, DDomXYZ>));
-//     EXPECT_TRUE((std::is_same_v<ddc::cartesian_prod_t<DDomZY, DDomX>, DDomZYX>));
-// }
-
 void TestDeviceForEachStritedSerialDevice1D(
         ddc::ChunkSpan<
                 int,

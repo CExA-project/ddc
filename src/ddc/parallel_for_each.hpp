@@ -18,7 +18,9 @@ namespace ddc {
 namespace detail {
 
 template <class F, class Support, class IndexSequence>
-class ForEachKokkosLambdaAdapter;
+class ForEachKokkosLambdaAdapter
+{
+};
 
 template <class F, class Support, std::size_t... Idx>
 class ForEachKokkosLambdaAdapter<F, Support, std::index_sequence<Idx...>>

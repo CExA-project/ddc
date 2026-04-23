@@ -19,7 +19,9 @@
 
 //! [X-dimension]
 /// Our first continuous dimension
-struct X;
+struct X
+{
+};
 //! [X-dimension]
 
 //! [X-discretization]
@@ -31,7 +33,9 @@ struct DDimX : ddc::UniformPointSampling<X>
 
 //! [Y-space]
 // Our second continuous dimension
-struct Y;
+struct Y
+{
+};
 // Its uniform discretization
 struct DDimY : ddc::UniformPointSampling<Y>
 {
@@ -40,7 +44,9 @@ struct DDimY : ddc::UniformPointSampling<Y>
 
 //! [time-space]
 // Our simulated time dimension
-struct T;
+struct T
+{
+};
 // Its uniform discretization
 struct DDimT : ddc::UniformPointSampling<T>
 {

@@ -43,6 +43,7 @@ namespace ddc {
 #include "detail/type_seq.hpp"
 #include "detail/utils.hpp"
 
+#include "ddc_to_kokkos_execution_policy.hpp"
 #include "real_type.hpp"
 #include "scope_guard.hpp"
 

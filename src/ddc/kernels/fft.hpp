@@ -21,7 +21,9 @@ namespace ddc {
  * @tparam The tag representing the original dimension.
  */
 template <typename Dim>
-struct Fourier;
+struct Fourier
+{
+};
 
 /**
  * @brief A named argument to choose the direction of the FFT.

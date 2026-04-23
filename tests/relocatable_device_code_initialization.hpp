@@ -8,11 +8,13 @@
 
 namespace rdc {
 
-struct DimX;
-
+struct DimX
+{
+};
 struct DDimX : ddc::UniformPointSampling<DimX>
 {
 };
+
 using DElemX = ddc::DiscreteElement<DDimX>;
 using DVectX = ddc::DiscreteVector<DDimX>;
 using DDomX = ddc::DiscreteDomain<DDimX>;

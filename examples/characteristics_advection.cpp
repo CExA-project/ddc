@@ -54,7 +54,9 @@ struct DDimX : GrevillePoints::interpolation_discrete_dimension_type
 
 //! [Y-space]
 // Our second continuous dimension
-struct Y;
+struct Y
+{
+};
 // Its uniform discretization
 struct DDimY : ddc::UniformPointSampling<Y>
 {
@@ -63,7 +65,9 @@ struct DDimY : ddc::UniformPointSampling<Y>
 
 //! [time-space]
 // Our simulated time dimension
-struct T;
+struct T
+{
+};
 // Its uniform discretization
 struct DDimT : ddc::UniformPointSampling<T>
 {

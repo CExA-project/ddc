@@ -36,10 +36,12 @@ template <class S>
 using to_tuple_t = ToTuple<S>::type;
 
 template <class TupleOfTuples, class Tuple>
-struct for_each_tuple_cat;
+struct ForEachTupleCat
+{
+};
 
 template <class... Tuples, class Tuple>
-struct for_each_tuple_cat<std::tuple<Tuples...>, Tuple>
+struct ForEachTupleCat<std::tuple<Tuples...>, Tuple>
 {
     using type = std::tuple<
             decltype(std::tuple_cat(std::declval<Tuples>(), std::declval<Tuple>()))...>;
@@ -47,7 +49,7 @@ struct for_each_tuple_cat<std::tuple<Tuples...>, Tuple>
 
 /// Construct a tuple of tuples that is the result of the concatenation of the tuples in TupleOfTuples with Tuple.
 template <class TupleOfTuples, class Tuple>
-using for_each_tuple_cat_t = for_each_tuple_cat<TupleOfTuples, Tuple>::type;
+using for_each_tuple_cat_t = ForEachTupleCat<TupleOfTuples, Tuple>::type;
 
 static_assert(std::is_same_v<
               for_each_tuple_cat_t<
@@ -60,11 +62,13 @@ static_assert(std::is_same_v<
               std::tuple<std::tuple<double, double, int>>>);
 
 template <class InTupleOfTuples, class OutTupleOfTuples>
-struct cartesian_product_impl;
+struct CartesianProductImpl
+{
+};
 
 template <class... HeadArgs, class... TailTuples, class OutTupleOfTuples>
-struct cartesian_product_impl<std::tuple<std::tuple<HeadArgs...>, TailTuples...>, OutTupleOfTuples>
-    : cartesian_product_impl<
+struct CartesianProductImpl<std::tuple<std::tuple<HeadArgs...>, TailTuples...>, OutTupleOfTuples>
+    : CartesianProductImpl<
               std::tuple<TailTuples...>,
               decltype(std::tuple_cat(
                       std::declval<
@@ -73,7 +77,7 @@ struct cartesian_product_impl<std::tuple<std::tuple<HeadArgs...>, TailTuples...>
 };
 
 template <class OutTupleOfTuples>
-struct cartesian_product_impl<std::tuple<>, OutTupleOfTuples>
+struct CartesianProductImpl<std::tuple<>, OutTupleOfTuples>
 {
     using type = OutTupleOfTuples;
 };
@@ -81,9 +85,9 @@ struct cartesian_product_impl<std::tuple<>, OutTupleOfTuples>
 /// Generate a std::tuple cartesian product from multiple tuple-like structures (std::tuple, std::integer_sequence and std::pair)
 /// Do not rely on the ordering result.
 template <class... InTuplesLike>
-using cartesian_product_t = cartesian_product_impl<
-        std::tuple<to_tuple_t<InTuplesLike>...>,
-        std::tuple<std::tuple<>>>::type;
+using cartesian_product_t
+        = CartesianProductImpl<std::tuple<to_tuple_t<InTuplesLike>...>, std::tuple<std::tuple<>>>::
+                type;
 
 static_assert(std::is_same_v<
               cartesian_product_t<std::tuple<int, float>, std::tuple<double>>,

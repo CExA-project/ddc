@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <array>
 #include <cstdlib>
+#include <limits>
 #include <mutex>
 #include <ostream>
 #include <sstream>

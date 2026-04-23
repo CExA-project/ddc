@@ -53,11 +53,8 @@ struct ToTypeSeq<StridedDiscreteDomain<Tags...>>
     using type = TypeSeq<Tags...>;
 };
 
-template <class T, class U>
-struct RebindDomain;
-
 template <class... DDims, class... ODDims>
-struct RebindDomain<StridedDiscreteDomain<DDims...>, detail::TypeSeq<ODDims...>>
+struct Rebind<StridedDiscreteDomain<DDims...>, detail::TypeSeq<ODDims...>>
 {
     using type = StridedDiscreteDomain<ODDims...>;
 };
@@ -472,7 +469,9 @@ KOKKOS_FUNCTION constexpr StridedDiscreteDomain<QueryDDims...> select(
 namespace detail {
 
 template <class T>
-struct ConvertTypeSeqToStridedDiscreteDomain;
+struct ConvertTypeSeqToStridedDiscreteDomain
+{
+};
 
 template <class... DDims>
 struct ConvertTypeSeqToStridedDiscreteDomain<detail::TypeSeq<DDims...>>

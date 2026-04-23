@@ -126,10 +126,12 @@ protected:
     }
 
     template <class TypeSeq>
-    struct slicer;
+    struct Slicer
+    {
+    };
 
     template <class... DDims>
-    struct slicer<detail::TypeSeq<DDims...>>
+    struct Slicer<detail::TypeSeq<DDims...>>
     {
         template <class... ODDims>
         KOKKOS_FUNCTION constexpr auto operator()(
@@ -267,9 +269,9 @@ public:
             DiscreteElement<QueryDDims...> const& slice_spec) const
     {
         using detail::TypeSeq;
-        using QueryDDom = detail::RebindDomain<SupportType, TypeSeq<QueryDDims...>>::type;
+        using QueryDDom = detail::Rebind<SupportType, TypeSeq<QueryDDims...>>::type;
         KOKKOS_ASSERT(QueryDDom(this->m_domain).contains(slice_spec))
-        slicer<to_type_seq_t<SupportType>> const slicer;
+        Slicer<to_type_seq_t<SupportType>> const slicer;
         auto subview = slicer(
                 this->allocation_mdspan(),
                 QueryDDom(this->m_domain).distance_from_front(slice_spec));
@@ -277,7 +279,7 @@ public:
         using extents_type = decltype(subview)::extents_type;
         using OutTypeSeqDDims
                 = type_seq_remove_t<to_type_seq_t<SupportType>, TypeSeq<QueryDDims...>>;
-        using OutDDom = detail::RebindDomain<SupportType, OutTypeSeqDDims>::type;
+        using OutDDom = detail::Rebind<SupportType, OutTypeSeqDDims>::type;
         if constexpr (
                 std::is_same_v<layout_type, Kokkos::Experimental::layout_left_padded<>>
                 || std::is_same_v<layout_type, Kokkos::Experimental::layout_right_padded<>>) {
@@ -308,7 +310,7 @@ public:
                 odomain.empty()
                 || (DiscreteDomain<QueryDDims...>(this->m_domain).contains(odomain.front())
                     && DiscreteDomain<QueryDDims...>(this->m_domain).contains(odomain.back())))
-        slicer<to_type_seq_t<SupportType>> const slicer;
+        Slicer<to_type_seq_t<SupportType>> const slicer;
         auto subview = slicer(this->allocation_mdspan(), odomain, this->m_domain);
         using layout_type = decltype(subview)::layout_type;
         using extents_type = decltype(subview)::extents_type;

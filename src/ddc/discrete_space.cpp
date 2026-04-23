@@ -7,6 +7,7 @@
 #include <optional>
 #include <ostream>
 #include <string>
+#include <utility>
 
 #include <Kokkos_Macros.hpp>
 

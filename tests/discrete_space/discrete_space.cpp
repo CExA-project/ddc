@@ -8,7 +8,9 @@
 
 #include "discrete_space.hpp"
 
-struct DimX;
+struct DimX
+{
+};
 struct DDimX : ddc::UniformPointSampling<DimX>
 {
 };

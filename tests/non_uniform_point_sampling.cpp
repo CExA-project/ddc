@@ -29,8 +29,12 @@
 
 inline namespace anonymous_namespace_workaround_non_uniform_point_sampling_cpp {
 
-struct DimX;
-struct DimY;
+struct DimX
+{
+};
+struct DimY
+{
+};
 
 struct DDimX : ddc::NonUniformPointSampling<DimX>
 {

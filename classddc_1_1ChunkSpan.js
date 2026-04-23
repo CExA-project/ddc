@@ -1,6 +1,6 @@
 var classddc_1_1ChunkSpan =
 [
-    [ "slicer", "classddc_1_1ChunkSpan.html#structddc_1_1ChunkSpan_1_1slicer", null ],
+    [ "Slicer", "classddc_1_1ChunkSpan.html#structddc_1_1ChunkSpan_1_1Slicer", null ],
     [ "base_type", "classddc_1_1ChunkSpan.html#a512a4a96b88725cc22801fa58ca44843", null ],
     [ "span_type", "classddc_1_1ChunkSpan.html#a505ad43f1499fe845d1361985e02322c", null ],
     [ "view_type", "classddc_1_1ChunkSpan.html#a355677948ca423a16157195e7e5059d0", null ],

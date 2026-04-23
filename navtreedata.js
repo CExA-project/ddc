@@ -120,7 +120,7 @@ var NAVTREEINDEX =
 "classddc_1_1SplineEvaluator3D.html#a7da4b254329b357322b2943ccae8f923",
 "classddc_1_1UniformPointSampling_1_1Impl.html#a7bde99588d41326a7965c07597df22cc",
 "namespaceddc.html#a6d5c456ec24ce19e1fef731322d831b4",
-"structddc_1_1is__discrete__domain_3_01DiscreteDomain_3_01Tags_8_8_8_01_4_01_4.html"
+"structddc_1_1is__discrete__element.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

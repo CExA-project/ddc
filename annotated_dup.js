@@ -14,10 +14,6 @@ var annotated_dup =
         [ "sum", "structddc_1_1reducer_1_1sum.html", "structddc_1_1reducer_1_1sum" ]
       ] ],
       [ "AlignedAllocator", "classddc_1_1AlignedAllocator.html", "classddc_1_1AlignedAllocator" ],
-      [ "cartesian_prod", "namespaceddc.html#structddc_1_1cartesian__prod", null ],
-      [ "cartesian_prod< DiscreteDomain< DDims... > >", "namespaceddc.html#structddc_1_1cartesian__prod_3_01DiscreteDomain_3_01DDims_8_8_8_01_4_01_4", "namespaceddc_structddc_1_1cartesian__prod_3_01DiscreteDomain_3_01DDims_8_8_8_01_4_01_4_dup" ],
-      [ "cartesian_prod< DiscreteDomain< DDims1... >, DiscreteDomain< DDims2... >, DDomsTail... >", "namespaceddc.html#structddc_1_1cartesian__prod_3_01DiscreteDomain_3_01DDims1_8_8_8_01_4_00_01DiscreteDomain_3_01DDa861a8c5f3dcd35e913aa9c44ea8c0be", "namespaceddc_structddc_1_1cartesian__prod_3_01DiscreteDomain_3_01DDims1_8_8_8_01_4_00_01DiscreteDomain_3_01DDa861a8c5f3dcd35e913aa9c44ea8c0be_dup" ],
-      [ "cartesian_prod<>", "namespaceddc.html#structddc_1_1cartesian__prod_3_4", "namespaceddc_structddc_1_1cartesian__prod_3_4_dup" ],
       [ "Chunk", "classddc_1_1Chunk.html", "classddc_1_1Chunk" ],
       [ "chunk_traits", "namespaceddc.html#structddc_1_1chunk__traits", "namespaceddc_structddc_1_1chunk__traits_dup" ],
       [ "ChunkCommon", "classddc_1_1ChunkCommon.html", "classddc_1_1ChunkCommon" ],
@@ -75,7 +71,6 @@ var annotated_dup =
       [ "ScopeGuard", "classddc_1_1ScopeGuard.html", "classddc_1_1ScopeGuard" ],
       [ "SparseDiscreteDomain", "classddc_1_1SparseDiscreteDomain.html", "classddc_1_1SparseDiscreteDomain" ],
       [ "SparseDiscreteDomain<>", "classddc_1_1SparseDiscreteDomain_3_4.html", "classddc_1_1SparseDiscreteDomain_3_4" ],
-      [ "SparseDiscreteDomainIterator", "namespaceddc.html#structddc_1_1SparseDiscreteDomainIterator", null ],
       [ "SplineBuilder", "classddc_1_1SplineBuilder.html", "classddc_1_1SplineBuilder" ],
       [ "SplineBuilder2D", "classddc_1_1SplineBuilder2D.html", "classddc_1_1SplineBuilder2D" ],
       [ "SplineBuilder3D", "classddc_1_1SplineBuilder3D.html", "classddc_1_1SplineBuilder3D" ],

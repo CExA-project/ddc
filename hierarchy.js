@@ -4,10 +4,6 @@ var hierarchy =
     [ "ddc::reducer::band< T >", "structddc_1_1reducer_1_1band.html", null ],
     [ "ddc::reducer::bor< T >", "structddc_1_1reducer_1_1bor.html", null ],
     [ "ddc::reducer::bxor< T >", "structddc_1_1reducer_1_1bxor.html", null ],
-    [ "ddc::cartesian_prod< DDoms >", "namespaceddc.html#structddc_1_1cartesian__prod", null ],
-    [ "ddc::cartesian_prod< DiscreteDomain< DDims... > >", "namespaceddc.html#structddc_1_1cartesian__prod_3_01DiscreteDomain_3_01DDims_8_8_8_01_4_01_4", null ],
-    [ "ddc::cartesian_prod< DiscreteDomain< DDims1... >, DiscreteDomain< DDims2... >, DDomsTail... >", "namespaceddc.html#structddc_1_1cartesian__prod_3_01DiscreteDomain_3_01DDims1_8_8_8_01_4_00_01DiscreteDomain_3_01DDa861a8c5f3dcd35e913aa9c44ea8c0be", null ],
-    [ "ddc::cartesian_prod<>", "namespaceddc.html#structddc_1_1cartesian__prod_3_4", null ],
     [ "ddc::chunk_traits< T >", "namespaceddc.html#structddc_1_1chunk__traits", null ],
     [ "ddc::ChunkCommon< ElementType, SupportType, LayoutStridedPolicy >", "classddc_1_1ChunkCommon.html", [
       [ "ddc::ChunkSpan< ElementType, SupportType, LayoutStridedPolicy, MemorySpace >", "classddc_1_1ChunkSpan.html", null ]
@@ -85,10 +81,9 @@ var hierarchy =
     [ "ddc::AlignedAllocator< T, N >::rebind< U >", "classddc_1_1AlignedAllocator.html#structddc_1_1AlignedAllocator_1_1rebind", null ],
     [ "ddc::KokkosAllocator< T, MemorySpace >::rebind< U >", "classddc_1_1KokkosAllocator.html#structddc_1_1KokkosAllocator_1_1rebind", null ],
     [ "ddc::ScopeGuard", "classddc_1_1ScopeGuard.html", null ],
-    [ "ddc::ChunkSpan< ElementType, SupportType, LayoutStridedPolicy, MemorySpace >::slicer< TypeSeq >", "classddc_1_1ChunkSpan.html#structddc_1_1ChunkSpan_1_1slicer", null ],
+    [ "ddc::ChunkSpan< ElementType, SupportType, LayoutStridedPolicy, MemorySpace >::Slicer< TypeSeq >", "classddc_1_1ChunkSpan.html#structddc_1_1ChunkSpan_1_1Slicer", null ],
     [ "ddc::SparseDiscreteDomain< DDims >", "classddc_1_1SparseDiscreteDomain.html", null ],
     [ "ddc::SparseDiscreteDomain<>", "classddc_1_1SparseDiscreteDomain_3_4.html", null ],
-    [ "ddc::SparseDiscreteDomainIterator< DDim >", "namespaceddc.html#structddc_1_1SparseDiscreteDomainIterator", null ],
     [ "ddc::SplineBuilder< ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower, BcUpper, Solver >", "classddc_1_1SplineBuilder.html", null ],
     [ "ddc::SplineBuilder2D< ExecSpace, MemorySpace, BSpline1, BSpline2, DDimI1, DDimI2, BcLower1, BcUpper1, BcLower2, BcUpper2, Solver >", "classddc_1_1SplineBuilder2D.html", null ],
     [ "ddc::SplineBuilder2D< ExecSpace, MemorySpace, BSpline2, BSpline3, DDimI2, DDimI3, BcLower2, BcUpper2, BcLower3, BcUpper3, Solver >", "classddc_1_1SplineBuilder2D.html", null ],

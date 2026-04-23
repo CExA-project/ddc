@@ -41,7 +41,7 @@ DVectXY constexpr nelems_x_y(nelems_x, nelems_y);
 
 } // namespace anonymous_namespace_workaround_for_each_block_cpp
 
-TEST(DistributeBlocks, D)
+TEST(ForEachBlock, DistributeBlocks)
 {
     {
         std::array<ddc::DiscreteVectorElement, 1> size {10};
@@ -63,7 +63,7 @@ TEST(DistributeBlocks, D)
     }
 }
 
-TEST(ForEachSerialBlockHost, OneDimension)
+TEST(ForEachBlock, OneDimension)
 {
     for (ddc::DiscreteVectorElement const nb_blocks : {1, 2, 4, 8}) {
         DDomX const dom(lbound_x, nelems_x);
@@ -79,7 +79,7 @@ TEST(ForEachSerialBlockHost, OneDimension)
     }
 }
 
-TEST(ForEachSerialBlockHost, TwoDimensions)
+TEST(ForEachBlock, TwoDimensions)
 {
     for (ddc::DiscreteVectorElement const nb_blocks : {1, 2, 4, 8}) {
         DDomXY const dom(lbound_x_y, nelems_x_y);

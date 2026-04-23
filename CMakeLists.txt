@@ -134,7 +134,7 @@ target_sources(
         src/ddc/discrete_element.cpp
         src/ddc/discrete_space.cpp
         src/ddc/discrete_vector.cpp
-        src/ddc/for_each.cpp
+        src/ddc/for_each_block.cpp
         src/ddc/print.cpp
     PUBLIC
         FILE_SET core_public

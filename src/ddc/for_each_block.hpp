@@ -40,16 +40,11 @@ void host_for_each_block_impl(
         DiscreteVectorElement const block = domain.template extent<DDim>() / nb_blocks_per_dim[I];
         DiscreteVectorElement const rem
                 = domain.template extent<DDim>() - nb_blocks_per_dim[I] * block;
-        DiscreteElement<DDim> front(domain.front());
+        typename Rebind<Support, TypeSeq<DDim>>::type dom(domain);
         for (DiscreteVectorElement ib = 0; ib < nb_blocks_per_dim[I]; ++ib) {
             DiscreteVector<DDim> const size(block + (ib < rem ? 1 : 0));
-            host_for_each_block_impl(
-                    domain,
-                    nb_blocks_per_dim,
-                    f,
-                    ddoms...,
-                    DiscreteDomain<DDim>(front, size));
-            front += size;
+            host_for_each_block_impl(domain, nb_blocks_per_dim, f, ddoms..., dom.take_first(size));
+            dom = dom.remove_first(size);
         }
     }
 }

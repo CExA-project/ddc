@@ -29,21 +29,21 @@ void host_for_each_block(
         Support const& domain,
         std::array<DiscreteVectorElement, N> const& nb_blocks_per_dim,
         Functor const& f,
-        Doms1d const&... doms) noexcept
+        Doms1d const&... doms1d) noexcept
 {
     static constexpr std::size_t I = sizeof...(Doms1d);
     if constexpr (I == N) {
-        f(Support(doms...));
+        f(Support(doms1d...));
     } else {
         using DDim = ddc::type_seq_element_t<I, ddc::to_type_seq_t<Support>>;
         DiscreteVectorElement const block = domain.template extent<DDim>() / nb_blocks_per_dim[I];
         DiscreteVectorElement const rem
                 = domain.template extent<DDim>() - nb_blocks_per_dim[I] * block;
-        typename Rebind<Support, TypeSeq<DDim>>::type dom(domain);
+        typename Rebind<Support, TypeSeq<DDim>>::type dom1d(domain);
         for (DiscreteVectorElement ib = 0; ib < nb_blocks_per_dim[I]; ++ib) {
             DiscreteVector<DDim> const size(block + (ib < rem ? 1 : 0));
-            host_for_each_block(domain, nb_blocks_per_dim, f, doms..., dom.take_first(size));
-            dom = dom.remove_first(size);
+            host_for_each_block(domain, nb_blocks_per_dim, f, doms1d..., dom1d.take_first(size));
+            dom1d = dom1d.remove_first(size);
         }
     }
 }

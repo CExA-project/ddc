@@ -3,102 +3,12 @@
 // SPDX-License-Identifier: MIT
 
 #include <array>
-#include <cstddef>
-#include <span>
-#include <stdexcept>
 
 #include <ddc/ddc.hpp>
 
 #include <gtest/gtest.h>
 
 #include <Kokkos_Core.hpp>
-
-namespace ddc {
-
-namespace detail {
-
-constexpr bool is_power_of_2(std::size_t const n) noexcept
-{
-    return n > 0 && !(n & (n - 1));
-}
-
-void distribute_blocks(
-        std::size_t nb_blocks,
-        std::span<DiscreteVectorElement const> const sizes,
-        std::span<DiscreteVectorElement> const nb_blocks_per_dim)
-{
-    assert(sizes.size() == nb_blocks_per_dim.size());
-
-    if (!is_power_of_2(nb_blocks)) {
-        throw std::runtime_error("DDC distribute_blocks expects a power of 2.");
-    }
-
-    for (DiscreteVectorElement& blocks : nb_blocks_per_dim) {
-        blocks = 1;
-    }
-
-    std::size_t dim = 0;
-    while (nb_blocks != 1) {
-        if (sizes[dim] >= nb_blocks_per_dim[dim] * 2) {
-            nb_blocks_per_dim[dim] *= 2;
-            nb_blocks /= 2;
-        } else if (dim < sizes.size()) {
-            ++dim;
-        } else {
-            throw std::runtime_error("what the hell");
-        }
-    }
-}
-
-template <class Support, std::size_t N, class Functor, class... DDoms1d>
-void host_for_each_block_impl(
-        Support const& domain,
-        std::array<DiscreteVectorElement, N> const& nb_blocks_per_dim,
-        Functor const& f,
-        DDoms1d const&... ddoms) noexcept
-{
-    static constexpr std::size_t I = sizeof...(DDoms1d);
-    if constexpr (I == N) {
-        f(Support(ddoms...));
-    } else {
-        using DDim = ddc::type_seq_element_t<I, ddc::to_type_seq_t<Support>>;
-        DiscreteVectorElement const block = domain.template extent<DDim>() / nb_blocks_per_dim[I];
-        DiscreteVectorElement const rem
-                = domain.template extent<DDim>() - nb_blocks_per_dim[I] * block;
-        DiscreteElement<DDim> front(domain.front());
-        for (DiscreteVectorElement ib = 0; ib < nb_blocks_per_dim[I]; ++ib) {
-            DiscreteVector<DDim> const size(block + (ib < rem ? 1 : 0));
-            host_for_each_block_impl(
-                    domain,
-                    nb_blocks_per_dim,
-                    f,
-                    ddoms...,
-                    DiscreteDomain<DDim>(front, size));
-            front += size;
-        }
-    }
-}
-
-template <class Support, std::size_t N, class Functor, class... DDoms1d>
-void host_for_each_block(
-        Support const& domain,
-        std::array<DiscreteVectorElement, N> const& nb_blocks_per_dim,
-        Functor const& f) noexcept
-{
-    host_for_each_block_impl(domain, nb_blocks_per_dim, f);
-}
-
-} // namespace detail
-
-template <class Support, class Functor, class... DDoms1d>
-void host_for_each_block(Support const& domain, std::size_t nb_blocks, Functor const& f) noexcept
-{
-    std::array<DiscreteVectorElement, Support::rank()> nb_blocks_per_dim {};
-    detail::distribute_blocks(nb_blocks, detail::array(domain.extents()), nb_blocks_per_dim);
-    detail::host_for_each_block_impl(domain, nb_blocks_per_dim, f);
-}
-
-} // namespace ddc
 
 inline namespace anonymous_namespace_workaround_for_each_block_cpp {
 
@@ -130,15 +40,6 @@ DElemXY constexpr lbound_x_y(lbound_x, lbound_y);
 DVectXY constexpr nelems_x_y(nelems_x, nelems_y);
 
 } // namespace anonymous_namespace_workaround_for_each_block_cpp
-
-TEST(ForEachSerialBlockHost, IsPowerOf2)
-{
-    EXPECT_FALSE(ddc::detail::is_power_of_2(0));
-    EXPECT_TRUE(ddc::detail::is_power_of_2(1));
-    EXPECT_TRUE(ddc::detail::is_power_of_2(2));
-    EXPECT_FALSE(ddc::detail::is_power_of_2(3));
-    EXPECT_TRUE(ddc::detail::is_power_of_2(4));
-}
 
 TEST(DistributeBlocks, D)
 {

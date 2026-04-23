@@ -12,7 +12,6 @@
 
 #include "detail/type_seq.hpp"
 
-#include "discrete_domain.hpp"
 #include "discrete_element.hpp"
 #include "discrete_vector.hpp"
 
@@ -25,16 +24,16 @@ void distribute_blocks(
         std::span<DiscreteVectorElement const> sizes,
         std::span<DiscreteVectorElement> nb_blocks_per_dim);
 
-template <class Support, std::size_t N, class Functor, class... DDoms1d>
-void host_for_each_block_impl(
+template <class Support, std::size_t N, class Functor, class... Doms1d>
+void host_for_each_block(
         Support const& domain,
         std::array<DiscreteVectorElement, N> const& nb_blocks_per_dim,
         Functor const& f,
-        DDoms1d const&... ddoms) noexcept
+        Doms1d const&... doms) noexcept
 {
-    static constexpr std::size_t I = sizeof...(DDoms1d);
+    static constexpr std::size_t I = sizeof...(Doms1d);
     if constexpr (I == N) {
-        f(Support(ddoms...));
+        f(Support(doms...));
     } else {
         using DDim = ddc::type_seq_element_t<I, ddc::to_type_seq_t<Support>>;
         DiscreteVectorElement const block = domain.template extent<DDim>() / nb_blocks_per_dim[I];
@@ -43,19 +42,10 @@ void host_for_each_block_impl(
         typename Rebind<Support, TypeSeq<DDim>>::type dom(domain);
         for (DiscreteVectorElement ib = 0; ib < nb_blocks_per_dim[I]; ++ib) {
             DiscreteVector<DDim> const size(block + (ib < rem ? 1 : 0));
-            host_for_each_block_impl(domain, nb_blocks_per_dim, f, ddoms..., dom.take_first(size));
+            host_for_each_block(domain, nb_blocks_per_dim, f, doms..., dom.take_first(size));
             dom = dom.remove_first(size);
         }
     }
-}
-
-template <class Support, std::size_t N, class Functor>
-void host_for_each_block(
-        Support const& domain,
-        std::array<DiscreteVectorElement, N> const& nb_blocks_per_dim,
-        Functor const& f) noexcept
-{
-    host_for_each_block_impl(domain, nb_blocks_per_dim, f);
 }
 
 } // namespace detail
@@ -65,7 +55,7 @@ void host_for_each_block(Support const& domain, std::size_t nb_blocks, Functor c
 {
     std::array<DiscreteVectorElement, Support::rank()> nb_blocks_per_dim {};
     detail::distribute_blocks(nb_blocks, detail::array(domain.extents()), nb_blocks_per_dim);
-    detail::host_for_each_block_impl(domain, nb_blocks_per_dim, f);
+    detail::host_for_each_block(domain, nb_blocks_per_dim, f);
 }
 
 } // namespace ddc

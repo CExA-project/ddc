@@ -32,7 +32,7 @@ using DVectXY = ddc::DiscreteVector<DDimX, DDimY>;
 using DDomXY = ddc::DiscreteDomain<DDimX, DDimY>;
 
 DElemX constexpr lbound_x = ddc::init_trivial_half_bounded_space<DDimX>();
-DVectX constexpr nelems_x(8);
+DVectX constexpr nelems_x(9);
 
 DElemY constexpr lbound_y = ddc::init_trivial_half_bounded_space<DDimY>();
 DVectY constexpr nelems_y(12);

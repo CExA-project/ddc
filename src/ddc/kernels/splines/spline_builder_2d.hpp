@@ -210,6 +210,7 @@ public:
         , m_label(label)
     {
     }
+
     /**
      * @brief Build a SplineBuilder2D acting on interpolation_domain.
      *
@@ -231,10 +232,10 @@ public:
             std::optional<std::size_t> cols_per_chunk = std::nullopt,
             std::optional<unsigned int> preconditioner_max_block_size = std::nullopt)
         : SplineBuilder2D(
-                "no-label",
-                interpolation_domain,
-                cols_per_chunk,
-                preconditioner_max_block_size)
+                  "no-label",
+                  interpolation_domain,
+                  cols_per_chunk,
+                  preconditioner_max_block_size)
     {
     }
 
@@ -263,10 +264,10 @@ public:
             std::optional<std::size_t> cols_per_chunk = std::nullopt,
             std::optional<unsigned int> preconditioner_max_block_size = std::nullopt)
         : SplineBuilder2D(
-                label,
-                interpolation_domain_type(batched_interpolation_domain),
-                cols_per_chunk,
-                preconditioner_max_block_size)
+                  label,
+                  interpolation_domain_type(batched_interpolation_domain),
+                  cols_per_chunk,
+                  preconditioner_max_block_size)
     {
     }
 
@@ -294,7 +295,7 @@ public:
             std::optional<std::size_t> cols_per_chunk = std::nullopt,
             std::optional<unsigned int> preconditioner_max_block_size = std::nullopt)
         : SplineBuilder2D(
-                "no-label",
+                  "no-label",
                   interpolation_domain_type(batched_interpolation_domain),
                   cols_per_chunk,
                   preconditioner_max_block_size)

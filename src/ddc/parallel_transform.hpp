@@ -54,10 +54,7 @@ public:
  * @return dst as a ChunkSpan
  */
 template <class ChunkDst, class UnaryTransformOp>
-auto parallel_transform(
-        std::string const& label,
-        ChunkDst&& dst,
-        UnaryTransformOp&& transform)
+auto parallel_transform(std::string const& label, ChunkDst&& dst, UnaryTransformOp&& transform)
 {
     static_assert(is_borrowed_chunk_v<ChunkDst>);
     parallel_for_each(
@@ -117,13 +114,10 @@ template <class ExecSpace, class ChunkDst, class UnaryTransformOp>
 auto parallel_transform(
         ExecSpace const& execution_space,
         ChunkDst&& dst,
-        UnaryTransformOp&& transform) requires(Kokkos::is_execution_space_v<ExecSpace>)
+        UnaryTransformOp&& transform)
+    requires(Kokkos::is_execution_space_v<ExecSpace>)
 {
-    return parallel_transform(
-            "ddc_parallel_transform_default",
-            execution_space,
-            dst,
-            transform);
+    return parallel_transform("ddc_parallel_transform_default", execution_space, dst, transform);
 }
 
 } // namespace ddc

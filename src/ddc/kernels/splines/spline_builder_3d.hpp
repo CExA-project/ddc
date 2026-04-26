@@ -341,10 +341,10 @@ public:
             std::optional<std::size_t> cols_per_chunk = std::nullopt,
             std::optional<unsigned int> preconditioner_max_block_size = std::nullopt)
         : SplineBuilder3D(
-                "no-label",
-                interpolation_domain,
-                cols_per_chunk,
-                preconditioner_max_block_size)
+                  "no-label",
+                  interpolation_domain,
+                  cols_per_chunk,
+                  preconditioner_max_block_size)
     {
     }
 

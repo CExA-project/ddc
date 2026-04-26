@@ -200,10 +200,10 @@ private:
     // interpolator specific
     std::unique_ptr<ddc::detail::SplinesLinearProblem<exec_space>> m_matrix;
 
+    std::string m_label;
+
     /// Calculate offset so that the matrix is diagonally dominant
     void compute_offset(interpolation_domain_type const& interpolation_domain, int& offset);
-
-    std::string m_label;
 
 public:
     /**
@@ -279,10 +279,10 @@ public:
             std::optional<std::size_t> cols_per_chunk = std::nullopt,
             std::optional<unsigned int> preconditioner_max_block_size = std::nullopt)
         : SplineBuilder(
-                "no-label",
-                interpolation_domain,
-                cols_per_chunk,
-                preconditioner_max_block_size)
+                  "no-label",
+                  interpolation_domain,
+                  cols_per_chunk,
+                  preconditioner_max_block_size)
     {
     }
 
@@ -311,10 +311,10 @@ public:
             std::optional<std::size_t> cols_per_chunk = std::nullopt,
             std::optional<unsigned int> preconditioner_max_block_size = std::nullopt)
         : SplineBuilder(
-                label,
-                interpolation_domain_type(batched_interpolation_domain),
-                cols_per_chunk,
-                preconditioner_max_block_size)
+                  label,
+                  interpolation_domain_type(batched_interpolation_domain),
+                  cols_per_chunk,
+                  preconditioner_max_block_size)
     {
     }
 
@@ -342,10 +342,10 @@ public:
             std::optional<std::size_t> cols_per_chunk = std::nullopt,
             std::optional<unsigned int> preconditioner_max_block_size = std::nullopt)
         : SplineBuilder(
-                "no-label",
-                interpolation_domain_type(batched_interpolation_domain),
-                cols_per_chunk,
-                preconditioner_max_block_size)
+                  "no-label",
+                  interpolation_domain_type(batched_interpolation_domain),
+                  cols_per_chunk,
+                  preconditioner_max_block_size)
     {
     }
 

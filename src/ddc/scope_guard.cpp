@@ -28,10 +28,7 @@ ScopeGuard::ScopeGuard()
     discretization_store_initialization();
 }
 
-ScopeGuard::ScopeGuard(int /*argc*/, char**& /*argv*/)
-{
-    discretization_store_initialization();
-}
+ScopeGuard::ScopeGuard(int /*argc*/, char**& /*argv*/) : ScopeGuard() {}
 
 ScopeGuard::~ScopeGuard() noexcept
 {

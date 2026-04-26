@@ -29,6 +29,7 @@ add_executable(
     discrete_space.cpp
     discrete_vector.cpp
     for_each.cpp
+    for_each_block.cpp
     multiple_discrete_dimensions.cpp
     non_uniform_point_sampling.cpp
     parallel_deepcopy.cpp

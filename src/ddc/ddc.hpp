@@ -71,6 +71,7 @@ namespace ddc {
 // Algorithms
 #include "create_mirror.hpp"
 #include "for_each.hpp"
+#include "for_each_block.hpp"
 #include "parallel_deepcopy.hpp"
 #include "parallel_fill.hpp"
 #include "parallel_for_each.hpp"

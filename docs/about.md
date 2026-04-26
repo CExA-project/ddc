@@ -6,7 +6,7 @@ Copyright (C) The DDC development team, see COPYRIGHT.md file
 SPDX-License-Identifier: MIT
 -->
 
-%DDC is the discrete domain computation library, a C++-17 library that aims to offer to the C++/MPI
+%DDC is the discrete domain computation library, a C++20 library that aims to offer to the C++/MPI
 world an equivalent to the
 [`xarray.DataArray`](https://docs.xarray.dev/en/stable/generated/xarray.DataArray.html)/[`dask.Array`](https://docs.dask.org/en/stable/array.html)
 python environment.

@@ -15,7 +15,7 @@ SPDX-License-Identifier: MIT
 
 See <https://ddc.mdls.fr/>
 
-[DDC](https://ddc.mdls.fr/), is a C++-17 library that aims to offer to the C++/MPI world an equivalent to the [`xarray.DataArray`](https://docs.xarray.dev/en/stable/generated/xarray.DataArray.html)/[`dask.Array`](https://docs.dask.org/en/stable/array.html) python environment.
+[DDC](https://ddc.mdls.fr/), is a C++20 library that aims to offer to the C++/MPI world an equivalent to the [`xarray.DataArray`](https://docs.xarray.dev/en/stable/generated/xarray.DataArray.html)/[`dask.Array`](https://docs.dask.org/en/stable/array.html) python environment.
 Where these two libraries are based on [numpy](https://numpy.org/), DDC relies on [Kokkos](https://github.com/kokkos/kokkos) and [mdspan](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2020/p0009r10.html) to offer CPU/GPU performance-portable multi-dimensional arrays and iterators.
 
 DDC aims to offer abstractions to represent:

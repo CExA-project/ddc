@@ -7,6 +7,7 @@ var searchData=
   ['homogeneous_5fhermite_4',['HOMOGENEOUS_HERMITE',['../namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744aa7f554ccdf64705edd67d9fb0e4a1b00b',1,'ddc']]],
   ['host_5fdiscrete_5fspace_5',['host_discrete_space',['../namespaceddc.html#a7d46db599cc0436ad0b042efd27dc055',1,'ddc']]],
   ['host_5ffor_5feach_6',['host_for_each',['../namespaceddc.html#a73a61ffa3418241e1072ec0ab40eed1c',1,'ddc']]],
-  ['host_5ftransform_5freduce_7',['host_transform_reduce',['../namespaceddc.html#a477f0d6ae51850e77237d162f44c5855',1,'ddc']]],
-  ['hostallocator_8',['HostAllocator',['../namespaceddc.html#a1eb87e589bae955cef6cd18cdc7826f3',1,'ddc']]]
+  ['host_5ffor_5feach_5fblock_7',['host_for_each_block',['../namespaceddc.html#ad0c001d508c505cca88fba302144dc1a',1,'ddc::host_for_each_block(Support const &amp;domain, typename Support::discrete_vector_type nb_blocks_per_dim, Functor const &amp;f) noexcept'],['../namespaceddc.html#a7b2c70f22eee7329b1f92f53bf9faa41',1,'ddc::host_for_each_block(Support const &amp;domain, std::size_t nb_blocks, Functor const &amp;f) noexcept']]],
+  ['host_5ftransform_5freduce_8',['host_transform_reduce',['../namespaceddc.html#a477f0d6ae51850e77237d162f44c5855',1,'ddc']]],
+  ['hostallocator_9',['HostAllocator',['../namespaceddc.html#a1eb87e589bae955cef6cd18cdc7826f3',1,'ddc']]]
 ];

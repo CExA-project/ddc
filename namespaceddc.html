@@ -669,6 +669,14 @@ requires (!<a class="el" href="namespaceddc.html#a6f856b258e5bd40d0c4a6d3f0fc1b9
 <tr class="memitem:af34fc7c90bdb6f3881bb8ea5ec6fb6eb"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">void</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#af34fc7c90bdb6f3881bb8ea5ec6fb6eb">device_for_each</a> (<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Support</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;domain, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Functor</a> &amp;&amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">f</a>) <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">noexcept</a></td></tr>
 <tr class="memdesc:af34fc7c90bdb6f3881bb8ea5ec6fb6eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">iterates over a nD domain in serial  <br /></td></tr>
 <tr class="separator:af34fc7c90bdb6f3881bb8ea5ec6fb6eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad0c001d508c505cca88fba302144dc1a" id="r_ad0c001d508c505cca88fba302144dc1a"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Support</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Functor</a> &gt; </td></tr>
+<tr class="memitem:ad0c001d508c505cca88fba302144dc1a"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">void</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#ad0c001d508c505cca88fba302144dc1a">host_for_each_block</a> (<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Support</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;domain, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> Support::discrete_vector_type <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">nb_blocks_per_dim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Functor</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">f</a>) <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">noexcept</a></td></tr>
+<tr class="memdesc:ad0c001d508c505cca88fba302144dc1a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Iterate over blocks of a domain using a per-dimension block specification.  <br /></td></tr>
+<tr class="separator:ad0c001d508c505cca88fba302144dc1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7b2c70f22eee7329b1f92f53bf9faa41" id="r_a7b2c70f22eee7329b1f92f53bf9faa41"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Support</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Functor</a> &gt; </td></tr>
+<tr class="memitem:a7b2c70f22eee7329b1f92f53bf9faa41"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">void</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a7b2c70f22eee7329b1f92f53bf9faa41">host_for_each_block</a> (<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Support</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;domain, std::size_t <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">nb_blocks</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Functor</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">f</a>) <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">noexcept</a></td></tr>
+<tr class="memdesc:a7b2c70f22eee7329b1f92f53bf9faa41"><td class="mdescLeft">&#160;</td><td class="mdescRight">Iterate over blocks of a domain using a total number of blocks.  <br /></td></tr>
+<tr class="separator:a7b2c70f22eee7329b1f92f53bf9faa41"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acae1ee737600836553012b1fc7d8e413" id="r_acae1ee737600836553012b1fc7d8e413"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> T , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MST</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">U</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MSU</a> &gt; </td></tr>
 <tr class="memitem:acae1ee737600836553012b1fc7d8e413"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">bool</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#acae1ee737600836553012b1fc7d8e413">operator==</a> (<a class="el" href="classddc_1_1KokkosAllocator.html">KokkosAllocator</a>&lt; T, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MST</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;, <a class="el" href="classddc_1_1KokkosAllocator.html">KokkosAllocator</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">U</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MSU</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;) <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">noexcept</a></td></tr>
 <tr class="separator:acae1ee737600836553012b1fc7d8e413"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -4386,6 +4394,121 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </dl>
 
 <p class="definition">Definition at line <a class="el" href="for__each_8hpp_source.html#l00083">83</a> of file <a class="el" href="for__each_8hpp_source.html">for_each.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ad0c001d508c505cca88fba302144dc1a" name="ad0c001d508c505cca88fba302144dc1a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad0c001d508c505cca88fba302144dc1a">&#9670;&#160;</a></span>host_for_each_block() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Support</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Functor</a> &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">void</a> ddc::host_for_each_block </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Support</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
+          <td class="paramname"><em>domain</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> Support::discrete_vector_type&#160;</td>
+          <td class="paramname"><em>nb_blocks_per_dim</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Functor</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
+          <td class="paramname"><em>f</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Iterate over blocks of a domain using a per-dimension block specification. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">domain</td><td>The domain to split. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">nb_blocks_per_dim</td><td>Number of blocks in each dimension. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">f</td><td>Functor applied to each block.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section pre"><dt>Precondition</dt><dd>For each dimension D: get&lt;D&gt;(nb_blocks_per_dim) &gt; 0 and get&lt;D&gt;(nb_blocks_per_dim) &lt;= domain.extent&lt;D&gt;() </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="for__each__block_8hpp_source.html#l00075">75</a> of file <a class="el" href="for__each__block_8hpp_source.html">for_each_block.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a7b2c70f22eee7329b1f92f53bf9faa41" name="a7b2c70f22eee7329b1f92f53bf9faa41"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7b2c70f22eee7329b1f92f53bf9faa41">&#9670;&#160;</a></span>host_for_each_block() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Support</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Functor</a> &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">void</a> ddc::host_for_each_block </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Support</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
+          <td class="paramname"><em>domain</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::size_t&#160;</td>
+          <td class="paramname"><em>nb_blocks</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Functor</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
+          <td class="paramname"><em>f</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Iterate over blocks of a domain using a total number of blocks. </p>
+<p>The total number of blocks is automatically distributed across dimensions.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">domain</td><td>The domain to split. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">nb_blocks</td><td>Total number of blocks. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">f</td><td>Functor applied to each block.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section pre"><dt>Precondition</dt><dd>nb_blocks must be a power of 2. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="for__each__block_8hpp_source.html#l00095">95</a> of file <a class="el" href="for__each__block_8hpp_source.html">for_each_block.hpp</a>.</p>
 
 </div>
 </div>

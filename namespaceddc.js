@@ -192,6 +192,8 @@ var namespaceddc =
     [ "operator<<", "namespaceddc.html#ad5f2691d78ff115a38f85a88bf298c06", null ],
     [ "host_for_each", "namespaceddc.html#a73a61ffa3418241e1072ec0ab40eed1c", null ],
     [ "device_for_each", "namespaceddc.html#af34fc7c90bdb6f3881bb8ea5ec6fb6eb", null ],
+    [ "host_for_each_block", "namespaceddc.html#ad0c001d508c505cca88fba302144dc1a", null ],
+    [ "host_for_each_block", "namespaceddc.html#a7b2c70f22eee7329b1f92f53bf9faa41", null ],
     [ "operator==", "namespaceddc.html#acae1ee737600836553012b1fc7d8e413", null ],
     [ "operator!=", "namespaceddc.html#ae4269f314ca30fb3ded4fdcc3a399965", null ],
     [ "operator<<", "namespaceddc.html#ade5c7d3068aa2e66ec7a11efe0a2ec67", null ],

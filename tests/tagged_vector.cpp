@@ -112,6 +112,14 @@ TEST(TaggedVector, ConversionReorder)
     EXPECT_EQ(b.get<double>(), 2.0);
 }
 
+TEST(TaggedVector0D, StreamOperator)
+{
+    ddc::detail::TaggedVector<int> const a {};
+    std::stringstream ss;
+    ss << a;
+    EXPECT_EQ(ss.str(), "()");
+}
+
 TEST(TaggedVector, StreamOperator)
 {
     ddc::detail::TaggedVector<int, float, double> const a(1, 2);

@@ -119,7 +119,7 @@ var NAVTREEINDEX =
 "classddc_1_1SplineBuilder3D.html#a25224b2081f7ee67bddecf3760009162",
 "classddc_1_1SplineEvaluator3D.html#a7da4b254329b357322b2943ccae8f923",
 "classddc_1_1UniformPointSampling_1_1Impl.html#a7bde99588d41326a7965c07597df22cc",
-"namespaceddc.html#a6d5c456ec24ce19e1fef731322d831b4",
+"namespaceddc.html#a6f856b258e5bd40d0c4a6d3f0fc1b9d1",
 "structddc_1_1is__discrete__domain_3_01DiscreteDomain_3_01Tags_8_8_8_01_4_01_4.html"
 ];
 

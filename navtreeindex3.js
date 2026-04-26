@@ -1,8 +1,8 @@
 var NAVTREEINDEX3 =
 {
 "classddc_1_1SparseDiscreteDomain.html#a20f0cff53d1c5f29d52e96a7b86272bb":[6,0,0,57,19],
-"classddc_1_1SparseDiscreteDomain.html#a2632e7616140d50f3ca8d634c38cd2d1":[6,0,0,57,25],
 "classddc_1_1SparseDiscreteDomain.html#a2632e7616140d50f3ca8d634c38cd2d1":[4,0,0,58,25],
+"classddc_1_1SparseDiscreteDomain.html#a2632e7616140d50f3ca8d634c38cd2d1":[6,0,0,57,25],
 "classddc_1_1SparseDiscreteDomain.html#a281dba260b09841003df9aa0dec2ea43":[4,0,0,58,14],
 "classddc_1_1SparseDiscreteDomain.html#a281dba260b09841003df9aa0dec2ea43":[6,0,0,57,14],
 "classddc_1_1SparseDiscreteDomain.html#a3417c9261e4ad158e3842d57cdfaa138":[4,0,0,58,30],

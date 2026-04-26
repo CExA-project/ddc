@@ -60,6 +60,17 @@ void host_for_each_block(
 
 } // namespace detail
 
+/**
+ * @brief Iterate over blocks of a domain using a per-dimension block specification.
+ *
+ * @param[in] domain The domain to split.
+ * @param[in] nb_blocks_per_dim Number of blocks in each dimension.
+ * @param[in] f Functor applied to each block.
+ *
+ * @pre For each dimension D:
+ *      get<D>(nb_blocks_per_dim) > 0 and
+ *      get<D>(nb_blocks_per_dim) <= domain.extent<D>()
+ */
 template <class Support, class Functor>
 void host_for_each_block(
         Support const& domain,
@@ -69,6 +80,17 @@ void host_for_each_block(
     detail::host_for_each_block(domain, detail::array(nb_blocks_per_dim), f);
 }
 
+/**
+ * @brief Iterate over blocks of a domain using a total number of blocks.
+ *
+ * The total number of blocks is automatically distributed across dimensions.
+ *
+ * @param[in] domain The domain to split.
+ * @param[in] nb_blocks Total number of blocks.
+ * @param[in] f Functor applied to each block.
+ *
+ * @pre nb_blocks must be a power of 2.
+*/
 template <class Support, class Functor>
 void host_for_each_block(Support const& domain, std::size_t nb_blocks, Functor const& f) noexcept
 {

@@ -135,8 +135,11 @@ target_sources(
         src/ddc/discrete_space.cpp
         src/ddc/discrete_vector.cpp
         src/ddc/for_each_block.cpp
+        src/ddc/non_uniform_point_sampling.cpp
+        src/ddc/periodic_sampling.cpp
         src/ddc/print.cpp
         src/ddc/scope_guard.cpp
+        src/ddc/uniform_point_sampling.cpp
     PUBLIC
         FILE_SET core_public
             TYPE HEADERS

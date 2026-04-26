@@ -6,7 +6,7 @@
 
 #include <cassert>
 #include <cstddef>
-#include <ostream>
+#include <iosfwd>
 #include <tuple>
 #include <type_traits>
 #include <utility>
@@ -27,6 +27,8 @@ namespace detail {
 struct PeriodicSamplingBase
 {
 };
+
+void print_periodic_sampling(std::ostream& os, CoordinateElement origin, Real step);
 
 } // namespace detail
 
@@ -262,10 +264,11 @@ concept periodic_sampling = is_periodic_sampling_v<DDim>;
 }
 
 template <class DDimImpl>
-std::ostream& operator<<(std::ostream& out, DDimImpl const& mesh)
+std::ostream& operator<<(std::ostream& os, DDimImpl const& mesh)
     requires(concepts::periodic_sampling<typename DDimImpl::discrete_dimension_type>)
 {
-    return out << "PeriodicSampling( origin=" << mesh.origin() << ", step=" << mesh.step() << " )";
+    detail::print_periodic_sampling(os, mesh.origin(), mesh.step());
+    return os;
 }
 
 /// @brief Lower bound index of the mesh

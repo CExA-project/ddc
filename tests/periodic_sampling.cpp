@@ -49,7 +49,7 @@ TEST(PeriodicSampling, Formatting)
     DDimX::Impl<DDimX, Kokkos::HostSpace> const ddim_x(origin, step, 10);
     std::stringstream oss;
     oss << ddim_x;
-    EXPECT_EQ(oss.str(), "PeriodicSampling( origin=(-1), step=0.5 )");
+    EXPECT_EQ(oss.str(), "PeriodicSampling(origin=-1, step=0.5)");
 }
 
 TEST(PeriodicSamplingTest, Coordinate)

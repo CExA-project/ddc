@@ -8,8 +8,8 @@
 #include <cassert>
 #include <cstddef>
 #include <initializer_list>
+#include <iosfwd>
 #include <iterator>
-#include <ostream>
 #include <stdexcept>
 #include <tuple>
 #include <type_traits>
@@ -31,6 +31,8 @@ namespace detail {
 struct NonUniformPointSamplingBase
 {
 };
+
+void print_non_uniform_point_samplig(std::ostream& os, std::size_t size);
 
 } // namespace detail
 
@@ -206,10 +208,11 @@ concept non_uniform_point_sampling = is_non_uniform_point_sampling_v<DDim>;
 }
 
 template <class DDimImpl>
-std::ostream& operator<<(std::ostream& out, DDimImpl const& mesh)
+std::ostream& operator<<(std::ostream& os, DDimImpl const& mesh)
     requires(concepts::non_uniform_point_sampling<typename DDimImpl::discrete_dimension_type>)
 {
-    return out << "NonUniformPointSampling(" << mesh.size() << ")";
+    detail::print_non_uniform_point_samplig(os, mesh.size());
+    return os;
 }
 
 template <concepts::non_uniform_point_sampling DDim>

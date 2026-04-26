@@ -45,9 +45,25 @@ void distribute_blocks(
         } else if (dim < sizes.size()) {
             ++dim;
         } else {
-            throw std::runtime_error("what the hell");
+            throw std::runtime_error("DDC expects a small number of blocks.");
         }
     }
+}
+
+ComputeBlockFn::ComputeBlockFn(
+        DiscreteVectorElement const extent,
+        DiscreteVectorElement const nb_blocks) noexcept
+    : m_quot(extent / nb_blocks)
+    , m_rem(extent % nb_blocks)
+{
+}
+
+DiscreteVectorElement ComputeBlockFn::operator()(DiscreteVectorElement const i) const noexcept
+{
+    if (i < m_rem) {
+        return m_quot + 1;
+    }
+    return m_quot;
 }
 
 } // namespace ddc::detail

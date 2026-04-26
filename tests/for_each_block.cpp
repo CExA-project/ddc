@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 #include <array>
+#include <stdexcept>
 
 #include <ddc/ddc.hpp>
 
@@ -46,14 +47,35 @@ TEST(ForEachBlock, DistributeBlocks)
     {
         std::array<ddc::DiscreteVectorElement, 1> size {10};
         std::array<ddc::DiscreteVectorElement, 1> nb_blocks_per_dim;
+        EXPECT_THROW(
+                ddc::detail::distribute_blocks(0, size, nb_blocks_per_dim),
+                std::runtime_error);
+    }
+    {
+        std::array<ddc::DiscreteVectorElement, 1> size {10};
+        std::array<ddc::DiscreteVectorElement, 1> nb_blocks_per_dim;
         ddc::detail::distribute_blocks(2, size, nb_blocks_per_dim);
         EXPECT_EQ(nb_blocks_per_dim, (std::array<ddc::DiscreteVectorElement, 1> {2}));
     }
     {
         std::array<ddc::DiscreteVectorElement, 1> size {10};
         std::array<ddc::DiscreteVectorElement, 1> nb_blocks_per_dim;
+        EXPECT_THROW(
+                ddc::detail::distribute_blocks(3, size, nb_blocks_per_dim),
+                std::runtime_error);
+    }
+    {
+        std::array<ddc::DiscreteVectorElement, 1> size {10};
+        std::array<ddc::DiscreteVectorElement, 1> nb_blocks_per_dim;
         ddc::detail::distribute_blocks(8, size, nb_blocks_per_dim);
         EXPECT_EQ(nb_blocks_per_dim, (std::array<ddc::DiscreteVectorElement, 1> {8}));
+    }
+    {
+        std::array<ddc::DiscreteVectorElement, 1> size {10};
+        std::array<ddc::DiscreteVectorElement, 1> nb_blocks_per_dim;
+        EXPECT_THROW(
+                ddc::detail::distribute_blocks(16, size, nb_blocks_per_dim),
+                std::runtime_error);
     }
     {
         std::array<ddc::DiscreteVectorElement, 3> size {3, 4, 5};

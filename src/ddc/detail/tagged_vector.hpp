@@ -388,20 +388,24 @@ public:
 };
 
 template <class ElementType>
-std::ostream& operator<<(std::ostream& out, TaggedVector<ElementType> const&)
+void print_tagged_vector(std::ostream& os, ElementType const* const data, std::size_t const n)
 {
-    out << "()";
-    return out;
+    os << '(';
+    if (n > 0) {
+        os << data[0];
+        for (std::size_t i = 1; i < n; ++i) {
+            os << ", " << data[i];
+        }
+    }
+    os << ')';
 }
 
-template <class ElementType, class Head, class... Tags>
-std::ostream& operator<<(std::ostream& out, TaggedVector<ElementType, Head, Tags...> const& arr)
+template <class ElementType, class... Tags>
+std::ostream& operator<<(std::ostream& os, TaggedVector<ElementType, Tags...> const& arr)
 {
-    out << "(";
-    out << get<Head>(arr);
-    ((out << ", " << get<Tags>(arr)), ...);
-    out << ")";
-    return out;
+    auto const& std_arr = arr.array();
+    detail::print_tagged_vector(os, std_arr.data(), std_arr.size());
+    return os;
 }
 
 } // namespace detail

@@ -48,7 +48,7 @@ TEST(UniformPointSampling, Formatting)
     DDimX::Impl<DDimX, Kokkos::HostSpace> const ddim_x(origin, step);
     std::stringstream oss;
     oss << ddim_x;
-    EXPECT_EQ(oss.str(), "UniformPointSampling( origin=(-1), step=0.5 )");
+    EXPECT_EQ(oss.str(), "UniformPointSampling(origin=-1, step=0.5)");
 }
 
 TEST(UniformPointSamplingTest, Coordinate)

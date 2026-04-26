@@ -5,7 +5,7 @@
 #pragma once
 
 #include <cassert>
-#include <ostream>
+#include <iosfwd>
 #include <tuple>
 #include <type_traits>
 #include <utility>
@@ -26,6 +26,8 @@ namespace detail {
 struct UniformPointSamplingBase
 {
 };
+
+void print_uniform_point_sampling(std::ostream& os, CoordinateElement origin, Real step);
 
 } // namespace detail
 
@@ -233,11 +235,11 @@ concept uniform_point_sampling = is_uniform_point_sampling_v<DDim>;
 }
 
 template <class DDimImpl>
-std::ostream& operator<<(std::ostream& out, DDimImpl const& mesh)
+std::ostream& operator<<(std::ostream& os, DDimImpl const& mesh)
     requires(concepts::uniform_point_sampling<typename DDimImpl::discrete_dimension_type>)
 {
-    return out << "UniformPointSampling( origin=" << mesh.origin() << ", step=" << mesh.step()
-               << " )";
+    print_uniform_point_sampling(os, mesh.origin(), mesh.step());
+    return os;
 }
 
 template <concepts::uniform_point_sampling DDim>

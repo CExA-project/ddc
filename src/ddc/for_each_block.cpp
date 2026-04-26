@@ -39,13 +39,15 @@ void distribute_blocks(
 
     std::size_t dim = 0;
     while (nb_blocks != 1) {
+        if (dim >= sizes.size()) {
+            throw std::runtime_error("DDC expects a smaller number of blocks.");
+        }
+
         if (sizes[dim] >= nb_blocks_per_dim[dim] * 2) {
             nb_blocks_per_dim[dim] *= 2;
             nb_blocks /= 2;
-        } else if (dim < sizes.size()) {
-            ++dim;
         } else {
-            throw std::runtime_error("DDC expects a small number of blocks.");
+            ++dim;
         }
     }
 }

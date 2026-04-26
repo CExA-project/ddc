@@ -136,6 +136,7 @@ target_sources(
         src/ddc/discrete_vector.cpp
         src/ddc/for_each_block.cpp
         src/ddc/print.cpp
+        src/ddc/scope_guard.cpp
     PUBLIC
         FILE_SET core_public
             TYPE HEADERS

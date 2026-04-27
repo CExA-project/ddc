@@ -7,6 +7,8 @@
 #include <cassert>
 #include <cstddef>
 #include <optional>
+#include <string>
+#include <utility>
 
 #include <ddc/ddc.hpp>
 
@@ -310,13 +312,13 @@ public:
      * @see SplinesLinearProblemSparse
      */
     explicit SplineBuilder3D(
-            std::string const& label,
+            std::string label,
             interpolation_domain_type const& interpolation_domain,
             std::optional<std::size_t> cols_per_chunk = std::nullopt,
             std::optional<unsigned int> preconditioner_max_block_size = std::nullopt)
         : m_spline_builder1(interpolation_domain, cols_per_chunk, preconditioner_max_block_size)
         , m_spline_builder_2_3(interpolation_domain, cols_per_chunk, preconditioner_max_block_size)
-        , m_label(label)
+        , m_label(std::move(label))
     {
     }
 
@@ -368,12 +370,12 @@ public:
      */
     template <concepts::discrete_domain BatchedInterpolationDDom>
     explicit SplineBuilder3D(
-            std::string const& label,
+            std::string label,
             BatchedInterpolationDDom const& batched_interpolation_domain,
             std::optional<std::size_t> cols_per_chunk = std::nullopt,
             std::optional<unsigned int> preconditioner_max_block_size = std::nullopt)
         : SplineBuilder3D(
-                  label,
+                  std::move(label),
                   interpolation_domain_type(batched_interpolation_domain),
                   cols_per_chunk,
                   preconditioner_max_block_size)

@@ -7,6 +7,7 @@
 #include <cassert>
 #include <cstddef>
 #include <optional>
+#include <string>
 
 #include <ddc/ddc.hpp>
 

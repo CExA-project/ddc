@@ -225,14 +225,14 @@ public:
      * @see MatrixSparse
      */
     explicit SplineBuilder(
-            std::string const& label,
+            std::string label,
             interpolation_domain_type const& interpolation_domain,
             std::optional<std::size_t> cols_per_chunk = std::nullopt,
             std::optional<unsigned int> preconditioner_max_block_size = std::nullopt)
         : m_interpolation_domain(interpolation_domain)
         , m_dx((ddc::discrete_space<BSplines>().rmax() - ddc::discrete_space<BSplines>().rmin())
                / ddc::discrete_space<BSplines>().ncells())
-        , m_label(label)
+        , m_label(std::move(label))
     {
         static_assert(
                 ((BcLower == BoundCond::PERIODIC) == (BcUpper == BoundCond::PERIODIC)),
@@ -306,12 +306,12 @@ public:
      */
     template <concepts::discrete_domain BatchedInterpolationDDom>
     explicit SplineBuilder(
-            std::string const& label,
+            std::string label,
             BatchedInterpolationDDom const& batched_interpolation_domain,
             std::optional<std::size_t> cols_per_chunk = std::nullopt,
             std::optional<unsigned int> preconditioner_max_block_size = std::nullopt)
         : SplineBuilder(
-                  label,
+                  std::move(label),
                   interpolation_domain_type(batched_interpolation_domain),
                   cols_per_chunk,
                   preconditioner_max_block_size)

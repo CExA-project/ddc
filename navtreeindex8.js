@@ -1,7 +1,5 @@
 var NAVTREEINDEX8 =
 {
-"structddc_1_1is__discrete__domain_3_01DiscreteDomain_3_01Tags_8_8_8_01_4_01_4.html":[4,0,0,20],
-"structddc_1_1is__discrete__domain_3_01DiscreteDomain_3_01Tags_8_8_8_01_4_01_4.html":[6,0,0,19],
 "structddc_1_1is__discrete__element.html":[6,0,0,20],
 "structddc_1_1is__discrete__element.html":[4,0,0,21],
 "structddc_1_1is__discrete__element_3_01DiscreteElement_3_01Tags_8_8_8_01_4_01_4.html":[6,0,0,21],

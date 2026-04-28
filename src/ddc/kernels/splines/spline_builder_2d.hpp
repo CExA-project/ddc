@@ -52,10 +52,6 @@ public:
     using builder_type2 = ddc::
             SplineBuilder<ExecSpace, MemorySpace, BSpline2, DDimI2, BcLower2, BcUpper2, Solver>;
 
-    /// @brief The type of the SplineBuilder used by this class to spline-approximate the second-dimension-derivatives along first dimension.
-    using builder_deriv_type1 = ddc::
-            SplineBuilder<ExecSpace, MemorySpace, BSpline1, DDimI1, BcLower1, BcUpper1, Solver>;
-
     /// @brief The type of the first interpolation continuous dimension.
     using continuous_dimension_type1 = builder_type1::continuous_dimension_type;
 
@@ -182,7 +178,6 @@ public:
 
 private:
     builder_type1 m_spline_builder1;
-    builder_deriv_type1 m_spline_builder_deriv1;
     builder_type2 m_spline_builder2;
 
 public:
@@ -207,7 +202,6 @@ public:
             std::optional<std::size_t> cols_per_chunk = std::nullopt,
             std::optional<unsigned int> preconditioner_max_block_size = std::nullopt)
         : m_spline_builder1(interpolation_domain, cols_per_chunk, preconditioner_max_block_size)
-        , m_spline_builder_deriv1(interpolation_domain)
         , m_spline_builder2(interpolation_domain, cols_per_chunk, preconditioner_max_block_size)
     {
     }
@@ -536,12 +530,12 @@ operator()(
                             ddc::DiscreteVector<deriv_type2>(bsplines_type2::degree() / 2)));
 
     ddc::Chunk spline1_deriv_min_alloc(
-            m_spline_builder_deriv1.batched_spline_domain(batched_interpolation_deriv_domain),
+            m_spline_builder1.batched_spline_domain(batched_interpolation_deriv_domain),
             ddc::KokkosAllocator<double, MemorySpace>());
     auto spline1_deriv_min = spline1_deriv_min_alloc.span_view();
     auto spline1_deriv_min_opt = std::optional(spline1_deriv_min.span_cview());
     if constexpr (BcLower2 == ddc::BoundCond::HERMITE) {
-        m_spline_builder_deriv1(
+        m_spline_builder1(
                 spline1_deriv_min,
                 *derivs_min2,
                 mixed_derivs_min1_min2,
@@ -560,12 +554,12 @@ operator()(
 
     // Spline1-approximate derivs_max2 (to spline1_deriv_max)
     ddc::Chunk spline1_deriv_max_alloc(
-            m_spline_builder_deriv1.batched_spline_domain(batched_interpolation_deriv_domain),
+            m_spline_builder1.batched_spline_domain(batched_interpolation_deriv_domain),
             ddc::KokkosAllocator<double, MemorySpace>());
     auto spline1_deriv_max = spline1_deriv_max_alloc.span_view();
     auto spline1_deriv_max_opt = std::optional(spline1_deriv_max.span_cview());
     if constexpr (BcUpper2 == ddc::BoundCond::HERMITE) {
-        m_spline_builder_deriv1(
+        m_spline_builder1(
                 spline1_deriv_max,
                 *derivs_max2,
                 mixed_derivs_min1_max2,

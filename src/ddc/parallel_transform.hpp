@@ -47,17 +47,18 @@ public:
 } // namespace detail
 
 /** Transform a borrowed chunk with a given transform functor
+ * @param[in] label A label used to tag parallel regions and memory allocations for profiling
  * @param[out] dst the borrowed chunk in which to copy
  * @param[in] transform a unary FunctionObject that will be applied to each element of the input
  *            range. The return type must be assignable to dst
  * @return dst as a ChunkSpan
  */
 template <class ChunkDst, class UnaryTransformOp>
-auto parallel_transform(ChunkDst&& dst, UnaryTransformOp&& transform)
+auto parallel_transform(std::string const& label, ChunkDst&& dst, UnaryTransformOp&& transform)
 {
     static_assert(is_borrowed_chunk_v<ChunkDst>);
     parallel_for_each(
-            "ddc_parallel_transform_default",
+            label,
             dst.domain(),
             detail::TransformKokkosLambdaAdapter(
                     dst.span_view(),
@@ -66,8 +67,45 @@ auto parallel_transform(ChunkDst&& dst, UnaryTransformOp&& transform)
 }
 
 /** Transform a borrowed chunk with a given transform functor
+ * @param[out] dst the borrowed chunk in which to copy
+ * @param[in] transform a unary FunctionObject that will be applied to each element of the input
+ *            range. The return type must be assignable to dst
+ * @return dst as a ChunkSpan
+ */
+template <class ChunkDst, class UnaryTransformOp>
+auto parallel_transform(ChunkDst&& dst, UnaryTransformOp&& transform)
+{
+    return parallel_transform("ddc_parallel_transform_default", dst, transform);
+}
+
+/** Transform a borrowed chunk with a given transform functor
+ * @param[in] label A label used to tag parallel regions and memory allocations for profiling
  * @param[in] execution_space a Kokkos execution space where the loop will be executed on
  * @param[out] dst the borrowed chunk in which to copy
+ * @param[in] transform a unary FunctionObject that will be applied to each element of the input
+ *            range. The return type must be acceptable as input to reduce
+ * @return dst as a ChunkSpan
+ */
+template <class ExecSpace, class ChunkDst, class UnaryTransformOp>
+auto parallel_transform(
+        std::string const& label,
+        ExecSpace const& execution_space,
+        ChunkDst&& dst,
+        UnaryTransformOp&& transform)
+{
+    static_assert(is_borrowed_chunk_v<ChunkDst>);
+    parallel_for_each(
+            label,
+            execution_space,
+            dst.domain(),
+            detail::TransformKokkosLambdaAdapter(
+                    dst.span_view(),
+                    std::forward<UnaryTransformOp>(transform)));
+    return dst.span_view();
+}
+/** Transform a borrowed chunk with a given transform functor
+ * @param[in] execution_space a Kokkos execution space where the loop will be executed on
+ * @param[out] dst the borrowed chunk in which to copyW
  * @param[in] transform a unary FunctionObject that will be applied to each element of the input
  *            range. The return type must be acceptable as input to reduce
  * @return dst as a ChunkSpan
@@ -77,16 +115,9 @@ auto parallel_transform(
         ExecSpace const& execution_space,
         ChunkDst&& dst,
         UnaryTransformOp&& transform)
+    requires(Kokkos::is_execution_space_v<ExecSpace>)
 {
-    static_assert(is_borrowed_chunk_v<ChunkDst>);
-    parallel_for_each(
-            "ddc_parallel_transform_default",
-            execution_space,
-            dst.domain(),
-            detail::TransformKokkosLambdaAdapter(
-                    dst.span_view(),
-                    std::forward<UnaryTransformOp>(transform)));
-    return dst.span_view();
+    return parallel_transform("ddc_parallel_transform_default", execution_space, dst, transform);
 }
 
 } // namespace ddc

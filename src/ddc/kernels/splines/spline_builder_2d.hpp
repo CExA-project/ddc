@@ -206,8 +206,16 @@ public:
             interpolation_domain_type const& interpolation_domain,
             std::optional<std::size_t> cols_per_chunk = std::nullopt,
             std::optional<unsigned int> preconditioner_max_block_size = std::nullopt)
-        : m_spline_builder1(label, interpolation_domain, cols_per_chunk, preconditioner_max_block_size)
-        , m_spline_builder2(label, interpolation_domain, cols_per_chunk, preconditioner_max_block_size)
+        : m_spline_builder1(
+                  label,
+                  interpolation_domain,
+                  cols_per_chunk,
+                  preconditioner_max_block_size)
+        , m_spline_builder2(
+                  label,
+                  interpolation_domain,
+                  cols_per_chunk,
+                  preconditioner_max_block_size)
         , m_label(label)
     {
     }

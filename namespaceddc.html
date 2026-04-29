@@ -738,14 +738,23 @@ requires (Kokkos::is_execution_space_v&lt;<a class="el" href="namespaceddc.html#
 <tr class="memitem:a38c84b63c494b0e01a5fcf79e41f95cc"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">void</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a38c84b63c494b0e01a5fcf79e41f95cc">parallel_for_each</a> (<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Support</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;domain, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Functor</a> &amp;&amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">f</a>) <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">noexcept</a></td></tr>
 <tr class="memdesc:a38c84b63c494b0e01a5fcf79e41f95cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">iterates over a nD domain using the <code>Kokkos</code> default execution space  <br /></td></tr>
 <tr class="separator:a38c84b63c494b0e01a5fcf79e41f95cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5bc2f92ddb9eeda3bcb12b1b8f72f151" id="r_a5bc2f92ddb9eeda3bcb12b1b8f72f151"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ChunkDst</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">UnaryTransformOp</a> &gt; </td></tr>
+<tr class="memitem:a5bc2f92ddb9eeda3bcb12b1b8f72f151"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a5bc2f92ddb9eeda3bcb12b1b8f72f151">parallel_transform</a> (std::string <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;label, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ChunkDst</a> &amp;&amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">dst</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">UnaryTransformOp</a> &amp;&amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">transform</a>)</td></tr>
+<tr class="memdesc:a5bc2f92ddb9eeda3bcb12b1b8f72f151"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transform a borrowed chunk with a given transform functor.  <br /></td></tr>
+<tr class="separator:a5bc2f92ddb9eeda3bcb12b1b8f72f151"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af073e85da1748eeb4dc695fcdabc2975" id="r_af073e85da1748eeb4dc695fcdabc2975"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ChunkDst</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">UnaryTransformOp</a> &gt; </td></tr>
 <tr class="memitem:af073e85da1748eeb4dc695fcdabc2975"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#af073e85da1748eeb4dc695fcdabc2975">parallel_transform</a> (<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ChunkDst</a> &amp;&amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">dst</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">UnaryTransformOp</a> &amp;&amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">transform</a>)</td></tr>
 <tr class="memdesc:af073e85da1748eeb4dc695fcdabc2975"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transform a borrowed chunk with a given transform functor.  <br /></td></tr>
 <tr class="separator:af073e85da1748eeb4dc695fcdabc2975"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1845837cc6071bd76ae20ca0ccf609c7" id="r_a1845837cc6071bd76ae20ca0ccf609c7"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ExecSpace</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ChunkDst</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">UnaryTransformOp</a> &gt; </td></tr>
-<tr class="memitem:a1845837cc6071bd76ae20ca0ccf609c7"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a1845837cc6071bd76ae20ca0ccf609c7">parallel_transform</a> (<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ExecSpace</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">execution_space</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ChunkDst</a> &amp;&amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">dst</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">UnaryTransformOp</a> &amp;&amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">transform</a>)</td></tr>
-<tr class="memdesc:a1845837cc6071bd76ae20ca0ccf609c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transform a borrowed chunk with a given transform functor.  <br /></td></tr>
-<tr class="separator:a1845837cc6071bd76ae20ca0ccf609c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab891f8d07efbf3f43a5f6da8467962cf" id="r_ab891f8d07efbf3f43a5f6da8467962cf"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ExecSpace</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ChunkDst</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">UnaryTransformOp</a> &gt; </td></tr>
+<tr class="memitem:ab891f8d07efbf3f43a5f6da8467962cf"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#ab891f8d07efbf3f43a5f6da8467962cf">parallel_transform</a> (std::string <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;label, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ExecSpace</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">execution_space</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ChunkDst</a> &amp;&amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">dst</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">UnaryTransformOp</a> &amp;&amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">transform</a>)</td></tr>
+<tr class="memdesc:ab891f8d07efbf3f43a5f6da8467962cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transform a borrowed chunk with a given transform functor.  <br /></td></tr>
+<tr class="separator:ab891f8d07efbf3f43a5f6da8467962cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:accbfc2f0a4d6502ba5fb17177ae43801" id="r_accbfc2f0a4d6502ba5fb17177ae43801"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ExecSpace</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ChunkDst</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">UnaryTransformOp</a> &gt; <br />
+requires (Kokkos::is_execution_space_v&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ExecSpace</a>&gt;)</td></tr>
+<tr class="memitem:accbfc2f0a4d6502ba5fb17177ae43801"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#accbfc2f0a4d6502ba5fb17177ae43801">parallel_transform</a> (<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ExecSpace</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">execution_space</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ChunkDst</a> &amp;&amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">dst</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">UnaryTransformOp</a> &amp;&amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">transform</a>)</td></tr>
+<tr class="memdesc:accbfc2f0a4d6502ba5fb17177ae43801"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transform a borrowed chunk with a given transform functor.  <br /></td></tr>
+<tr class="separator:accbfc2f0a4d6502ba5fb17177ae43801"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a35958049c996ae6af7dc9bbeaeb8a05a" id="r_a35958049c996ae6af7dc9bbeaeb8a05a"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ExecSpace</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Support</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> T , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BinaryReductionOp</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">UnaryTransformOp</a> &gt; </td></tr>
 <tr class="memitem:a35958049c996ae6af7dc9bbeaeb8a05a"><td class="memTemplItemLeft" align="right" valign="top">T&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a35958049c996ae6af7dc9bbeaeb8a05a">parallel_transform_reduce</a> (std::string <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;label, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ExecSpace</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">execution_space</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Support</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;domain, T <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">neutral</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BinaryReductionOp</a> &amp;&amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">reduce</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">UnaryTransformOp</a> &amp;&amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">transform</a>) <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">noexcept</a></td></tr>
 <tr class="memdesc:a35958049c996ae6af7dc9bbeaeb8a05a"><td class="mdescLeft">&#160;</td><td class="mdescRight">A reduction over a nD domain using a given <code>Kokkos</code> execution space.  <br /></td></tr>
@@ -5164,8 +5173,57 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 
 </div>
 </div>
+<a id="a5bc2f92ddb9eeda3bcb12b1b8f72f151" name="a5bc2f92ddb9eeda3bcb12b1b8f72f151"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5bc2f92ddb9eeda3bcb12b1b8f72f151">&#9670;&#160;</a></span>parallel_transform() <span class="overload">[1/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ChunkDst</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">UnaryTransformOp</a> &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">auto</a> ddc::parallel_transform </td>
+          <td>(</td>
+          <td class="paramtype">std::string <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
+          <td class="paramname"><em>label</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ChunkDst</a> &amp;&amp;&#160;</td>
+          <td class="paramname"><em>dst</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">UnaryTransformOp</a> &amp;&amp;&#160;</td>
+          <td class="paramname"><em>transform</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Transform a borrowed chunk with a given transform functor. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">label</td><td>A label used to tag parallel regions and memory allocations for profiling </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">dst</td><td>the borrowed chunk in which to copy </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">transform</td><td>a unary FunctionObject that will be applied to each element of the input range. The return type must be assignable to dst </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>dst as a <a class="el" href="classddc_1_1ChunkSpan.html">ChunkSpan</a> </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="parallel__transform_8hpp_source.html#l00057">57</a> of file <a class="el" href="parallel__transform_8hpp_source.html">parallel_transform.hpp</a>.</p>
+
+</div>
+</div>
 <a id="af073e85da1748eeb4dc695fcdabc2975" name="af073e85da1748eeb4dc695fcdabc2975"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af073e85da1748eeb4dc695fcdabc2975">&#9670;&#160;</a></span>parallel_transform() <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#af073e85da1748eeb4dc695fcdabc2975">&#9670;&#160;</a></span>parallel_transform() <span class="overload">[2/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -5202,17 +5260,74 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>dst as a <a class="el" href="classddc_1_1ChunkSpan.html">ChunkSpan</a> </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="parallel__transform_8hpp_source.html#l00056">56</a> of file <a class="el" href="parallel__transform_8hpp_source.html">parallel_transform.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parallel__transform_8hpp_source.html#l00076">76</a> of file <a class="el" href="parallel__transform_8hpp_source.html">parallel_transform.hpp</a>.</p>
 
 </div>
 </div>
-<a id="a1845837cc6071bd76ae20ca0ccf609c7" name="a1845837cc6071bd76ae20ca0ccf609c7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1845837cc6071bd76ae20ca0ccf609c7">&#9670;&#160;</a></span>parallel_transform() <span class="overload">[2/2]</span></h2>
+<a id="ab891f8d07efbf3f43a5f6da8467962cf" name="ab891f8d07efbf3f43a5f6da8467962cf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab891f8d07efbf3f43a5f6da8467962cf">&#9670;&#160;</a></span>parallel_transform() <span class="overload">[3/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ExecSpace</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ChunkDst</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">UnaryTransformOp</a> &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">auto</a> ddc::parallel_transform </td>
+          <td>(</td>
+          <td class="paramtype">std::string <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
+          <td class="paramname"><em>label</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ExecSpace</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
+          <td class="paramname"><em>execution_space</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ChunkDst</a> &amp;&amp;&#160;</td>
+          <td class="paramname"><em>dst</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">UnaryTransformOp</a> &amp;&amp;&#160;</td>
+          <td class="paramname"><em>transform</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Transform a borrowed chunk with a given transform functor. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">label</td><td>A label used to tag parallel regions and memory allocations for profiling </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">execution_space</td><td>a Kokkos execution space where the loop will be executed on </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">dst</td><td>the borrowed chunk in which to copy </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">transform</td><td>a unary FunctionObject that will be applied to each element of the input range. The return type must be acceptable as input to reduce </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>dst as a <a class="el" href="classddc_1_1ChunkSpan.html">ChunkSpan</a> </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="parallel__transform_8hpp_source.html#l00090">90</a> of file <a class="el" href="parallel__transform_8hpp_source.html">parallel_transform.hpp</a>.</p>
+
+</div>
+</div>
+<a id="accbfc2f0a4d6502ba5fb17177ae43801" name="accbfc2f0a4d6502ba5fb17177ae43801"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#accbfc2f0a4d6502ba5fb17177ae43801">&#9670;&#160;</a></span>parallel_transform() <span class="overload">[4/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ExecSpace</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ChunkDst</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">UnaryTransformOp</a> &gt; <br />
+requires (Kokkos::is_execution_space_v&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ExecSpace</a>&gt;)</div>
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">auto</a> ddc::parallel_transform </td>
@@ -5244,14 +5359,14 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">execution_space</td><td>a Kokkos execution space where the loop will be executed on </td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">dst</td><td>the borrowed chunk in which to copy </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">dst</td><td>the borrowed chunk in which to copyW </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">transform</td><td>a unary FunctionObject that will be applied to each element of the input range. The return type must be acceptable as input to reduce </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>dst as a <a class="el" href="classddc_1_1ChunkSpan.html">ChunkSpan</a> </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="parallel__transform_8hpp_source.html#l00076">76</a> of file <a class="el" href="parallel__transform_8hpp_source.html">parallel_transform.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="parallel__transform_8hpp_source.html#l00114">114</a> of file <a class="el" href="parallel__transform_8hpp_source.html">parallel_transform.hpp</a>.</p>
 
 </div>
 </div>

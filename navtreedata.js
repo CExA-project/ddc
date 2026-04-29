@@ -116,11 +116,11 @@ var NAVTREEINDEX =
 "classddc_1_1ChunkSpan.html#a8aaed50f667ca1e88576e4e8ef580b1b",
 "classddc_1_1DiscreteVector.html#afb3c8c9ab49ebd9923116eda48657037",
 "classddc_1_1SparseDiscreteDomain.html#a20f0cff53d1c5f29d52e96a7b86272bb",
-"classddc_1_1SplineBuilder3D.html#a37df35f660dc8a4829bbf7906a06a537",
-"classddc_1_1SplineEvaluator3D.html#a82ea3e7f6860382e58830622195eb984",
-"classddc_1_1UniformPointSampling_1_1Impl.html#ab0ae79ae8ffb7aebe902a522d819ddbf",
-"namespaceddc.html#a70f6a7634ef3f77720ba76b015de2008",
-"structddc_1_1is__discrete__element.html"
+"classddc_1_1SplineBuilder3D.html#a1584c9742919aca1dda40f93e8109312",
+"classddc_1_1SplineEvaluator3D.html#a5a146b96c03b456cc58d5210270257c7",
+"classddc_1_1UniformPointSampling_1_1Impl.html#a3646b65d3dd212475f369f1767b9b83a",
+"namespaceddc.html#a6141d17f89f3cc72b0472729a6aa3a54",
+"structddc_1_1StridedDiscreteDomainIterator.html#ac307934c78fc1515e131612609fc8f37"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

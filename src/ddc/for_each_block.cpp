@@ -2,11 +2,10 @@
 //
 // SPDX-License-Identifier: MIT
 
+#include <cassert>
 #include <cstddef>
 #include <span>
 #include <stdexcept>
-
-#include <Kokkos_Core.hpp>
 
 #include "discrete_vector.hpp"
 #include "for_each_block.hpp"

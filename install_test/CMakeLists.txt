@@ -52,7 +52,7 @@ endforeach()
 # and the additivity of DDC components.
 
 # Find DDC without components, only core will be defined
-find_package(DDC 0.12 REQUIRED)
+find_package(DDC 0.13 REQUIRED)
 
 # Targets that must exist
 foreach(target IN ITEMS DDC::core)
@@ -80,7 +80,7 @@ foreach(
 endforeach()
 
 # Find again DDC with fft component, core and fft will be defined
-find_package(DDC 0.12 REQUIRED COMPONENTS fft)
+find_package(DDC 0.13 REQUIRED COMPONENTS fft)
 
 # Targets that must exist
 foreach(target IN ITEMS DDC::core DDC::fft)
@@ -108,7 +108,7 @@ foreach(
 endforeach()
 
 # Find again DDC with pdi and splines components, all components will be defined
-find_package(DDC 0.12 REQUIRED COMPONENTS pdi splines)
+find_package(DDC 0.13 REQUIRED COMPONENTS pdi splines)
 
 # Targets that must exist
 foreach(target IN ITEMS DDC::core DDC::fft DDC::pdi DDC::splines)

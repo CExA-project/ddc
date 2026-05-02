@@ -7,6 +7,7 @@
 #include <gtest/gtest.h>
 
 #include <Kokkos_Core.hpp>
+#include <Kokkos_StdAlgorithms.hpp>
 
 inline namespace anonymous_namespace_workaround_parallel_transform_reduce_cpp {
 
@@ -126,4 +127,62 @@ TEST(ParallelTransformReduceDevice, TwoDimensions)
     int const sum
             = ddc::parallel_transform_reduce(dom, 0, ddc::reducer::sum<int>(), view.span_cview());
     EXPECT_EQ(sum, dom.size());
+}
+
+TEST(ParallelTransformReduceDevice, SumXY2Scalar)
+{
+    Kokkos::DefaultExecutionSpace const exec_space;
+
+    DDom0D const dom_0d;
+    DDomXY const dom_x_y(lbound_x_y, nelems_x_y);
+
+    Kokkos::View<int> const storage(Kokkos::view_alloc("storage", exec_space));
+    ddc::ChunkSpan const chunk_0d(storage, dom_0d);
+    ddc::parallel_fill(exec_space, chunk_0d, -1);
+
+    ddc::Chunk chunk_x_y(dom_x_y, ddc::DeviceAllocator<int>());
+    ddc::parallel_fill(exec_space, chunk_x_y, 1);
+
+    ddc::experimental::parallel_transform_reduce(
+            "xy2scalar",
+            exec_space,
+            chunk_x_y.domain(),
+            chunk_0d,
+            ddc::reducer::sum<int>(),
+            chunk_x_y.span_cview());
+
+    int const res = ddc::parallel_transform_reduce(
+            "xy2scalar",
+            exec_space,
+            chunk_x_y.domain(),
+            0,
+            ddc::reducer::sum<int>(),
+            chunk_x_y.span_cview());
+
+    EXPECT_EQ(res, dom_x_y.size());
+}
+
+TEST(ParallelTransformReduceDevice, SumXY2X)
+{
+    Kokkos::DefaultExecutionSpace const exec_space;
+
+    DDomX const dom_x(lbound_x, nelems_x);
+    DDomXY const dom_x_y(lbound_x_y, nelems_x_y);
+
+    Kokkos::View<int*> const storage(Kokkos::view_alloc("storage", exec_space), dom_x.size());
+    ddc::ChunkSpan const chunk_x(storage, dom_x);
+    ddc::parallel_fill(exec_space, chunk_x, -1);
+
+    ddc::Chunk chunk_x_y(dom_x_y, ddc::DeviceAllocator<int>());
+    ddc::parallel_fill(exec_space, chunk_x_y, 1);
+
+    ddc::experimental::parallel_transform_reduce(
+            "xy2x",
+            exec_space,
+            chunk_x_y.domain(),
+            chunk_x,
+            ddc::reducer::sum<int>(),
+            chunk_x_y.span_cview());
+
+    EXPECT_EQ(Kokkos::Experimental::count(exec_space, storage, 12), dom_x.size());
 }

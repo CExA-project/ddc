@@ -64,6 +64,8 @@ RUN chmod +x /bin/bash_run.sh \
     pdiplugin-user-code \
     pkg-config \
     python3 \
+    python3-numpy \
+    python3-pytest \
  && case "${BACKEND}" in \
     "cpu") \
       apt-get install -y --no-install-recommends \

@@ -66,6 +66,8 @@ RUN chmod +x /bin/bash_run.sh \
     pkg-config \
     pipx \
     python3 \
+    python3-numpy \
+    python3-pytest \
  && python3 -m pipx install gcovr==${GCOVR_VERSION} \
  && python3 -m pipx ensurepath \
  && case "${BACKEND}" in \

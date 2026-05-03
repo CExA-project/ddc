@@ -138,6 +138,7 @@ target_sources(
         src/ddc/non_uniform_point_sampling.cpp
         src/ddc/periodic_sampling.cpp
         src/ddc/print.cpp
+        src/ddc/save_npy.cpp
         src/ddc/scope_guard.cpp
         src/ddc/uniform_point_sampling.cpp
     PUBLIC
@@ -182,6 +183,7 @@ target_sources(
                 src/ddc/print.hpp
                 src/ddc/real_type.hpp
                 src/ddc/reducer.hpp
+                src/ddc/save_npy.hpp
                 src/ddc/scope_guard.hpp
                 src/ddc/sparse_discrete_domain.hpp
                 src/ddc/strided_discrete_domain.hpp

@@ -82,3 +82,4 @@ namespace ddc {
 
 // Output
 #include "print.hpp"
+#include "save_npy.hpp"

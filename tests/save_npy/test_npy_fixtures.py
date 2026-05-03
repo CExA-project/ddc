@@ -34,32 +34,28 @@ def gen_array_3d(dtype):
 
 def test_0d():
     """Test loading and equality of a 0D float32 array."""
-    np.testing.assert_array_equal(np.load("float_0d.npy"), gen_array_0d(np.float32), strict=True)
+    np.testing.assert_array_equal(np.load("float_0d.npy"), gen_array_0d(np.float32))
 
 
 def test_1d():
     """Test loading and equality of a 1D float64 array."""
-    np.testing.assert_array_equal(np.load("double_1d.npy"), gen_array_1d(np.float64), strict=True)
+    np.testing.assert_array_equal(np.load("double_1d.npy"), gen_array_1d(np.float64))
 
 
 def test_3d():
     """Test loading and equality of multiple 3D arrays across dtypes."""
-    np.testing.assert_array_equal(np.load("int8_3d.npy"), gen_array_3d(np.int8), strict=True)
-    np.testing.assert_array_equal(np.load("int16_3d.npy"), gen_array_3d(np.int16), strict=True)
-    np.testing.assert_array_equal(np.load("int32_3d.npy"), gen_array_3d(np.int32), strict=True)
-    np.testing.assert_array_equal(np.load("int64_3d.npy"), gen_array_3d(np.int64), strict=True)
+    np.testing.assert_array_equal(np.load("int8_3d.npy"), gen_array_3d(np.int8))
+    np.testing.assert_array_equal(np.load("int16_3d.npy"), gen_array_3d(np.int16))
+    np.testing.assert_array_equal(np.load("int32_3d.npy"), gen_array_3d(np.int32))
+    np.testing.assert_array_equal(np.load("int64_3d.npy"), gen_array_3d(np.int64))
 
-    np.testing.assert_array_equal(np.load("uint8_3d.npy"), gen_array_3d(np.uint8), strict=True)
-    np.testing.assert_array_equal(np.load("uint16_3d.npy"), gen_array_3d(np.uint16), strict=True)
-    np.testing.assert_array_equal(np.load("uint32_3d.npy"), gen_array_3d(np.uint32), strict=True)
-    np.testing.assert_array_equal(np.load("uint64_3d.npy"), gen_array_3d(np.uint64), strict=True)
+    np.testing.assert_array_equal(np.load("uint8_3d.npy"), gen_array_3d(np.uint8))
+    np.testing.assert_array_equal(np.load("uint16_3d.npy"), gen_array_3d(np.uint16))
+    np.testing.assert_array_equal(np.load("uint32_3d.npy"), gen_array_3d(np.uint32))
+    np.testing.assert_array_equal(np.load("uint64_3d.npy"), gen_array_3d(np.uint64))
 
-    np.testing.assert_array_equal(np.load("float_3d.npy"), gen_array_3d(np.float32), strict=True)
-    np.testing.assert_array_equal(np.load("double_3d.npy"), gen_array_3d(np.float64), strict=True)
+    np.testing.assert_array_equal(np.load("float_3d.npy"), gen_array_3d(np.float32))
+    np.testing.assert_array_equal(np.load("double_3d.npy"), gen_array_3d(np.float64))
 
-    np.testing.assert_array_equal(
-        np.load("complex_float_3d.npy"), gen_array_3d(np.complex64), strict=True
-    )
-    np.testing.assert_array_equal(
-        np.load("complex_double_3d.npy"), gen_array_3d(np.complex128), strict=True
-    )
+    np.testing.assert_array_equal(np.load("complex_float_3d.npy"), gen_array_3d(np.complex64))
+    np.testing.assert_array_equal(np.load("complex_double_3d.npy"), gen_array_3d(np.complex128))

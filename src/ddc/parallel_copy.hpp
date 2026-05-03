@@ -6,45 +6,61 @@
 
 #include <cassert>
 #include <type_traits>
+#include <utility>
 
 #include <Kokkos_Core.hpp>
 
-#include "chunk_span.hpp"
 #include "chunk_traits.hpp"
-#include "parallel_for_each.hpp"
+#include "ddc_to_kokkos_execution_policy.hpp"
 
 namespace ddc {
 
 namespace detail {
 
-template <
-        typename Tsrc,
-        typename Tdst,
-        typename DDomSrc,
-        typename DDomDst,
-        typename MemorySpace,
-        typename LayoutSrc,
-        typename LayoutDst>
+template <typename ChunkSpanDst, typename ChunkSpanSrc, typename IndexSequence>
 class CopyKokkosLambdaAdapter
 {
-    ddc::ChunkSpan<Tdst, DDomDst, LayoutDst, MemorySpace> m_dst;
+};
 
-    ddc::ChunkSpan<Tsrc const, DDomSrc, LayoutSrc, MemorySpace> m_src;
+template <typename ChunkSpanDst, typename ChunkSpanSrc, std::size_t... Idx>
+class CopyKokkosLambdaAdapter<ChunkSpanDst, ChunkSpanSrc, std::index_sequence<Idx...>>
+{
+    template <std::size_t I>
+    using index_type = DiscreteVectorElement;
+
+    ChunkSpanDst m_dst;
+
+    ChunkSpanSrc m_src;
 
 public:
-    explicit CopyKokkosLambdaAdapter(
-            ddc::ChunkSpan<Tdst, DDomDst, LayoutDst, MemorySpace> const& dst,
-            ddc::ChunkSpan<Tsrc const, DDomSrc, LayoutSrc, MemorySpace> const& src)
+    explicit CopyKokkosLambdaAdapter(ChunkSpanDst const& dst, ChunkSpanSrc const& src)
         : m_dst(dst)
         , m_src(src)
     {
     }
 
-    KOKKOS_FUNCTION void operator()(DDomDst::discrete_element_type idst) const
+    KOKKOS_FUNCTION void operator()(index_type<0> /*id*/) const
+        requires(sizeof...(Idx) == 0)
     {
-        m_dst(idst) = m_src(typename DDomSrc::discrete_element_type(idst));
+        m_dst() = m_src();
+    }
+
+    KOKKOS_FUNCTION void operator()(index_type<Idx>... ids) const
+        requires(sizeof...(Idx) > 0)
+    {
+        using DVectDst = ChunkSpanDst::discrete_vector_type;
+        using DVectSrc = ChunkSpanSrc::discrete_vector_type;
+        DVectDst const ddst(ids...);
+        m_dst(ddst) = m_src(DVectSrc(ddst));
     }
 };
+
+template <typename ChunkSpanDst, typename ChunkSpanSrc>
+CopyKokkosLambdaAdapter(ChunkSpanDst const& dst, ChunkSpanSrc const& src)
+        -> CopyKokkosLambdaAdapter<
+                ChunkSpanDst,
+                ChunkSpanSrc,
+                std::make_index_sequence<ChunkSpanDst::rank()>>;
 
 } // namespace detail
 
@@ -82,9 +98,11 @@ auto parallel_copy(ExecSpace const& execution_space, ChunkDst&& dst, ChunkSrc&& 
         // Alternative implementations:
         // - outer loop over src dimensions and inner loop over batch dimensions
         // - outer loop over batch dimensions and inner loop over src dimensions
-        ddc::parallel_for_each(
-                execution_space,
-                dst.domain(),
+        Kokkos::parallel_for(
+                "ddc_copy_default",
+                detail::ddc_to_kokkos_execution_policy(
+                        execution_space,
+                        detail::array(dst.domain().extents())),
                 detail::CopyKokkosLambdaAdapter(dst.span_view(), src.span_cview()));
     }
     return dst.span_view();

@@ -173,6 +173,7 @@ target_sources(
                 src/ddc/for_each_block.hpp
                 src/ddc/kokkos_allocator.hpp
                 src/ddc/non_uniform_point_sampling.hpp
+                src/ddc/parallel_copy.hpp
                 src/ddc/parallel_deepcopy.hpp
                 src/ddc/parallel_fill.hpp
                 src/ddc/parallel_for_each.hpp

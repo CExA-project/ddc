@@ -13,6 +13,33 @@
 
 namespace ddc {
 
+namespace detail {
+
+/**
+ * @brief Ensure a layout_right view of a ChunkSpan, copying if necessary.
+ *
+ * If the input `src` already uses `Kokkos::layout_right`, it is returned as-is.
+ * Otherwise, a new chunk with layout_right is allocated and a deep copy of
+ * `src` is performed into it.
+ *
+ * @param[in] src Source ChunkSpan to adapt.
+ * @return Either the original view (if already LayoutRight) or a copied chunk.
+ */
+template <class ElementType, class Support, class Layout, class MemorySpace>
+auto create_layout_right_view_and_copy(
+        ChunkSpan<ElementType, Support, Layout, MemorySpace> const& src)
+{
+    if constexpr (std::is_same_v<Layout, Kokkos::layout_right>) {
+        return src;
+    } else {
+        Chunk chunk(src.domain(), KokkosAllocator<std::remove_const_t<ElementType>, MemorySpace>());
+        parallel_deepcopy(chunk, src);
+        return chunk;
+    }
+}
+
+} // namespace detail
+
 /// @param[in] space A Kokkos memory space or execution space.
 /// @param[in] src A layout right ChunkSpan.
 /// @return a `Chunk` with the same support and layout as `src` allocated on the `Space::memory_space` memory space.

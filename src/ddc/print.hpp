@@ -18,6 +18,7 @@
 #include <Kokkos_Core.hpp>
 
 #include "chunk_span.hpp"
+#include "create_mirror.hpp"
 #include "discrete_vector.hpp"
 
 namespace ddc {
@@ -350,13 +351,16 @@ std::ostream& print_content(
         std::ostream& os,
         ChunkSpan<ElementType, SupportType, LayoutStridedPolicy, MemorySpace> const& chunk_span)
 {
-    auto h_chunk_span = create_mirror_view_and_copy(Kokkos::HostSpace(), chunk_span);
+    auto chunk_span_right = detail::create_layout_right_view_and_copy(chunk_span);
+    auto chunk_span_right_host
+            = create_mirror_view_and_copy(Kokkos::HostSpace(), chunk_span_right.span_view());
 
-    using chunkspan_type = std::remove_cv_t<std::remove_reference_t<decltype(h_chunk_span)>>;
+    using chunkspan_type
+            = std::remove_cv_t<std::remove_reference_t<decltype(chunk_span_right_host)>>;
     using mdspan_type = chunkspan_type::allocation_mdspan_type;
     using extents = mdspan_type::extents_type;
 
-    mdspan_type const allocated_mdspan = h_chunk_span.allocation_mdspan();
+    mdspan_type const allocated_mdspan = chunk_span_right_host.allocation_mdspan();
 
     ddc::detail::ChunkPrinter& printer = ddc::detail::ChunkPrinter::get_instance();
     std::scoped_lock const lock(printer.m_global_lock);

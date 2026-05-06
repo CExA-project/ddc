@@ -496,6 +496,16 @@ void TestPrintTestCheckOutput3d()
                 "  [0.12345 0.12345 0.12345]\n"
                 "  [0.12345 0.12345 0.12345]]]");
     }
+
+    {
+        ddc::ChunkSpan const sub_chunk_span = chunk_span[domain_1.front()][domain_2.front()];
+        ASSERT_TRUE((std::is_same_v<
+                     typename decltype(sub_chunk_span)::layout_type,
+                     Kokkos::layout_stride>));
+        std::stringstream ss;
+        print_content(ss, sub_chunk_span);
+        EXPECT_EQ(ss.str(), "[0.12345 0.12345 0.12345]");
+    }
 }
 
 TEST(Print, CheckOutput3d)

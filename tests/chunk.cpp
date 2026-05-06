@@ -496,8 +496,6 @@ TEST(Chunk2DTest, Cview)
 
 TEST(Chunk2DTest, SliceCoordX)
 {
-    DElemX const slice_x_val(lbound_x + 1);
-
     ChunkXY<double> chunk(dom_x_y);
     ChunkXY<double> const& chunk_cref = chunk;
     for (DElemX const ix : chunk.domain<DDimX>()) {
@@ -506,20 +504,35 @@ TEST(Chunk2DTest, SliceCoordX)
         }
     }
 
-    ddc::ChunkSpan const chunk_y = chunk_cref[slice_x_val];
-    EXPECT_TRUE(
-            (std::is_same_v<std::decay_t<decltype(chunk_y)>::layout_type, Kokkos::layout_right>));
-    EXPECT_EQ(chunk_y.extent<DDimY>(), chunk.extent<DDimY>());
-    for (DElemY const iy : chunk_cref.domain<DDimY>()) {
-        // we expect complete equality, not EXPECT_DOUBLE_EQ: these are copy
-        EXPECT_EQ(chunk_y(iy), chunk_cref(slice_x_val, iy));
+    {
+        DElemX const slice_x_val(lbound_x + 1);
+        ddc::ChunkSpan const chunk_y = chunk_cref[slice_x_val];
+        EXPECT_TRUE((std::is_same_v<
+                     std::decay_t<decltype(chunk_y)>::layout_type,
+                     Kokkos::layout_right>));
+        EXPECT_EQ(chunk_y.extent<DDimY>(), chunk.extent<DDimY>());
+        for (DElemY const iy : chunk_cref.domain<DDimY>()) {
+            // we expect complete equality, not EXPECT_DOUBLE_EQ: these are copy
+            EXPECT_EQ(chunk_y(iy), chunk_cref(slice_x_val, iy));
+        }
+    }
+
+    {
+        DVectX const slice_x_val(1);
+        ddc::ChunkSpan const chunk_y = chunk_cref[slice_x_val];
+        EXPECT_TRUE((std::is_same_v<
+                     std::decay_t<decltype(chunk_y)>::layout_type,
+                     Kokkos::layout_right>));
+        EXPECT_EQ(chunk_y.extent<DDimY>(), chunk.extent<DDimY>());
+        for (DElemY const iy : chunk_cref.domain<DDimY>()) {
+            // we expect complete equality, not EXPECT_DOUBLE_EQ: these are copy
+            EXPECT_EQ(chunk_y(iy), chunk_cref(lbound_x + slice_x_val, iy));
+        }
     }
 }
 
 TEST(Chunk2DTest, SliceCoordY)
 {
-    DElemY const slice_y_val(lbound_y + 1);
-
     ChunkXY<double> chunk(dom_x_y);
     ChunkXY<double> const& chunk_cref = chunk;
     for (DElemX const ix : chunk.domain<DDimX>()) {
@@ -528,13 +541,30 @@ TEST(Chunk2DTest, SliceCoordY)
         }
     }
 
-    ddc::ChunkSpan const chunk_x = chunk_cref[slice_y_val];
-    EXPECT_TRUE(
-            (std::is_same_v<std::decay_t<decltype(chunk_x)>::layout_type, Kokkos::layout_stride>));
-    EXPECT_EQ(chunk_x.extent<DDimX>(), chunk.extent<DDimX>());
-    for (DElemX const ix : chunk_cref.domain<DDimX>()) {
-        // we expect complete equality, not EXPECT_DOUBLE_EQ: these are copy
-        EXPECT_EQ(chunk_x(ix), chunk_cref(ix, slice_y_val));
+    {
+        DElemY const slice_y_val(lbound_y + 1);
+        ddc::ChunkSpan const chunk_x = chunk_cref[slice_y_val];
+        EXPECT_TRUE((std::is_same_v<
+                     std::decay_t<decltype(chunk_x)>::layout_type,
+                     Kokkos::layout_stride>));
+        EXPECT_EQ(chunk_x.extent<DDimX>(), chunk.extent<DDimX>());
+        for (DElemX const ix : chunk_cref.domain<DDimX>()) {
+            // we expect complete equality, not EXPECT_DOUBLE_EQ: these are copy
+            EXPECT_EQ(chunk_x(ix), chunk_cref(ix, slice_y_val));
+        }
+    }
+
+    {
+        DVectY const slice_y_val(1);
+        ddc::ChunkSpan const chunk_x = chunk_cref[slice_y_val];
+        EXPECT_TRUE((std::is_same_v<
+                     std::decay_t<decltype(chunk_x)>::layout_type,
+                     Kokkos::layout_stride>));
+        EXPECT_EQ(chunk_x.extent<DDimX>(), chunk.extent<DDimX>());
+        for (DElemX const ix : chunk_cref.domain<DDimX>()) {
+            // we expect complete equality, not EXPECT_DOUBLE_EQ: these are copy
+            EXPECT_EQ(chunk_x(ix), chunk_cref(ix, lbound_y + slice_y_val));
+        }
     }
 }
 
@@ -543,11 +573,17 @@ TEST(Chunk2DTest, SliceCoordXOutOfBounds)
 #if !defined(NDEBUG) // The assertion is only checked if NDEBUG isn't defined
     ChunkXY<double> chunk(dom_x_y);
 
-    char const* const death_msg
-            = R"rgx(.ssert.*QueryDDom\(this->m_domain\).contains\(slice_spec\))rgx";
-
-    EXPECT_DEATH(chunk[dom_x.front() - 1], death_msg);
-    EXPECT_DEATH(chunk[dom_x.back() + 1], death_msg);
+    {
+        char const* const death_msg
+                = R"rgx(.ssert.*QueryDDom\(this->m_domain\).contains\(slice_spec\))rgx";
+        EXPECT_DEATH(chunk[dom_x.front() - 1], death_msg);
+        EXPECT_DEATH(chunk[dom_x.back() + 1], death_msg);
+    }
+    {
+        char const* const death_msg
+                = R"rgx(.ssert.*\(DiscreteVector<QueryDDims>\(slice_spec\) < DiscreteVector<QueryDDims>\(this->m_domain.extents\(\)\)\) && ...\))rgx";
+        EXPECT_DEATH(chunk[dom_x.extents()], death_msg);
+    }
 #else
     GTEST_SKIP();
 #endif

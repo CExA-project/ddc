@@ -265,16 +265,15 @@ public:
     /** Slice out some dimensions
      */
     template <class... QueryDDims>
-    KOKKOS_FUNCTION constexpr auto operator[](
-            DiscreteElement<QueryDDims...> const& slice_spec) const
+    KOKKOS_FUNCTION constexpr auto operator[](DiscreteVector<QueryDDims...> const& slice_spec) const
     {
         using detail::TypeSeq;
-        using QueryDDom = detail::Rebind<SupportType, TypeSeq<QueryDDims...>>::type;
-        KOKKOS_ASSERT(QueryDDom(this->m_domain).contains(slice_spec))
+        KOKKOS_ASSERT(
+                ((DiscreteVector<QueryDDims>(slice_spec)
+                  < DiscreteVector<QueryDDims>(this->m_domain.extents()))
+                 && ...))
         Slicer<to_type_seq_t<SupportType>> const slicer;
-        auto subview = slicer(
-                this->allocation_mdspan(),
-                QueryDDom(this->m_domain).distance_from_front(slice_spec));
+        auto subview = slicer(this->allocation_mdspan(), slice_spec);
         using layout_type = decltype(subview)::layout_type;
         using extents_type = decltype(subview)::extents_type;
         using OutTypeSeqDDims
@@ -298,6 +297,17 @@ public:
                     layout_type,
                     memory_space>(subview, OutDDom(this->m_domain));
         }
+    }
+
+    /** Slice out some dimensions
+     */
+    template <class... QueryDDims>
+    KOKKOS_FUNCTION constexpr auto operator[](
+            DiscreteElement<QueryDDims...> const& slice_spec) const
+    {
+        using QueryDDom = detail::Rebind<SupportType, detail::TypeSeq<QueryDDims...>>::type;
+        KOKKOS_ASSERT(QueryDDom(this->m_domain).contains(slice_spec))
+        return (*this)[QueryDDom(this->m_domain).distance_from_front(slice_spec)];
     }
 
     /** Restrict to a subdomain, only valid when SupportType is a DiscreteDomain

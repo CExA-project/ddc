@@ -368,7 +368,7 @@ public:
                     auto const spline_coef_ND = spline_coef[j];
                     ddc::device_for_each(
                             evaluation_domain(spline_eval.domain()),
-                            [=, *this](typename evaluation_domain::discrete_element_type const i) {
+                            [=, *this](evaluation_domain::discrete_element_type const i) {
                                 spline_eval_ND(i) = eval(coords_eval_ND(i), spline_coef_ND);
                             });
                 });
@@ -415,7 +415,7 @@ public:
 
                     ddc::device_for_each(
                             evaluation_domain(spline_eval.domain()),
-                            [=, *this](typename evaluation_domain::discrete_element_type const i) {
+                            [=, *this](evaluation_domain::discrete_element_type const i) {
                                 ddc::Coordinate<typename BSplines::continuous_dimension_type...>
                                         coord_eval_ND(ddc::coordinate(i));
                                 spline_eval_ND(i) = eval(coord_eval_3D(i), spline_coef_ND);
@@ -511,7 +511,7 @@ public:
                     auto const spline_coef_ND = spline_coef[j];
                     ddc::device_for_each(
                             evaluation_domain(spline_eval.domain()),
-                            [=, *this](typename evaluation_domain::discrete_element_type const i) {
+                            [=, *this](evaluation_domain::discrete_element_type const i) {
                                 spline_eval_ND(i) = eval_no_bc(
                                         deriv_order,
                                         coords_eval_ND(i),
@@ -562,7 +562,7 @@ public:
                     auto const spline_coef_ND = spline_coef[j];
                     ddc::device_for_each(
                             evaluation_domain(spline_eval.domain()),
-                            [=, *this](typename evaluation_domain::discrete_element_type const i) {
+                            [=, *this](evaluation_domain::discrete_element_type const i) {
                                 ddc::Coordinate<typename BSplines::continuous_dimension_type...>
                                         coord_eval_ND(ddc::coordinate(i));
                                 spline_eval_ND(i)
@@ -614,8 +614,7 @@ public:
                     integrals(j) = 0;
                     ddc::device_for_each(
                             ddc::DiscreteDomain<BSplines...>(),
-                            [=](typename ddc::DiscreteDomain<
-                                    BSplines...>::discrete_element_type const i) {
+                            [=](ddc::DiscreteDomain<BSplines...>::discrete_element_type const i) {
                                 integrals(j) += spline_coef(i, j)
                                                 * (cexa::get<IDX>(values)(
                                                            ddc::DiscreteElement<BSplines>(i))
@@ -747,7 +746,7 @@ private:
     template <std::size_t N, class Functor, typename... Is>
     KOKKOS_INLINE_FUNCTION static void for_each(
             std::array<std::size_t, N> const& bounds,
-            Functor&& f,
+            Functor const& f,
             Is... is)
     {
         static constexpr std::size_t I = sizeof...(Is);
@@ -755,7 +754,7 @@ private:
             f(std::array<std::size_t, N> {is...});
         } else {
             for (std::size_t i = 0; i < bounds[I]; ++i) {
-                for_each(bounds, std::forward<Functor>(f), is..., i);
+                for_each(bounds, f, is..., i);
             }
         }
     }

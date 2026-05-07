@@ -127,10 +127,6 @@ template <class T, class U>
 inline constexpr bool is_different_from_v = is_different_from<T, U>::value;
 
 // reference_constructs_from_temporary
-#ifdef CEXA_HAS_CXX23
-using std::reference_constructs_from_temporary;
-using std::reference_constructs_from_temporary_v;
-#else
 template <class T, class U>
 struct reference_constructs_from_temporary : std::false_type
 {
@@ -175,26 +171,21 @@ struct reference_constructs_from_temporary<T&&, U>
 template <class T, class U>
 constexpr inline bool reference_constructs_from_temporary_v
         = reference_constructs_from_temporary<T, U>::value;
-#endif
 
 // common_reference helper
 template <
         class TTuple,
         class UTuple,
-        template <class>
-        class TQual,
-        template <class>
-        class UQual,
+        template <class> class TQual,
+        template <class> class UQual,
         class IndexSeq>
 struct common_reference_helper;
 
 template <
         class TTuple,
         class UTuple,
-        template <class>
-        class TQual,
-        template <class>
-        class UQual,
+        template <class> class TQual,
+        template <class> class UQual,
         std::size_t... Ints>
 struct common_reference_helper<TTuple, UTuple, TQual, UQual, std::index_sequence<Ints...>>
 {
@@ -221,7 +212,7 @@ struct common_type_helper<TTuple, UTuple, std::index_sequence<Ints...>>
 // NOTE: specializations of std::basic_common_reference are allowed if T1 and/or
 // T2 is a user defined type and std::decay is an identity transformation for
 // T1 and T2
-// NOLINTBEGIN(cert-dcl58-cpp)
+// NOLINTBEGIN(cert-dcl58-cpp,bugprone-std-namespace-modification)
 template <class... TTypes, class UTuple, template <class> class TQual, template <class> class UQual>
 struct std::basic_common_reference<cexa::tuple<TTypes...>, UTuple, TQual, UQual>
 {
@@ -251,11 +242,11 @@ struct std::basic_common_reference<TTuple, cexa::tuple<UTypes...>, TQual, UQual>
             UQual,
             decltype(std::index_sequence_for<UTypes...> {})>::type;
 };
-// NOLINTEND(cert-dcl58-cpp)
+// NOLINTEND(cert-dcl58-cpp,bugprone-std-namespace-modification)
 
 // NOTE: specializations of std::common_type are allowed if T1 and/or T2 is a
 // user defined type and std::decay is and identity transformation for T1 and T2
-// NOLINTBEGIN(cert-dcl58-cpp)
+// NOLINTBEGIN(cert-dcl58-cpp,bugprone-std-namespace-modification)
 template <class... TTypes, class UTuple>
 struct std::common_type<cexa::tuple<TTypes...>, UTuple>
 {
@@ -263,7 +254,7 @@ struct std::common_type<cexa::tuple<TTypes...>, UTuple>
     static_assert(std::is_same_v<UTuple, std::decay_t<UTuple>>);
     static_assert(sizeof...(TTypes) == std::tuple_size_v<std::remove_reference_t<UTuple>>);
 
-    using type = typename cexa::impl::common_type_helper<
+    using type = cexa::impl::common_type_helper<
             cexa::tuple<TTypes...>,
             UTuple,
             decltype(std::index_sequence_for<TTypes...> {})>::type;
@@ -276,10 +267,10 @@ struct std::common_type<TTuple, cexa::tuple<UTypes...>>
     static_assert(std::is_same_v<cexa::tuple<UTypes...>, std::decay_t<cexa::tuple<UTypes...>>>);
     static_assert(std::tuple_size_v<std::remove_reference_t<TTuple>> == sizeof...(UTypes));
 
-    using type = typename cexa::impl::common_type_helper<
+    using type = cexa::impl::common_type_helper<
             TTuple,
             cexa::tuple<UTypes...>,
             decltype(std::index_sequence_for<UTypes...> {})>::type;
 };
-// NOLINTEND(cert-dcl58-cpp)
+// NOLINTEND(cert-dcl58-cpp,bugprone-std-namespace-modification)
 // NOLINTEND(readability-identifier-naming)

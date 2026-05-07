@@ -24,7 +24,7 @@ constexpr bool is_reference_wrapper_v<std::reference_wrapper<U>> = true;
 
 template <class C, class Pointed, class Object, class... Args>
 KOKKOS_INLINE_FUNCTION constexpr decltype(auto) invoke_ptr(
-        Pointed C::*member,
+        Pointed C::* member,
         Object&& object,
         Args&&... args)
 {

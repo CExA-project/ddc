@@ -126,7 +126,7 @@ std::vector<Coord<X>> breaks(std::size_t ncells)
 template <class DDim>
 void interest_dim_initializer(std::size_t const ncells)
 {
-    using CDim = typename DDim::continuous_dimension_type;
+    using CDim = DDim::continuous_dimension_type;
 #if defined(BSPLINES_TYPE_UNIFORM)
     ddc::init_discrete_space<BSplines<CDim>>(x0<CDim>(), xn<CDim>(), ncells);
 #elif defined(BSPLINES_TYPE_NON_UNIFORM)
@@ -140,7 +140,7 @@ void interest_dim_initializer(std::size_t const ncells)
 template <typename ExecSpace, typename MemorySpace, typename DDimI, typename... DDims>
 void TestBatchedNd1dSpline()
 {
-    using I = typename DDimI::continuous_dimension_type;
+    using I = DDimI::continuous_dimension_type;
 
     // Instantiate execution spaces and initialize spaces
     ExecSpace const exec_space;
@@ -209,8 +209,7 @@ void TestBatchedNd1dSpline()
         ddc::parallel_for_each(
                 exec_space,
                 derivs_lhs.domain(),
-                KOKKOS_LAMBDA(
-                        typename decltype(derivs_lhs.domain())::discrete_element_type const e) {
+                KOKKOS_LAMBDA(decltype(derivs_lhs.domain())::discrete_element_type const e) {
                     derivs_lhs(e) = derivs_lhs1(DElem<ddc::Deriv<I>>(e));
                 });
     }
@@ -229,8 +228,7 @@ void TestBatchedNd1dSpline()
         ddc::parallel_for_each(
                 exec_space,
                 derivs_rhs.domain(),
-                KOKKOS_LAMBDA(
-                        typename decltype(derivs_rhs.domain())::discrete_element_type const e) {
+                KOKKOS_LAMBDA(decltype(derivs_rhs.domain())::discrete_element_type const e) {
                     derivs_rhs(e) = derivs_rhs1(DElem<ddc::Deriv<I>>(e));
                 });
     }
@@ -320,7 +318,7 @@ void TestBatchedNd1dSpline()
             0.,
             ddc::reducer::max<double>(),
             KOKKOS_LAMBDA(
-                    typename decltype(spline_builder)::template batch_domain_type<
+                    decltype(spline_builder)::template batch_domain_type<
                             ddc::DiscreteDomain<DDims...>>::discrete_element_type const e) {
                 return Kokkos::abs(
                         spline_eval_integrals(e) - evaluator.deriv(xn<I>(), -1)

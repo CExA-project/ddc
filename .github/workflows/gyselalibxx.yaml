@@ -44,7 +44,7 @@ jobs:
             export KokkosKernels_ROOT=/opt/serial/KokkosKernels
             export KokkosTools_ROOT=/opt/serial/KokkosTools
             export koliop_ROOT=/opt/serial/koliop
-            export DDC_ROOT=${PWD}/opt/DDC
+            export DDC_ROOT=opt/DDC
 
             cmake \
               -D CMAKE_BUILD_TYPE=Release \
@@ -57,7 +57,6 @@ jobs:
             rm -rf build
 
             cmake \
-              -D GYSELALIBXX_DEFAULT_CXX_FLAGS="" \
               -B build \
               -S /src
             cmake --build build

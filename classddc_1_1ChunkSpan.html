@@ -137,7 +137,7 @@ Inheritance diagram for ddc::ChunkSpan&lt; ElementType, SupportType, LayoutStrid
 <div class="dyncontent">
 <div class="center"><img src="classddc_1_1ChunkSpan__inherit__graph.png" border="0" usemap="#addc_1_1ChunkSpan_3_01ElementType_00_01SupportType_00_01LayoutStridedPolicy_00_01MemorySpace_01_4_inherit__map" alt="Inheritance graph"/></div>
 <map name="addc_1_1ChunkSpan_3_01ElementType_00_01SupportType_00_01LayoutStridedPolicy_00_01MemorySpace_01_4_inherit__map" id="addc_1_1ChunkSpan_3_01ElementType_00_01SupportType_00_01LayoutStridedPolicy_00_01MemorySpace_01_4_inherit__map">
-<area shape="rect" title=" " alt="" coords="5,688,244,1243"/>
+<area shape="rect" title=" " alt="" coords="5,688,244,1263"/>
 <area shape="rect" href="classddc_1_1ChunkCommon.html" title=" " alt="" coords="9,5,240,640"/>
 <area shape="poly" title=" " alt="" coords="127,654,127,688,122,688,122,654"/>
 </map>
@@ -147,7 +147,7 @@ Collaboration diagram for ddc::ChunkSpan&lt; ElementType, SupportType, LayoutStr
 <div class="dyncontent">
 <div class="center"><img src="classddc_1_1ChunkSpan__coll__graph.png" border="0" usemap="#addc_1_1ChunkSpan_3_01ElementType_00_01SupportType_00_01LayoutStridedPolicy_00_01MemorySpace_01_4_coll__map" alt="Collaboration graph"/></div>
 <map name="addc_1_1ChunkSpan_3_01ElementType_00_01SupportType_00_01LayoutStridedPolicy_00_01MemorySpace_01_4_coll__map" id="addc_1_1ChunkSpan_3_01ElementType_00_01SupportType_00_01LayoutStridedPolicy_00_01MemorySpace_01_4_coll__map">
-<area shape="rect" title=" " alt="" coords="5,688,244,1243"/>
+<area shape="rect" title=" " alt="" coords="5,688,244,1263"/>
 <area shape="rect" href="classddc_1_1ChunkCommon.html" title=" " alt="" coords="9,5,240,640"/>
 <area shape="poly" title=" " alt="" coords="127,654,127,688,122,688,122,654"/>
 </map>
@@ -279,6 +279,10 @@ requires (Kokkos::is_view_v&lt;<a class="el" href="namespaceddc.html#a70f12a43ed
 <tr class="memitem:aefba3b9812bbb7dafd2fb379b31c6061" id="r_aefba3b9812bbb7dafd2fb379b31c6061"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_DEFAULTED_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="classddc_1_1ChunkSpan.html">ChunkSpan</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1ChunkSpan.html#aefba3b9812bbb7dafd2fb379b31c6061">operator=</a> (<a class="el" href="classddc_1_1ChunkSpan.html">ChunkSpan</a> &amp;&amp;other) <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">noexcept</a>=<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">default</a></td></tr>
 <tr class="memdesc:aefba3b9812bbb7dafd2fb379b31c6061"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move-assigns a new value to this <a class="el" href="classddc_1_1ChunkSpan.html">ChunkSpan</a>.  <br /></td></tr>
 <tr class="separator:aefba3b9812bbb7dafd2fb379b31c6061"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab13501080992eca35f03cf2ca8e25791" id="r_ab13501080992eca35f03cf2ca8e25791"><td class="memTemplParams" colspan="2">template&lt;class... QueryDDims&gt; </td></tr>
+<tr class="memitem:ab13501080992eca35f03cf2ca8e25791"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1ChunkSpan.html#ab13501080992eca35f03cf2ca8e25791">operator[]</a> (<a class="el" href="classddc_1_1DiscreteVector.html">DiscreteVector</a>&lt; QueryDDims... &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">slice_spec</a>) <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a></td></tr>
+<tr class="memdesc:ab13501080992eca35f03cf2ca8e25791"><td class="mdescLeft">&#160;</td><td class="mdescRight">Slice out some dimensions.  <br /></td></tr>
+<tr class="separator:ab13501080992eca35f03cf2ca8e25791"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1806b1590a1cfa6479fa458b4cdbef80" id="r_a1806b1590a1cfa6479fa458b4cdbef80"><td class="memTemplParams" colspan="2">template&lt;class... QueryDDims&gt; </td></tr>
 <tr class="memitem:a1806b1590a1cfa6479fa458b4cdbef80"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classddc_1_1ChunkSpan.html#a1806b1590a1cfa6479fa458b4cdbef80">operator[]</a> (<a class="el" href="classddc_1_1DiscreteElement.html">DiscreteElement</a>&lt; QueryDDims... &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">slice_spec</a>) <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a></td></tr>
 <tr class="memdesc:a1806b1590a1cfa6479fa458b4cdbef80"><td class="mdescLeft">&#160;</td><td class="mdescRight">Slice out some dimensions.  <br /></td></tr>
@@ -1365,8 +1369,42 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 
 </div>
 </div>
+<a id="ab13501080992eca35f03cf2ca8e25791" name="ab13501080992eca35f03cf2ca8e25791"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab13501080992eca35f03cf2ca8e25791">&#9670;&#160;</a></span>operator[]() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">SupportType</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">LayoutStridedPolicy</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt; </div>
+<div class="memtemplate">
+template&lt;class... QueryDDims&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">KOKKOS_FUNCTION</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">auto</a> <a class="el" href="classddc_1_1ChunkSpan.html">ddc::ChunkSpan</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ElementType</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">SupportType</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">LayoutStridedPolicy</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">::operator</a>[] </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classddc_1_1DiscreteVector.html">DiscreteVector</a>&lt; QueryDDims... &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
+          <td class="paramname"><em>slice_spec</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Slice out some dimensions. </p>
+
+<p class="definition">Definition at line <a class="el" href="chunk__span_8hpp_source.html#l00268">268</a> of file <a class="el" href="chunk__span_8hpp_source.html">chunk_span.hpp</a>.</p>
+
+</div>
+</div>
 <a id="a1806b1590a1cfa6479fa458b4cdbef80" name="a1806b1590a1cfa6479fa458b4cdbef80"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1806b1590a1cfa6479fa458b4cdbef80">&#9670;&#160;</a></span>operator[]() <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a1806b1590a1cfa6479fa458b4cdbef80">&#9670;&#160;</a></span>operator[]() <span class="overload">[2/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1395,12 +1433,12 @@ template&lt;class... QueryDDims&gt; </div>
 
 <p>Slice out some dimensions. </p>
 
-<p class="definition">Definition at line <a class="el" href="chunk__span_8hpp_source.html#l00268">268</a> of file <a class="el" href="chunk__span_8hpp_source.html">chunk_span.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="chunk__span_8hpp_source.html#l00305">305</a> of file <a class="el" href="chunk__span_8hpp_source.html">chunk_span.hpp</a>.</p>
 
 </div>
 </div>
 <a id="ac57f93b636d56df0c2281aa883a0c965" name="ac57f93b636d56df0c2281aa883a0c965"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac57f93b636d56df0c2281aa883a0c965">&#9670;&#160;</a></span>operator[]() <span class="overload">[2/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ac57f93b636d56df0c2281aa883a0c965">&#9670;&#160;</a></span>operator[]() <span class="overload">[3/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1430,7 +1468,7 @@ requires (<a class="el" href="namespaceddc.html#ac2cf0a43efdcfdbd2d1cb64f74cb18b
 
 <p>Restrict to a subdomain, only valid when SupportType is a <a class="el" href="classddc_1_1DiscreteDomain.html">DiscreteDomain</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="chunk__span_8hpp_source.html#l00306">306</a> of file <a class="el" href="chunk__span_8hpp_source.html">chunk_span.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="chunk__span_8hpp_source.html#l00316">316</a> of file <a class="el" href="chunk__span_8hpp_source.html">chunk_span.hpp</a>.</p>
 
 </div>
 </div>
@@ -1471,7 +1509,7 @@ template&lt;concepts::discrete_element... DElems&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>reference to this element </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="chunk__span_8hpp_source.html#l00342">342</a> of file <a class="el" href="chunk__span_8hpp_source.html">chunk_span.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="chunk__span_8hpp_source.html#l00352">352</a> of file <a class="el" href="chunk__span_8hpp_source.html">chunk_span.hpp</a>.</p>
 
 </div>
 </div>
@@ -1513,7 +1551,7 @@ requires (sizeof...(<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>reference to this element </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="chunk__span_8hpp_source.html#l00358">358</a> of file <a class="el" href="chunk__span_8hpp_source.html">chunk_span.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="chunk__span_8hpp_source.html#l00368">368</a> of file <a class="el" href="chunk__span_8hpp_source.html">chunk_span.hpp</a>.</p>
 
 </div>
 </div>
@@ -1545,7 +1583,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 <p>Access to the underlying allocation pointer. </p>
 <dl class="section return"><dt>Returns</dt><dd>allocation pointer </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="chunk__span_8hpp_source.html#l00372">372</a> of file <a class="el" href="chunk__span_8hpp_source.html">chunk_span.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="chunk__span_8hpp_source.html#l00382">382</a> of file <a class="el" href="chunk__span_8hpp_source.html">chunk_span.hpp</a>.</p>
 
 </div>
 </div>
@@ -1577,7 +1615,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 <p>Provide a mdspan on the memory allocation. </p>
 <dl class="section return"><dt>Returns</dt><dd>allocation mdspan </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="chunk__span_8hpp_source.html#l00380">380</a> of file <a class="el" href="chunk__span_8hpp_source.html">chunk_span.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="chunk__span_8hpp_source.html#l00390">390</a> of file <a class="el" href="chunk__span_8hpp_source.html">chunk_span.hpp</a>.</p>
 
 </div>
 </div>
@@ -1609,7 +1647,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 <p>Provide a mdspan on the memory allocation. </p>
 <dl class="section return"><dt>Returns</dt><dd>allocation mdspan </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="chunk__span_8hpp_source.html#l00388">388</a> of file <a class="el" href="chunk__span_8hpp_source.html">chunk_span.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="chunk__span_8hpp_source.html#l00398">398</a> of file <a class="el" href="chunk__span_8hpp_source.html">chunk_span.hpp</a>.</p>
 
 </div>
 </div>
@@ -1638,7 +1676,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="chunk__span_8hpp_source.html#l00401">401</a> of file <a class="el" href="chunk__span_8hpp_source.html">chunk_span.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="chunk__span_8hpp_source.html#l00411">411</a> of file <a class="el" href="chunk__span_8hpp_source.html">chunk_span.hpp</a>.</p>
 
 </div>
 </div>
@@ -1667,7 +1705,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="chunk__span_8hpp_source.html#l00406">406</a> of file <a class="el" href="chunk__span_8hpp_source.html">chunk_span.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="chunk__span_8hpp_source.html#l00416">416</a> of file <a class="el" href="chunk__span_8hpp_source.html">chunk_span.hpp</a>.</p>
 
 </div>
 </div>

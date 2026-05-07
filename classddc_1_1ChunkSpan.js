@@ -32,6 +32,7 @@ var classddc_1_1ChunkSpan =
     [ "~ChunkSpan", "classddc_1_1ChunkSpan.html#ab33ca5a187914e21d41b168d73d77244", null ],
     [ "operator=", "classddc_1_1ChunkSpan.html#a8aaed50f667ca1e88576e4e8ef580b1b", null ],
     [ "operator=", "classddc_1_1ChunkSpan.html#aefba3b9812bbb7dafd2fb379b31c6061", null ],
+    [ "operator[]", "classddc_1_1ChunkSpan.html#ab13501080992eca35f03cf2ca8e25791", null ],
     [ "operator[]", "classddc_1_1ChunkSpan.html#a1806b1590a1cfa6479fa458b4cdbef80", null ],
     [ "operator[]", "classddc_1_1ChunkSpan.html#ac57f93b636d56df0c2281aa883a0c965", null ],
     [ "operator()", "classddc_1_1ChunkSpan.html#a4fe802b04fe60aceef679365a53d2d0c", null ],

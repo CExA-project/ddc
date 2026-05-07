@@ -25,6 +25,8 @@ var classddc_1_1Chunk =
     [ "~Chunk", "classddc_1_1Chunk.html#a8cb65d84412ef13ac65ef69d9ed37012", null ],
     [ "operator=", "classddc_1_1Chunk.html#a59b13e190b90cf5e424968fef44af445", null ],
     [ "operator=", "classddc_1_1Chunk.html#a9961d06d6b9644d397084c183f74226f", null ],
+    [ "operator[]", "classddc_1_1Chunk.html#a1c1a26732183b7d43fa707875661a321", null ],
+    [ "operator[]", "classddc_1_1Chunk.html#ae6918620b7b6a4ea9792d035f6493dd3", null ],
     [ "operator[]", "classddc_1_1Chunk.html#a078d1f6864870e13906a8867c56242d6", null ],
     [ "operator[]", "classddc_1_1Chunk.html#af2f79ebd33a1c26fcf79f47d3aac3ed2", null ],
     [ "operator[]", "classddc_1_1Chunk.html#accbbabdc989878a7e921f9d264ef2c78", null ],

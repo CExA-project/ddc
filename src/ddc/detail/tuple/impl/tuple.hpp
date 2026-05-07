@@ -150,7 +150,7 @@ struct store<>
     KOKKOS_DEFAULTED_FUNCTION constexpr store(store&&) = default;
 #if defined(CEXA_HAS_CXX23)
     KOKKOS_DEFAULTED_FUNCTION constexpr store(store&) noexcept = default;
-    KOKKOS_INLINE_FUNCTION constexpr store(store const&&) noexcept {};
+    KOKKOS_INLINE_FUNCTION constexpr store(store const&&) noexcept {}
 #endif
     KOKKOS_DEFAULTED_FUNCTION constexpr ~store() = default;
 
@@ -474,21 +474,21 @@ class tuple<>
 public:
     KOKKOS_DEFAULTED_FUNCTION constexpr tuple() noexcept = default;
 
-    KOKKOS_DEFAULTED_FUNCTION constexpr tuple(tuple const& u) noexcept = default;
-    KOKKOS_DEFAULTED_FUNCTION constexpr tuple(tuple&& u) noexcept = default;
+    KOKKOS_DEFAULTED_FUNCTION constexpr tuple(tuple const&) noexcept = default;
+    KOKKOS_DEFAULTED_FUNCTION constexpr tuple(tuple&&) noexcept = default;
 
     KOKKOS_DEFAULTED_FUNCTION constexpr ~tuple() = default;
 
-    KOKKOS_DEFAULTED_FUNCTION constexpr tuple& operator=(tuple const& u) noexcept = default;
-    KOKKOS_DEFAULTED_FUNCTION constexpr tuple& operator=(tuple&& u) noexcept = default;
+    KOKKOS_DEFAULTED_FUNCTION constexpr tuple& operator=(tuple const&) noexcept = default;
+    KOKKOS_DEFAULTED_FUNCTION constexpr tuple& operator=(tuple&&) noexcept = default;
 #if defined(CEXA_HAS_CXX23)
     // We don't care about self assignment since this is an empty class
     // NOLINTNEXTLINE(cert-oop54-cpp)
-    KOKKOS_INLINE_FUNCTION constexpr const tuple& operator=(tuple const& u) const noexcept
+    KOKKOS_INLINE_FUNCTION constexpr const tuple& operator=(tuple const&) const noexcept
     {
         return *this;
     }
-    KOKKOS_INLINE_FUNCTION constexpr const tuple& operator=(tuple&& u) const noexcept
+    KOKKOS_INLINE_FUNCTION constexpr const tuple& operator=(tuple&&) const noexcept
     {
         return *this;
     }
@@ -567,18 +567,6 @@ concept pair_constructible = tuple_size_v<Tuple> == 2
                              && !impl::reference_constructs_from_temporary_v<
                                      tuple_element_t<1, std::remove_cvref_t<Tuple>>,
                                      decltype(std::get<1>(FWD((std::declval<UPair>()))))>;
-
-template <class Tuple, class UTuple>
-concept tuple_like_constructible
-        = impl::is_tuple_like_v<UTuple>
-          && tuple_size_v<Tuple> == tuple_size_v<std::remove_reference_t<UTuple>>
-          && impl::all_types_constructible_v<Tuple, UTuple&&>
-          && !impl::is_tuple_v<std::remove_cvref_t<UTuple>>
-          && !impl::is_subrange_v<std::remove_cvref_t<UTuple>>
-          && !impl::any_types_reference_constructs_from_temporary_v<Tuple, UTuple>
-          && (tuple_size_v<Tuple> != 1
-              || !(std::convertible_to<UTuple, tuple_element_t<0, Tuple>>
-                   || std::constructible_from<tuple_element_t<0, Tuple>, UTuple>));
 } // namespace impl
 
 template <typename... Types>
@@ -772,13 +760,31 @@ public:
     }
 #endif
 
-    template <class UTuple>
-        requires impl::tuple_like_constructible<tuple, UTuple>
+    // Using a concept for this leads to compile failures with older clang
+    // versions (fails with clang 16)
+    // NOLINTBEGIN(modernize-use-constraints)
+    template <
+            class UTuple,
+            class = std::enable_if_t<std::conjunction_v<
+                    impl::is_tuple_like<UTuple>,
+                    std::bool_constant<
+                            sizeof...(Types) == tuple_size<std::remove_reference_t<UTuple>>::value>,
+                    impl::all_types_constructible<tuple, UTuple&&>,
+                    std::negation<impl::is_tuple<std::remove_cvref_t<UTuple>>>,
+                    std::negation<impl::is_subrange<std::remove_cvref_t<UTuple>>>,
+                    std::negation<
+                            impl::any_types_reference_constructs_from_temporary<tuple, UTuple>>,
+                    std::disjunction<
+                            std::bool_constant<sizeof...(Types) != 1>,
+                            std::negation<std::disjunction<
+                                    std::is_convertible<UTuple, tuple_element_t<0, tuple>>,
+                                    std::is_constructible<tuple_element_t<0, tuple>, UTuple>>>>>>>
     constexpr explicit((!impl::all_types_convertible_v<UTuple&&, tuple<Types...>>))
             tuple(UTuple&& u)
         : tuple(tuple_like_tag {}, FWD(u), std::make_index_sequence<sizeof...(Types)> {})
     {
     }
+    // NOLINTEND(modernize-use-constraints)
 
     KOKKOS_DEFAULTED_FUNCTION
     constexpr ~tuple() = default;

@@ -10,7 +10,7 @@
 #include "traits.hpp"
 #include "tuple.hpp"
 
-#ifdef CEXA_HAS_CXX23
+#if defined(CEXA_HAS_CXX23)
 #    include <functional>
 #endif
 
@@ -108,7 +108,7 @@ inline constexpr bool is_constructible_from_tuple_v = is_constructible_from_tupl
         Tuple,
         std::make_index_sequence<tuple_size_v<std::remove_cvref_t<Tuple>>>>::value;
 
-#ifdef CEXA_HAS_CXX23
+#if defined(CEXA_HAS_CXX23)
 template <class F, class Tuple, class Other>
 struct is_nothrow_applicable : std::false_type
 {
@@ -131,7 +131,7 @@ constexpr bool is_nothrow_applicable_v = is_nothrow_applicable<
 
 template <class F, class Tuple>
 KOKKOS_INLINE_FUNCTION constexpr decltype(auto) apply(F&& f, Tuple&& t)
-#ifdef CEXA_HAS_CXX23
+#if defined(CEXA_HAS_CXX23)
         noexcept(impl::is_nothrow_applicable_v<F, Tuple>)
 #endif
 {

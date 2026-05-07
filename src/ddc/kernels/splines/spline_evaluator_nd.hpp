@@ -220,9 +220,9 @@ public:
                 "The type of the extrapolation rules passed to the constructor should be the same "
                 "as the ones passed as template argument to the class");
 
-        cexa::tuple extrap_rules_tuple(extrap_rules...);
-        m_lower_extrap_rules = cexa::tuple(cexa::get<2 * IDX>(extrap_rules_tuple)...);
-        m_upper_extrap_rules = cexa::tuple(cexa::get<2 * IDX + 1>(extrap_rules_tuple)...);
+        cexa::tuple<ExtrapRules...> extrap_rules_tuple(extrap_rules...);
+        m_lower_extrap_rules = cexa::make_tuple(cexa::get<2 * IDX>(extrap_rules_tuple)...);
+        m_upper_extrap_rules = cexa::make_tuple(cexa::get<2 * IDX + 1>(extrap_rules_tuple)...);
     }
 
     /**
@@ -787,12 +787,12 @@ private:
                 "The only valid dimensions for deriv_order are Deriv<Dim1>, Deriv<Dim2>, ..., "
                 "Deriv<DimN>");
 
-        cexa::tuple vals_ptr = cexa::make_tuple(std::array<double, BSplines::degree() + 1> {}...);
-        cexa::tuple const vals = cexa::make_tuple(
+        auto vals_ptr = cexa::make_tuple(std::array<double, BSplines::degree() + 1> {}...);
+        auto const vals = cexa::make_tuple(
                 Kokkos::mdspan<double, Kokkos::extents<std::size_t, BSplines::degree() + 1>>(
                         cexa::get<IDX>(vals_ptr).data())...);
 
-        cexa::tuple const jmin = cexa::make_tuple(
+        auto const jmin = cexa::make_tuple(
                 get_jmin<BSplines>(
                         deriv_order,
                         cexa::get<IDX>(vals),

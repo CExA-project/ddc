@@ -58,10 +58,8 @@ public:
                                                     ddc::discrete_space<BSplines>().ncells() + 1)));
         } else {
             using SamplingImpl = Sampling::template Impl<Sampling, Kokkos::HostSpace>;
-            ddc::DiscreteDomain<knot_discrete_dimension_t<BSplines>> break_point_domain(
-                    ddc::discrete_space<BSplines>().break_point_domain().remove_last(
-                            ddc::DiscreteVector<knot_discrete_dimension_t<BSplines>>(
-                                    U::is_periodic())));
+            ddc::DiscreteDomain<knot_discrete_dimension_t<BSplines>> break_point_domain
+                    = ddc::discrete_space<BSplines>().break_point_domain();
             std::vector<double> break_points(break_point_domain.size());
             ddc::host_for_each(
                     break_point_domain,

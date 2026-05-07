@@ -151,6 +151,20 @@ public:
 
     /// Slice out some dimensions
     template <class... QueryDDims>
+    auto operator[](DiscreteVector<QueryDDims...> const& slice_spec) const
+    {
+        return view_type(*this)[slice_spec];
+    }
+
+    /// Slice out some dimensions
+    template <class... QueryDDims>
+    auto operator[](DiscreteVector<QueryDDims...> const& slice_spec)
+    {
+        return span_view()[slice_spec];
+    }
+
+    /// Slice out some dimensions
+    template <class... QueryDDims>
     auto operator[](DiscreteElement<QueryDDims...> const& slice_spec) const
     {
         return view_type(*this)[slice_spec];

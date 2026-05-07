@@ -35,15 +35,15 @@ namespace ddc {
  * - EvaluationDDim A TypeSeq containing the discrete dimensions on which evaluation points are defined.
  * - ExtrapolationRule A TypeSeq containing the lower and upper extrapolation rules along each dimension of interest.
  */
-template <typename... Args>
+template <class... Args>
 class SplineEvaluatorND;
 
 template <
-        typename ExecSpace,
-        typename MemorySpace,
-        typename... BSplines,
-        typename... EvaluationDDim,
-        typename... ExtrapolationRule>
+        class ExecSpace,
+        class MemorySpace,
+        class... BSplines,
+        class... EvaluationDDim,
+        class... ExtrapolationRule>
 class SplineEvaluatorND<
         ExecSpace,
         MemorySpace,
@@ -68,8 +68,8 @@ public:
     /// @brief The type of the Ith evaluation continuous dimension used by this class.
     /// @tparam I the requested dimension
     template <std::size_t I>
-    using continuous_dimension_type =
-            typename ddc::type_seq_element_t<I, bsplines_ts>::continuous_dimension_type;
+    using continuous_dimension_type
+            = ddc::type_seq_element_t<I, bsplines_ts>::continuous_dimension_type;
 
     /// @brief The type of the Kokkos execution space used by this class.
     using exec_space = ExecSpace;
@@ -98,9 +98,7 @@ public:
      *
      * @tparam The batched discrete domain on which the interpolation points are defined.
      */
-    template <
-            class BatchedInterpolationDDom,
-            class = std::enable_if_t<ddc::is_discrete_domain_v<BatchedInterpolationDDom>>>
+    template <concepts::discrete_domain BatchedInterpolationDDom>
     using batched_evaluation_domain_type = BatchedInterpolationDDom;
 
     /**
@@ -117,9 +115,7 @@ public:
      *
      * @tparam The batched discrete domain on which the interpolation points are defined.
      */
-    template <
-            class BatchedInterpolationDDom,
-            class = std::enable_if_t<ddc::is_discrete_domain_v<BatchedInterpolationDDom>>>
+    template <concepts::discrete_domain BatchedInterpolationDDom>
     using batch_domain_type
             = ddc::detail::convert_type_seq_to_discrete_domain_t<ddc::type_seq_remove_t<
                     ddc::to_type_seq_t<BatchedInterpolationDDom>,
@@ -131,11 +127,9 @@ public:
      *
      * @tparam The batched discrete domain on which the interpolation points are defined.
      */
-    template <
-            class BatchedInterpolationDDom,
-            class = std::enable_if_t<ddc::is_discrete_domain_v<BatchedInterpolationDDom>>>
-    using batched_spline_domain_type =
-            typename ddc::detail::convert_type_seq_to_discrete_domain_t<ddc::type_seq_replace_t<
+    template <concepts::discrete_domain BatchedInterpolationDDom>
+    using batched_spline_domain_type
+            = ddc::detail::convert_type_seq_to_discrete_domain_t<ddc::type_seq_replace_t<
                     ddc::to_type_seq_t<BatchedInterpolationDDom>,
                     evaluation_ddim_ts,
                     bsplines_ts>>;
@@ -212,7 +206,7 @@ public:
      *
      * @see NullExtrapolationRule ConstantExtrapolationRule PeriodicExtrapolationRule
      */
-    template <typename... ExtrapRules>
+    template <class... ExtrapRules>
     explicit SplineEvaluatorND(ExtrapRules const&... extrap_rules)
     {
         static_assert(
@@ -709,7 +703,7 @@ private:
                 spline_coef);
     }
 
-    template <typename BSplinesType, typename... DerivDims, typename CoordDim>
+    template <class BSplinesType, class... DerivDims, class CoordDim>
     KOKKOS_INLINE_FUNCTION static ddc::DiscreteElement<BSplinesType> get_jmin(
             ddc::DiscreteElement<DerivDims...> const& deriv_order,
             Kokkos::mdspan<double, Kokkos::extents<std::size_t, BSplinesType::degree() + 1>> vals,
@@ -743,7 +737,7 @@ private:
         }
     }
 
-    template <std::size_t N, class Functor, typename... Is>
+    template <std::size_t N, class Functor, class... Is>
     KOKKOS_INLINE_FUNCTION static void for_each(
             std::array<std::size_t, N> const& bounds,
             Functor const& f,

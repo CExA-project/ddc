@@ -24,12 +24,11 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
         with:
           repository: gyselax/gyselalibxx
-          submodules: true
       - name: Checkout ddc
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
         with:
           path: vendor/ddc
-          submodules: true
+      - run: sed -i -E 's/find_package\(DDC [0-9]+(\.[0-9]+)* REQUIRED COMPONENTS fft pdi splines\)/find_package(DDC REQUIRED COMPONENTS fft pdi splines)/g' CMakeLists.txt
       - name: Build
         run: |
           cat<<-EOF > run.sh
@@ -39,11 +38,28 @@ jobs:
             export CMAKE_BUILD_PARALLEL_LEVEL=4
             export CMAKE_BUILD_TYPE=${{matrix.cmake_build_type}}
 
+            export GTest_ROOT=/opt/googletest
+            export Kokkos_ROOT=/opt/serial/Kokkos
+            export KokkosFFT_ROOT=/opt/serial/KokkosFFT
+            export KokkosKernels_ROOT=/opt/serial/KokkosKernels
+            export KokkosTools_ROOT=/opt/serial/KokkosTools
+            export koliop_ROOT=/opt/serial/koliop
+            export DDC_ROOT=${PWD}/opt/DDC
+
+            cmake \
+              -D CMAKE_BUILD_TYPE=Release \
+              -D DDC_BUILD_EXAMPLES=OFF \
+              -D DDC_BUILD_TESTS=OFF \
+              -B build \
+              -S /src/vendor/ddc
+            cmake --build build
+            cmake --install build --prefix opt/DDC
+            rm -rf build
+
             cmake \
               -D GYSELALIBXX_DEFAULT_CXX_FLAGS="" \
               -B build \
               -S /src
-
             cmake --build build
 
             ctest --test-dir build --output-on-failure --timeout 5 -LE test_on_Release_only

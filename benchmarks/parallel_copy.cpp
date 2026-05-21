@@ -36,6 +36,40 @@ using DDomXY = ddc::DiscreteDomain<DDimX, DDimY>;
 using SDDomXY = ddc::SparseDiscreteDomain<DDimX, DDimY>;
 
 
+void benchmark_kokkos_deepcopy(benchmark::State& state)
+{
+    Kokkos::View<int**> const src("src", state.range(0), state.range(0));
+    Kokkos::View<int**> const dst("dst", state.range(0), state.range(0));
+    Kokkos::DefaultExecutionSpace const exec_space;
+
+    for (auto _ : state) {
+        Kokkos::deep_copy(exec_space, dst, src);
+        exec_space.fence();
+    }
+    state.SetBytesProcessed(
+            static_cast<std::int64_t>(state.iterations())
+            * static_cast<std::int64_t>((src.size() + dst.size()) * sizeof(int)));
+}
+
+void benchmark_kokkos_manual_copy(benchmark::State& state)
+{
+    Kokkos::View<int**> const src("src", state.range(0), state.range(0));
+    Kokkos::View<int**> const dst("dst", state.range(0), state.range(0));
+    Kokkos::DefaultExecutionSpace const exec_space;
+
+    for (auto _ : state) {
+        Kokkos::parallel_for(
+                "",
+                Kokkos::MDRangePolicy<
+                        Kokkos::Rank<2>>({0, 0}, {dst.extent_int(0), dst.extent_int(1)}),
+                KOKKOS_LAMBDA(int i, int j) { dst(i, j) = src(i, j); });
+        exec_space.fence();
+    }
+    state.SetBytesProcessed(
+            static_cast<std::int64_t>(state.iterations())
+            * static_cast<std::int64_t>((src.size() + dst.size()) * sizeof(int)));
+}
+
 void benchmark_ddc_discrete_domain_manual_copy(benchmark::State& state)
 {
     ddc::DiscreteDomain<DDimX> const domain_x
@@ -162,32 +196,18 @@ void benchmark_ddc_discrete_domain_parallel_copy(benchmark::State& state)
             * static_cast<std::int64_t>((chk_span_src.size() + chk_span_dst.size()) * sizeof(int)));
 }
 
-void benchmark_kokkos_deepcopy(benchmark::State& state)
-{
-    Kokkos::View<int**> const src("src", state.range(0), state.range(0));
-    Kokkos::View<int**> const dst("dst", state.range(0), state.range(0));
-    Kokkos::DefaultExecutionSpace const exec_space;
-
-    for (auto _ : state) {
-        Kokkos::deep_copy(exec_space, dst, src);
-        exec_space.fence();
-    }
-    state.SetBytesProcessed(
-            static_cast<std::int64_t>(state.iterations())
-            * static_cast<std::int64_t>((src.size() + dst.size()) * sizeof(int)));
-}
-
 std::size_t constexpr small_dim1_1D = 2'000;
 std::size_t constexpr large_dim1_1D = 10 * small_dim1_1D;
 
 } // namespace anonymous_namespace_workaround_parallel_copy_cpp
 
 // NOLINTBEGIN(misc-use-anonymous-namespace)
+BENCHMARK(benchmark_kokkos_deepcopy)->Arg(small_dim1_1D)->Arg(large_dim1_1D);
+BENCHMARK(benchmark_kokkos_manual_copy)->Arg(small_dim1_1D)->Arg(large_dim1_1D);
 BENCHMARK(benchmark_ddc_discrete_domain_manual_copy)->Arg(small_dim1_1D)->Arg(large_dim1_1D);
 BENCHMARK(benchmark_ddc_strided_domain_manual_copy)->Arg(small_dim1_1D)->Arg(large_dim1_1D);
 BENCHMARK(benchmark_ddc_discrete_domain_parallel_copy)->Arg(small_dim1_1D)->Arg(large_dim1_1D);
 BENCHMARK(benchmark_ddc_strided_domain_parallel_copy)->Arg(small_dim1_1D)->Arg(large_dim1_1D);
-BENCHMARK(benchmark_kokkos_deepcopy)->Arg(small_dim1_1D)->Arg(large_dim1_1D);
 // NOLINTEND(misc-use-anonymous-namespace)
 
 int main(int argc, char** argv)

@@ -203,6 +203,7 @@ var namespaceddc =
     [ "rmin", "namespaceddc.html#a61330d2b60cc10d1f9ef500e14a67204", null ],
     [ "rmax", "namespaceddc.html#af903a38f5fb44af4fa393e0f3db15c8f", null ],
     [ "rlength", "namespaceddc.html#a1addf8bd8cc62fe6ff7f1db82fc96585", null ],
+    [ "parallel_copy", "namespaceddc.html#ae577349d194b74a1b735b507515a4b05", null ],
     [ "parallel_deepcopy", "namespaceddc.html#a37d4f1dc7122e72c049517a90ff0b98b", null ],
     [ "parallel_deepcopy", "namespaceddc.html#ad90d3688ee5986d7c9914cf94434375a", null ],
     [ "parallel_fill", "namespaceddc.html#a9818f50e1b95ec461586abacca9b4819", null ],

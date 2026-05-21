@@ -382,6 +382,7 @@ jobs:
               ./build/examples/pdi_event
               ./build/examples/uniform_heat_equation
               ./build/benchmarks/ddc_benchmark_deepcopy --benchmark_dry_run
+              ./build/benchmarks/ddc_benchmark_parallel_copy --benchmark_dry_run
               ./build/benchmarks/ddc_benchmark_splines --benchmark_dry_run
             fi
             cmake --install build --prefix $DDC_ROOT
@@ -491,6 +492,7 @@ jobs:
             ./build/examples/pdi_event
             ./build/examples/uniform_heat_equation
             ./build/benchmarks/ddc_benchmark_deepcopy --benchmark_dry_run
+            ./build/benchmarks/ddc_benchmark_parallel_copy --benchmark_dry_run
             ./build/benchmarks/ddc_benchmark_splines --benchmark_dry_run
           EOF
 

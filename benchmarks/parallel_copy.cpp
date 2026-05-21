@@ -36,7 +36,35 @@ using DDomXY = ddc::DiscreteDomain<DDimX, DDimY>;
 using SDDomXY = ddc::SparseDiscreteDomain<DDimX, DDimY>;
 
 
-void benchmark_ddc_manual_copy(benchmark::State& state)
+void benchmark_ddc_discrete_domain_manual_copy(benchmark::State& state)
+{
+    ddc::DiscreteDomain<DDimX> const domain_x
+            = ddc::init_trivial_bounded_space(ddc::DiscreteVector<DDimX>(state.range(0)));
+    ddc::DiscreteDomain<DDimY> const domain_y
+            = ddc::init_trivial_bounded_space(ddc::DiscreteVector<DDimY>(state.range(0)));
+
+    ddc::DiscreteDomain<DDimX, DDimY> const ddom_xy(domain_x, domain_y);
+    ddc::Chunk chk_dst("chk_dst", ddom_xy, ddc::DeviceAllocator<int>());
+    ddc::Chunk chk_src("chk_src", ddom_xy, ddc::DeviceAllocator<int>());
+    ddc::ChunkSpan const chk_span_dst = chk_dst.span_view();
+    ddc::ChunkSpan const chk_span_src = chk_src.span_view();
+    Kokkos::DefaultExecutionSpace const exec_space;
+
+    for (auto _ : state) {
+        ddc::parallel_for_each(
+                exec_space,
+                ddom_xy,
+                KOKKOS_LAMBDA(ddc::DiscreteElement<DDimX, DDimY> ixy) {
+                    chk_span_dst(ixy) = chk_span_src(ixy);
+                });
+        exec_space.fence();
+    }
+    state.SetBytesProcessed(
+            static_cast<std::int64_t>(state.iterations())
+            * static_cast<std::int64_t>((chk_span_src.size() + chk_span_dst.size()) * sizeof(int)));
+}
+
+void benchmark_ddc_strided_domain_manual_copy(benchmark::State& state)
 {
     ddc::DiscreteDomain<DDimX> const domain_x
             = ddc::init_trivial_bounded_space(ddc::DiscreteVector<DDimX>(state.range(0)));
@@ -76,7 +104,7 @@ void benchmark_ddc_manual_copy(benchmark::State& state)
             * static_cast<std::int64_t>((chk_span_src.size() + chk_span_dst.size()) * sizeof(int)));
 }
 
-void benchmark_ddc_parallel_copy(benchmark::State& state)
+void benchmark_ddc_strided_domain_parallel_copy(benchmark::State& state)
 {
     ddc::DiscreteDomain<DDimX> const domain_x
             = ddc::init_trivial_bounded_space(ddc::DiscreteVector<DDimX>(state.range(0)));
@@ -111,6 +139,29 @@ void benchmark_ddc_parallel_copy(benchmark::State& state)
             * static_cast<std::int64_t>((chk_span_src.size() + chk_span_dst.size()) * sizeof(int)));
 }
 
+void benchmark_ddc_discrete_domain_parallel_copy(benchmark::State& state)
+{
+    ddc::DiscreteDomain<DDimX> const domain_x
+            = ddc::init_trivial_bounded_space(ddc::DiscreteVector<DDimX>(state.range(0)));
+    ddc::DiscreteDomain<DDimY> const domain_y
+            = ddc::init_trivial_bounded_space(ddc::DiscreteVector<DDimY>(state.range(0)));
+
+    ddc::DiscreteDomain<DDimX, DDimY> const ddom_xy(domain_x, domain_y);
+    ddc::Chunk chk_dst("chk_dst", ddom_xy, ddc::DeviceAllocator<int>());
+    ddc::Chunk chk_src("chk_src", ddom_xy, ddc::DeviceAllocator<int>());
+    ddc::ChunkSpan const chk_span_dst = chk_dst.span_view();
+    ddc::ChunkSpan const chk_span_src = chk_src.span_view();
+    Kokkos::DefaultExecutionSpace const exec_space;
+
+    for (auto _ : state) {
+        ddc::parallel_copy(exec_space, chk_span_dst, chk_span_src);
+        exec_space.fence();
+    }
+    state.SetBytesProcessed(
+            static_cast<std::int64_t>(state.iterations())
+            * static_cast<std::int64_t>((chk_span_src.size() + chk_span_dst.size()) * sizeof(int)));
+}
+
 void benchmark_kokkos_deepcopy(benchmark::State& state)
 {
     Kokkos::View<int**> const src("src", state.range(0), state.range(0));
@@ -132,12 +183,11 @@ std::size_t constexpr large_dim1_1D = 10 * small_dim1_1D;
 } // namespace anonymous_namespace_workaround_parallel_copy_cpp
 
 // NOLINTBEGIN(misc-use-anonymous-namespace)
-BENCHMARK(benchmark_ddc_manual_copy)->Arg(small_dim1_1D);
-BENCHMARK(benchmark_ddc_parallel_copy)->Arg(small_dim1_1D);
-BENCHMARK(benchmark_kokkos_deepcopy)->Arg(small_dim1_1D);
-BENCHMARK(benchmark_ddc_manual_copy)->Arg(large_dim1_1D);
-BENCHMARK(benchmark_ddc_parallel_copy)->Arg(large_dim1_1D);
-BENCHMARK(benchmark_kokkos_deepcopy)->Arg(large_dim1_1D);
+BENCHMARK(benchmark_ddc_discrete_domain_manual_copy)->Arg(small_dim1_1D)->Arg(large_dim1_1D);
+BENCHMARK(benchmark_ddc_strided_domain_manual_copy)->Arg(small_dim1_1D)->Arg(large_dim1_1D);
+BENCHMARK(benchmark_ddc_discrete_domain_parallel_copy)->Arg(small_dim1_1D)->Arg(large_dim1_1D);
+BENCHMARK(benchmark_ddc_strided_domain_parallel_copy)->Arg(small_dim1_1D)->Arg(large_dim1_1D);
+BENCHMARK(benchmark_kokkos_deepcopy)->Arg(small_dim1_1D)->Arg(large_dim1_1D);
 // NOLINTEND(misc-use-anonymous-namespace)
 
 int main(int argc, char** argv)

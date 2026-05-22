@@ -7,21 +7,17 @@ FROM ubuntu:noble@sha256:186072bba1b2f436cbb91ef2567abca677337cfc786c86e107d25b7
 LABEL "org.opencontainers.image.source"="https://github.com/CExA-project/ddc"
 
 ARG BACKEND
-ARG AMDGPU_VERSION=6.4.4
-ARG CMAKE_VERSION=4.2.3
+ARG AMDGPU_VERSION=6.4.3
 ARG CUDA_MAJOR_VERSION=12
 ARG CUDA_MINOR_VERSION=9
-ARG GCOVR_VERSION=8.6
-ARG GINKGO_VERSION=1.11.0
 ARG LLVM_VERSION=22
-ARG ROCM_VERSION=6.4.4
+ARG ROCM_VERSION=6.4.3
 
 COPY bash_run.sh /bin/
 ENV BASH_ENV=/etc/profile
 SHELL ["/bin/bash", "-c"]
 
 ENV PATH="/usr/local/cuda-${CUDA_MAJOR_VERSION}.${CUDA_MINOR_VERSION}/bin${PATH:+:${PATH}}"
-ENV PATH="/opt/cmake-${CMAKE_VERSION}-linux-x86_64/bin${PATH:+:${PATH}}"
 ENV PATH="${PATH:+$PATH:}/opt/rocm-${ROCM_VERSION}/bin"
 ENV CMAKE_PREFIX_PATH="${CMAKE_PREFIX_PATH:+$CMAKE_PREFIX_PATH:}/opt/rocm-${ROCM_VERSION}"
 
@@ -37,9 +33,7 @@ RUN chmod +x /bin/bash_run.sh \
     gpg \
     wget \
  && mkdir --parents --mode=0755 /etc/apt/keyrings \
- && wget -O /usr/share/keyrings/pdidev-archive-keyring.gpg https://repo.pdi.dev/ubuntu/pdidev-archive-keyring.gpg \
  && wget -O /usr/share/keyrings/apt.llvm.org.asc https://apt.llvm.org/llvm-snapshot.gpg.key \
- && echo "deb [arch=amd64 signed-by=/usr/share/keyrings/pdidev-archive-keyring.gpg] https://repo.pdi.dev/ubuntu noble main" > /etc/apt/sources.list.d/pdi.list \
  && echo "deb [arch=amd64 signed-by=/usr/share/keyrings/apt.llvm.org.asc] http://apt.llvm.org/noble/ llvm-toolchain-noble-${LLVM_VERSION} main" > /etc/apt/sources.list.d/llvm.list \
  && case "x${BACKEND}" in \
     "xhip") \
@@ -53,21 +47,6 @@ RUN chmod +x /bin/bash_run.sh \
       && wget -O /etc/apt/preferences.d/cuda-repository-pin-600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-ubuntu2404.pin \
  ;; esac \
  && apt-get update -y \
- && apt-get install -y --no-install-recommends \
-    build-essential \
-    git \
-    libfftw3-dev \
-    libhwloc-dev \
-    liblapacke-dev \
-    libpdi-dev \
-    pdiplugin-decl-hdf5-serial \
-    pdiplugin-trace \
-    pdiplugin-user-code \
-    pkg-config \
-    pipx \
-    python3 \
- && python3 -m pipx install gcovr==${GCOVR_VERSION} \
- && python3 -m pipx ensurepath \
  && case "${BACKEND}" in \
     "cpu") \
       apt-get install -y --no-install-recommends \
@@ -84,9 +63,11 @@ RUN chmod +x /bin/bash_run.sh \
       libcublas-dev-${CUDA_MAJOR_VERSION}-${CUDA_MINOR_VERSION} \
       libcufft-dev-${CUDA_MAJOR_VERSION}-${CUDA_MINOR_VERSION} \
       libcurand-dev-${CUDA_MAJOR_VERSION}-${CUDA_MINOR_VERSION} \
+      libcusolver-dev-${CUDA_MAJOR_VERSION}-${CUDA_MINOR_VERSION} \
       libcusparse-dev-${CUDA_MAJOR_VERSION}-${CUDA_MINOR_VERSION} \
       libnvjitlink-${CUDA_MAJOR_VERSION}-${CUDA_MINOR_VERSION} \
       gcc-12 \
+      gfortran-12 \
       g++-12 \
  ;; "hip") \
       apt-get install -y --no-install-recommends \
@@ -103,21 +84,6 @@ RUN chmod +x /bin/bash_run.sh \
       && echo "/opt/rocm/lib64" >> /etc/ld.so.conf.d/rocm.conf \
       && ldconfig \
  ;; esac \
- && wget https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-linux-x86_64.tar.gz \
- && tar -xvf cmake-${CMAKE_VERSION}-linux-x86_64.tar.gz --directory /opt \
- && rm -f cmake-${CMAKE_VERSION}-linux-x86_64.tar.gz \
- && git clone --branch v${GINKGO_VERSION} --depth 1 https://github.com/ginkgo-project/ginkgo.git \
- && case "${BACKEND}" in \
-    "cpu") \
-      cmake -DCMAKE_BUILD_TYPE=Release -DGINKGO_BUILD_OMP=ON -DGINKGO_BUILD_TESTS=OFF -DGINKGO_BUILD_EXAMPLES=OFF -DGINKGO_BUILD_BENCHMARKS=OFF -B ginkgo/build -S ginkgo \
- ;; "cuda") \
-      cmake -DCMAKE_C_COMPILER=gcc-12 -DCMAKE_CXX_COMPILER=g++-12 -DCMAKE_CUDA_HOST_COMPILER=g++-12 -DCMAKE_BUILD_TYPE=Release -DGINKGO_CUDA_ARCHITECTURES=80 -DGINKGO_BUILD_CUDA=ON -DGINKGO_BUILD_TESTS=OFF -DGINKGO_BUILD_EXAMPLES=OFF -DGINKGO_BUILD_BENCHMARKS=OFF -B ginkgo/build -S ginkgo \
- ;; "hip") \
-      cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_HIP_ARCHITECTURES=gfx90a -DGINKGO_BUILD_HIP=ON -DGINKGO_BUILD_TESTS=OFF -DGINKGO_BUILD_EXAMPLES=OFF -DGINKGO_BUILD_BENCHMARKS=OFF -B ginkgo/build -S ginkgo \
- ;; esac \
- && cmake --build ginkgo/build \
- && cmake --install ginkgo/build --prefix /usr \
- && rm -rf ginkgo \
  && apt-get purge -y \
     apt-transport-https \
     apt-utils \
@@ -133,8 +99,18 @@ RUN chmod +x /bin/bash_run.sh \
        ; echo 'CUDA_GXX=g++-12' >> /etc/profile.d/ddc-cuda.sh \
  ;  fi
 
+RUN apt-get update -y \
+ && apt-get install -y --no-install-recommends file bzip2 ca-certificates g++ gcc gfortran git gzip lsb-release patch python3 tar unzip xz-utils zstd
+
 USER ci:ci
 WORKDIR /data
+
+COPY spack-env /data/spack-env
+RUN git clone --branch v1.1.1 --depth 1 https://github.com/spack/spack.git \
+ && . /data/spack/share/spack/setup-env.sh \
+ && spack env create ddc-${BACKEND} /data/spack-env/spack-${BACKEND}.yaml \
+ && spack --env ddc-${BACKEND} repo update \
+ && spack --env ddc-${BACKEND} install --fail-fast
 
 ENTRYPOINT ["/bin/bash_run.sh"]
 CMD ["/bin/bash", "-li"]

@@ -55,6 +55,7 @@ RUN chmod +x /bin/bash_run.sh \
  && apt-get install -y --no-install-recommends \
     build-essential \
     git \
+    googletest \
     libfftw3-dev \
     libhwloc-dev \
     liblapacke-dev \

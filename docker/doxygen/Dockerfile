@@ -35,6 +35,7 @@ RUN chmod +x /bin/bash_run.sh \
     doxygen-latex \
     ghostscript \
     git \
+    googletest \
     graphviz \
     libfftw3-dev \
     liblapacke-dev \

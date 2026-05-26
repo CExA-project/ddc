@@ -103,9 +103,9 @@ WORKDIR /data
 COPY spack-env /data/spack-env
 RUN git clone --branch v1.1.1 --depth 1 https://github.com/spack/spack.git \
  && . /data/spack/share/spack/setup-env.sh \
- && spack env create ddc-${BACKEND} /data/spack-env/spack-${BACKEND}.yaml \
- && spack --env ddc-${BACKEND} repo update \
- && spack --env ddc-${BACKEND} install --fail-fast
+ && spack env create ddc /data/spack-env/spack-${BACKEND}.yaml \
+ && spack --env ddc repo update \
+ && spack --env ddc install --fail-fast
 
 ENTRYPOINT ["/bin/bash_run.sh"]
 CMD ["/bin/bash", "-li"]

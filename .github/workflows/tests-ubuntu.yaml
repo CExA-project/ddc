@@ -155,9 +155,6 @@ jobs:
           cat<<-'EOF' > run.sh
             set -e
 
-            . /data/spack/share/spack/setup-env.sh
-            spack env activate ddc-cpu
-
             export CMAKE_BUILD_PARALLEL_LEVEL=4
             export CMAKE_BUILD_TYPE=${{matrix.cmake_build_type}}
 
@@ -287,9 +284,6 @@ jobs:
           cat<<-'EOF' > run.sh
             set -e
 
-            . spack/share/spack/setup-env.sh
-            spack env activate ddc-${{matrix.backend.name}}
-
             export DDC_ROOT=$PWD/opt/ddc
 
             export CMAKE_BUILD_PARALLEL_LEVEL=4
@@ -408,9 +402,6 @@ jobs:
           cat<<-'EOF' > run.sh
             set -e
 
-            . spack/share/spack/setup-env.sh
-            spack env activate ddc-cpu
-
             export CMAKE_BUILD_PARALLEL_LEVEL=4
             export CMAKE_BUILD_TYPE=${{matrix.cmake_build_type}}
 
@@ -506,9 +497,6 @@ jobs:
         run: |
           cat<<-'EOF' > run.sh
             set -e
-
-            . spack/share/spack/setup-env.sh
-            spack env activate ddc-cpu
 
             export CMAKE_BUILD_PARALLEL_LEVEL=4
             export CMAKE_BUILD_TYPE=${{matrix.cmake_build_type}}

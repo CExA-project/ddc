@@ -100,9 +100,6 @@ jobs:
           cat<<-EOF > run.sh
             set -e
 
-            . spack/share/spack/setup-env.sh
-            spack env activate ddc-cpu
-
             cmake \
                 -D BUILD_TESTING=OFF \
                 -D CMAKE_CXX_STANDARD=20 \
@@ -168,9 +165,6 @@ jobs:
         run: |
           cat<<-EOF > run.sh
             set -e
-
-            . spack/share/spack/setup-env.sh
-            spack env activate ddc-cpu
 
             export CC=clang
             export CXX=clang++

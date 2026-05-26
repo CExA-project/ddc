@@ -35,18 +35,18 @@ RUN chmod +x /bin/bash_run.sh \
  && rm -rf /var/lib/apt/lists/* \
  && useradd -d /data -m -U ci
 
- RUN apt-get update -y \
-  && apt-get install -y --no-install-recommends file bzip2 ca-certificates g++ gcc gfortran git gzip lsb-release patch python3 tar unzip xz-utils zstd
+RUN apt-get update -y \
+ && apt-get install -y --no-install-recommends file bzip2 ca-certificates g++ gcc gfortran git gzip lsb-release patch python3 tar unzip xz-utils zstd
 
- USER ci:ci
- WORKDIR /data
+USER ci:ci
+WORKDIR /data
 
- COPY spack-env /data/spack-env
- RUN git clone --branch v1.1.1 --depth 1 https://github.com/spack/spack.git \
-  && . /data/spack/share/spack/setup-env.sh \
-  && spack env create ddc-cpu /data/spack-env/spack-cpu.yaml \
-  && spack --env ddc-cpu repo update \
-  && spack --env ddc-cpu install --fail-fast
+COPY spack-env /data/spack-env
+RUN git clone --branch v1.1.1 --depth 1 https://github.com/spack/spack.git \
+ && . /data/spack/share/spack/setup-env.sh \
+ && spack env create ddc /data/spack-env/spack-cpu.yaml \
+ && spack --env ddc repo update \
+ && spack --env ddc install --fail-fast
 
- ENTRYPOINT ["/bin/bash_run.sh"]
- CMD ["/bin/bash", "-li"]
+ENTRYPOINT ["/bin/bash_run.sh"]
+CMD ["/bin/bash", "-li"]

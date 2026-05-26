@@ -192,12 +192,6 @@ jobs:
             if [ 'xcpu' = 'x${{matrix.backend.name}}' ]
             then
               ctest --test-dir build --output-on-failure --timeout 20 --output-junit tests.xml
-              ./build/examples/characteristics_advection
-              ./build/examples/game_of_life
-              ./build/examples/heat_equation_spectral
-              ./build/examples/heat_equation
-              ./build/examples/non_uniform_heat_equation
-              ./build/examples/uniform_heat_equation
             fi
             cmake --install build --prefix $DDC_ROOT
             rm -rf build

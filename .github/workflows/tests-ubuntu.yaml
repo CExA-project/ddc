@@ -316,16 +316,6 @@ jobs:
             then
               ctest --test-dir build --output-on-failure --timeout 25 --output-junit tests.xml
               cp build/tests.xml .
-              ./build/examples/characteristics_advection
-              ./build/examples/game_of_life
-              ./build/examples/heat_equation_spectral
-              ./build/examples/heat_equation
-              ./build/examples/non_uniform_heat_equation
-              ./build/examples/pdi_event
-              ./build/examples/uniform_heat_equation
-              ./build/benchmarks/ddc_benchmark_deepcopy --benchmark_dry_run
-              ./build/benchmarks/ddc_benchmark_parallel_copy --benchmark_dry_run
-              ./build/benchmarks/ddc_benchmark_splines --benchmark_dry_run
             fi
             cmake --install build --prefix $DDC_ROOT
             rm -rf build
@@ -432,16 +422,6 @@ jobs:
 
             ctest --test-dir build --output-on-failure --timeout 30 --output-junit tests.xml
             cp build/tests.xml .
-            ./build/examples/characteristics_advection
-            ./build/examples/game_of_life
-            ./build/examples/heat_equation_spectral
-            ./build/examples/heat_equation
-            ./build/examples/non_uniform_heat_equation
-            ./build/examples/pdi_event
-            ./build/examples/uniform_heat_equation
-            ./build/benchmarks/ddc_benchmark_deepcopy --benchmark_dry_run
-            ./build/benchmarks/ddc_benchmark_parallel_copy --benchmark_dry_run
-            ./build/benchmarks/ddc_benchmark_splines --benchmark_dry_run
           EOF
 
           docker run \

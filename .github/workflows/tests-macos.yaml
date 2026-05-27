@@ -80,10 +80,11 @@ jobs:
         run: |
           cmake \
             -D BUILD_BENCHMARKING=OFF \
-            -D BUILD_DECL_HDF5_PLUGIN=OFF \
+            -D BUILD_DECL_HDF5_PLUGIN=ON \
             -D BUILD_DECL_NETCDF_PLUGIN=OFF \
             -D BUILD_DOCUMENTATION=OFF \
             -D BUILD_FORTRAN=OFF \
+            -D BUILD_HDF5_PARALLEL=OFF \
             -D BUILD_MPI_PLUGIN=OFF \
             -D BUILD_PYCALL_PLUGIN=OFF \
             -D BUILD_SERIALIZE_PLUGIN=OFF \

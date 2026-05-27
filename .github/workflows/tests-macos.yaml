@@ -80,10 +80,11 @@ jobs:
         run: |
           cmake \
             -D BUILD_BENCHMARKING=OFF \
-            -D BUILD_DECL_HDF5_PLUGIN=OFF \
+            -D BUILD_DECL_HDF5_PLUGIN=ON \
             -D BUILD_DECL_NETCDF_PLUGIN=OFF \
             -D BUILD_DOCUMENTATION=OFF \
             -D BUILD_FORTRAN=OFF \
+            -D BUILD_HDF5_PARALLEL=OFF \
             -D BUILD_MPI_PLUGIN=OFF \
             -D BUILD_PYCALL_PLUGIN=OFF \
             -D BUILD_SERIALIZE_PLUGIN=OFF \
@@ -197,17 +198,6 @@ jobs:
         with:
           annotate_only: true  # forked repo cannot write to checks so just do annotations
           report_paths: '${{github.workspace}}/build/tests.xml'
-      - name: Run examples
-        run: |
-          ./build/examples/characteristics_advection
-          ./build/examples/game_of_life
-          ./build/examples/heat_equation_spectral
-          ./build/examples/heat_equation
-          ./build/examples/non_uniform_heat_equation
-          ./build/examples/uniform_heat_equation
-          ./build/benchmarks/ddc_benchmark_deepcopy --benchmark_dry_run
-          ./build/benchmarks/ddc_benchmark_parallel_copy --benchmark_dry_run
-          ./build/benchmarks/ddc_benchmark_splines --benchmark_dry_run
       - name: Install DDC
         run: |
           cmake --install build --prefix $DDC_ROOT

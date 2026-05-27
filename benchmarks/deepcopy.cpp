@@ -39,10 +39,10 @@ using ChunkSpanXY = ddc::ChunkSpan<Datatype, DDomXY>;
 
 
 // Let say 1MB cache
-std::size_t constexpr small_dim1_2D = 400;
-std::size_t constexpr small_dim2_2D = small_dim1_2D;
+std::size_t constexpr small_dim1_2D = 32;
+std::size_t constexpr small_dim2_2D = 32;
 
-std::size_t constexpr small_dim1_1D = small_dim1_2D * small_dim1_2D;
+std::size_t constexpr small_dim1_1D = 32;
 
 std::size_t constexpr large_dim1_2D = 2000;
 std::size_t constexpr large_dim2_2D = large_dim1_2D;
@@ -131,14 +131,19 @@ void deepcopy_subchunk_2d(benchmark::State& state)
 
 // NOLINTBEGIN(misc-use-anonymous-namespace)
 // 1D
-BENCHMARK(memcpy_1d)->Arg(small_dim1_1D);
-BENCHMARK(deepcopy_1d)->Arg(small_dim1_1D);
+BENCHMARK(memcpy_1d)->Name("memcopy_1d_small")->Arg(small_dim1_1D);
+BENCHMARK(deepcopy_1d)->Name("deepcopy_1d_small")->Arg(small_dim1_1D);
+
 BENCHMARK(memcpy_1d)->Arg(large_dim1_1D);
 BENCHMARK(deepcopy_1d)->Arg(large_dim1_1D);
 
 // 2D
-BENCHMARK(memcpy_2d)->Args({small_dim1_2D, small_dim2_2D});
-BENCHMARK(deepcopy_subchunk_2d)->Args({small_dim1_2D, small_dim2_2D});
+BENCHMARK(memcpy_2d)->Name("memcopy_2d_small")->Args({small_dim1_2D, small_dim2_2D});
+BENCHMARK(deepcopy_2d)->Name("deepcopy_2d_small")->Args({small_dim1_2D, small_dim2_2D});
+BENCHMARK(deepcopy_subchunk_2d)
+        ->Name("deepcopy_subchunk_2d_small")
+        ->Args({small_dim1_2D, small_dim2_2D});
+
 BENCHMARK(memcpy_2d)->Args({large_dim1_2D, large_dim2_2D});
 BENCHMARK(deepcopy_2d)->Args({large_dim1_2D, large_dim2_2D});
 BENCHMARK(deepcopy_subchunk_2d)->Args({large_dim1_2D, large_dim2_2D});

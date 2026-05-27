@@ -196,12 +196,29 @@ void benchmark_ddc_discrete_domain_parallel_copy(benchmark::State& state)
             * static_cast<std::int64_t>((chk_span_src.size() + chk_span_dst.size()) * sizeof(int)));
 }
 
-std::size_t constexpr small_dim1_1D = 2'000;
-std::size_t constexpr large_dim1_1D = 10 * small_dim1_1D;
+std::size_t constexpr small_dim1_1D = 32;
+std::size_t constexpr large_dim1_1D = 20'000;
 
 } // namespace anonymous_namespace_workaround_parallel_copy_cpp
 
 // NOLINTBEGIN(misc-use-anonymous-namespace)
+BENCHMARK(benchmark_kokkos_deepcopy)->Name("benchmark_kokkos_deepcopy_small")->Arg(small_dim1_1D);
+BENCHMARK(benchmark_kokkos_manual_copy)
+        ->Name("benchmark_kokkos_manual_copy_small")
+        ->Arg(small_dim1_1D);
+BENCHMARK(benchmark_ddc_discrete_domain_manual_copy)
+        ->Name("benchmark_ddc_discrete_domain_manual_copy_small")
+        ->Arg(small_dim1_1D);
+BENCHMARK(benchmark_ddc_strided_domain_manual_copy)
+        ->Name("benchmark_ddc_strided_domain_manual_copy_small")
+        ->Arg(small_dim1_1D);
+BENCHMARK(benchmark_ddc_discrete_domain_parallel_copy)
+        ->Name("benchmark_ddc_discrete_domain_parallel_copy_small")
+        ->Arg(small_dim1_1D);
+BENCHMARK(benchmark_ddc_strided_domain_parallel_copy)
+        ->Name("benchmark_ddc_strided_domain_parallel_copy_small")
+        ->Arg(small_dim1_1D);
+
 BENCHMARK(benchmark_kokkos_deepcopy)->Arg(small_dim1_1D)->Arg(large_dim1_1D);
 BENCHMARK(benchmark_kokkos_manual_copy)->Arg(small_dim1_1D)->Arg(large_dim1_1D);
 BENCHMARK(benchmark_ddc_discrete_domain_manual_copy)->Arg(small_dim1_1D)->Arg(large_dim1_1D);

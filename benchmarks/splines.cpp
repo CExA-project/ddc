@@ -288,6 +288,19 @@ std::size_t ny_ref = 1000;
 std::string_view name = "degree_x";
 // NOLINTBEGIN(misc-use-anonymous-namespace)
 BENCHMARK(characteristics_advection)
+        ->Name("characteristics_advection_small")
+        ->RangeMultiplier(2)
+        ->Ranges(
+                {{false, true},
+                 {false, true},
+                 {3, 5},
+                 {32, 32},
+                 {ny_ref, ny_ref},
+                 {cols_per_chunk_ref, cols_per_chunk_ref},
+                 {preconditioner_max_block_size_ref, preconditioner_max_block_size_ref}})
+        ->UseRealTime();
+
+BENCHMARK(characteristics_advection)
         ->RangeMultiplier(2)
         ->Ranges(
                 {{false, true},

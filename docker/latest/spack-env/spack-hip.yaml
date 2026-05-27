@@ -1,0 +1,131 @@
+# Copyright (C) The DDC development team, see COPYRIGHT.md file
+#
+# SPDX-License-Identifier: MIT
+
+---
+spack:
+  concretizer:
+    reuse: false
+    unify: true
+  packages:
+    all:
+      require:
+        - 'target=x86_64'
+        - '~cuda'
+        - '~openmp'
+        - '~mpi'
+        - '~fortran'
+    c:
+      require: 'gcc@13'
+    comgr:
+      buildable: false
+      externals:
+        - spec: comgr@6.4.3
+          prefix: /opt/rocm-6.4.3
+    cxx:
+      require: 'gcc@13'
+    gcc:
+      externals:
+        - spec: gcc@13.3.0 languages:='c,c++,fortran'
+          prefix: /usr
+          extra_attributes:
+            compilers:
+              c: /usr/bin/gcc
+              cxx: /usr/bin/g++
+              fortran: /usr/bin/gfortran
+    fortran:
+      require: 'gcc@13'
+    hip:
+      buildable: false
+      externals:
+        - spec: hip@6.4.3
+          prefix: /opt/rocm-6.4.3
+          extra_attributes:
+            compilers:
+              c: /opt/rocm-6.4.3/llvm/bin/clang++
+              c++: /opt/rocm-6.4.3/llvm/bin/clang++
+              hip: /opt/rocm-6.4.3/bin/hipcc
+    hipblas:
+      buildable: false
+      externals:
+        - spec: hipblas@6.4.3
+          prefix: /opt/rocm-6.4.3
+    hipfft:
+      buildable: false
+      externals:
+        - prefix: /opt/rocm-6.4.3
+          spec: hipfft@6.4.3
+    hiprand:
+      buildable: false
+      externals:
+        - prefix: /opt/rocm-6.4.3
+          spec: hiprand@6.4.3
+    hipsparse:
+      buildable: false
+      externals:
+        - spec: hipsparse@6.4.3
+          prefix: /opt/rocm-6.4.3
+    hsa-rocr-dev:
+      buildable: false
+      externals:
+        - spec: hsa-rocr-dev@6.4.3
+          prefix: /opt/rocm-6.4.3
+    lapack:
+      require: 'openblas@0.3'
+    llvm-amdgpu:
+      buildable: false
+      externals:
+        - spec: llvm-amdgpu@=6.4.3
+          prefix: /opt/rocm-6.4.3/llvm
+          extra_attributes:
+            compilers:
+              c: /opt/rocm-6.4.3/llvm/bin/clang
+              cxx: /opt/rocm-6.4.3/llvm/bin/clang++
+    rocblas:
+      buildable: false
+      externals:
+        - spec: rocblas@6.4.3
+          prefix: /opt/rocm-6.4.3
+    rocprim:
+      buildable: false
+      externals:
+        - spec: rocprim@6.4.3
+          prefix: /opt/rocm-6.4.3
+    rocrand:
+      buildable: false
+      externals:
+        - prefix: /opt/rocm-6.4.3
+          spec: rocrand@6.4.3
+    rocthrust:
+      buildable: false
+      externals:
+        - prefix: /opt/rocm-6.4.3
+          spec: rocthrust@6.4.3
+    roctracer-dev:
+      buildable: false
+      externals:
+        - prefix: /opt/rocm-6.4.3
+          spec: roctracer-dev@6.4.3
+  repos:
+    builtin:
+      tag: v2026.03.0
+  specs:
+    - 'gcc@13'
+    - 'benchmark@1.9 ~performance_counters'
+    - 'cmake@4.2'
+    - 'ginkgo@1.11 +rocm amdgpu_target=gfx90a'
+    - 'googletest@1.17 +gmock'
+    - 'kokkos@5.0 +hip_relocatable_device_code +rocm amdgpu_target=gfx90a'
+    - 'kokkos-fft@1.0 host_backend=fftw-serial device_backend=hipfft'
+    - 'kokkos-kernels@5.0'
+    - 'lapack'
+    - 'paraconf@1.0'
+    - 'pkgconfig'
+    - 'pdi@1.10.1:1.10'
+    - 'pdiplugin-decl-hdf5@1.10.1:1.10'
+    - 'pdiplugin-user-code@1.10.1:1.10'
+    - 'pdiplugin-trace@1.10.1:1.10'
+  view:
+    default:
+      root: .spack-env/view
+      exclude: ['gcc-runtime']

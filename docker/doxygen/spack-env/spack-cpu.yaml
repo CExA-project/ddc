@@ -1,0 +1,44 @@
+# Copyright (C) The DDC development team, see COPYRIGHT.md file
+#
+# SPDX-License-Identifier: MIT
+
+---
+spack:
+  concretizer:
+    reuse: false
+    unify: true
+  packages:
+    all:
+      require:
+        - 'target=x86_64'
+        - '~cuda'
+        - '~rocm'
+        - '~openmp'
+        - '~mpi'
+        - '~fortran'
+    c:
+      require: 'gcc@13'
+    cxx:
+      require: 'gcc@13'
+    fortran:
+      require: 'gcc@13'
+    lapack:
+      require: 'openblas@0.3'
+  repos:
+    builtin:
+      tag: v2026.03.0
+  specs:
+    - 'gcc@13'
+    - 'cmake@4.2'
+    - 'ginkgo@1.11'
+    - 'kokkos@5.0'
+    - 'kokkos-fft@1.0 host_backend=fftw-serial'
+    - 'kokkos-kernels@5.0'
+    - 'lapack'
+    - 'paraconf@1.0'
+    - 'pkgconfig'
+    - 'pdi@1.10.1:1.10'
+  view:
+    default:
+      root: .spack-env/view
+      exclude: ['gcc-runtime']

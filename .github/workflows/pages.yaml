@@ -98,11 +98,17 @@ jobs:
       - name: Generate documentation
         run: |
           cat<<-EOF > run.sh
-            set -xe
-            git config --global --add safe.directory '*'
+            set -e
+
             cmake \
-                -D DDC_BUILD_DOCUMENTATION=ON \
+                -D BUILD_TESTING=OFF \
                 -D CMAKE_CXX_STANDARD=20 \
+                -D DDC_BUILD_BENCHMARKS=OFF \
+                -D DDC_BUILD_DOCUMENTATION=ON \
+                -D DDC_BUILD_EXAMPLES=ON \
+                -D DDC_BUILD_KERNELS_FFT=ON \
+                -D DDC_BUILD_KERNELS_SPLINES=ON \
+                -D DDC_BUILD_PDI_WRAPPER=ON \
                 -D DOXYGEN_EXTRACT_ALL=NO \
                 -D DOXYGEN_WARN_IF_UNDOCUMENTED=YES \
                 -D DOXYGEN_WARN_IF_DOC_ERROR=YES \
@@ -110,7 +116,6 @@ jobs:
                 -D DOXYGEN_WARN_NO_PARAMDOC=YES \
                 -D DOXYGEN_WARN_IF_UNDOC_ENUM_VAL=YES \
                 -D DOXYGEN_WARN_AS_ERROR=NO \
-                -D Kokkos_ENABLE_DEPRECATION_WARNINGS=OFF \
                 -B build \
                 -S /src
             cmake --build build --verbose --target doc
@@ -159,16 +164,22 @@ jobs:
       - name: Build site
         run: |
           cat<<-EOF > run.sh
-            set -xe
-            git config --global --add safe.directory '*'
+            set -e
+
             export CC=clang
             export CXX=clang++
             cmake \
-                -D DDC_BUILD_DOCUMENTATION=ON \
+                -D BUILD_TESTING=OFF \
                 -D CMAKE_CXX_STANDARD=20 \
                 -D CMAKE_EXPORT_COMPILE_COMMANDS=ON \
                 -D CMAKE_VERIFY_INTERFACE_HEADER_SETS=ON \
-                -D Kokkos_ENABLE_DEPRECATION_WARNINGS=OFF \
+                -D DDC_BUILD_BENCHMARKS=OFF \
+                -D DDC_BUILD_DOCUMENTATION=ON \
+                -D DDC_BUILD_EXAMPLES=ON \
+                -D DDC_BUILD_KERNELS_FFT=ON \
+                -D DDC_BUILD_KERNELS_SPLINES=ON \
+                -D DDC_BUILD_PDI_WRAPPER=ON \
+                -D DDC_BUILD_DOCUMENTATION=ON \
                 -B build \
                 -S /src
             cmake --build build --verbose --target doc || true

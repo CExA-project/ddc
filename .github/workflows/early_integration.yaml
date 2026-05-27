@@ -107,56 +107,18 @@ jobs:
           cat<<-'EOF' > run.sh
             set -e
 
-            spack remove kokkos kokkos-kernels kokkos-fft
-            spack install --force --reuse
+            spack develop --path /src/vendor/kokkos --no-clone kokkos
+            spack develop --path /src/vendor/kokkos-kernels --no-clone kokkos-kernels
+            spack develop --path /src/vendor/kokkos-fft --no-clone kokkos-fft
+            spack install --verbose
 
             export DDC_ROOT=$PWD/opt/ddc
-            export Kokkos_ROOT=$PWD/opt/kokkos
-            export KokkosFFT_ROOT=$PWD/opt/kokkos-fft
-            export KokkosKernels_ROOT=$PWD/opt/kokkos-kernels
 
             export CMAKE_BUILD_PARALLEL_LEVEL=4
             export CMAKE_BUILD_TYPE=${{matrix.cmake_build_type}}
 
             export CC=${{matrix.backend.c_compiler}}
             export CXX=${{matrix.backend.cxx_compiler}}
-
-            cmake \
-              -D CMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
-              -D Kokkos_ENABLE_DEPRECATED_CODE_4=OFF \
-              -D Kokkos_ENABLE_DEPRECATION_WARNINGS=OFF \
-              -D Kokkos_ENABLE_SERIAL=ON \
-              ${{matrix.backend.kokkos_extra_cmake_flags}} \
-              -B build \
-              -S /src/vendor/kokkos
-            cmake --build build
-            cmake --install build --prefix $Kokkos_ROOT
-            rm -rf build
-
-            cmake \
-              -D CMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
-              -D KokkosFFT_ENABLE_FFTW=ON \
-              -B build \
-              -S /src/vendor/kokkos-fft
-            cmake --build build
-            cmake --install build --prefix $KokkosFFT_ROOT
-            rm -rf build
-
-            cmake \
-              -D CMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
-              -D KokkosKernels_ADD_DEFAULT_ETI=OFF \
-              -D KokkosKernels_ENABLE_ALL_COMPONENTS=OFF \
-              -D KokkosKernels_ENABLE_COMPONENT_BLAS=ON \
-              -D KokkosKernels_ENABLE_COMPONENT_BATCHED=ON \
-              -D KokkosKernels_ENABLE_COMPONENT_LAPACK=OFF \
-              -D KokkosKernels_ENABLE_TPL_BLAS=OFF \
-              -D KokkosKernels_ENABLE_TPL_CUSOLVER=OFF \
-              -D KokkosKernels_ENABLE_TPL_LAPACK=OFF \
-              -B build \
-              -S /src/vendor/kokkos-kernels
-            cmake --build build
-            cmake --install build --prefix $KokkosKernels_ROOT
-            rm -rf build
 
             cmake \
               -D CMAKE_CXX_FLAGS="-Werror -Wall -Wextra -Wpedantic -Wno-sign-compare -pedantic-errors ${{matrix.backend.ddc_extra_cxx_flags}}" \
@@ -185,6 +147,7 @@ jobs:
           docker run \
             --cidfile='docker.cid' \
             -v ${PWD}:/src:ro \
+            -v ${PWD}/vendor:/src/vendor \
             ghcr.io/cexa-project/ddc/${{matrix.image}}_${{matrix.backend.name}} \
             bash /src/run.sh
           if docker cp "$(cat docker.cid)":/data/tests.xml ${{github.workspace}}/tests.xml

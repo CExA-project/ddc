@@ -105,12 +105,12 @@ jobs:
         id: test
         run: |
           cat<<-'EOF' > run.sh
-            set -xe
-            git config --global --add safe.directory '*'
+            set -e
 
-            export benchmark_ROOT=$PWD/opt/benchmark
+            spack remove kokkos kokkos-kernels kokkos-fft
+            spack install --force --reuse
+
             export DDC_ROOT=$PWD/opt/ddc
-            export GTest_ROOT=$PWD/opt/gtest
             export Kokkos_ROOT=$PWD/opt/kokkos
             export KokkosFFT_ROOT=$PWD/opt/kokkos-fft
             export KokkosKernels_ROOT=$PWD/opt/kokkos-kernels
@@ -120,26 +120,6 @@ jobs:
 
             export CC=${{matrix.backend.c_compiler}}
             export CXX=${{matrix.backend.cxx_compiler}}
-
-            cmake \
-              -D CMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
-              -D BENCHMARK_ENABLE_GTEST_TESTS=OFF \
-              -D BENCHMARK_ENABLE_TESTING=OFF \
-              -D BENCHMARK_INSTALL_DOCS=OFF \
-              -D BENCHMARK_USE_BUNDLED_GTEST=OFF \
-              -B build \
-              -S /src/vendor/benchmark
-            cmake --build build
-            cmake --install build --prefix $benchmark_ROOT
-            rm -rf build
-
-            cmake \
-              -D CMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
-              -B build \
-              -S /src/vendor/googletest
-            cmake --build build
-            cmake --install build --prefix $GTest_ROOT
-            rm -rf build
 
             cmake \
               -D CMAKE_CXX_STANDARD=${{matrix.cxx_version}} \

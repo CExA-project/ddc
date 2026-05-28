@@ -101,9 +101,10 @@ jobs:
           cat<<-'EOF' > run.sh
             set -e
 
-            spack develop --path /src/vendor/kokkos --no-clone kokkos
-            spack develop --path /src/vendor/kokkos-kernels --no-clone kokkos-kernels
+            spack develop --path /src/vendor/kokkos --no-clone --no-modify-concrete-specs kokkos@develop
+            spack develop --path /src/vendor/kokkos-kernels --no-clone --no-modify-concrete-specs kokkos-kernels@develop
             spack develop --path /src/vendor/kokkos-fft --no-clone kokkos-fft
+            spack concretize --force
             spack install --verbose
 
             export DDC_ROOT=$PWD/opt/ddc

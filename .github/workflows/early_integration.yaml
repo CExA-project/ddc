@@ -53,22 +53,18 @@ jobs:
             c_compiler: 'gcc'
             cxx_compiler: 'g++'
             ddc_extra_cxx_flags: '-Wextra-semi -Wold-style-cast'
-            kokkos_extra_cmake_flags: ''
           - name: 'cpu'
             c_compiler: 'clang'
             cxx_compiler: 'clang++'
             ddc_extra_cxx_flags: '-Wextra-semi -Wextra-semi-stmt -Wold-style-cast'
-            kokkos_extra_cmake_flags: ''
           - name: 'cuda'
             c_compiler: '${CUDA_GCC}'
             cxx_compiler: '${CUDA_GXX}'
             ddc_extra_cxx_flags: ''
-            kokkos_extra_cmake_flags: '-DKokkos_ENABLE_CUDA=ON -DKokkos_ENABLE_CUDA_CONSTEXPR=ON -DKokkos_ENABLE_CUDA_RELOCATABLE_DEVICE_CODE=ON -DKokkos_ARCH_AMPERE80=ON'
           - name: 'hip'
             c_compiler: 'hipcc'
             cxx_compiler: 'hipcc'
             ddc_extra_cxx_flags: ''
-            kokkos_extra_cmake_flags: '-DKokkos_ENABLE_HIP=ON -DKokkos_ENABLE_HIP_RELOCATABLE_DEVICE_CODE=ON -DKokkos_ENABLE_ROCTHRUST=OFF -DKokkos_ARCH_AMD_GFX90A=ON'
         cxx_version: ['20', '23']
         cmake_build_type: ['Debug', 'Release']
         exclude:
@@ -84,8 +80,6 @@ jobs:
         with: {tool-cache: true, large-packages: false}
       - name: Checkout built branch
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
-        with:
-          submodules: true
       - name: Checkout Kokkos devel branch
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
         with:

@@ -52,9 +52,6 @@ NpyDtype convert_to_npy_dtype()
     } else if constexpr (std::is_same_v<T, std::byte>) {
         // std::byte → raw byte buffer, no arithmetic meaning
         kind = NpyKind::other;
-    } else if constexpr (std::is_same_v<T, char>) {
-        // char is a distinct type; its signedness is implementation-defined
-        kind = std::is_signed_v<char> ? NpyKind::signed_int : NpyKind::unsigned_int;
     } else if constexpr (
             std::is_same_v<T, std::complex<float>> || std::is_same_v<T, std::complex<double>>) {
         // ── Complex ───────────────────────────────────────────────────────

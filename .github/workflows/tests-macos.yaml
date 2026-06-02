@@ -71,6 +71,7 @@ jobs:
       - name: Install
         shell: spack-bash {0}
         run: |
+          spack env create . spack-env/spack-${{matrix.os}}.yaml
           spack --env . repo update
           spack --env . install
       - name: Push packages and update index

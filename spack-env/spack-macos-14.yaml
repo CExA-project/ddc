@@ -7,6 +7,9 @@ spack:
   concretizer:
     reuse: false
     unify: true
+  config:
+    install_tree:
+      padded_length: 128
   mirrors:
     local-buildcache:
       url: oci://ghcr.io/CExA-project/ddc-spack-buildcache
@@ -25,16 +28,18 @@ spack:
         - '~mpi'
         - '~fortran'
     c:
-      require: 'apple-clang'
+      require: 'apple-clang@15.0'
     cxx:
-      require: 'apple-clang'
+      require: 'apple-clang@15.0'
+    fortran:
+      require: 'gcc@15.2'
     lapack:
       require: 'openblas@0.3'
   repos:
     builtin:
       tag: v2026.03.0
   specs:
-    - 'apple-clang'
+    - 'apple-clang@15.0'
     - 'benchmark@1.9 ~performance_counters'
     - 'cmake@4.2'
     - 'ginkgo@1.11'

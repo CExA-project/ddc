@@ -112,7 +112,7 @@ void save_npy(std::ostream& os, Kokkos::mdspan<T, Extents, Layout, Accessor> con
             "save_npy: only contiguous layouts supported.");
 
     std::vector<std::size_t> shape(Extents::rank());
-    for (std::size_t i = 0; i < Extents::rank(); ++i) {
+    for (std::size_t i = 0; i < shape.size(); ++i) {
         shape[i] = mds.extent(i);
     }
 
@@ -146,10 +146,8 @@ void save_npy(
             "save_npy: only contiguous layouts supported.");
 
     std::vector<std::size_t> shape(Extents::rank());
-    if constexpr (Extents::rank() > 0) {
-        for (std::size_t i = 0; i < Extents::rank(); ++i) {
-            shape[i] = mds.extent(i);
-        }
+    for (std::size_t i = 0; i < shape.size(); ++i) {
+        shape[i] = mds.extent(i);
     }
 
     ddc::detail::save_npy(

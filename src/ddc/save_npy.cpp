@@ -73,7 +73,7 @@ void save_npy(std::ostream& os, NpyArrayView const& view)
     // magic(6) + major(1) + minor(1) + header_len(2) + header
     std::size_t const alignment = 16;
     std::size_t const remainder = (6 + 1 + 1 + 2 + non_padded_header_len) % alignment;
-    std::size_t const padding = remainder == 0 ? 0 : alignment - remainder;
+    std::size_t const padding = (alignment - remainder) % alignment;
     if (!std::in_range<std::uint16_t>(non_padded_header_len + padding)) {
         throw std::runtime_error("save_npy: header too large for npy v1.0.");
     }

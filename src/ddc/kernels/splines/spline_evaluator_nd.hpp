@@ -14,15 +14,12 @@
 
 #include <Kokkos_Core.hpp>
 
-#include "ddc/coordinate.hpp"
-#include "ddc/detail/type_seq.hpp"
-#include "ddc/discrete_domain.hpp"
-
 #include "deriv.hpp"
 #include "integrals.hpp"
 #include "periodic_extrapolation_rule.hpp"
 
 namespace ddc {
+
 /**
  * @brief A class to evaluate, differentiate or integrate a spline function of arbitrary dimension.
  *
@@ -35,7 +32,12 @@ namespace ddc {
  * - EvaluationDDim A TypeSeq containing the discrete dimensions on which evaluation points are defined.
  * - ExtrapolationRule A TypeSeq containing the lower and upper extrapolation rules along each dimension of interest.
  */
-template <class... Args>
+template <
+        class ExecSpace,
+        class MemorySpace,
+        class BSplines,
+        class EvaluationDDim,
+        class ExtrapolationRule>
 class SplineEvaluatorND;
 
 template <
@@ -54,15 +56,17 @@ class SplineEvaluatorND<
 private:
     static constexpr std::size_t dimension = sizeof...(BSplines);
 
-// A value that can be used to do a pack expansion over (0, 1, ..., Dimension)
-#define IDX ddc::type_seq_rank_v<BSplines, bsplines_ts>
-
     using bsplines_ts = detail::TypeSeq<BSplines...>;
+    // A value that can be used to do a pack expansion over (0, 1, ..., Dimension)
+    template <class BSpline>
+    static constexpr std::size_t s_idx = ddc::type_seq_rank_v<BSpline, bsplines_ts>;
+
     using evaluation_ddim_ts = detail::TypeSeq<EvaluationDDim...>;
     using lower_extrap_rule_ts = detail::TypeSeq<
-            ddc::type_seq_element_t<2 * IDX, detail::TypeSeq<ExtrapolationRule...>>...>;
-    using upper_extrap_rule_ts = detail::TypeSeq<
-            ddc::type_seq_element_t<2 * IDX + 1, detail::TypeSeq<ExtrapolationRule...>>...>;
+            ddc::type_seq_element_t<2 * s_idx<BSplines>, detail::TypeSeq<ExtrapolationRule...>>...>;
+    using upper_extrap_rule_ts = detail::TypeSeq<ddc::type_seq_element_t<
+            2 * s_idx<BSplines> + 1,
+            detail::TypeSeq<ExtrapolationRule...>>...>;
 
 public:
     /// @brief The type of the Ith evaluation continuous dimension used by this class.
@@ -143,8 +147,10 @@ public:
     using upper_extrapolation_rule_type = ddc::type_seq_element_t<I, upper_extrap_rule_ts>;
 
 private:
-    cexa::tuple<ddc::type_seq_element_t<IDX, lower_extrap_rule_ts>...> m_lower_extrap_rules;
-    cexa::tuple<ddc::type_seq_element_t<IDX, upper_extrap_rule_ts>...> m_upper_extrap_rules;
+    cexa::tuple<ddc::type_seq_element_t<s_idx<BSplines>, lower_extrap_rule_ts>...>
+            m_lower_extrap_rules;
+    cexa::tuple<ddc::type_seq_element_t<s_idx<BSplines>, upper_extrap_rule_ts>...>
+            m_upper_extrap_rules;
 
 public:
     static_assert(
@@ -162,11 +168,11 @@ public:
 
     static_assert(
             ((std::is_same_v<
-                      ddc::type_seq_element_t<IDX, lower_extrap_rule_ts>,
+                      ddc::type_seq_element_t<s_idx<BSplines>, lower_extrap_rule_ts>,
                       ddc::PeriodicExtrapolationRule<typename BSplines::continuous_dimension_type>>
                       == BSplines::is_periodic()
               && std::is_same_v<
-                         ddc::type_seq_element_t<IDX, upper_extrap_rule_ts>,
+                         ddc::type_seq_element_t<s_idx<BSplines>, upper_extrap_rule_ts>,
                          ddc::PeriodicExtrapolationRule<
                                  typename BSplines::continuous_dimension_type>>
                          == BSplines::is_periodic())
@@ -175,7 +181,7 @@ public:
     static_assert(
             (std::is_invocable_r_v<
                      double,
-                     ddc::type_seq_element_t<IDX, lower_extrap_rule_ts>,
+                     ddc::type_seq_element_t<s_idx<BSplines>, lower_extrap_rule_ts>,
                      ddc::Coordinate<typename BSplines::continuous_dimension_type>,
                      ddc::ChunkSpan<
                              double const,
@@ -188,7 +194,7 @@ public:
     static_assert(
             (std::is_invocable_r_v<
                      double,
-                     ddc::type_seq_element_t<IDX, upper_extrap_rule_ts>,
+                     ddc::type_seq_element_t<s_idx<BSplines>, upper_extrap_rule_ts>,
                      ddc::Coordinate<typename BSplines::continuous_dimension_type>,
                      ddc::ChunkSpan<
                              double const,
@@ -215,8 +221,10 @@ public:
                 "as the ones passed as template argument to the class");
 
         cexa::tuple<ExtrapRules...> extrap_rules_tuple(extrap_rules...);
-        m_lower_extrap_rules = cexa::make_tuple(cexa::get<2 * IDX>(extrap_rules_tuple)...);
-        m_upper_extrap_rules = cexa::make_tuple(cexa::get<2 * IDX + 1>(extrap_rules_tuple)...);
+        m_lower_extrap_rules
+                = cexa::make_tuple(cexa::get<2 * s_idx<BSplines>>(extrap_rules_tuple)...);
+        m_upper_extrap_rules
+                = cexa::make_tuple(cexa::get<2 * s_idx<BSplines> + 1>(extrap_rules_tuple)...);
     }
 
     /**
@@ -596,8 +604,8 @@ public:
                 ddc::
                         Chunk(ddc::DiscreteDomain<BSplines>(spline_coef.domain()),
                               ddc::KokkosAllocator<double, memory_space>())...);
-        auto values = cexa::make_tuple(cexa::get<IDX>(values_alloc).span_view()...);
-        (ddc::integrals(exec_space(), cexa::get<IDX>(values)), ...);
+        auto values = cexa::make_tuple(cexa::get<s_idx<BSplines>>(values_alloc).span_view()...);
+        (ddc::integrals(exec_space(), cexa::get<s_idx<BSplines>>(values)), ...);
 
         ddc::parallel_for_each(
                 "ddc_splines_integrate_bsplines",
@@ -609,7 +617,7 @@ public:
                             ddc::DiscreteDomain<BSplines...>(),
                             [=](ddc::DiscreteDomain<BSplines...>::discrete_element_type const i) {
                                 integrals(j) += spline_coef(i, j)
-                                                * (cexa::get<IDX>(values)(
+                                                * (cexa::get<s_idx<BSplines>>(values)(
                                                            ddc::DiscreteElement<BSplines>(i))
                                                    * ...);
                             });
@@ -684,12 +692,12 @@ private:
                     Layout,
                     memory_space> const spline_coef) const
     {
-        (update_coord_eval<IDX>(coord_eval), ...);
+        (update_coord_eval<s_idx<BSplines>>(coord_eval), ...);
 
         double res = 0.;
         // We rely on short circuit here. If we need to extrapolate on one of the dims, `res` will be set and `check_needs_extrapolation` will return true.
         bool const needs_extrapolation
-                = (... || check_needs_extrapolation<IDX>(coord_eval, spline_coef, res));
+                = (... || check_needs_extrapolation<s_idx<BSplines>>(coord_eval, spline_coef, res));
 
         if (needs_extrapolation) {
             return res;
@@ -774,7 +782,7 @@ private:
         static_assert(
                 (in_tags_v<
                          DerivDims,
-                         ddc::detail::TypeSeq<Deriv<continuous_dimension_type<IDX>>...>>
+                         ddc::detail::TypeSeq<Deriv<continuous_dimension_type<s_idx<BSplines>>>...>>
                  && ...),
                 "The only valid dimensions for deriv_order are Deriv<Dim1>, Deriv<Dim2>, ..., "
                 "Deriv<DimN>");
@@ -782,12 +790,12 @@ private:
         auto vals_ptr = cexa::make_tuple(std::array<double, BSplines::degree() + 1> {}...);
         auto const vals = cexa::make_tuple(
                 Kokkos::mdspan<double, Kokkos::extents<std::size_t, BSplines::degree() + 1>>(
-                        cexa::get<IDX>(vals_ptr).data())...);
+                        cexa::get<s_idx<BSplines>>(vals_ptr).data())...);
 
         auto const jmin = cexa::make_tuple(
                 get_jmin<BSplines>(
                         deriv_order,
-                        cexa::get<IDX>(vals),
+                        cexa::get<s_idx<BSplines>>(vals),
                         ddc::Coordinate<typename BSplines::continuous_dimension_type>(
                                 coord_eval))...);
 
@@ -797,13 +805,13 @@ private:
                 [&](std::array<std::size_t, dimension> idx) {
                     y += spline_coef(
                                  ddc::DiscreteElement<BSplines...>(
-                                         (cexa::get<IDX>(jmin) + idx[IDX])...))
-                         * (cexa::get<IDX>(vals)[idx[IDX]] * ...);
+                                         (cexa::get<s_idx<BSplines>>(jmin)
+                                          + idx[s_idx<BSplines>])...))
+                         * (cexa::get<s_idx<BSplines>>(vals)[idx[s_idx<BSplines>]] * ...);
                 });
 
         return y;
     }
-#undef IDX
 };
 
 } // namespace ddc

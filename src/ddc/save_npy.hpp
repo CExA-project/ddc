@@ -86,6 +86,22 @@ struct NpyArrayView
     bool fortran_order;
 };
 
+template <typename T, typename Extents, typename Layout, typename Accessor>
+NpyArrayView to_np_array_view(Kokkos::mdspan<T, Extents, Layout, Accessor> const& mds)
+{
+    std::vector<std::size_t> shape(Extents::rank());
+    for (std::size_t i = 0; i < shape.size(); ++i) {
+        shape[i] = mds.extent(i);
+    }
+
+    return NpyArrayView {
+            .data = mds.data_handle(),
+            .dtype = convert_to_npy_dtype<std::remove_const_t<T>>(),
+            .shape = std::move(shape),
+            .fortran_order = std::is_same_v<Layout, Kokkos::layout_left>,
+    };
+}
+
 void save_npy(std::ostream& os, NpyArrayView const& view);
 
 void save_npy(std::filesystem::path const& filename, NpyArrayView const& view);
@@ -111,19 +127,7 @@ void save_npy(std::ostream& os, Kokkos::mdspan<T, Extents, Layout, Accessor> con
                     || std::is_same_v<Layout, Kokkos::layout_right>,
             "save_npy: only contiguous layouts supported.");
 
-    std::vector<std::size_t> shape(Extents::rank());
-    for (std::size_t i = 0; i < shape.size(); ++i) {
-        shape[i] = mds.extent(i);
-    }
-
-    ddc::detail::save_npy(
-            os,
-            ddc::detail::NpyArrayView {
-                    .data = mds.data_handle(),
-                    .dtype = ddc::detail::convert_to_npy_dtype<std::remove_const_t<T>>(),
-                    .shape = std::move(shape),
-                    .fortran_order = std::is_same_v<Layout, Kokkos::layout_left>,
-            });
+    ddc::detail::save_npy(os, ddc::detail::to_np_array_view(mds));
 }
 
 /**
@@ -145,19 +149,7 @@ void save_npy(
                     || std::is_same_v<Layout, Kokkos::layout_right>,
             "save_npy: only contiguous layouts supported.");
 
-    std::vector<std::size_t> shape(Extents::rank());
-    for (std::size_t i = 0; i < shape.size(); ++i) {
-        shape[i] = mds.extent(i);
-    }
-
-    ddc::detail::save_npy(
-            filename,
-            ddc::detail::NpyArrayView {
-                    .data = mds.data_handle(),
-                    .dtype = ddc::detail::convert_to_npy_dtype<std::remove_const_t<T>>(),
-                    .shape = std::move(shape),
-                    .fortran_order = std::is_same_v<Layout, Kokkos::layout_left>,
-            });
+    ddc::detail::save_npy(filename, ddc::detail::to_np_array_view(mds));
 }
 
 } // namespace ddc::experimental

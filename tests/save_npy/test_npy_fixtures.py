@@ -58,8 +58,14 @@ def test_3d():
     np.testing.assert_array_equal(np.load("double_3d.npy"), gen_array_3d(np.float64), strict=True)
 
     np.testing.assert_array_equal(
-        np.load("complex_float_3d.npy"), gen_array_3d(np.complex64), strict=True
+        np.load("std_complex_float_3d.npy"), gen_array_3d(np.complex64), strict=True
     )
     np.testing.assert_array_equal(
-        np.load("complex_double_3d.npy"), gen_array_3d(np.complex128), strict=True
+        np.load("std_complex_double_3d.npy"), gen_array_3d(np.complex128), strict=True
+    )
+    np.testing.assert_array_equal(
+        np.load("kokkos_complex_float_3d.npy"), gen_array_3d(np.complex64), strict=True
+    )
+    np.testing.assert_array_equal(
+        np.load("kokkos_complex_double_3d.npy"), gen_array_3d(np.complex128), strict=True
     )

@@ -21,14 +21,17 @@ int constexpr n = ns[0] * ns[1] * ns[2];
 template <typename T>
 constexpr T make_value()
 {
-    std::complex<double> const base_value(2.3, 0.4);
+    double const real = 2.3;
+    double const imag = 0.4;
     if constexpr (
-            std::is_same_v<T, std::complex<float>> || std::is_same_v<T, std::complex<double>>) {
-        return T(base_value);
+            std::is_same_v<T, std::complex<float>> || std::is_same_v<T, std::complex<double>>
+            || std::is_same_v<T, Kokkos::complex<float>>
+            || std::is_same_v<T, Kokkos::complex<double>>) {
+        return T(real, imag);
     } else if constexpr (std::is_floating_point_v<T>) {
-        return T(std::real(base_value));
+        return T(real);
     } else {
-        return T(std::llround(std::real(base_value)));
+        return T(std::llround(real));
     }
 }
 
@@ -86,8 +89,10 @@ int main(int argc, char** argv)
     save_array_3d("./float_3d.npy", make_value<float>());
     save_array_3d("./double_3d.npy", make_value<double>());
 
-    save_array_3d("./complex_float_3d.npy", make_value<std::complex<float>>());
-    save_array_3d("./complex_double_3d.npy", make_value<std::complex<double>>());
+    save_array_3d("./std_complex_float_3d.npy", make_value<std::complex<float>>());
+    save_array_3d("./std_complex_double_3d.npy", make_value<std::complex<double>>());
+    save_array_3d("./kokkos_complex_float_3d.npy", make_value<Kokkos::complex<float>>());
+    save_array_3d("./kokkos_complex_double_3d.npy", make_value<Kokkos::complex<double>>());
 
     return 0;
 }

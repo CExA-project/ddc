@@ -53,7 +53,9 @@ NpyDtype convert_to_npy_dtype()
         // std::byte → raw byte buffer, no arithmetic meaning
         kind = NpyKind::other;
     } else if constexpr (
-            std::is_same_v<T, std::complex<float>> || std::is_same_v<T, std::complex<double>>) {
+            std::is_same_v<T, std::complex<float>> || std::is_same_v<T, std::complex<double>>
+            || std::is_same_v<T, Kokkos::complex<float>>
+            || std::is_same_v<T, Kokkos::complex<double>>) {
         // ── Complex ───────────────────────────────────────────────────────
         // NumPy 'c' dtype stores interleaved real+imag, same layout as std::complex
         kind = NpyKind::complex;

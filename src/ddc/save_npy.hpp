@@ -110,10 +110,6 @@ void save_npy(std::ostream& os, Kokkos::mdspan<T, Extents, Layout, Accessor> con
             std::is_same_v<Layout, Kokkos::layout_left>
                     || std::is_same_v<Layout, Kokkos::layout_right>,
             "save_npy: only contiguous layouts supported.");
-    static_assert(
-            std::is_same_v<Accessor, Kokkos::default_accessor<T>>
-                    || std::is_same_v<Accessor, Kokkos::default_accessor<T const>>,
-            "save_npy: non-host-accessible accessor. Use create_mirror_view + deep_copy first.");
 
     std::vector<std::size_t> shape(Extents::rank());
     for (std::size_t i = 0; i < Extents::rank(); ++i) {
@@ -148,10 +144,6 @@ void save_npy(
             std::is_same_v<Layout, Kokkos::layout_left>
                     || std::is_same_v<Layout, Kokkos::layout_right>,
             "save_npy: only contiguous layouts supported.");
-    static_assert(
-            std::is_same_v<Accessor, Kokkos::default_accessor<T>>
-                    || std::is_same_v<Accessor, Kokkos::default_accessor<T const>>,
-            "save_npy: non-host-accessible accessor. Use create_mirror_view + deep_copy first.");
 
     std::vector<std::size_t> shape(Extents::rank());
     if constexpr (Extents::rank() > 0) {

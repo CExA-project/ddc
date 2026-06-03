@@ -53,7 +53,7 @@ Morvany Trévis - CEA
 * Work on splines
 * Implementation of 3d splines
 * Implementation of n-th order derivatives of splines
-* Implementation of nd spline evaluation
+* Implementation of nd spline evaluator
 
 Padioleau Thomas - CEA (<thomas.padioleau@cea.fr>)
 

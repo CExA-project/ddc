@@ -126,6 +126,14 @@ public:
     }
 };
 
+template <class Reducer, class Functor, class Support>
+TransformReducerKokkosLambdaAdapter(Reducer const& r, Functor const& f, Support const& support)
+        -> TransformReducerKokkosLambdaAdapter<
+                Reducer,
+                Functor,
+                Support,
+                std::make_index_sequence<Support::rank()>>;
+
 /** A parallel reduction over a nD domain using the default Kokkos execution space
  * @param[in] label  name for easy identification of the parallel_for_each algorithm
  * @param[in] execution_space a Kokkos execution space where the loop will be executed on
@@ -149,11 +157,7 @@ T transform_reduce_kokkos(
     Kokkos::parallel_reduce(
             label,
             ddc_to_kokkos_execution_policy(execution_space, detail::array(domain.extents())),
-            TransformReducerKokkosLambdaAdapter<
-                    BinaryReductionOp,
-                    UnaryTransformOp,
-                    Support,
-                    std::make_index_sequence<Support::rank()>>(reduce, transform, domain),
+            TransformReducerKokkosLambdaAdapter(reduce, transform, domain),
             ddc_to_kokkos_reducer_t<BinaryReductionOp>(result));
     return result;
 }

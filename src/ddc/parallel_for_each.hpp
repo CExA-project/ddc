@@ -52,6 +52,10 @@ public:
     }
 };
 
+template <class F, class Support>
+ForEachKokkosLambdaAdapter(F const& f, Support const& support)
+        -> ForEachKokkosLambdaAdapter<F, Support, std::make_index_sequence<Support::rank()>>;
+
 template <class ExecSpace, class Support, class Functor>
 void for_each_kokkos(
         std::string const& label,
@@ -62,10 +66,7 @@ void for_each_kokkos(
     Kokkos::parallel_for(
             label,
             ddc_to_kokkos_execution_policy(execution_space, detail::array(domain.extents())),
-            ForEachKokkosLambdaAdapter<
-                    Functor,
-                    Support,
-                    std::make_index_sequence<Support::rank()>>(f, domain));
+            ForEachKokkosLambdaAdapter(f, domain));
 }
 
 } // namespace detail

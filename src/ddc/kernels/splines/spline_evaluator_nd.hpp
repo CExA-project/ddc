@@ -126,7 +126,7 @@ public:
                     evaluation_ddim_ts>>;
 
     /**
-     * @brief The type of the whole spline domain (cartesian product of N:wspline domain
+     * @brief The type of the whole spline domain (cartesian product of ND spline domain
      * and batch domain) preserving the underlying memory layout (order of dimensions).
      *
      * @tparam The batched discrete domain on which the interpolation points are defined.
@@ -354,7 +354,8 @@ public:
                     Layout3,
                     memory_space> const spline_coef) const
     {
-        using evaluation_domain = ddc::DiscreteDomain<EvaluationDDim...>;
+        using evaluation_domain_type = ddc::DiscreteDomain<EvaluationDDim...>;
+        evaluation_domain_type const evaluation_domain(spline_eval.domain());
 
         batch_domain_type<BatchedInterpolationDDom> const batch_domain(coords_eval.domain());
 
@@ -369,8 +370,8 @@ public:
                     auto const coords_eval_ND = coords_eval[j];
                     auto const spline_coef_ND = spline_coef[j];
                     ddc::device_for_each(
-                            evaluation_domain(spline_eval.domain()),
-                            [=, *this](evaluation_domain::discrete_element_type const i) {
+                            evaluation_domain,
+                            [&](evaluation_domain_type::discrete_element_type const i) {
                                 spline_eval_ND(i) = eval(coords_eval_ND(i), spline_coef_ND);
                             });
                 });
@@ -401,7 +402,8 @@ public:
                     Layout2,
                     memory_space> const spline_coef) const
     {
-        using evaluation_domain = ddc::DiscreteDomain<EvaluationDDim...>;
+        using evaluation_domain_type = ddc::DiscreteDomain<EvaluationDDim...>;
+        evaluation_domain_type evaluation_domain(spline_eval.domain());
 
         batch_domain_type<BatchedInterpolationDDom> const batch_domain(spline_eval.domain());
 
@@ -416,8 +418,8 @@ public:
                     auto const spline_coef_ND = spline_coef[j];
 
                     ddc::device_for_each(
-                            evaluation_domain(spline_eval.domain()),
-                            [=, *this](evaluation_domain::discrete_element_type const i) {
+                            evaluation_domain,
+                            [&](evaluation_domain_type::discrete_element_type const i) {
                                 ddc::Coordinate<typename BSplines::continuous_dimension_type...>
                                         coord_eval_ND(ddc::coordinate(i));
                                 spline_eval_ND(i) = eval(coord_eval_3D(i), spline_coef_ND);
@@ -498,7 +500,9 @@ public:
     {
         static_assert(ddc::is_discrete_element_v<DElem>);
 
-        using evaluation_domain = ddc::DiscreteDomain<EvaluationDDim...>;
+        using evaluation_domain_type = ddc::DiscreteDomain<EvaluationDDim...>;
+        evaluation_domain_type evaluation_domain(spline_eval.domain());
+
         batch_domain_type<BatchedInterpolationDDom> const batch_domain(spline_eval.domain());
 
         ddc::parallel_for_each(
@@ -512,8 +516,8 @@ public:
                     auto const coords_eval_ND = coords_eval[j];
                     auto const spline_coef_ND = spline_coef[j];
                     ddc::device_for_each(
-                            evaluation_domain(spline_eval.domain()),
-                            [=, *this](evaluation_domain::discrete_element_type const i) {
+                            evaluation_domain,
+                            [&](evaluation_domain_type::discrete_element_type const i) {
                                 spline_eval_ND(i) = eval_no_bc(
                                         deriv_order,
                                         coords_eval_ND(i),
@@ -550,7 +554,9 @@ public:
     {
         static_assert(is_discrete_element_v<DElem>);
 
-        using evaluation_domain = ddc::DiscreteDomain<EvaluationDDim...>;
+        using evaluation_domain_type = ddc::DiscreteDomain<EvaluationDDim...>;
+        evaluation_domain_type evaluation_domain(spline_eval.domain());
+
         batch_domain_type<BatchedInterpolationDDom> const batch_domain(spline_eval.domain());
 
         ddc::parallel_for_each(
@@ -563,8 +569,8 @@ public:
                     auto const spline_eval_ND = spline_eval[j];
                     auto const spline_coef_ND = spline_coef[j];
                     ddc::device_for_each(
-                            evaluation_domain(spline_eval.domain()),
-                            [=, *this](evaluation_domain::discrete_element_type const i) {
+                            evaluation_domain,
+                            [&](evaluation_domain_type::discrete_element_type const i) {
                                 ddc::Coordinate<typename BSplines::continuous_dimension_type...>
                                         coord_eval_ND(ddc::coordinate(i));
                                 spline_eval_ND(i)
@@ -599,6 +605,9 @@ public:
                 std::is_same_v<batch_domain_type<BatchedDDom>, BatchedDDom>,
                 "The integrals domain must only contain the batch dimensions");
 
+        using bsplines_domain_type = ddc::DiscreteDomain<BSplines...>;
+        bsplines_domain_type const bsplines_domain(spline_coef.domain());
+
         batch_domain_type<BatchedDDom> const batch_domain(integrals.domain());
         auto values_alloc = cexa::make_tuple(
                 ddc::
@@ -614,8 +623,8 @@ public:
                 KOKKOS_LAMBDA(batch_domain_type<BatchedDDom>::discrete_element_type const j) {
                     integrals(j) = 0;
                     ddc::device_for_each(
-                            ddc::DiscreteDomain<BSplines...>(),
-                            [=](ddc::DiscreteDomain<BSplines...>::discrete_element_type const i) {
+                            bsplines_domain,
+                            [&](bsplines_domain_type::discrete_element_type const i) {
                                 integrals(j) += spline_coef(i, j)
                                                 * (cexa::get<s_idx<BSplines>>(values)(
                                                            ddc::DiscreteElement<BSplines>(i))

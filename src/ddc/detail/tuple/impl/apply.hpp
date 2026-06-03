@@ -1,6 +1,12 @@
-// NOLINTBEGIN(readability-identifier-naming)
-// SPDX-FileCopyrightText: 2026 CExA-project
+// Copyright (C) The DDC development team, see COPYRIGHT.md file
+//
+// SPDX-License-Identifier: MIT
+
+// Original copyright statement:
+// SPDX-FileCopyrightText: Copyright (C) The CExA project
 // SPDX-License-Identifier: MIT or Apache-2.0 with LLVM-exception
+
+// NOLINTBEGIN(readability-identifier-naming)
 #pragma once
 
 #include <type_traits>
@@ -24,7 +30,7 @@ constexpr bool is_reference_wrapper_v<std::reference_wrapper<U>> = true;
 
 template <class C, class Pointed, class Object, class... Args>
 KOKKOS_INLINE_FUNCTION constexpr decltype(auto) invoke_ptr(
-        Pointed C::* member,
+        Pointed C::*member,
         Object&& object,
         Args&&... args)
 {

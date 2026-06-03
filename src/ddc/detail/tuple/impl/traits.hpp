@@ -1,6 +1,12 @@
-// NOLINTBEGIN(readability-identifier-naming)
-// SPDX-FileCopyrightText: 2026 CExA-project
+// Copyright (C) The DDC development team, see COPYRIGHT.md file
+//
+// SPDX-License-Identifier: MIT
+
+// Original copyright statement:
+// SPDX-FileCopyrightText: Copyright (C) The CExA project
 // SPDX-License-Identifier: MIT or Apache-2.0 with LLVM-exception
+
+// NOLINTBEGIN(readability-identifier-naming)
 #pragma once
 
 #include <array>
@@ -176,16 +182,20 @@ constexpr inline bool reference_constructs_from_temporary_v
 template <
         class TTuple,
         class UTuple,
-        template <class> class TQual,
-        template <class> class UQual,
+        template <class>
+        class TQual,
+        template <class>
+        class UQual,
         class IndexSeq>
 struct common_reference_helper;
 
 template <
         class TTuple,
         class UTuple,
-        template <class> class TQual,
-        template <class> class UQual,
+        template <class>
+        class TQual,
+        template <class>
+        class UQual,
         std::size_t... Ints>
 struct common_reference_helper<TTuple, UTuple, TQual, UQual, std::index_sequence<Ints...>>
 {

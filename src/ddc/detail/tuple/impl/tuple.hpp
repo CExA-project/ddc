@@ -1,6 +1,12 @@
-// NOLINTBEGIN(readability-identifier-naming)
-// SPDX-FileCopyrightText: 2026 CExA-project
+// Copyright (C) The DDC development team, see COPYRIGHT.md file
+//
+// SPDX-License-Identifier: MIT
+
+// Original copyright statement:
+// SPDX-FileCopyrightText: Copyright (C) The CExA project
 // SPDX-License-Identifier: MIT or Apache-2.0 with LLVM-exception
+
+// NOLINTBEGIN(readability-identifier-naming)
 #pragma once
 
 #include <cstddef>
@@ -172,13 +178,13 @@ struct store<>
 
     KOKKOS_INLINE_FUNCTION constexpr void swap(store&) noexcept {}
 #if defined(CEXA_HAS_CXX23)
-    KOKKOS_INLINE_FUNCTION constexpr void swap(const store&) const noexcept {}
+    KOKKOS_INLINE_FUNCTION constexpr void swap(store const&) const noexcept {}
 #endif
 
 #if defined(CEXA_TUPLE_IMPL_USE_SPACESHIP_OPERATOR)
-    KOKKOS_DEFAULTED_FUNCTION auto operator<=>(const store&) const = default;
+    KOKKOS_DEFAULTED_FUNCTION auto operator<=>(store const&) const = default;
 #else
-    KOKKOS_INLINE_FUNCTION friend constexpr bool operator==(const store<>&, const store<>&)
+    KOKKOS_INLINE_FUNCTION friend constexpr bool operator==(store<> const&, store<> const&)
     {
         return true;
     }
@@ -429,8 +435,10 @@ struct store<T, Types...>
     CEXA_NVCC_HOST_DEVICE_CHECK_DISABLE
     template <class U, class... UTypes>
         requires std::three_way_comparable_with<T, U>
-    KOKKOS_INLINE_FUNCTION constexpr auto operator<=>(store<U, UTypes...> const& rhs) const -> std::
-            common_comparison_category_t<decltype(value <=> rhs.value), decltype(rest <=> rhs.rest)>
+    KOKKOS_INLINE_FUNCTION constexpr auto operator<=>(store<U, UTypes...> const& rhs) const
+            -> std::common_comparison_category_t<
+                    decltype(value <=> rhs.value),
+                    decltype(rest <=> rhs.rest)>
     {
         auto res = value <=> rhs.value;
         return res != 0 ? res : rest <=> rhs.rest;
@@ -504,16 +512,16 @@ public:
 
     KOKKOS_INLINE_FUNCTION constexpr void swap(tuple&) noexcept {}
 #if defined(CEXA_HAS_CXX23)
-    KOKKOS_INLINE_FUNCTION constexpr void swap(const tuple&) const noexcept {}
+    KOKKOS_INLINE_FUNCTION constexpr void swap(tuple const&) const noexcept {}
 #endif
 
 #if defined(CEXA_TUPLE_IMPL_USE_SPACESHIP_OPERATOR)
-    KOKKOS_DEFAULTED_FUNCTION auto operator<=>(const tuple&) const = default;
+    KOKKOS_DEFAULTED_FUNCTION auto operator<=>(tuple const&) const = default;
 #endif
 };
 
 #if !defined(CEXA_TUPLE_IMPL_USE_SPACESHIP_OPERATOR)
-KOKKOS_INLINE_FUNCTION constexpr bool operator==(const tuple<>&, const tuple<>&)
+KOKKOS_INLINE_FUNCTION constexpr bool operator==(tuple<> const&, tuple<> const&)
 {
     return true;
 }
@@ -808,8 +816,8 @@ public:
     = default;
 
 #if defined(CEXA_HAS_CXX23)
-    KOKKOS_INLINE_FUNCTION constexpr const tuple& operator=(const tuple& u) const
-        requires(std::is_copy_assignable_v<const Types> && ...)
+    KOKKOS_INLINE_FUNCTION constexpr const tuple& operator=(tuple const& u) const
+        requires(std::is_copy_assignable_v<Types const> && ...)
     {
         if (this != &u) {
             m_values = u.m_values;
@@ -857,9 +865,9 @@ public:
 #if defined(CEXA_HAS_CXX23)
     template <class... UTypes>
         requires(sizeof...(Types) == sizeof...(UTypes))
-                && std::conjunction_v<std::is_assignable<const Types&, const UTypes&>...>
-    KOKKOS_INLINE_FUNCTION constexpr const tuple& operator=(const tuple<UTypes...>& other) const
-            noexcept((std::is_nothrow_assignable_v<const Types&, const UTypes&> && ...))
+                && std::conjunction_v<std::is_assignable<Types const&, UTypes const&>...>
+    KOKKOS_INLINE_FUNCTION constexpr const tuple& operator=(tuple<UTypes...> const& other) const
+            noexcept((std::is_nothrow_assignable_v<Types const&, UTypes const&> && ...))
     {
         m_values = other.m_values;
         return *this;
@@ -881,7 +889,7 @@ public:
                 && std::conjunction_v<
                         std::is_assignable<T0<Types...>&, const U1&>,
                         std::is_assignable<T1<Types...>&, const U2&>>
-    constexpr tuple& operator=(const std::pair<U1, U2>& p) noexcept(
+    constexpr tuple& operator=(std::pair<U1, U2> const& p) noexcept(
             std::is_nothrow_assignable_v<T0<Types...>&, const U1&>
             && std::is_nothrow_assignable_v<T1<Types...>&, const U2&>)
     {
@@ -914,7 +922,7 @@ public:
                         std::is_assignable<const T0<Types...>&, const U1&>,
                         std::is_assignable<const T1<Types...>&, const U2&>>
     // NOLINTNEXTLINE(misc-unconventional-assign-operator,cppcoreguidelines-c-copy-assignment-signature)
-    constexpr const tuple& operator=(const std::pair<U1, U2>& p) const noexcept(
+    constexpr tuple const& operator=(std::pair<U1, U2> const& p) const noexcept(
             std::is_nothrow_assignable_v<const T0<Types...>&, const U1&>
             && std::is_nothrow_assignable_v<const T1<Types...>&, const U2&>)
     {
@@ -984,8 +992,8 @@ public:
     }
 
 #if defined(CEXA_HAS_CXX23)
-    KOKKOS_INLINE_FUNCTION constexpr void swap(const tuple& rhs) const
-            noexcept((std::is_nothrow_swappable_v<const Types> && ...))
+    KOKKOS_INLINE_FUNCTION constexpr void swap(tuple const& rhs) const
+            noexcept((std::is_nothrow_swappable_v<Types const> && ...))
     {
         return m_values.swap(rhs.m_values);
     }
@@ -1029,7 +1037,7 @@ public:
 #if defined(CEXA_TUPLE_IMPL_USE_SPACESHIP_OPERATOR)
     template <class... UTypes>
         requires(sizeof...(Types) == sizeof...(UTypes))
-    KOKKOS_INLINE_FUNCTION constexpr auto operator<=>(const tuple<UTypes...>& rhs) const
+    KOKKOS_INLINE_FUNCTION constexpr auto operator<=>(tuple<UTypes...> const& rhs) const
     {
         return m_values <=> rhs.m_values;
     }
@@ -1043,7 +1051,7 @@ public:
 #else
     template <class... UTypes>
         requires(sizeof...(Types) == sizeof...(UTypes))
-    KOKKOS_INLINE_FUNCTION constexpr bool operator==(const tuple<UTypes...>& rhs) const
+    KOKKOS_INLINE_FUNCTION constexpr bool operator==(tuple<UTypes...> const& rhs) const
     {
         return m_values == rhs.m_values;
     }
@@ -1159,10 +1167,10 @@ KOKKOS_INLINE_FUNCTION constexpr void swap(tuple<Types...>& lhs, tuple<Types...>
 
 #if defined(CEXA_HAS_CXX23)
 template <class... Types>
-    requires(std::is_swappable_v<const Types> && ...)
+    requires(std::is_swappable_v<Types const> && ...)
 KOKKOS_INLINE_FUNCTION constexpr void swap(
-        const tuple<Types...>& lhs,
-        const tuple<Types...>& rhs) noexcept((std::is_nothrow_swappable_v<const Types> && ...))
+        tuple<Types...> const& lhs,
+        tuple<Types...> const& rhs) noexcept((std::is_nothrow_swappable_v<Types const> && ...))
 {
     lhs.swap(rhs);
 }

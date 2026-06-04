@@ -501,7 +501,7 @@ public:
         static_assert(ddc::is_discrete_element_v<DElem>);
 
         using evaluation_domain_type = ddc::DiscreteDomain<EvaluationDDim...>;
-        evaluation_domain_type evaluation_domain(spline_eval.domain());
+        evaluation_domain_type const evaluation_domain(spline_eval.domain());
 
         batch_domain_type<BatchedInterpolationDDom> const batch_domain(spline_eval.domain());
 

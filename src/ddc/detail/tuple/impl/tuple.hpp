@@ -435,10 +435,8 @@ struct store<T, Types...>
     CEXA_NVCC_HOST_DEVICE_CHECK_DISABLE
     template <class U, class... UTypes>
         requires std::three_way_comparable_with<T, U>
-    KOKKOS_INLINE_FUNCTION constexpr auto operator<=>(store<U, UTypes...> const& rhs) const
-            -> std::common_comparison_category_t<
-                    decltype(value <=> rhs.value),
-                    decltype(rest <=> rhs.rest)>
+    KOKKOS_INLINE_FUNCTION constexpr auto operator<=>(store<U, UTypes...> const& rhs) const -> std::
+            common_comparison_category_t<decltype(value <=> rhs.value), decltype(rest <=> rhs.rest)>
     {
         auto res = value <=> rhs.value;
         return res != 0 ? res : rest <=> rhs.rest;

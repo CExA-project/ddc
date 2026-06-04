@@ -182,20 +182,16 @@ constexpr inline bool reference_constructs_from_temporary_v
 template <
         class TTuple,
         class UTuple,
-        template <class>
-        class TQual,
-        template <class>
-        class UQual,
+        template <class> class TQual,
+        template <class> class UQual,
         class IndexSeq>
 struct common_reference_helper;
 
 template <
         class TTuple,
         class UTuple,
-        template <class>
-        class TQual,
-        template <class>
-        class UQual,
+        template <class> class TQual,
+        template <class> class UQual,
         std::size_t... Ints>
 struct common_reference_helper<TTuple, UTuple, TQual, UQual, std::index_sequence<Ints...>>
 {

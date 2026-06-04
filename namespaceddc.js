@@ -2,6 +2,7 @@ var namespaceddc =
 [
     [ "concepts", "namespaceddc_1_1concepts.html", "namespaceddc_1_1concepts" ],
     [ "experimental", "namespaceddc_1_1experimental.html", [
+      [ "parallel_transform_reduce", "namespaceddc_1_1experimental.html#aed6f6dc5725522401a5b64485b641a34", null ],
       [ "save_npy", "namespaceddc_1_1experimental.html#a7c515154bf14c169159c7cfed5cd17e0", null ],
       [ "save_npy", "namespaceddc_1_1experimental.html#a67f84b332a37c86410f764cec2b72b9c", null ]
     ] ],

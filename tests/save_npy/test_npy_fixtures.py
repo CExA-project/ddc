@@ -23,8 +23,13 @@ def gen_array_0d(dtype):
 
 
 def gen_array_1d(dtype):
-    """Generate a 1D NumPy array of length 24 filled with a dtype-specific value."""
-    return np.full(shape=(2 * 3 * 4), fill_value=gen_value(dtype), order="C")
+    """Generate a 1D NumPy array of length 2 filled with a dtype-specific value."""
+    return np.full(shape=(2), fill_value=gen_value(dtype), order="C")
+
+
+def gen_array_2d(dtype):
+    """Generate a 2D NumPy array (2x4) filled with a dtype-specific value."""
+    return np.full(shape=(2, 4), fill_value=gen_value(dtype), order="C")
 
 
 def gen_array_3d(dtype):
@@ -40,6 +45,11 @@ def test_0d():
 def test_1d():
     """Test loading and equality of a 1D float64 array."""
     np.testing.assert_array_equal(np.load("double_1d.npy"), gen_array_1d(np.float64), strict=True)
+
+
+def test_2d():
+    """Test loading and equality of a 2D float64 array."""
+    np.testing.assert_array_equal(np.load("double_2d.npy"), gen_array_2d(np.float64), strict=True)
 
 
 def test_3d():

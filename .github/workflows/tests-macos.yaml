@@ -50,135 +50,41 @@ jobs:
             c_compiler: 'clang'
             cxx_compiler: 'clang++'
             ddc_extra_cxx_flags: '-Wextra-semi -Wextra-semi-stmt -Wold-style-cast'
-            kokkos_extra_cmake_flags: ''
         cxx_version: ['20', '23']
         cmake_build_type: ['Debug', 'Release']
         os: [macos-14, macos-15]
     runs-on: ${{matrix.os}}
     env:
-      DDC_ROOT: ${{github.workspace}}/opt/ddc
-      Ginkgo_ROOT: ${{github.workspace}}/opt/ginkgo
-      Kokkos_ROOT: ${{github.workspace}}/opt/kokkos
-      KokkosFFT_ROOT: ${{github.workspace}}/opt/kokkos-fft
-      KokkosKernels_ROOT: ${{github.workspace}}/opt/kokkos-kernels
-      PDI_ROOT: ${{github.workspace}}/opt/pdi
       CMAKE_BUILD_PARALLEL_LEVEL: 4
-      PKG_CONFIG_PATH: /opt/homebrew/opt/lapack/lib/pkgconfig
-      LAPACKE_ROOT: /opt/homebrew/opt/lapack
-      CC: ${{matrix.backend.c_compiler}}
-      CXX: ${{matrix.backend.cxx_compiler}}
       CMAKE_BUILD_TYPE: ${{matrix.cmake_build_type}}
+      DDC_ROOT: ${{github.workspace}}/opt/ddc
+    permissions:
+      packages: write  # Required to push to registry
     steps:
       - name: Checkout built branch
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
+      - name: Set up Spack
+        uses: spack/setup-spack@16b756799ede8b28951287f89bcd3fdb32ec1ca3  # v3.0.0
         with:
-          repository: pdidev/pdi
-          ref: 1.10.1
-          path: pdi
-      - name: Install PDI+user code plugin and dependencies
+          spack_ref: v1.1.1
+          buildcache: true
+      - name: Install
+        shell: spack-bash {0}
         run: |
-          cmake \
-            -D BUILD_BENCHMARKING=OFF \
-            -D BUILD_DECL_HDF5_PLUGIN=ON \
-            -D BUILD_DECL_NETCDF_PLUGIN=OFF \
-            -D BUILD_DOCUMENTATION=OFF \
-            -D BUILD_FORTRAN=OFF \
-            -D BUILD_HDF5_PARALLEL=OFF \
-            -D BUILD_MPI_PLUGIN=OFF \
-            -D BUILD_PYCALL_PLUGIN=OFF \
-            -D BUILD_SERIALIZE_PLUGIN=OFF \
-            -D BUILD_SET_VALUE_PLUGIN=OFF \
-            -D BUILD_TESTING=OFF \
-            -D BUILD_TRACE_PLUGIN=OFF \
-            -D BUILD_USER_CODE_PLUGIN=ON \
-            -D CMAKE_CXX_FLAGS="-Wno-unqualified-std-cast-call" \
-            -D CMAKE_CXX_STANDARD=17 \
-            -B build \
-            -S ./pdi
-          cmake --build build
-          cmake --install build --prefix $PDI_ROOT
-          rm -rf build
-      - name: Install fftw
-        run: brew install fftw
-      - name: Install lapack
-        run: brew install lapack
-      - name: Install Google Test
-        run: brew install googletest
-      - name: Install Google benchmark
-        run: brew install google-benchmark
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
-        with:
-          repository: ginkgo-project/ginkgo
-          ref: v1.11.0
-          path: ginkgo
-      - name: Install Ginkgo
-        run: |
-          cmake \
-            -D GINKGO_BUILD_BENCHMARKS=OFF \
-            -D GINKGO_BUILD_EXAMPLES=OFF \
-            -D GINKGO_BUILD_MPI=OFF \
-            -D GINKGO_BUILD_REFERENCE=ON \
-            -D GINKGO_BUILD_TESTS=OFF \
-            -B build \
-            -S ./ginkgo
-          cmake --build build
-          cmake --install build --prefix $Ginkgo_ROOT
-          rm -rf build
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
-        with:
-          repository: kokkos/kokkos
-          ref: 5.0.2
-          path: kokkos
-      - name: Install Kokkos
-        run: |
-          cmake \
-            -D Kokkos_ENABLE_DEPRECATED_CODE_4=OFF \
-            -D Kokkos_ENABLE_DEPRECATION_WARNINGS=OFF \
-            -D Kokkos_ENABLE_SERIAL=ON \
-            ${{matrix.backend.kokkos_extra_cmake_flags}} \
-            -B build \
-            -S ./kokkos
-          cmake --build build
-          cmake --install build --prefix $Kokkos_ROOT
-          rm -rf build
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
-        with:
-          repository: kokkos/kokkos-fft
-          ref: v1.0.0
-          path: kokkos-fft
-      - name: Install Kokkos-fft
-        run: |
-          cmake \
-            -D KokkosFFT_ENABLE_FFTW=ON \
-            -B build \
-            -S ./kokkos-fft
-          cmake --build build
-          cmake --install build --prefix $KokkosFFT_ROOT
-          rm -rf build
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
-        with:
-          repository: kokkos/kokkos-kernels
-          ref: 5.0.2
-          path: kokkos-kernels
-      - name: Install Kokkos Kernels
-        run: |
-          cmake \
-            -D KokkosKernels_ADD_DEFAULT_ETI=OFF \
-            -D KokkosKernels_ENABLE_ALL_COMPONENTS=OFF \
-            -D KokkosKernels_ENABLE_COMPONENT_BLAS=ON \
-            -D KokkosKernels_ENABLE_COMPONENT_BATCHED=ON \
-            -D KokkosKernels_ENABLE_COMPONENT_LAPACK=OFF \
-            -D KokkosKernels_ENABLE_TPL_BLAS=OFF \
-            -D KokkosKernels_ENABLE_TPL_CUSOLVER=OFF \
-            -D KokkosKernels_ENABLE_TPL_LAPACK=OFF \
-            -B build \
-            -S ./kokkos-kernels
-          cmake --build build
-          cmake --install build --prefix $KokkosKernels_ROOT
-          rm -rf build
+          spack env create . spack-env/spack-${{matrix.os}}.yaml
+          spack --env . repo update
+          spack --env . install
+      - name: Push packages and update index
+        shell: spack-bash {0}
+        env:
+          GITHUB_USER: ${{github.actor}}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        run: spack --env . buildcache push --update-index local-buildcache
+        if: ${{!cancelled()}}
       - name: Build DDC
+        shell: spack-bash {0}
         run: |
+          spack env activate .
           cmake \
             -D CMAKE_CXX_FLAGS="-Werror -Wall -Wextra -Wpedantic -Wno-sign-compare -pedantic-errors ${{matrix.backend.ddc_extra_cxx_flags}}" \
             -D CMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
@@ -187,11 +93,13 @@ jobs:
             -D DDC_GTest_DEPENDENCY_POLICY=INSTALLED \
             -D DDC_Kokkos_DEPENDENCY_POLICY=INSTALLED \
             -D DDC_KokkosFFT_DEPENDENCY_POLICY=INSTALLED \
-            -D BLA_PREFER_PKGCONFIG=ON \
             -B build
           cmake --build build
       - name: Run unit tests
-        run: ctest --test-dir build --output-on-failure --timeout 25 --output-junit tests.xml
+        shell: spack-bash {0}
+        run: |
+          spack env activate .
+          ctest --test-dir build --output-on-failure --timeout 25 --output-junit tests.xml
       - name: Publish Test Report
         uses: mikepenz/action-junit-report@3a81627bfac62268172037048872e8ebd4207e6d  # v6.4.1
         if: ( success() || failure() )  # always run even if the previous step fails
@@ -199,11 +107,15 @@ jobs:
           annotate_only: true  # forked repo cannot write to checks so just do annotations
           report_paths: '${{github.workspace}}/build/tests.xml'
       - name: Install DDC
+        shell: spack-bash {0}
         run: |
+          spack env activate .
           cmake --install build --prefix $DDC_ROOT
           rm -rf build
       - name: Run install tests
+        shell: spack-bash {0}
         run: |
+          spack env activate .
           cmake \
             -B build \
             -S ./install_test

@@ -2,7 +2,6 @@
 //
 // SPDX-License-Identifier: MIT
 
-#include <array>
 #include <cmath>
 #include <complex>
 #include <cstdint>
@@ -13,10 +12,46 @@
 
 #include <Kokkos_Core.hpp>
 
+struct DDimX
+{
+};
+using DElemX = ddc::DiscreteElement<DDimX>;
+using DVectX = ddc::DiscreteVector<DDimX>;
+using DDomX = ddc::DiscreteDomain<DDimX>;
+
+
+struct DDimY
+{
+};
+using DElemY = ddc::DiscreteElement<DDimY>;
+using DVectY = ddc::DiscreteVector<DDimY>;
+using DDomY = ddc::DiscreteDomain<DDimY>;
+
+
+struct DDimZ
+{
+};
+using DElemZ = ddc::DiscreteElement<DDimZ>;
+using DVectZ = ddc::DiscreteVector<DDimZ>;
+using DDomZ = ddc::DiscreteDomain<DDimZ>;
+
+using DElemXYZ = ddc::DiscreteElement<DDimX, DDimY, DDimZ>;
+using DVectXYZ = ddc::DiscreteVector<DDimX, DDimY, DDimZ>;
+using DDomXYZ = ddc::DiscreteDomain<DDimX, DDimY, DDimZ>;
+
 namespace {
 
-std::array constexpr ns {2, 3, 4};
-int constexpr n = ns[0] * ns[1] * ns[2];
+DElemX constexpr lbound_x = ddc::init_trivial_half_bounded_space<DDimX>();
+DVectX constexpr nelems_x(2);
+
+DElemY constexpr lbound_y = ddc::init_trivial_half_bounded_space<DDimY>();
+DVectY constexpr nelems_y(3);
+
+DElemZ constexpr lbound_z = ddc::init_trivial_half_bounded_space<DDimZ>();
+DVectZ constexpr nelems_z(4);
+
+DElemXYZ constexpr lbound_x_y_z(lbound_x, lbound_y, lbound_z);
+DVectXYZ constexpr nelems_x_y_z(nelems_x, nelems_y, nelems_z);
 
 template <typename T>
 constexpr T make_value()
@@ -38,31 +73,41 @@ constexpr T make_value()
 template <typename T>
 void save_array_0d(std::filesystem::path const& path, T value)
 {
-    Kokkos::View<T, Kokkos::HostSpace> const alloc("");
-    Kokkos::deep_copy(alloc, value);
-    Kokkos::mdspan const view(alloc.data());
+    ddc::DiscreteDomain<> const dom;
+    ddc::Chunk chk(dom, ddc::DeviceAllocator<T>());
+    ddc::parallel_fill(chk, value);
 
-    ddc::experimental::save_npy(path, view);
+    ddc::experimental::save_npy(path, chk.span_cview());
 }
 
 template <typename T>
 void save_array_1d(std::filesystem::path const& path, T value)
 {
-    Kokkos::View<T*, Kokkos::HostSpace> const alloc("", n);
-    Kokkos::deep_copy(alloc, value);
-    Kokkos::mdspan const view(alloc.data(), n);
+    DDomX const dom(lbound_x, nelems_x);
+    ddc::Chunk chk(dom, ddc::DeviceAllocator<T>());
+    ddc::parallel_fill(chk, value);
 
-    ddc::experimental::save_npy(path, view);
+    ddc::experimental::save_npy(path, chk.span_cview());
+}
+
+template <typename T>
+void save_array_2d_slice(std::filesystem::path const& path, T value)
+{
+    DDomXYZ const dom(lbound_x_y_z, nelems_x_y_z);
+    ddc::Chunk chk(dom, ddc::DeviceAllocator<T>());
+    ddc::parallel_fill(chk, value);
+
+    ddc::experimental::save_npy(path, chk[DVectY(2)].span_cview());
 }
 
 template <typename T>
 void save_array_3d(std::filesystem::path const& path, T value)
 {
-    Kokkos::View<T*, Kokkos::HostSpace> const alloc("", n);
-    Kokkos::deep_copy(alloc, value);
-    Kokkos::mdspan const view(alloc.data(), ns);
+    DDomXYZ const dom(lbound_x_y_z, nelems_x_y_z);
+    ddc::Chunk chk(dom, ddc::DeviceAllocator<T>());
+    ddc::parallel_fill(chk, value);
 
-    ddc::experimental::save_npy(path, view);
+    ddc::experimental::save_npy(path, chk.span_cview());
 }
 
 } // namespace
@@ -75,6 +120,8 @@ int main(int argc, char** argv)
     save_array_0d("./float_0d.npy", make_value<float>());
 
     save_array_1d("./double_1d.npy", make_value<double>());
+
+    save_array_2d_slice("./double_2d.npy", make_value<double>());
 
     save_array_3d("./int8_3d.npy", make_value<std::int8_t>());
     save_array_3d("./int16_3d.npy", make_value<std::int16_t>());

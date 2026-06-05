@@ -15,6 +15,9 @@
 
 #include <Kokkos_Core.hpp>
 
+#include "chunk_span.hpp"
+#include "create_mirror.hpp"
+
 namespace ddc::detail {
 
 enum class NpyByteOrder : char { little_endian = '<', big_endian = '>', not_applicable = '|' };
@@ -110,45 +113,40 @@ void save_npy(std::filesystem::path const& filename, NpyArrayView const& view);
 namespace ddc::experimental {
 
 /**
- * @brief Save a contiguous mdspan in the NumPy format in a stream.
- *
- * Supports Kokkos::layout_left and Kokkos::layout_right layouts with
- * host-accessible default accessors.
+ * @brief Save a ddc::ChunkSpan in the NumPy format in a stream.
  *
  * @param os Output stream receiving the .npy data.
- * @param mds mdspan to serialize.
+ * @param chunk_span ChunkSpan to serialize.
  */
-template <typename T, typename Extents, typename Layout, typename Accessor>
-void save_npy(std::ostream& os, Kokkos::mdspan<T, Extents, Layout, Accessor> const& mds)
+template <typename T, typename SupportType, typename LayoutStridedPolicy, typename MemorySpace>
+void save_npy(
+        std::ostream& os,
+        ChunkSpan<T, SupportType, LayoutStridedPolicy, MemorySpace> const& chunk_span)
 {
-    static_assert(
-            std::is_same_v<Layout, Kokkos::layout_left>
-                    || std::is_same_v<Layout, Kokkos::layout_right>,
-            "save_npy: only contiguous layouts supported.");
-
-    ddc::detail::save_npy(os, ddc::detail::to_np_array_view(mds));
+    auto chunk_span_right = ::ddc::detail::create_layout_right_view_and_copy(chunk_span);
+    auto chunk_span_right_host
+            = create_mirror_view_and_copy(Kokkos::HostSpace(), chunk_span_right.span_view());
+    ddc::detail::
+            save_npy(os, ddc::detail::to_np_array_view(chunk_span_right_host.allocation_mdspan()));
 }
 
 /**
- * @brief Save a contiguous mdspan in the NumPy format in a file.
- *
- * Supports Kokkos::layout_left and Kokkos::layout_right layouts with
- * host-accessible default accessors.
+ * @brief Save a ddc::ChunkSpan in the NumPy format in a file.
  *
  * @param filename Path to the output .npy file.
- * @param mds mdspan to serialize.
+ * @param chunk_span ChunkSpan to serialize.
  */
-template <typename T, typename Extents, typename Layout, typename Accessor>
+template <typename T, typename SupportType, typename LayoutStridedPolicy, typename MemorySpace>
 void save_npy(
         std::filesystem::path const& filename,
-        Kokkos::mdspan<T, Extents, Layout, Accessor> const& mds)
+        ChunkSpan<T, SupportType, LayoutStridedPolicy, MemorySpace> const& chunk_span)
 {
-    static_assert(
-            std::is_same_v<Layout, Kokkos::layout_left>
-                    || std::is_same_v<Layout, Kokkos::layout_right>,
-            "save_npy: only contiguous layouts supported.");
-
-    ddc::detail::save_npy(filename, ddc::detail::to_np_array_view(mds));
+    auto chunk_span_right = ::ddc::detail::create_layout_right_view_and_copy(chunk_span);
+    auto chunk_span_right_host
+            = create_mirror_view_and_copy(Kokkos::HostSpace(), chunk_span_right.span_view());
+    ddc::detail::save_npy(
+            filename,
+            ddc::detail::to_np_array_view(chunk_span_right_host.allocation_mdspan()));
 }
 
 } // namespace ddc::experimental

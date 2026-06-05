@@ -43,6 +43,8 @@ spack:
     - 'pdiplugin-decl-hdf5@1.10.1:1.10'
     - 'pdiplugin-user-code@1.10.1:1.10'
     - 'pdiplugin-trace@1.10.1:1.10'
+    - 'py-numpy@1.24'
+    - 'py-pytest@8.4'
   view:
     default:
       root: .spack-env/view

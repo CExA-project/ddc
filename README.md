@@ -44,6 +44,8 @@ To use DDC core, one needs the following dependencies:
 * (optional, micro benchmarking) Benchmark 1.8...<2
 * (optional, documentation) Doxygen 1.9.8...<2
 * (optional, unit-testing) GoogleTest 1.14...<2
+* (optional, unit-testing) NumPy 1.24...<3
+* (optional, unit-testing) pytest 8.4...<10
 
 To use DDC components, one needs the following dependencies:
 

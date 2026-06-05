@@ -71,6 +71,7 @@ var namespaceddc =
     [ "SplineEvaluator", "classddc_1_1SplineEvaluator.html", "classddc_1_1SplineEvaluator" ],
     [ "SplineEvaluator2D", "classddc_1_1SplineEvaluator2D.html", "classddc_1_1SplineEvaluator2D" ],
     [ "SplineEvaluator3D", "classddc_1_1SplineEvaluator3D.html", "classddc_1_1SplineEvaluator3D" ],
+    [ "SplineEvaluatorND", "namespaceddc.html#classddc_1_1SplineEvaluatorND", null ],
     [ "StridedDiscreteDomain", "classddc_1_1StridedDiscreteDomain.html", "classddc_1_1StridedDiscreteDomain" ],
     [ "StridedDiscreteDomain<>", "classddc_1_1StridedDiscreteDomain_3_4.html", "classddc_1_1StridedDiscreteDomain_3_4" ],
     [ "StridedDiscreteDomainIterator", "structddc_1_1StridedDiscreteDomainIterator.html", "structddc_1_1StridedDiscreteDomainIterator" ],

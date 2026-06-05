@@ -292,6 +292,11 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1SplineEvaluator3D.html">SplineEvaluator3D</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A class to evaluate, differentiate or integrate a 3D spline function.  <a href="classddc_1_1SplineEvaluator3D.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:classddc_1_1SplineEvaluatorND" id="r_classddc_1_1SplineEvaluatorND"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceddc.html#classddc_1_1SplineEvaluatorND">SplineEvaluatorND</a></td></tr>
+<tr class="memdesc:classddc_1_1SplineEvaluatorND"><td class="mdescLeft">&#160;</td><td class="mdescRight">A class to evaluate, differentiate or integrate a spline function of arbitrary dimension.  <a href="namespaceddc.html#classddc_1_1SplineEvaluatorND">More...</a><br /></td></tr>
+<tr class="separator:classddc_1_1SplineEvaluatorND"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:classddc_1_1SplineEvaluatorND_3_01ExecSpace_00_01MemorySpace_00_01detail_1_1TypeSeq_3_01BSplinesd54c83af3c1d68954fb3e4b73f52c3ef" id="r_classddc_1_1SplineEvaluatorND_3_01ExecSpace_00_01MemorySpace_00_01detail_1_1TypeSeq_3_01BSplinesd54c83af3c1d68954fb3e4b73f52c3ef"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><b>SplineEvaluatorND&lt; ExecSpace, MemorySpace, detail::TypeSeq&lt; BSplines... &gt;, detail::TypeSeq&lt; EvaluationDDim... &gt;, detail::TypeSeq&lt; ExtrapolationRule... &gt; &gt;</b></td></tr>
+<tr class="separator:classddc_1_1SplineEvaluatorND_3_01ExecSpace_00_01MemorySpace_00_01detail_1_1TypeSeq_3_01BSplinesd54c83af3c1d68954fb3e4b73f52c3ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1StridedDiscreteDomain.html">StridedDiscreteDomain</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1StridedDiscreteDomain_3_4.html">StridedDiscreteDomain&lt;&gt;</a></td></tr>
@@ -1235,6 +1240,46 @@ normalization</td>
 <td class="fielddoc">
 Enum member to identify the type of normalization performed. </td></tr>
 </table>
+
+</div>
+</div>
+<a name="classddc_1_1SplineEvaluatorND" id="classddc_1_1SplineEvaluatorND"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#classddc_1_1SplineEvaluatorND">&#9670;&#160;</a></span>ddc::SplineEvaluatorND</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">class ddc::SplineEvaluatorND</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<div class="textblock"><div class="compoundTemplParams">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ExecSpace</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BSplines</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">EvaluationDDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ExtrapolationRule</a>&gt;<br />
+class ddc::SplineEvaluatorND&lt; ExecSpace, MemorySpace, BSplines, EvaluationDDim, ExtrapolationRule &gt;</div><p>A class to evaluate, differentiate or integrate a spline function of arbitrary dimension. </p>
+<p>A class which contains an operator () which can be used to evaluate, differentiate or integrate a spline function of arbitrary dimension.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">Args...</td><td>The template parameters of the evaluator:<ul>
+<li>ExecSpace The Kokkos execution space on which the spline evaluation is performed.</li>
+<li>MemorySpace The Kokkos memory space on which the data (spline coefficients and evaluation) is stored.</li>
+<li>BSplines A TypeSeq containing the N discrete dimensions representing the B-splines along the dimensions of interest.</li>
+<li>EvaluationDDim A TypeSeq containing the discrete dimensions on which evaluation points are defined.</li>
+<li>ExtrapolationRule A TypeSeq containing the lower and upper extrapolation rules along each dimension of interest. </li>
+</ul>
+</td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="spline__evaluator__nd_8hpp_source.html#l00041">41</a> of file <a class="el" href="spline__evaluator__nd_8hpp_source.html">spline_evaluator_nd.hpp</a>.</p>
+</div><div class="dynheader">
+Collaboration diagram for ddc::SplineEvaluatorND&lt; ExecSpace, MemorySpace, BSplines, EvaluationDDim, ExtrapolationRule &gt;:</div>
+<div class="dyncontent">
+<div class="center"><img src="classddc_1_1SplineEvaluatorND__coll__graph.png" border="0" usemap="#addc_1_1SplineEvaluatorND_3_01ExecSpace_00_01MemorySpace_00_01BSplines_00_01EvaluationDDim_00_01ExtrapolationRule_01_4_coll__map" alt="Collaboration graph"/></div>
+<map name="addc_1_1SplineEvaluatorND_3_01ExecSpace_00_01MemorySpace_00_01BSplines_00_01EvaluationDDim_00_01ExtrapolationRule_01_4_coll__map" id="addc_1_1SplineEvaluatorND_3_01ExecSpace_00_01MemorySpace_00_01BSplines_00_01EvaluationDDim_00_01ExtrapolationRule_01_4_coll__map">
+<area shape="rect" title="A class to evaluate, differentiate or integrate a spline function of arbitrary dimension." alt="" coords="5,5,208,115"/>
+</map>
+</div>
 
 </div>
 </div>

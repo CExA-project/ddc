@@ -15,8 +15,9 @@ var searchData=
   ['splineevaluator_12',['SplineEvaluator',['../classddc_1_1SplineEvaluator.html',1,'ddc']]],
   ['splineevaluator2d_13',['SplineEvaluator2D',['../classddc_1_1SplineEvaluator2D.html',1,'ddc']]],
   ['splineevaluator3d_14',['SplineEvaluator3D',['../classddc_1_1SplineEvaluator3D.html',1,'ddc']]],
-  ['strideddiscretedomain_15',['StridedDiscreteDomain',['../classddc_1_1StridedDiscreteDomain.html',1,'ddc']]],
-  ['strideddiscretedomain_3c_3e_16',['StridedDiscreteDomain&lt;&gt;',['../classddc_1_1StridedDiscreteDomain_3_4.html',1,'ddc']]],
-  ['strideddiscretedomainiterator_17',['StridedDiscreteDomainIterator',['../structddc_1_1StridedDiscreteDomainIterator.html',1,'ddc']]],
-  ['sum_18',['sum',['../structddc_1_1reducer_1_1sum.html',1,'ddc::reducer']]]
+  ['splineevaluatornd_15',['SplineEvaluatorND',['../namespaceddc.html#classddc_1_1SplineEvaluatorND',1,'ddc']]],
+  ['strideddiscretedomain_16',['StridedDiscreteDomain',['../classddc_1_1StridedDiscreteDomain.html',1,'ddc']]],
+  ['strideddiscretedomain_3c_3e_17',['StridedDiscreteDomain&lt;&gt;',['../classddc_1_1StridedDiscreteDomain_3_4.html',1,'ddc']]],
+  ['strideddiscretedomainiterator_18',['StridedDiscreteDomainIterator',['../structddc_1_1StridedDiscreteDomainIterator.html',1,'ddc']]],
+  ['sum_19',['sum',['../structddc_1_1reducer_1_1sum.html',1,'ddc::reducer']]]
 ];

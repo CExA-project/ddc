@@ -95,6 +95,7 @@ var hierarchy =
     [ "ddc::SplineEvaluator< ExecSpace, MemorySpace, BSplines, EvaluationDDim, LowerExtrapolationRule, UpperExtrapolationRule >", "classddc_1_1SplineEvaluator.html", null ],
     [ "ddc::SplineEvaluator2D< ExecSpace, MemorySpace, BSplines1, BSplines2, EvaluationDDim1, EvaluationDDim2, LowerExtrapolationRule1, UpperExtrapolationRule1, LowerExtrapolationRule2, UpperExtrapolationRule2 >", "classddc_1_1SplineEvaluator2D.html", null ],
     [ "ddc::SplineEvaluator3D< ExecSpace, MemorySpace, BSplines1, BSplines2, BSplines3, EvaluationDDim1, EvaluationDDim2, EvaluationDDim3, LowerExtrapolationRule1, UpperExtrapolationRule1, LowerExtrapolationRule2, UpperExtrapolationRule2, LowerExtrapolationRule3, UpperExtrapolationRule3 >", "classddc_1_1SplineEvaluator3D.html", null ],
+    [ "ddc::SplineEvaluatorND< ExecSpace, MemorySpace, BSplines, EvaluationDDim, ExtrapolationRule >", "namespaceddc.html#classddc_1_1SplineEvaluatorND", null ],
     [ "ddc::StridedDiscreteDomain< DDims >", "classddc_1_1StridedDiscreteDomain.html", null ],
     [ "ddc::StridedDiscreteDomain<>", "classddc_1_1StridedDiscreteDomain_3_4.html", null ],
     [ "ddc::StridedDiscreteDomainIterator< DDim >", "structddc_1_1StridedDiscreteDomainIterator.html", null ],

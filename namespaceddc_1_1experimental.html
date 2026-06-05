@@ -132,14 +132,14 @@ requires (<a class="el" href="namespaceddc.html#a00ef862a4d77c604c3818f628e134a5
 <tr class="memitem:aed6f6dc5725522401a5b64485b641a34"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">void</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc_1_1experimental.html#aed6f6dc5725522401a5b64485b641a34">parallel_transform_reduce</a> (std::string <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;label, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ExecSpace</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">execution_space</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Support</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;domain, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ChunkDst</a> &amp;&amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">out</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">BinaryReductionOp</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">reduce</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">UnaryTransformOp</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">transform</a>) <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">noexcept</a></td></tr>
 <tr class="memdesc:aed6f6dc5725522401a5b64485b641a34"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs a parallel transform-reduce over an nD domain using a Kokkos execution space.  <br /></td></tr>
 <tr class="separator:aed6f6dc5725522401a5b64485b641a34"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7c515154bf14c169159c7cfed5cd17e0" id="r_a7c515154bf14c169159c7cfed5cd17e0"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> T , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Extents</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Accessor</a> &gt; </td></tr>
-<tr class="memitem:a7c515154bf14c169159c7cfed5cd17e0"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">void</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc_1_1experimental.html#a7c515154bf14c169159c7cfed5cd17e0">save_npy</a> (std::ostream &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">os</a>, Kokkos::mdspan&lt; T, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Extents</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Accessor</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">mds</a>)</td></tr>
-<tr class="memdesc:a7c515154bf14c169159c7cfed5cd17e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Save a contiguous mdspan in the NumPy format in a stream.  <br /></td></tr>
-<tr class="separator:a7c515154bf14c169159c7cfed5cd17e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a67f84b332a37c86410f764cec2b72b9c" id="r_a67f84b332a37c86410f764cec2b72b9c"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> T , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Extents</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Accessor</a> &gt; </td></tr>
-<tr class="memitem:a67f84b332a37c86410f764cec2b72b9c"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">void</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc_1_1experimental.html#a67f84b332a37c86410f764cec2b72b9c">save_npy</a> (std::filesystem::path <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">filename</a>, Kokkos::mdspan&lt; T, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Extents</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Accessor</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">mds</a>)</td></tr>
-<tr class="memdesc:a67f84b332a37c86410f764cec2b72b9c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Save a contiguous mdspan in the NumPy format in a file.  <br /></td></tr>
-<tr class="separator:a67f84b332a37c86410f764cec2b72b9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a41a45ce1dd193198368779f3691ca328" id="r_a41a45ce1dd193198368779f3691ca328"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> T , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">SupportType</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">LayoutStridedPolicy</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt; </td></tr>
+<tr class="memitem:a41a45ce1dd193198368779f3691ca328"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">void</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc_1_1experimental.html#a41a45ce1dd193198368779f3691ca328">save_npy</a> (std::ostream &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">os</a>, <a class="el" href="classddc_1_1ChunkSpan.html">ChunkSpan</a>&lt; T, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">SupportType</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">LayoutStridedPolicy</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">chunk_span</a>)</td></tr>
+<tr class="memdesc:a41a45ce1dd193198368779f3691ca328"><td class="mdescLeft">&#160;</td><td class="mdescRight">Save a <a class="el" href="classddc_1_1ChunkSpan.html">ddc::ChunkSpan</a> in the NumPy format in a stream.  <br /></td></tr>
+<tr class="separator:a41a45ce1dd193198368779f3691ca328"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8278d857021b75ca84301632ab3934aa" id="r_a8278d857021b75ca84301632ab3934aa"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> T , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">SupportType</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">LayoutStridedPolicy</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt; </td></tr>
+<tr class="memitem:a8278d857021b75ca84301632ab3934aa"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">void</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc_1_1experimental.html#a8278d857021b75ca84301632ab3934aa">save_npy</a> (std::filesystem::path <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">filename</a>, <a class="el" href="classddc_1_1ChunkSpan.html">ChunkSpan</a>&lt; T, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">SupportType</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">LayoutStridedPolicy</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">chunk_span</a>)</td></tr>
+<tr class="memdesc:a8278d857021b75ca84301632ab3934aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Save a <a class="el" href="classddc_1_1ChunkSpan.html">ddc::ChunkSpan</a> in the NumPy format in a file.  <br /></td></tr>
+<tr class="separator:a8278d857021b75ca84301632ab3934aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="aed6f6dc5725522401a5b64485b641a34" name="aed6f6dc5725522401a5b64485b641a34"></a>
@@ -221,13 +221,13 @@ requires (<a class="el" href="namespaceddc.html#a00ef862a4d77c604c3818f628e134a5
 
 </div>
 </div>
-<a id="a7c515154bf14c169159c7cfed5cd17e0" name="a7c515154bf14c169159c7cfed5cd17e0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7c515154bf14c169159c7cfed5cd17e0">&#9670;&#160;</a></span>save_npy() <span class="overload">[1/2]</span></h2>
+<a id="a41a45ce1dd193198368779f3691ca328" name="a41a45ce1dd193198368779f3691ca328"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a41a45ce1dd193198368779f3691ca328">&#9670;&#160;</a></span>save_npy() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> T , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Extents</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Accessor</a> &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> T , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">SupportType</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">LayoutStridedPolicy</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt; </div>
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">void</a> ddc::experimental::save_npy </td>
@@ -238,8 +238,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Kokkos::mdspan&lt; T, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Extents</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Accessor</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
-          <td class="paramname"><em>mds</em>&#160;</td>
+          <td class="paramtype"><a class="el" href="classddc_1_1ChunkSpan.html">ChunkSpan</a>&lt; T, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">SupportType</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">LayoutStridedPolicy</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
+          <td class="paramname"><em>chunk_span</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -249,12 +249,11 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
       </table>
 </div><div class="memdoc">
 
-<p>Save a contiguous mdspan in the NumPy format in a stream. </p>
-<p>Supports Kokkos::layout_left and Kokkos::layout_right layouts with host-accessible default accessors.</p>
+<p>Save a <a class="el" href="classddc_1_1ChunkSpan.html">ddc::ChunkSpan</a> in the NumPy format in a stream. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">os</td><td>Output stream receiving the .npy data. </td></tr>
-    <tr><td class="paramname">mds</td><td>mdspan to serialize. </td></tr>
+    <tr><td class="paramname">chunk_span</td><td><a class="el" href="classddc_1_1ChunkSpan.html">ChunkSpan</a> to serialize. </td></tr>
   </table>
   </dd>
 </dl>
@@ -263,13 +262,13 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 
 </div>
 </div>
-<a id="a67f84b332a37c86410f764cec2b72b9c" name="a67f84b332a37c86410f764cec2b72b9c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a67f84b332a37c86410f764cec2b72b9c">&#9670;&#160;</a></span>save_npy() <span class="overload">[2/2]</span></h2>
+<a id="a8278d857021b75ca84301632ab3934aa" name="a8278d857021b75ca84301632ab3934aa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8278d857021b75ca84301632ab3934aa">&#9670;&#160;</a></span>save_npy() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> T , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Extents</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Accessor</a> &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> T , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">SupportType</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">LayoutStridedPolicy</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt; </div>
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">void</a> ddc::experimental::save_npy </td>
@@ -280,8 +279,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Kokkos::mdspan&lt; T, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Extents</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Layout</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Accessor</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
-          <td class="paramname"><em>mds</em>&#160;</td>
+          <td class="paramtype"><a class="el" href="classddc_1_1ChunkSpan.html">ChunkSpan</a>&lt; T, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">SupportType</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">LayoutStridedPolicy</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">MemorySpace</a> &gt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
+          <td class="paramname"><em>chunk_span</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -291,17 +290,16 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
       </table>
 </div><div class="memdoc">
 
-<p>Save a contiguous mdspan in the NumPy format in a file. </p>
-<p>Supports Kokkos::layout_left and Kokkos::layout_right layouts with host-accessible default accessors.</p>
+<p>Save a <a class="el" href="classddc_1_1ChunkSpan.html">ddc::ChunkSpan</a> in the NumPy format in a file. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">filename</td><td>Path to the output .npy file. </td></tr>
-    <tr><td class="paramname">mds</td><td>mdspan to serialize. </td></tr>
+    <tr><td class="paramname">chunk_span</td><td><a class="el" href="classddc_1_1ChunkSpan.html">ChunkSpan</a> to serialize. </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="save__npy_8hpp_source.html#l00142">142</a> of file <a class="el" href="save__npy_8hpp_source.html">save_npy.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="save__npy_8hpp_source.html#l00140">140</a> of file <a class="el" href="save__npy_8hpp_source.html">save_npy.hpp</a>.</p>
 
 </div>
 </div>

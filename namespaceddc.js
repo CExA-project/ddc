@@ -3,8 +3,8 @@ var namespaceddc =
     [ "concepts", "namespaceddc_1_1concepts.html", "namespaceddc_1_1concepts" ],
     [ "experimental", "namespaceddc_1_1experimental.html", [
       [ "parallel_transform_reduce", "namespaceddc_1_1experimental.html#aed6f6dc5725522401a5b64485b641a34", null ],
-      [ "save_npy", "namespaceddc_1_1experimental.html#a7c515154bf14c169159c7cfed5cd17e0", null ],
-      [ "save_npy", "namespaceddc_1_1experimental.html#a67f84b332a37c86410f764cec2b72b9c", null ]
+      [ "save_npy", "namespaceddc_1_1experimental.html#a41a45ce1dd193198368779f3691ca328", null ],
+      [ "save_npy", "namespaceddc_1_1experimental.html#a8278d857021b75ca84301632ab3934aa", null ]
     ] ],
     [ "reducer", "namespaceddc_1_1reducer.html", "namespaceddc_1_1reducer" ],
     [ "AlignedAllocator", "classddc_1_1AlignedAllocator.html", "classddc_1_1AlignedAllocator" ],

@@ -189,6 +189,7 @@ target_sources(
                 src/ddc/parallel_for_each.hpp
                 src/ddc/parallel_transform.hpp
                 src/ddc/parallel_transform_reduce.hpp
+                src/ddc/parallel_transform_scan.hpp
                 src/ddc/periodic_sampling.hpp
                 src/ddc/print.hpp
                 src/ddc/real_type.hpp

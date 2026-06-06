@@ -40,6 +40,7 @@ add_executable(
     parallel_for_each.cpp
     parallel_transform.cpp
     parallel_transform_reduce.cpp
+    parallel_transform_scan.cpp
     periodic_sampling.cpp
     print.cpp
     reducer.cpp

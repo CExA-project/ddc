@@ -33,10 +33,10 @@ struct X
 
 //! [boundary-condition]
 #if defined(PERIODIC_DOMAIN)
-static constexpr ddc::BoundCond BoundCond = ddc::BoundCond::PERIODIC;
+static constexpr ddc::SplineBuilderClosure s_sbc = ddc::SplineBuilderClosure::PERIODIC;
 using ExtrapolationRule = ddc::PeriodicExtrapolationRule<X>;
 #else
-static constexpr ddc::BoundCond BoundCond = ddc::BoundCond::GREVILLE;
+static constexpr ddc::SplineBuilderClosure s_sbc = ddc::SplineBuilderClosure::GREVILLE;
 using ExtrapolationRule = ddc::NullExtrapolationRule;
 #endif
 //! [boundary-condition]
@@ -46,7 +46,7 @@ using ExtrapolationRule = ddc::NullExtrapolationRule;
 struct BSplinesX : ddc::UniformBSplines<X, s_degree>
 {
 };
-using GrevillePoints = ddc::GrevilleInterpolationPoints<BSplinesX, BoundCond, BoundCond>;
+using GrevillePoints = ddc::GrevilleInterpolationPoints<BSplinesX, s_sbc, s_sbc>;
 struct DDimX : GrevillePoints::interpolation_discrete_dimension_type
 {
 };
@@ -209,8 +209,8 @@ int main(int argc, char** argv)
             Kokkos::DefaultExecutionSpace::memory_space,
             BSplinesX,
             DDimX,
-            BoundCond,
-            BoundCond,
+            s_sbc,
+            s_sbc,
             ddc::SplineSolver::LAPACK> const spline_builder(x_domain);
     ExtrapolationRule const extrapolation_rule;
     ddc::SplineEvaluator<

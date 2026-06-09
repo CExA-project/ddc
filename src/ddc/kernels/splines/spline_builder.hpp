@@ -21,7 +21,7 @@
 #include "deriv.hpp"
 #include "integrals.hpp"
 #include "math_tools.hpp"
-#include "spline_boundary_conditions.hpp"
+#include "spline_builder_closures.hpp"
 #include "splines_linear_problem.hpp"
 #include "splines_linear_problem_maker.hpp"
 #include "view.hpp"
@@ -43,15 +43,15 @@ enum class SplineSolver {
  *
  * A class which contains an operator () which can be used to build a spline approximation
  * of a function. A spline approximation is represented by coefficients stored in a Chunk
- * of B-splines. The spline is constructed such that it respects the boundary conditions
- * BcLower and BcUpper, and it interpolates the function at the points on the interpolation_discrete_dimension
+ * of B-splines. The spline is constructed such that it respects the closure relations
+ * SBCLower and SBCUpper, and it interpolates the function at the points on the interpolation_discrete_dimension
  * associated with interpolation_discrete_dimension_type.
  * @tparam ExecSpace The Kokkos execution space on which the spline approximation is performed.
  * @tparam MemorySpace The Kokkos memory space on which the data (interpolation function and splines coefficients) is stored.
  * @tparam BSplines The discrete dimension representing the B-splines.
  * @tparam InterpolationDDim The discrete dimension on which interpolation points are defined.
- * @tparam BcLower The lower boundary condition.
- * @tparam BcUpper The upper boundary condition.
+ * @tparam SBCLower The lower closure relation.
+ * @tparam SBCUpper The upper closure relation.
  * @tparam Solver The SplineSolver giving the backend used to perform the spline approximation.
  */
 template <
@@ -59,16 +59,16 @@ template <
         class MemorySpace,
         class BSplines,
         class InterpolationDDim,
-        ddc::BoundCond BcLower,
-        ddc::BoundCond BcUpper,
+        ddc::SplineBuilderClosure SBCLower,
+        ddc::SplineBuilderClosure SBCUpper,
         SplineSolver Solver>
 class SplineBuilder
 {
     static_assert(
-            (BSplines::is_periodic() && (BcLower == ddc::BoundCond::PERIODIC)
-             && (BcUpper == ddc::BoundCond::PERIODIC))
-            || (!BSplines::is_periodic() && (BcLower != ddc::BoundCond::PERIODIC)
-                && (BcUpper != ddc::BoundCond::PERIODIC)));
+            (BSplines::is_periodic() && (SBCLower == ddc::SplineBuilderClosure::PERIODIC)
+             && (SBCUpper == ddc::SplineBuilderClosure::PERIODIC))
+            || (!BSplines::is_periodic() && (SBCLower != ddc::SplineBuilderClosure::PERIODIC)
+                && (SBCUpper != ddc::SplineBuilderClosure::PERIODIC)));
 
 public:
     /// @brief The type of the Kokkos execution space used by this class.
@@ -165,27 +165,39 @@ public:
     /// @brief Indicates if the degree of the splines is odd or even.
     static constexpr bool s_odd = BSplines::degree() % 2;
 
-    /// @brief The number of equations defining the boundary condition at the lower bound.
-    static constexpr int s_nbe_xmin = n_boundary_equations(BcLower, BSplines::degree());
+    /// @brief The number of equations defining the closure relation at the lower bound.
+    static constexpr int s_nbe_xmin = n_boundary_equations(SBCLower, BSplines::degree());
 
-    /// @brief The number of equations defining the boundary condition at the upper bound.
-    static constexpr int s_nbe_xmax = n_boundary_equations(BcUpper, BSplines::degree());
+    /// @brief The number of equations defining the closure relation at the upper bound.
+    static constexpr int s_nbe_xmax = n_boundary_equations(SBCUpper, BSplines::degree());
 
-    /// @brief The number of input values defining the boundary condition at the lower bound.
-    static constexpr int s_nbv_xmin = BcLower == BoundCond::HOMOGENEOUS_HERMITE
+    /// @brief The number of input values defining the closure relation at the lower bound.
+    static constexpr int s_nbv_xmin = SBCLower == SplineBuilderClosure::HOMOGENEOUS_HERMITE
                                               ? 0
-                                              : n_boundary_equations(BcLower, BSplines::degree());
+                                              : n_boundary_equations(SBCLower, BSplines::degree());
 
-    /// @brief The number of input values defining the boundary condition at the upper bound.
-    static constexpr int s_nbv_xmax = BcUpper == BoundCond::HOMOGENEOUS_HERMITE
+    /// @brief The number of input values defining the closure relation at the upper bound.
+    static constexpr int s_nbv_xmax = SBCUpper == SplineBuilderClosure::HOMOGENEOUS_HERMITE
                                               ? 0
-                                              : n_boundary_equations(BcUpper, BSplines::degree());
+                                              : n_boundary_equations(SBCUpper, BSplines::degree());
 
+#if DDC_BUILD_DEPRECATED_CODE()
     /// @brief The boundary condition implemented at the lower bound.
-    static constexpr ddc::BoundCond s_bc_xmin = BcLower;
+    /// @deprecated Use s_sbc_xmin instead
+    [[deprecated("Use s_sbc_xmin instead")]] static constexpr ddc::SplineBuilderClosure s_bc_xmin
+            = SBCLower;
 
     /// @brief The boundary condition implemented at the upper bound.
-    static constexpr ddc::BoundCond s_bc_xmax = BcUpper;
+    /// @deprecated Use s_sbc_xmax instead
+    [[deprecated("Use s_sbc_xmax instead")]] static constexpr ddc::SplineBuilderClosure s_bc_xmax
+            = SBCUpper;
+#endif
+
+    /// @brief The closure relation implemented at the lower bound.
+    static constexpr ddc::SplineBuilderClosure s_sbc_xmin = SBCLower;
+
+    /// @brief The closure relation implemented at the upper bound.
+    static constexpr ddc::SplineBuilderClosure s_sbc_xmax = SBCUpper;
 
     /// @brief The SplineSolver giving the backend used to perform the spline approximation.
     static constexpr SplineSolver s_spline_solver = Solver;
@@ -235,8 +247,9 @@ public:
         , m_label(std::move(label))
     {
         static_assert(
-                ((BcLower == BoundCond::PERIODIC) == (BcUpper == BoundCond::PERIODIC)),
-                "Incompatible boundary conditions");
+                ((SBCLower == SplineBuilderClosure::PERIODIC)
+                 == (SBCUpper == SplineBuilderClosure::PERIODIC)),
+                "Incompatible closure relations");
         check_valid_grid();
 
         compute_offset(this->interpolation_domain(), m_offset);
@@ -245,11 +258,11 @@ public:
         int lower_block_size;
         int upper_block_size;
         if constexpr (bsplines_type::is_uniform()) {
-            upper_block_size = compute_block_sizes_uniform(BcLower, s_nbe_xmin);
-            lower_block_size = compute_block_sizes_uniform(BcUpper, s_nbe_xmax);
+            upper_block_size = compute_block_sizes_uniform(SBCLower, s_nbe_xmin);
+            lower_block_size = compute_block_sizes_uniform(SBCUpper, s_nbe_xmax);
         } else {
-            upper_block_size = compute_block_sizes_non_uniform(BcLower, s_nbe_xmin);
-            lower_block_size = compute_block_sizes_non_uniform(BcUpper, s_nbe_xmax);
+            upper_block_size = compute_block_sizes_non_uniform(SBCLower, s_nbe_xmin);
+            lower_block_size = compute_block_sizes_non_uniform(SBCUpper, s_nbe_xmax);
         }
         allocate_matrix(
                 lower_block_size,
@@ -452,7 +465,7 @@ private:
     /**
      * @brief Get the whole domain on which spline coefficients are defined, with the dimension of interest being the leading dimension.
      *
-     * This is used internally due to solver limitation and because it may be beneficial to computation performance. For LAPACK backend and non-periodic boundary condition, we are using SplinesLinearSolver3x3Blocks which requires upper_block_size additional rows for internal operations.
+     * This is used internally due to solver limitation and because it may be beneficial to computation performance. For LAPACK backend and non-periodic closure relation, we are using SplinesLinearSolver3x3Blocks which requires upper_block_size additional rows for internal operations.
      *
      * @param batched_interpolation_domain The whole domain on which the interpolation points are defined.
      *
@@ -476,7 +489,7 @@ public:
     /**
      * @brief Get the whole domain on which derivatives on lower boundary are defined.
      *
-     * This is only used with BoundCond::HERMITE boundary conditions.
+     * This is only used with SplineBuilderClosure::HERMITE closure relations.
      *
      * @param batched_interpolation_domain The whole domain on which the interpolation points are defined.
      *
@@ -497,7 +510,7 @@ public:
     /**
      * @brief Get the whole domain on which derivatives on upper boundary are defined.
      *
-     * This is only used with BoundCond::HERMITE boundary conditions.
+     * This is only used with SplineBuilderClosure::HERMITE closure relations.
      *
      * @param batched_interpolation_domain The whole domain on which the interpolation points are defined.
      *
@@ -520,7 +533,7 @@ public:
      *
      * Use the values of a function (defined on
      * SplineBuilder::batched_interpolation_domain) and the derivatives of the
-     * function at the boundaries (in the case of BoundCond::HERMITE only, defined
+     * function at the boundaries (in the case of SplineBuilderClosure::HERMITE only, defined
      * on SplineBuilder::batched_derivs_xmin_domain and SplineBuilder::batched_derivs_xmax_domain)
      * to calculate a spline approximation of this function.
      *
@@ -530,9 +543,9 @@ public:
      * @param[out] spline The coefficients of the spline computed by this SplineBuilder.
      * @param[in] vals The values of the function on the interpolation mesh.
      * @param[in] derivs_xmin The values of the derivatives at the lower boundary
-     * (used only with BoundCond::HERMITE lower boundary condition).
+     * (used only with SplineBuilderClosure::HERMITE lower closure relation).
      * @param[in] derivs_xmax The values of the derivatives at the upper boundary
-     * (used only with BoundCond::HERMITE upper boundary condition).
+     * (used only with SplineBuilderClosure::HERMITE upper closure relation).
      */
     template <class Layout, class BatchedInterpolationDDom>
     void operator()(
@@ -560,13 +573,13 @@ public:
      *
      * Those coefficients can be used to perform integration way faster than SplineEvaluator::integrate().
      *
-     * This function solves matrix equation A^t*Q=integral_bsplines. In case of HERMITE boundary conditions,
+     * This function solves matrix equation A^t*Q=integral_bsplines. In case of HERMITE closure relations,
      * integral_bsplines contains the integral coefficients at the boundaries, and Q thus has to
      * be split in three parts (quadrature coefficients for the derivatives at lower boundary,
      * for the values inside the domain and for the derivatives at upper boundary).
      *
      * A discrete function f can then be integrated using sum_j Q_j*f_j for j in interpolation_domain.
-     * If boundary condition is HERMITE, sum_j Qderiv_j*(d^j f/dx^j) for j in derivs_domain
+     * If closure relation is HERMITE, sum_j Qderiv_j*(d^j f/dx^j) for j in derivs_domain
      * must be added at the boundary.
      *
      * Please refer to section 2.8.1 of Emily's Bourne phd (https://theses.fr/2022AIXM0412) for more information and to
@@ -597,9 +610,9 @@ public:
     quadrature_coefficients() const;
 
 private:
-    static int compute_block_sizes_uniform(ddc::BoundCond bound_cond, int nbc);
+    static int compute_block_sizes_uniform(ddc::SplineBuilderClosure bound_cond, int nbc);
 
-    static int compute_block_sizes_non_uniform(ddc::BoundCond bound_cond, int nbc);
+    static int compute_block_sizes_non_uniform(ddc::SplineBuilderClosure bound_cond, int nbc);
 
     void allocate_matrix(
             int lower_block_size,
@@ -620,11 +633,17 @@ template <
         class MemorySpace,
         class BSplines,
         class InterpolationDDim,
-        ddc::BoundCond BcLower,
-        ddc::BoundCond BcUpper,
+        ddc::SplineBuilderClosure SBCLower,
+        ddc::SplineBuilderClosure SBCUpper,
         SplineSolver Solver>
-void SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower, BcUpper, Solver>::
-        compute_offset(interpolation_domain_type const& interpolation_domain, int& offset)
+void SplineBuilder<
+        ExecSpace,
+        MemorySpace,
+        BSplines,
+        InterpolationDDim,
+        SBCLower,
+        SBCUpper,
+        Solver>::compute_offset(interpolation_domain_type const& interpolation_domain, int& offset)
 {
     if constexpr (bsplines_type::is_periodic()) {
         // Calculate offset so that the matrix is diagonally dominant
@@ -655,26 +674,26 @@ template <
         class MemorySpace,
         class BSplines,
         class InterpolationDDim,
-        ddc::BoundCond BcLower,
-        ddc::BoundCond BcUpper,
+        ddc::SplineBuilderClosure SBCLower,
+        ddc::SplineBuilderClosure SBCUpper,
         SplineSolver Solver>
-int SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower, BcUpper, Solver>::
-        compute_block_sizes_uniform(ddc::BoundCond const bound_cond, int const nbc)
+int SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, SBCLower, SBCUpper, Solver>::
+        compute_block_sizes_uniform(ddc::SplineBuilderClosure const bound_cond, int const nbc)
 {
-    if (bound_cond == ddc::BoundCond::PERIODIC) {
+    if (bound_cond == ddc::SplineBuilderClosure::PERIODIC) {
         return static_cast<int>(bsplines_type::degree()) / 2;
     }
 
-    if (bound_cond == ddc::BoundCond::HERMITE
-        || bound_cond == ddc::BoundCond::HOMOGENEOUS_HERMITE) {
+    if (bound_cond == ddc::SplineBuilderClosure::HERMITE
+        || bound_cond == ddc::SplineBuilderClosure::HOMOGENEOUS_HERMITE) {
         return nbc;
     }
 
-    if (bound_cond == ddc::BoundCond::GREVILLE) {
+    if (bound_cond == ddc::SplineBuilderClosure::GREVILLE) {
         return static_cast<int>(bsplines_type::degree()) - 1;
     }
 
-    throw std::runtime_error("ddc::BoundCond not handled");
+    throw std::runtime_error("ddc::SplineBuilderClosure not handled");
 }
 
 template <
@@ -682,22 +701,23 @@ template <
         class MemorySpace,
         class BSplines,
         class InterpolationDDim,
-        ddc::BoundCond BcLower,
-        ddc::BoundCond BcUpper,
+        ddc::SplineBuilderClosure SBCLower,
+        ddc::SplineBuilderClosure SBCUpper,
         SplineSolver Solver>
-int SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower, BcUpper, Solver>::
-        compute_block_sizes_non_uniform(ddc::BoundCond const bound_cond, int const nbc)
+int SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, SBCLower, SBCUpper, Solver>::
+        compute_block_sizes_non_uniform(ddc::SplineBuilderClosure const bound_cond, int const nbc)
 {
-    if (bound_cond == ddc::BoundCond::PERIODIC || bound_cond == ddc::BoundCond::GREVILLE) {
+    if (bound_cond == ddc::SplineBuilderClosure::PERIODIC
+        || bound_cond == ddc::SplineBuilderClosure::GREVILLE) {
         return static_cast<int>(bsplines_type::degree()) - 1;
     }
 
-    if (bound_cond == ddc::BoundCond::HERMITE
-        || bound_cond == ddc::BoundCond::HOMOGENEOUS_HERMITE) {
+    if (bound_cond == ddc::SplineBuilderClosure::HERMITE
+        || bound_cond == ddc::SplineBuilderClosure::HOMOGENEOUS_HERMITE) {
         return nbc + 1;
     }
 
-    throw std::runtime_error("ddc::BoundCond not handled");
+    throw std::runtime_error("ddc::SplineBuilderClosure not handled");
 }
 
 template <
@@ -705,10 +725,17 @@ template <
         class MemorySpace,
         class BSplines,
         class InterpolationDDim,
-        ddc::BoundCond BcLower,
-        ddc::BoundCond BcUpper,
+        ddc::SplineBuilderClosure SBCLower,
+        ddc::SplineBuilderClosure SBCUpper,
         SplineSolver Solver>
-void SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower, BcUpper, Solver>::
+void SplineBuilder<
+        ExecSpace,
+        MemorySpace,
+        BSplines,
+        InterpolationDDim,
+        SBCLower,
+        SBCUpper,
+        Solver>::
         allocate_matrix(
                 [[maybe_unused]] int lower_block_size,
                 [[maybe_unused]] int upper_block_size,
@@ -763,15 +790,22 @@ template <
         class MemorySpace,
         class BSplines,
         class InterpolationDDim,
-        ddc::BoundCond BcLower,
-        ddc::BoundCond BcUpper,
+        ddc::SplineBuilderClosure SBCLower,
+        ddc::SplineBuilderClosure SBCUpper,
         SplineSolver Solver>
-void SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower, BcUpper, Solver>::
-        build_matrix_system()
+void SplineBuilder<
+        ExecSpace,
+        MemorySpace,
+        BSplines,
+        InterpolationDDim,
+        SBCLower,
+        SBCUpper,
+        Solver>::build_matrix_system()
 {
-    // Hermite boundary conditions at xmin, if any
+    // Hermite closure relations at xmin, if any
     if constexpr (
-            BcLower == ddc::BoundCond::HERMITE || BcLower == ddc::BoundCond::HOMOGENEOUS_HERMITE) {
+            SBCLower == ddc::SplineBuilderClosure::HERMITE
+            || SBCLower == ddc::SplineBuilderClosure::HOMOGENEOUS_HERMITE) {
         std::array<double, (bsplines_type::degree() / 2 + 1) * (bsplines_type::degree() + 1)>
                 derivs_ptr;
         ddc::DSpan2D const
@@ -822,9 +856,10 @@ void SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower,
         }
     });
 
-    // Hermite boundary conditions at xmax, if any
+    // Hermite closure relations at xmax, if any
     if constexpr (
-            BcUpper == ddc::BoundCond::HERMITE || BcUpper == ddc::BoundCond::HOMOGENEOUS_HERMITE) {
+            SBCUpper == ddc::SplineBuilderClosure::HERMITE
+            || SBCUpper == ddc::SplineBuilderClosure::HOMOGENEOUS_HERMITE) {
         std::array<double, (bsplines_type::degree() / 2 + 1) * (bsplines_type::degree() + 1)>
                 derivs_ptr;
         Kokkos::mdspan<
@@ -867,11 +902,18 @@ template <
         class MemorySpace,
         class BSplines,
         class InterpolationDDim,
-        ddc::BoundCond BcLower,
-        ddc::BoundCond BcUpper,
+        ddc::SplineBuilderClosure SBCLower,
+        ddc::SplineBuilderClosure SBCUpper,
         SplineSolver Solver>
 template <class Layout, class BatchedInterpolationDDom>
-void SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower, BcUpper, Solver>::
+void SplineBuilder<
+        ExecSpace,
+        MemorySpace,
+        BSplines,
+        InterpolationDDim,
+        SBCLower,
+        SBCUpper,
+        Solver>::
 operator()(
         ddc::ChunkSpan<
                 double,
@@ -903,23 +945,23 @@ operator()(
     assert(vals.template extent<interpolation_discrete_dimension_type>()
            == ddc::discrete_space<bsplines_type>().nbasis() - s_nbe_xmin - s_nbe_xmax);
 
-    if constexpr (BcLower == BoundCond::HERMITE) {
+    if constexpr (SBCLower == SplineBuilderClosure::HERMITE) {
         assert(ddc::DiscreteElement<deriv_type>(derivs_xmin->domain().front()).uid() == s_odd);
         assert(derivs_xmin.has_value() || s_nbe_xmin == 0);
     } else {
         assert(!derivs_xmin.has_value() || derivs_xmin->template extent<deriv_type>() == 0);
     }
-    if constexpr (BcUpper == BoundCond::HERMITE) {
+    if constexpr (SBCUpper == SplineBuilderClosure::HERMITE) {
         assert(ddc::DiscreteElement<deriv_type>(derivs_xmax->domain().front()).uid() == s_odd);
         assert(derivs_xmax.has_value() || s_nbe_xmax == 0);
     } else {
         assert(!derivs_xmax.has_value() || derivs_xmax->template extent<deriv_type>() == 0);
     }
 
-    // Hermite boundary conditions at xmin, if any
+    // Hermite closure relations at xmin, if any
     // NOTE: For consistency with the linear system, the i-th derivative
     //       provided by the user must be multiplied by dx^i
-    if constexpr (BcLower == BoundCond::HERMITE) {
+    if constexpr (SBCLower == SplineBuilderClosure::HERMITE) {
         assert(derivs_xmin->template extent<deriv_type>() == s_nbe_xmin);
         auto derivs_xmin_values = *derivs_xmin;
         auto const dx_proxy = m_dx;
@@ -938,7 +980,7 @@ operator()(
                                   * ddc::detail::ipow(dx_proxy, i + odd_proxy);
                     }
                 });
-    } else if constexpr (BcLower == BoundCond::HOMOGENEOUS_HERMITE) {
+    } else if constexpr (SBCLower == SplineBuilderClosure::HOMOGENEOUS_HERMITE) {
         ddc::DiscreteDomain<bsplines_type> const dx_splines(
                 ddc::DiscreteElement<bsplines_type>(0),
                 ddc::DiscreteVector<bsplines_type>(s_nbe_xmin));
@@ -969,11 +1011,11 @@ operator()(
 
 
 
-    // Hermite boundary conditions at xmax, if any
+    // Hermite closure relations at xmax, if any
     // NOTE: For consistency with the linear system, the i-th derivative
     //       provided by the user must be multiplied by dx^i
     auto const& nbasis_proxy = ddc::discrete_space<bsplines_type>().nbasis();
-    if constexpr (BcUpper == BoundCond::HERMITE) {
+    if constexpr (SBCUpper == SplineBuilderClosure::HERMITE) {
         assert(derivs_xmax->template extent<deriv_type>() == s_nbe_xmax);
         auto derivs_xmax_values = *derivs_xmax;
         auto const dx_proxy = m_dx;
@@ -993,7 +1035,7 @@ operator()(
                                   * ddc::detail::ipow(dx_proxy, i + odd_proxy);
                     }
                 });
-    } else if constexpr (BcUpper == BoundCond::HOMOGENEOUS_HERMITE) {
+    } else if constexpr (SBCUpper == SplineBuilderClosure::HOMOGENEOUS_HERMITE) {
         ddc::DiscreteDomain<bsplines_type> const dx_splines(
                 ddc::DiscreteElement<bsplines_type>(nbasis_proxy - s_nbe_xmax),
                 ddc::DiscreteVector<bsplines_type>(s_nbe_xmax));
@@ -1075,8 +1117,8 @@ template <
         class MemorySpace,
         class BSplines,
         class InterpolationDDim,
-        ddc::BoundCond BcLower,
-        ddc::BoundCond BcUpper,
+        ddc::SplineBuilderClosure SBCLower,
+        ddc::SplineBuilderClosure SBCUpper,
         SplineSolver Solver>
 template <class OutMemorySpace>
 std::tuple<
@@ -1094,7 +1136,7 @@ std::tuple<
                 ddc::DiscreteDomain<
                         ddc::Deriv<typename InterpolationDDim::continuous_dimension_type>>,
                 ddc::KokkosAllocator<double, OutMemorySpace>>>
-SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower, BcUpper, Solver>::
+SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, SBCLower, SBCUpper, Solver>::
         quadrature_coefficients() const
 {
     // Compute integrals of bsplines
@@ -1208,11 +1250,18 @@ template <
         class MemorySpace,
         class BSplines,
         class InterpolationDDim,
-        ddc::BoundCond BcLower,
-        ddc::BoundCond BcUpper,
+        ddc::SplineBuilderClosure SBCLower,
+        ddc::SplineBuilderClosure SBCUpper,
         SplineSolver Solver>
 template <class KnotElement>
-void SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower, BcUpper, Solver>::
+void SplineBuilder<
+        ExecSpace,
+        MemorySpace,
+        BSplines,
+        InterpolationDDim,
+        SBCLower,
+        SBCUpper,
+        Solver>::
         check_n_points_in_cell(int const n_points_in_cell, KnotElement const current_cell_end_idx)
 {
     if (n_points_in_cell > BSplines::degree() + 1) {
@@ -1230,11 +1279,17 @@ template <
         class MemorySpace,
         class BSplines,
         class InterpolationDDim,
-        ddc::BoundCond BcLower,
-        ddc::BoundCond BcUpper,
+        ddc::SplineBuilderClosure SBCLower,
+        ddc::SplineBuilderClosure SBCUpper,
         SplineSolver Solver>
-void SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower, BcUpper, Solver>::
-        check_valid_grid()
+void SplineBuilder<
+        ExecSpace,
+        MemorySpace,
+        BSplines,
+        InterpolationDDim,
+        SBCLower,
+        SBCUpper,
+        Solver>::check_valid_grid()
 {
     std::size_t const n_interp_points = interpolation_domain().size();
     std::size_t const expected_npoints

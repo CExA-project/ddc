@@ -45,18 +45,18 @@ struct DDimBatch2
 constexpr std::size_t s_degree = DEGREE;
 
 #if defined(BC_PERIODIC)
-constexpr ddc::BoundCond s_bcl = ddc::BoundCond::PERIODIC;
-constexpr ddc::BoundCond s_bcr = ddc::BoundCond::PERIODIC;
+constexpr ddc::SplineBuilderClosure s_sbcl = ddc::SplineBuilderClosure::PERIODIC;
+constexpr ddc::SplineBuilderClosure s_sbcr = ddc::SplineBuilderClosure::PERIODIC;
 #elif defined(BC_GREVILLE)
-constexpr ddc::BoundCond s_bcl = ddc::BoundCond::GREVILLE;
-constexpr ddc::BoundCond s_bcr = ddc::BoundCond::GREVILLE;
+constexpr ddc::SplineBuilderClosure s_sbcl = ddc::SplineBuilderClosure::GREVILLE;
+constexpr ddc::SplineBuilderClosure s_sbcr = ddc::SplineBuilderClosure::GREVILLE;
 #elif defined(BC_HERMITE)
-constexpr ddc::BoundCond s_bcl = ddc::BoundCond::HERMITE;
-constexpr ddc::BoundCond s_bcr = ddc::BoundCond::HERMITE;
+constexpr ddc::SplineBuilderClosure s_sbcl = ddc::SplineBuilderClosure::HERMITE;
+constexpr ddc::SplineBuilderClosure s_sbcr = ddc::SplineBuilderClosure::HERMITE;
 #endif
 
 template <typename BSpX>
-using GrevillePoints = ddc::GrevilleInterpolationPoints<BSpX, s_bcl, s_bcr>;
+using GrevillePoints = ddc::GrevilleInterpolationPoints<BSpX, s_sbcl, s_sbcr>;
 
 #if defined(BSPLINES_TYPE_UNIFORM)
 template <typename X>
@@ -161,14 +161,14 @@ void TestBatchedNd1dSpline()
     auto const dom_derivs = ddc::replace_dim_of<DDimI, ddc::Deriv<I>>(dom_vals, derivs_domain);
 #endif
 
-    // Create a SplineBuilder over BSplines<I> and batched along other dimensions using some boundary conditions
+    // Create a SplineBuilder over BSplines<I> and batched along other dimensions using some closure relations
     ddc::SplineBuilder<
             ExecSpace,
             MemorySpace,
             BSplines<I>,
             DDimI,
-            s_bcl,
-            s_bcr,
+            s_sbcl,
+            s_sbcr,
             s_spline_solver> const spline_builder(interpolation_domain);
 
     // Compute useful domains (dom_interpolation, dom_batch, dom_bsplines and dom_spline)
@@ -195,7 +195,7 @@ void TestBatchedNd1dSpline()
     // Allocate and fill a chunk containing derivs to be passed as input to spline_builder.
     ddc::Chunk derivs_lhs_alloc(dom_derivs, ddc::KokkosAllocator<double, MemorySpace>());
     ddc::ChunkSpan const derivs_lhs = derivs_lhs_alloc.span_view();
-    if (s_bcl == ddc::BoundCond::HERMITE) {
+    if (s_sbcl == ddc::SplineBuilderClosure::HERMITE) {
         ddc::Chunk derivs_lhs1_host_alloc(derivs_domain, ddc::HostAllocator<double>());
         ddc::ChunkSpan const derivs_lhs1_host = derivs_lhs1_host_alloc.span_view();
         for (ddc::DiscreteElement<ddc::Deriv<I>> const ei : derivs_domain) {
@@ -213,7 +213,7 @@ void TestBatchedNd1dSpline()
 
     ddc::Chunk derivs_rhs_alloc(dom_derivs, ddc::KokkosAllocator<double, MemorySpace>());
     ddc::ChunkSpan const derivs_rhs = derivs_rhs_alloc.span_view();
-    if (s_bcr == ddc::BoundCond::HERMITE) {
+    if (s_sbcr == ddc::SplineBuilderClosure::HERMITE) {
         ddc::Chunk derivs_rhs1_host_alloc(derivs_domain, ddc::HostAllocator<double>());
         ddc::ChunkSpan const derivs_rhs1_host = derivs_rhs1_host_alloc.span_view();
         for (ddc::DiscreteElement<ddc::Deriv<I>> const ei : derivs_domain) {

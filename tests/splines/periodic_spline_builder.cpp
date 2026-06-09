@@ -37,8 +37,10 @@ struct BSplinesX : ddc::NonUniformBSplines<DimX, s_degree>
 };
 #endif
 
-using GrevillePoints = ddc::
-        GrevilleInterpolationPoints<BSplinesX, ddc::BoundCond::PERIODIC, ddc::BoundCond::PERIODIC>;
+using GrevillePoints = ddc::GrevilleInterpolationPoints<
+        BSplinesX,
+        ddc::SplineBuilderClosure::PERIODIC,
+        ddc::SplineBuilderClosure::PERIODIC>;
 
 struct DDimX : GrevillePoints::interpolation_discrete_dimension_type
 {
@@ -86,14 +88,14 @@ void TestPeriodicSplineBuilderTestIdentity()
     ddc::init_discrete_space<DDimX>(GrevillePoints::get_sampling<DDimX>());
     ddc::DiscreteDomain<DDimX> const interpolation_domain(GrevillePoints::get_domain<DDimX>());
 
-    // 4. Create a SplineBuilder over BSplines using some boundary conditions
+    // 4. Create a SplineBuilder over BSplines using some closure relations
     ddc::SplineBuilder<
             execution_space,
             memory_space,
             BSplinesX,
             DDimX,
-            ddc::BoundCond::PERIODIC,
-            ddc::BoundCond::PERIODIC,
+            ddc::SplineBuilderClosure::PERIODIC,
+            ddc::SplineBuilderClosure::PERIODIC,
             ddc::SplineSolver::GINKGO> const spline_builder(interpolation_domain);
 
     // 5. Allocate and fill a chunk over the interpolation domain

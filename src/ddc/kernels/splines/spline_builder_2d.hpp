@@ -11,8 +11,8 @@
 
 #include <ddc/ddc.hpp>
 
-#include "spline_boundary_conditions.hpp"
 #include "spline_builder.hpp"
+#include "spline_builder_closures.hpp"
 
 namespace ddc {
 
@@ -31,10 +31,10 @@ template <
         class BSpline2,
         class DDimI1,
         class DDimI2,
-        ddc::BoundCond BcLower1,
-        ddc::BoundCond BcUpper1,
-        ddc::BoundCond BcLower2,
-        ddc::BoundCond BcUpper2,
+        ddc::SplineBuilderClosure SBCLower1,
+        ddc::SplineBuilderClosure SBCUpper1,
+        ddc::SplineBuilderClosure SBCLower2,
+        ddc::SplineBuilderClosure SBCUpper2,
         ddc::SplineSolver Solver>
 class SplineBuilder2D
 {
@@ -47,11 +47,11 @@ public:
 
     /// @brief The type of the SplineBuilder used by this class to spline-approximate along first dimension.
     using builder_type1 = ddc::
-            SplineBuilder<ExecSpace, MemorySpace, BSpline1, DDimI1, BcLower1, BcUpper1, Solver>;
+            SplineBuilder<ExecSpace, MemorySpace, BSpline1, DDimI1, SBCLower1, SBCUpper1, Solver>;
 
     /// @brief The type of the SplineBuilder used by this class to spline-approximate along second dimension.
     using builder_type2 = ddc::
-            SplineBuilder<ExecSpace, MemorySpace, BSpline2, DDimI2, BcLower2, BcUpper2, Solver>;
+            SplineBuilder<ExecSpace, MemorySpace, BSpline2, DDimI2, SBCLower2, SBCUpper2, Solver>;
 
     /// @brief The type of the first interpolation continuous dimension.
     using continuous_dimension_type1 = builder_type1::continuous_dimension_type;
@@ -421,7 +421,7 @@ public:
      *
      * Use the values of a function (defined on
      * SplineBuilder2D::batched_interpolation_domain) and the derivatives of the
-     * function at the boundaries (in the case of BoundCond::HERMITE only)
+     * function at the boundaries (in the case of SplineBuilderClosure::HERMITE only)
      * to calculate a 2D spline approximation of this function.
      *
      * The spline approximation is stored as a ChunkSpan of coefficients
@@ -518,10 +518,10 @@ template <
         class BSpline2,
         class DDimI1,
         class DDimI2,
-        ddc::BoundCond BcLower1,
-        ddc::BoundCond BcUpper1,
-        ddc::BoundCond BcLower2,
-        ddc::BoundCond BcUpper2,
+        ddc::SplineBuilderClosure SBCLower1,
+        ddc::SplineBuilderClosure SBCUpper1,
+        ddc::SplineBuilderClosure SBCLower2,
+        ddc::SplineBuilderClosure SBCUpper2,
         ddc::SplineSolver Solver>
 template <class Layout, class BatchedInterpolationDDom>
 void SplineBuilder2D<
@@ -531,10 +531,10 @@ void SplineBuilder2D<
         BSpline2,
         DDimI1,
         DDimI2,
-        BcLower1,
-        BcUpper1,
-        BcLower2,
-        BcUpper2,
+        SBCLower1,
+        SBCUpper1,
+        SBCLower2,
+        SBCUpper2,
         Solver>::
 operator()(
         ddc::ChunkSpan<
@@ -610,7 +610,7 @@ operator()(
             ddc::KokkosAllocator<double, MemorySpace>());
     auto spline1_deriv_min = spline1_deriv_min_alloc.span_view();
     auto spline1_deriv_min_opt = std::optional(spline1_deriv_min.span_cview());
-    if constexpr (BcLower2 == ddc::BoundCond::HERMITE) {
+    if constexpr (SBCLower2 == ddc::SplineBuilderClosure::HERMITE) {
         m_spline_builder1(
                 spline1_deriv_min,
                 *derivs_min2,
@@ -636,7 +636,7 @@ operator()(
             ddc::KokkosAllocator<double, MemorySpace>());
     auto spline1_deriv_max = spline1_deriv_max_alloc.span_view();
     auto spline1_deriv_max_opt = std::optional(spline1_deriv_max.span_cview());
-    if constexpr (BcUpper2 == ddc::BoundCond::HERMITE) {
+    if constexpr (SBCUpper2 == ddc::SplineBuilderClosure::HERMITE) {
         m_spline_builder1(
                 spline1_deriv_max,
                 *derivs_max2,

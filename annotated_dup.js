@@ -1,6 +1,9 @@
 var annotated_dup =
 [
     [ "ddc", "namespaceddc.html", [
+      [ "experimental", "namespaceddc_1_1experimental.html", [
+        [ "Dims", "namespaceddc_1_1experimental.html#structddc_1_1experimental_1_1Dims", null ]
+      ] ],
       [ "reducer", "namespaceddc_1_1reducer.html", [
         [ "band", "structddc_1_1reducer_1_1band.html", "structddc_1_1reducer_1_1band" ],
         [ "bor", "structddc_1_1reducer_1_1bor.html", "structddc_1_1reducer_1_1bor" ],

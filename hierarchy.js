@@ -16,6 +16,7 @@ var hierarchy =
     [ "ddc::ConstantExtrapolationRule< DimI, DimNI >", "structddc_1_1ConstantExtrapolationRule_3_01DimI_00_01DimNI_01_4.html", null ],
     [ "ddc::coordinate_of< T >", "namespaceddc.html#structddc_1_1coordinate__of", null ],
     [ "ddc::Deriv< CDim >", "namespaceddc.html#structddc_1_1Deriv", null ],
+    [ "ddc::experimental::Dims< Tags >", "namespaceddc_1_1experimental.html#structddc_1_1experimental_1_1Dims", null ],
     [ "ddc::DiscreteDomain< DDims >", "classddc_1_1DiscreteDomain.html", null ],
     [ "ddc::DiscreteDomain< ddc::NonUniformBsplinesKnots >", "classddc_1_1DiscreteDomain.html", null ],
     [ "ddc::DiscreteDomain< ddc::UniformBsplinesKnots >", "classddc_1_1DiscreteDomain.html", null ],

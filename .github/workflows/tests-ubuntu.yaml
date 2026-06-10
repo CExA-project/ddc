@@ -161,7 +161,7 @@ jobs:
 
             cmake \
               -D CMAKE_CXX_STANDARD=${{matrix.cxx_version}} \
-              -D CMAKE_CXX_FLAGS="-DNDEBUG --coverage -fprofile-update=atomic" \
+              -D CMAKE_CXX_FLAGS="-DNDEBUG --coverage -fprofile-update=atomic -fno-inline -fno-inline-small-functions -fno-default-inline" \
               -D DDC_BUILD_BENCHMARKS=OFF \
               -D DDC_BUILD_KERNELS_FFT=ON \
               -D DDC_BUILD_KERNELS_SPLINES=ON \

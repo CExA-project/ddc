@@ -4,7 +4,7 @@
 
 #include <ddc/ddc.hpp>
 
-#if defined(DDC_BUILD_DOUBLE_PRECISION)
+#if DDC_BUILD_DOUBLE_PRECISION()
 static_assert(std::is_same_v<ddc::Real, double>);
 #else
 static_assert(std::is_same_v<ddc::Real, float>);

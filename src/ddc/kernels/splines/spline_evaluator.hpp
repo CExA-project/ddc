@@ -341,7 +341,7 @@ public:
                 });
     }
 
-#if defined(DDC_BUILD_DEPRECATED_CODE)
+#if DDC_BUILD_DEPRECATED_CODE()
     /**
      * @brief Differentiate 1D spline function (described by its spline coefficients) at a given coordinate.
      *

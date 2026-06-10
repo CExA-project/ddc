@@ -8,6 +8,8 @@
 #include <cstddef>
 #include <utility>
 
+#include <ddc/config.hpp>
+
 #include <Kokkos_Macros.hpp>
 
 #include "discrete_vector.hpp"
@@ -52,7 +54,7 @@ KOKKOS_FUNCTION void device_for_each_serial(
 
 } // namespace detail
 
-#if defined(DDC_BUILD_DEPRECATED_CODE)
+#if DDC_BUILD_DEPRECATED_CODE()
 /** iterates over a nD domain in serial
  * @param[in] domain the domain over which to iterate
  * @param[in] f      a functor taking an index as parameter

@@ -8,6 +8,7 @@
 #include <concepts>
 #include <cstddef>
 #include <iosfwd>
+#include <span>
 #include <type_traits>
 #include <utility>
 
@@ -464,15 +465,14 @@ KOKKOS_FUNCTION constexpr bool operator<(DiscreteVector<Tag> const& lhs, Integra
 
 namespace detail {
 
-void print_discrete_vector(std::ostream& os, DiscreteVectorElement const* data, std::size_t n);
+void print_discrete_vector(std::ostream& os, std::span<DiscreteVectorElement const> view);
 
 } // namespace detail
 
 template <class... Tags>
 std::ostream& operator<<(std::ostream& os, DiscreteVector<Tags...> const& arr)
 {
-    std::array const std_arr = detail::array(arr);
-    detail::print_discrete_vector(os, std_arr.data(), std_arr.size());
+    detail::print_discrete_vector(os, detail::array(arr));
     return os;
 }
 

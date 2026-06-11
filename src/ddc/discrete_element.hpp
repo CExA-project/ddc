@@ -311,15 +311,14 @@ public:
 
 namespace detail {
 
-void print_discrete_element(std::ostream& os, DiscreteElementType const* data, std::size_t n);
+void print_discrete_element(std::ostream& os, std::span<DiscreteElementType const> view);
 
 } // namespace detail
 
 template <class... Tags>
 std::ostream& operator<<(std::ostream& os, DiscreteElement<Tags...> const& arr)
 {
-    std::array const std_arr = detail::array(arr);
-    detail::print_discrete_element(os, std_arr.data(), std_arr.size());
+    detail::print_discrete_element(os, detail::array(arr));
     return os;
 }
 

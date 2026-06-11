@@ -2,23 +2,20 @@
 //
 // SPDX-License-Identifier: MIT
 
-#include <cstddef>
 #include <ostream>
+#include <span>
 
 #include "discrete_element.hpp"
 
 namespace ddc::detail {
 
-void print_discrete_element(
-        std::ostream& os,
-        DiscreteElementType const* const data,
-        std::size_t const n)
+void print_discrete_element(std::ostream& os, std::span<DiscreteElementType const> const view)
 {
     os << '(';
-    if (n > 0) {
-        os << data[0];
-        for (std::size_t i = 1; i < n; ++i) {
-            os << ", " << data[i];
+    if (!view.empty()) {
+        os << view.front();
+        for (DiscreteElementType const value : view.subspan(1)) {
+            os << ", " << value;
         }
     }
     os << ')';

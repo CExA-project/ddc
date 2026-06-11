@@ -6,16 +6,16 @@
 <area shape="poly" id="edge33_Node000000_Node000002" title=" " alt="" coords="63,488,75,404,96,293,125,188,143,147,163,119,187,103,213,91,268,80,269,85,214,96,189,108,167,123,148,150,130,190,101,294,80,405,68,489"/>
 <area shape="rect" id="Node000003" href="$structddc_1_1is__discrete__vector_3_01DiscreteVector_3_01Tags_8_8_8_01_4_01_4.html" title=" " alt="" coords="275,133,493,173"/>
 <area shape="poly" id="edge34_Node000000_Node000003" title=" " alt="" coords="60,488,63,425,77,342,90,298,108,256,132,217,164,183,188,167,216,155,274,144,275,149,218,160,191,171,167,187,137,220,113,258,95,300,82,343,68,425,65,488"/>
-<area shape="rect" id="Node000004" href="$structddc_1_1is__evaluator__admissible_3_01SplineBuilder2D_3_01ExecSpace_00_01MemorySpace_00_01B3b9a0a284ab7d992c4eb7eb3baab8cf1.html" title=" " alt="" coords="165,197,603,325"/>
+<area shape="rect" id="Node000004" href="$structddc_1_1is__evaluator__admissible_3_01SplineBuilder2D_3_01ExecSpace_00_01MemorySpace_00_01B5ddee331a52e77ca5c7235354cad196d.html" title=" " alt="" coords="165,197,603,325"/>
 <area shape="poly" id="edge35_Node000000_Node000004" title=" " alt="" coords="69,488,82,454,102,413,129,371,164,335,180,323,183,328,167,339,134,375,107,416,87,456,73,490"/>
-<area shape="rect" id="Node000005" href="$structddc_1_1is__evaluator__admissible_3_01SplineBuilder_3_01ExecSpace_00_01MemorySpace_00_01BSp49a3b5cca1e507a8a1b59ab9867f3f9b.html" title=" " alt="" coords="195,350,573,463"/>
+<area shape="rect" id="Node000005" href="$structddc_1_1is__evaluator__admissible_3_01SplineBuilder_3_01ExecSpace_00_01MemorySpace_00_01BSp4a78e44f5661f9b0105fe82c93b3c8df.html" title=" " alt="" coords="195,350,573,463"/>
 <area shape="poly" id="edge36_Node000000_Node000005" title=" " alt="" coords="106,494,164,472,197,461,199,466,166,477,107,499"/>
 <area shape="rect" id="Node000006" href="$structddc_1_1is__sparse__discrete__domain_3_01SparseDiscreteDomain_3_01Tags_8_8_8_01_4_01_4.html" title=" " alt="" coords="263,487,505,542"/>
 <area shape="poly" id="edge37_Node000000_Node000006" title=" " alt="" coords="131,512,262,512,262,517,131,517"/>
-<area shape="rect" id="Node000007" href="$structddc_1_1is__spline__builder2d_3_01SplineBuilder2D_3_01ExecSpace_00_01MemorySpace_00_01BSpli7b60690c0d8d02d86807917fa974cfff.html" title=" " alt="" coords="245,566,523,650"/>
-<area shape="poly" id="edge38_Node000000_Node000007" title=" " alt="" coords="107,530,166,551,245,573,244,578,165,556,105,535"/>
-<area shape="rect" id="Node000008" href="$structddc_1_1is__spline__builder_3_01SplineBuilder_3_01ExecSpace_00_01MemorySpace_00_01BSplines_7fb20b4b3cb905fbec09104cc4d8bad0.html" title=" " alt="" coords="247,675,521,744"/>
-<area shape="poly" id="edge39_Node000000_Node000008" title=" " alt="" coords="76,539,110,600,136,632,167,659,205,679,247,693,246,698,203,684,164,664,132,636,106,603,71,541"/>
+<area shape="rect" id="Node000007" href="$structddc_1_1is__spline__builder2d_3_01SplineBuilder2D_3_01ExecSpace_00_01MemorySpace_00_01BSpli4225ea179f2e6753dc817ecd501c0002.html" title=" " alt="" coords="235,566,533,650"/>
+<area shape="poly" id="edge38_Node000000_Node000007" title=" " alt="" coords="107,530,166,551,235,570,233,576,165,556,105,535"/>
+<area shape="rect" id="Node000008" href="$structddc_1_1is__spline__builder_3_01SplineBuilder_3_01ExecSpace_00_01MemorySpace_00_01BSplines_9552635f9929289f9d3a89cd5466ddf1.html" title=" " alt="" coords="242,675,526,744"/>
+<area shape="poly" id="edge39_Node000000_Node000008" title=" " alt="" coords="76,539,110,600,136,632,167,659,203,678,243,692,241,697,201,683,164,664,132,636,106,603,71,541"/>
 <area shape="rect" id="Node000009" href="$structddc_1_1is__spline__evaluator2d_3_01SplineEvaluator2D_3_01ExecSpace_00_01MemorySpace_00_01Bab426b7c2afbbe95ee03abe88c8cadbb.html" title=" " alt="" coords="169,768,599,867"/>
 <area shape="poly" id="edge40_Node000000_Node000009" title=" " alt="" coords="69,540,79,586,97,644,125,703,145,730,167,754,182,766,179,770,164,758,140,734,121,706,92,646,73,588,64,541"/>
 <area shape="rect" id="Node000010" href="$structddc_1_1is__spline__evaluator_3_01SplineEvaluator_3_01ExecSpace_00_01MemorySpace_00_01BSpli9c02ad999c3c97f462f5c25d3036992e.html" title=" " alt="" coords="197,891,571,960"/>

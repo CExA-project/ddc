@@ -27,8 +27,8 @@ var namespaceddc =
     [ "is_discrete_vector", "structddc_1_1is__discrete__vector.html", null ],
     [ "is_discrete_vector< DiscreteVector< Tags... > >", "structddc_1_1is__discrete__vector_3_01DiscreteVector_3_01Tags_8_8_8_01_4_01_4.html", null ],
     [ "is_evaluator_admissible", "structddc_1_1is__evaluator__admissible.html", null ],
-    [ "is_evaluator_admissible< SplineBuilder2D< ExecSpace, MemorySpace, BSplines1, BSplines2, DDimI1, DDimI2, BcLower1, BcUpper1, BcLower2, BcUpper2, Solver >, SplineEvaluator2D< ExecSpace, MemorySpace, BSplines1, BSplines2, DDimI1, DDimI2, LowerExtrapolationRule1, UpperExtrapolationRule1, LowerExtrapolationRule2, UpperExtrapolationRule2 > >", "structddc_1_1is__evaluator__admissible_3_01SplineBuilder2D_3_01ExecSpace_00_01MemorySpace_00_01B3b9a0a284ab7d992c4eb7eb3baab8cf1.html", null ],
-    [ "is_evaluator_admissible< SplineBuilder< ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower, BcUpper, Solver >, SplineEvaluator< ExecSpace, MemorySpace, BSplines, InterpolationDDim, LowerExtrapolationRule, UpperExtrapolationRule > >", "structddc_1_1is__evaluator__admissible_3_01SplineBuilder_3_01ExecSpace_00_01MemorySpace_00_01BSp49a3b5cca1e507a8a1b59ab9867f3f9b.html", null ],
+    [ "is_evaluator_admissible< SplineBuilder2D< ExecSpace, MemorySpace, BSplines1, BSplines2, DDimI1, DDimI2, SBCLower1, SBCUpper1, SBCLower2, SBCUpper2, Solver >, SplineEvaluator2D< ExecSpace, MemorySpace, BSplines1, BSplines2, DDimI1, DDimI2, LowerExtrapolationRule1, UpperExtrapolationRule1, LowerExtrapolationRule2, UpperExtrapolationRule2 > >", "structddc_1_1is__evaluator__admissible_3_01SplineBuilder2D_3_01ExecSpace_00_01MemorySpace_00_01B5ddee331a52e77ca5c7235354cad196d.html", null ],
+    [ "is_evaluator_admissible< SplineBuilder< ExecSpace, MemorySpace, BSplines, InterpolationDDim, SBCLower, SBCUpper, Solver >, SplineEvaluator< ExecSpace, MemorySpace, BSplines, InterpolationDDim, LowerExtrapolationRule, UpperExtrapolationRule > >", "structddc_1_1is__evaluator__admissible_3_01SplineBuilder_3_01ExecSpace_00_01MemorySpace_00_01BSp4a78e44f5661f9b0105fe82c93b3c8df.html", null ],
     [ "is_non_uniform_bsplines", "structddc_1_1is__non__uniform__bsplines.html", null ],
     [ "is_non_uniform_point_sampling", "structddc_1_1is__non__uniform__point__sampling.html", null ],
     [ "is_periodic_sampling", "structddc_1_1is__periodic__sampling.html", null ],
@@ -36,8 +36,8 @@ var namespaceddc =
     [ "is_sparse_discrete_domain< SparseDiscreteDomain< Tags... > >", "structddc_1_1is__sparse__discrete__domain_3_01SparseDiscreteDomain_3_01Tags_8_8_8_01_4_01_4.html", null ],
     [ "is_spline_builder", "structddc_1_1is__spline__builder.html", null ],
     [ "is_spline_builder2d", "structddc_1_1is__spline__builder2d.html", null ],
-    [ "is_spline_builder2d< SplineBuilder2D< ExecSpace, MemorySpace, BSpline1, BSpline2, DDimI1, DDimI2, BcLower1, BcUpper1, BcLower2, BcUpper2, Solver > >", "structddc_1_1is__spline__builder2d_3_01SplineBuilder2D_3_01ExecSpace_00_01MemorySpace_00_01BSpli7b60690c0d8d02d86807917fa974cfff.html", null ],
-    [ "is_spline_builder< SplineBuilder< ExecSpace, MemorySpace, BSplines, InterpolationDDim, BcLower, BcUpper, Solver > >", "structddc_1_1is__spline__builder_3_01SplineBuilder_3_01ExecSpace_00_01MemorySpace_00_01BSplines_7fb20b4b3cb905fbec09104cc4d8bad0.html", null ],
+    [ "is_spline_builder2d< SplineBuilder2D< ExecSpace, MemorySpace, BSpline1, BSpline2, DDimI1, DDimI2, SBCLower1, SBCUpper1, SBCLower2, SBCUpper2, Solver > >", "structddc_1_1is__spline__builder2d_3_01SplineBuilder2D_3_01ExecSpace_00_01MemorySpace_00_01BSpli4225ea179f2e6753dc817ecd501c0002.html", null ],
+    [ "is_spline_builder< SplineBuilder< ExecSpace, MemorySpace, BSplines, InterpolationDDim, SBCLower, SBCUpper, Solver > >", "structddc_1_1is__spline__builder_3_01SplineBuilder_3_01ExecSpace_00_01MemorySpace_00_01BSplines_9552635f9929289f9d3a89cd5466ddf1.html", null ],
     [ "is_spline_evaluator", "structddc_1_1is__spline__evaluator.html", null ],
     [ "is_spline_evaluator2d", "structddc_1_1is__spline__evaluator2d.html", null ],
     [ "is_spline_evaluator2d< SplineEvaluator2D< ExecSpace, MemorySpace, BSpline1, BSpline2, EvaluationDDim1, EvaluationDDim2, LowerExtrapolationRule1, UpperExtrapolationRule1, LowerExtrapolationRule2, UpperExtrapolationRule2 > >", "structddc_1_1is__spline__evaluator2d_3_01SplineEvaluator2D_3_01ExecSpace_00_01MemorySpace_00_01Bab426b7c2afbbe95ee03abe88c8cadbb.html", null ],
@@ -112,15 +112,15 @@ var namespaceddc =
       [ "ORTHO", "namespaceddc.html#a5d5291156a65ec442dfcd7274f045631a9441273d8f694623f0a3cf3e24c29944", null ],
       [ "FULL", "namespaceddc.html#a5d5291156a65ec442dfcd7274f045631aba7de5bc6888294e5884b024a4c894f1", null ]
     ] ],
-    [ "BoundCond", "namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744a", [
-      [ "PERIODIC", "namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744aad9d83fc826ae0d42075af007a477e2c9", null ],
-      [ "HERMITE", "namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744aad85d6eb1a93601cc83dc87ac66dfb75e", null ],
-      [ "HOMOGENEOUS_HERMITE", "namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744aa7f554ccdf64705edd67d9fb0e4a1b00b", null ],
-      [ "GREVILLE", "namespaceddc.html#a28f4ae114fe8694bf78c0d761bc9744aa9febc190323c06d33ae8d8716f98bfe9", null ]
-    ] ],
     [ "SplineSolver", "namespaceddc.html#a36c0210a850dde0979ad8b5772ee730c", [
       [ "GINKGO", "namespaceddc.html#a36c0210a850dde0979ad8b5772ee730caa3a0305034fc65890f8e232fdf60ab46", null ],
       [ "LAPACK", "namespaceddc.html#a36c0210a850dde0979ad8b5772ee730ca7015270b41ffefb4e67d40c8bd451a4d", null ]
+    ] ],
+    [ "SplineBuilderClosure", "namespaceddc.html#af0164352e1fcea721abe3aadb2533cf6", [
+      [ "PERIODIC", "namespaceddc.html#af0164352e1fcea721abe3aadb2533cf6ad9d83fc826ae0d42075af007a477e2c9", null ],
+      [ "HERMITE", "namespaceddc.html#af0164352e1fcea721abe3aadb2533cf6ad85d6eb1a93601cc83dc87ac66dfb75e", null ],
+      [ "HOMOGENEOUS_HERMITE", "namespaceddc.html#af0164352e1fcea721abe3aadb2533cf6a7f554ccdf64705edd67d9fb0e4a1b00b", null ],
+      [ "GREVILLE", "namespaceddc.html#af0164352e1fcea721abe3aadb2533cf6a9febc190323c06d33ae8d8716f98bfe9", null ]
     ] ],
     [ "operator==", "namespaceddc.html#ab9c4c82344441d78a0d129c7fa9e3ab9", null ],
     [ "operator!=", "namespaceddc.html#a1e2daade1cf2aa66fd6772beb01ac888", null ],
@@ -261,8 +261,8 @@ var namespaceddc =
     [ "expose_to_pdi", "namespaceddc.html#a23d4abcde702238b33c5185cd6457658", null ],
     [ "expose_to_pdi", "namespaceddc.html#ad1758d8bf1e3c6a363d0ee5ec254d517", null ],
     [ "integrals", "namespaceddc.html#a2e0f4e58eeec721f51500277e9f814fa", null ],
-    [ "operator<<", "namespaceddc.html#a357bbf38491a391951d4f42062795abd", null ],
-    [ "n_boundary_equations", "namespaceddc.html#a086f7e0fd872b6bd2aef5760d1b3845f", null ],
+    [ "operator<<", "namespaceddc.html#a4507b6273035310c6613b823850cc854", null ],
+    [ "n_boundary_equations", "namespaceddc.html#a8ae5f0e5a8f43f7c54e9d13159bb96dc", null ],
     [ "enable_chunk< Chunk< ElementType, SupportType, Allocator > >", "namespaceddc.html#a0408c8fc71367c112c298719ad6b9885", null ],
     [ "enable_chunk< ChunkSpan< ElementType, SupportType, LayoutStridedPolicy, MemorySpace > >", "namespaceddc.html#a940791d3528033e07205be12f8aee358", null ],
     [ "enable_borrowed_chunk< ChunkSpan< ElementType, SupportType, LayoutStridedPolicy, MemorySpace > >", "namespaceddc.html#a1654348aeba85c8ac3c8b933ee87a4c1", null ],

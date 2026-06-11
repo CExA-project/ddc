@@ -1,11 +1,11 @@
 var searchData=
 [
-  ['s_5fbc_5fxmax_0',['s_bc_xmax',['../classddc_1_1SplineBuilder.html#abeed8ab41d7d784ca55bdd922116b79b',1,'ddc::SplineBuilder']]],
-  ['s_5fbc_5fxmin_1',['s_bc_xmin',['../classddc_1_1SplineBuilder.html#a4cc69f4ab29d14e997478b4b7fa52a42',1,'ddc::SplineBuilder']]],
-  ['s_5fnbe_5fxmax_2',['s_nbe_xmax',['../classddc_1_1SplineBuilder.html#a38ece00e99bf386de694ccd99329d744',1,'ddc::SplineBuilder']]],
-  ['s_5fnbe_5fxmin_3',['s_nbe_xmin',['../classddc_1_1SplineBuilder.html#af4ae808e971a32af11ef18046a7a90e7',1,'ddc::SplineBuilder']]],
-  ['s_5fnbv_5fxmax_4',['s_nbv_xmax',['../classddc_1_1SplineBuilder.html#a8e6d897d7a1f34a68c6a44fb6bf2e1fc',1,'ddc::SplineBuilder']]],
-  ['s_5fnbv_5fxmin_5',['s_nbv_xmin',['../classddc_1_1SplineBuilder.html#aa09709360999d914ca32cd5b9c7b6485',1,'ddc::SplineBuilder']]],
-  ['s_5fodd_6',['s_odd',['../classddc_1_1SplineBuilder.html#a942620c02e5864f743a44b820c9bd488',1,'ddc::SplineBuilder']]],
-  ['s_5fspline_5fsolver_7',['s_spline_solver',['../classddc_1_1SplineBuilder.html#a12ef471bd615ff07310704d66b409884',1,'ddc::SplineBuilder']]]
+  ['s_5fnbe_5fxmax_0',['s_nbe_xmax',['../classddc_1_1SplineBuilder.html#a654634b7f983a0e4f774e2d2c5ad68d7',1,'ddc::SplineBuilder']]],
+  ['s_5fnbe_5fxmin_1',['s_nbe_xmin',['../classddc_1_1SplineBuilder.html#a37025d4beb74a0020f434d391c0da683',1,'ddc::SplineBuilder']]],
+  ['s_5fnbv_5fxmax_2',['s_nbv_xmax',['../classddc_1_1SplineBuilder.html#ae85e43ab1bf2e79d4f2f9e83932b0015',1,'ddc::SplineBuilder']]],
+  ['s_5fnbv_5fxmin_3',['s_nbv_xmin',['../classddc_1_1SplineBuilder.html#af50aba000bfa91926040ed444c127597',1,'ddc::SplineBuilder']]],
+  ['s_5fodd_4',['s_odd',['../classddc_1_1SplineBuilder.html#a8b35974bc1a2d0669196697539d0a7a2',1,'ddc::SplineBuilder']]],
+  ['s_5fsbc_5fxmax_5',['s_sbc_xmax',['../classddc_1_1SplineBuilder.html#a6d8128fffd13833229a801298dab50d4',1,'ddc::SplineBuilder']]],
+  ['s_5fsbc_5fxmin_6',['s_sbc_xmin',['../classddc_1_1SplineBuilder.html#a3a95c35d3b5cda5c5dd0273da5063684',1,'ddc::SplineBuilder']]],
+  ['s_5fspline_5fsolver_7',['s_spline_solver',['../classddc_1_1SplineBuilder.html#a69be7ea9ff1cc0c12bca6584209f66a2',1,'ddc::SplineBuilder']]]
 ];

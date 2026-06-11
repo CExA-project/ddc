@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['fft_5fdirection_0',['FFT_Direction',['../namespaceddc.html#ae672eb355c3d1fa7de604e8bf6164853',1,'ddc']]],
-  ['fft_5fnormalization_1',['FFT_Normalization',['../namespaceddc.html#a5d5291156a65ec442dfcd7274f045631',1,'ddc']]]
+  ['splinebuilderclosure_0',['SplineBuilderClosure',['../namespaceddc.html#af0164352e1fcea721abe3aadb2533cf6',1,'ddc']]],
+  ['splinesolver_1',['SplineSolver',['../namespaceddc.html#a36c0210a850dde0979ad8b5772ee730c',1,'ddc']]]
 ];

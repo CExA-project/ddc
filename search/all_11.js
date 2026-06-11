@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['n_5fboundary_5fequations_0',['n_boundary_equations',['../namespaceddc.html#a086f7e0fd872b6bd2aef5760d1b3845f',1,'ddc']]],
+  ['n_5fboundary_5fequations_0',['n_boundary_equations',['../namespaceddc.html#a8ae5f0e5a8f43f7c54e9d13159bb96dc',1,'ddc']]],
   ['n_5fperiod_1',['n_period',['../classddc_1_1PeriodicSampling_1_1Impl.html#aa16c57ec35d70f65bcb93d63b1c8e626',1,'ddc::PeriodicSampling::Impl']]],
   ['naming_2',['naming',['../going_further.html#autotoc_md15',1,'Dimensions naming'],['../first_steps.html#autotoc_md4',1,'Dimensions naming']]],
   ['nbasis_3',['nbasis',['../classddc_1_1UniformBSplines_1_1Impl.html#a564dc30c93068bcf9a772078893e38d2',1,'ddc::UniformBSplines::Impl::nbasis()'],['../classddc_1_1NonUniformBSplines_1_1Impl.html#ad713aa8b15d968e5bf6fafd0d4fa74dd',1,'ddc::NonUniformBSplines::Impl::nbasis() const noexcept']]],

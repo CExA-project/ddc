@@ -53,10 +53,9 @@ public:
  *            range. The return type must be assignable to dst
  * @return dst as a ChunkSpan
  */
-template <class ChunkDst, class UnaryTransformOp>
+template <concepts::borrowed_chunk ChunkDst, class UnaryTransformOp>
 auto parallel_transform(std::string const& label, ChunkDst&& dst, UnaryTransformOp&& transform)
 {
-    static_assert(is_borrowed_chunk_v<ChunkDst>);
     parallel_for_each(
             label,
             dst.domain(),
@@ -86,14 +85,13 @@ auto parallel_transform(ChunkDst&& dst, UnaryTransformOp&& transform)
  *            range. The return type must be acceptable as input to reduce
  * @return dst as a ChunkSpan
  */
-template <class ExecSpace, class ChunkDst, class UnaryTransformOp>
+template <class ExecSpace, concepts::borrowed_chunk ChunkDst, class UnaryTransformOp>
 auto parallel_transform(
         std::string const& label,
         ExecSpace const& execution_space,
         ChunkDst&& dst,
         UnaryTransformOp&& transform)
 {
-    static_assert(is_borrowed_chunk_v<ChunkDst>);
     parallel_for_each(
             label,
             execution_space,

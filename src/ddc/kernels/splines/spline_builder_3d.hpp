@@ -12,9 +12,9 @@
 
 #include <ddc/ddc.hpp>
 
-#include "spline_boundary_conditions.hpp"
 #include "spline_builder.hpp"
 #include "spline_builder_2d.hpp"
+#include "spline_builder_closures.hpp"
 
 namespace ddc {
 
@@ -35,12 +35,12 @@ template <
         class DDimI1,
         class DDimI2,
         class DDimI3,
-        ddc::BoundCond BcLower1,
-        ddc::BoundCond BcUpper1,
-        ddc::BoundCond BcLower2,
-        ddc::BoundCond BcUpper2,
-        ddc::BoundCond BcLower3,
-        ddc::BoundCond BcUpper3,
+        ddc::SplineBuilderClosure SBCLower1,
+        ddc::SplineBuilderClosure SBCUpper1,
+        ddc::SplineBuilderClosure SBCLower2,
+        ddc::SplineBuilderClosure SBCUpper2,
+        ddc::SplineBuilderClosure SBCLower3,
+        ddc::SplineBuilderClosure SBCUpper3,
         ddc::SplineSolver Solver>
 class SplineBuilder3D
 {
@@ -53,7 +53,7 @@ public:
 
     /// @brief The type of the SplineBuilder used by this class to spline-approximate along first dimension.
     using builder_type1 = ddc::
-            SplineBuilder<ExecSpace, MemorySpace, BSpline1, DDimI1, BcLower1, BcUpper1, Solver>;
+            SplineBuilder<ExecSpace, MemorySpace, BSpline1, DDimI1, SBCLower1, SBCUpper1, Solver>;
 
     /// @brief The type of SplineBuilder used by this class to spline-approximate along the second and third dimensions.
     using builder_type_2_3 = ddc::SplineBuilder2D<
@@ -63,10 +63,10 @@ public:
             BSpline3,
             DDimI2,
             DDimI3,
-            BcLower2,
-            BcUpper2,
-            BcLower3,
-            BcUpper3,
+            SBCLower2,
+            SBCUpper2,
+            SBCLower3,
+            SBCUpper3,
             Solver>;
 
     /// @brief The type of the first interpolation continuous dimension.
@@ -530,7 +530,7 @@ public:
      *
      * Use the values of a function (defined on
      * SplineBuilder3D::batched_interpolation_domain) and the derivatives of the
-     * function at the boundaries (in the case of BoundCond::HERMITE only)
+     * function at the boundaries (in the case of SplineBuilderClosure::HERMITE only)
      * to calculate a 3D spline approximation of this function.
      *
      * The spline approximation is stored as a ChunkSpan of coefficients
@@ -769,12 +769,12 @@ template <
         class DDimI1,
         class DDimI2,
         class DDimI3,
-        ddc::BoundCond BcLower1,
-        ddc::BoundCond BcUpper1,
-        ddc::BoundCond BcLower2,
-        ddc::BoundCond BcUpper2,
-        ddc::BoundCond BcLower3,
-        ddc::BoundCond BcUpper3,
+        ddc::SplineBuilderClosure SBCLower1,
+        ddc::SplineBuilderClosure SBCUpper1,
+        ddc::SplineBuilderClosure SBCLower2,
+        ddc::SplineBuilderClosure SBCUpper2,
+        ddc::SplineBuilderClosure SBCLower3,
+        ddc::SplineBuilderClosure SBCUpper3,
         ddc::SplineSolver Solver>
 template <class Layout, class BatchedInterpolationDDom>
 void SplineBuilder3D<
@@ -786,12 +786,12 @@ void SplineBuilder3D<
         DDimI1,
         DDimI2,
         DDimI3,
-        BcLower1,
-        BcUpper1,
-        BcLower2,
-        BcUpper2,
-        BcLower3,
-        BcUpper3,
+        SBCLower1,
+        SBCUpper1,
+        SBCLower2,
+        SBCUpper2,
+        SBCLower3,
+        SBCUpper3,
         Solver>::
 operator()(
         ddc::ChunkSpan<
@@ -955,7 +955,7 @@ operator()(
             ddc::KokkosAllocator<double, MemorySpace>());
     auto spline_derivs_min2 = spline_derivs_min2_alloc.span_view();
     auto spline_derivs_min2_opt = std::optional(spline_derivs_min2.span_cview());
-    if constexpr (BcLower2 == ddc::BoundCond::HERMITE) {
+    if constexpr (SBCLower2 == ddc::SplineBuilderClosure::HERMITE) {
         m_spline_builder1(
                 spline_derivs_min2,
                 *derivs_min2,
@@ -971,7 +971,7 @@ operator()(
             ddc::KokkosAllocator<double, MemorySpace>());
     auto spline_derivs_max2 = spline_derivs_max2_alloc.span_view();
     auto spline_derivs_max2_opt = std::optional(spline_derivs_max2.span_cview());
-    if constexpr (BcUpper2 == ddc::BoundCond::HERMITE) {
+    if constexpr (SBCUpper2 == ddc::SplineBuilderClosure::HERMITE) {
         m_spline_builder1(
                 spline_derivs_max2,
                 *derivs_max2,
@@ -995,7 +995,7 @@ operator()(
             ddc::KokkosAllocator<double, MemorySpace>());
     auto spline_derivs_min3 = spline_derivs_min3_alloc.span_view();
     auto spline_derivs_min3_opt = std::optional(spline_derivs_min3.span_cview());
-    if constexpr (BcLower3 == ddc::BoundCond::HERMITE) {
+    if constexpr (SBCLower3 == ddc::SplineBuilderClosure::HERMITE) {
         m_spline_builder1(
                 spline_derivs_min3,
                 *derivs_min3,
@@ -1011,7 +1011,7 @@ operator()(
             ddc::KokkosAllocator<double, MemorySpace>());
     auto spline_derivs_max3 = spline_derivs_max3_alloc.span_view();
     auto spline_derivs_max3_opt = std::optional(spline_derivs_max3.span_cview());
-    if constexpr (BcUpper3 == ddc::BoundCond::HERMITE) {
+    if constexpr (SBCUpper3 == ddc::SplineBuilderClosure::HERMITE) {
         m_spline_builder1(
                 spline_derivs_max3,
                 *derivs_max3,
@@ -1035,7 +1035,9 @@ operator()(
             ddc::KokkosAllocator<double, MemorySpace>());
     auto spline_derivs_min2_min3 = spline_derivs_min2_min3_alloc.span_view();
     auto spline_derivs_min2_min3_opt = std::optional(spline_derivs_min2_min3.span_cview());
-    if constexpr (BcLower2 == ddc::BoundCond::HERMITE || BcLower3 == ddc::BoundCond::HERMITE) {
+    if constexpr (
+            SBCLower2 == ddc::SplineBuilderClosure::HERMITE
+            || SBCLower3 == ddc::SplineBuilderClosure::HERMITE) {
         m_spline_builder1(
                 spline_derivs_min2_min3,
                 *mixed_derivs_min2_min3,
@@ -1051,7 +1053,9 @@ operator()(
             ddc::KokkosAllocator<double, MemorySpace>());
     auto spline_derivs_min2_max3 = spline_derivs_min2_max3_alloc.span_view();
     auto spline_derivs_min2_max3_opt = std::optional(spline_derivs_min2_max3.span_cview());
-    if constexpr (BcLower2 == ddc::BoundCond::HERMITE || BcUpper3 == ddc::BoundCond::HERMITE) {
+    if constexpr (
+            SBCLower2 == ddc::SplineBuilderClosure::HERMITE
+            || SBCUpper3 == ddc::SplineBuilderClosure::HERMITE) {
         m_spline_builder1(
                 spline_derivs_min2_max3,
                 *mixed_derivs_min2_max3,
@@ -1067,7 +1071,9 @@ operator()(
             ddc::KokkosAllocator<double, MemorySpace>());
     auto spline_derivs_max2_min3 = spline_derivs_max2_min3_alloc.span_view();
     auto spline_derivs_max2_min3_opt = std::optional(spline_derivs_max2_min3.span_cview());
-    if constexpr (BcUpper2 == ddc::BoundCond::HERMITE || BcLower3 == ddc::BoundCond::HERMITE) {
+    if constexpr (
+            SBCUpper2 == ddc::SplineBuilderClosure::HERMITE
+            || SBCLower3 == ddc::SplineBuilderClosure::HERMITE) {
         m_spline_builder1(
                 spline_derivs_max2_min3,
                 *mixed_derivs_max2_min3,
@@ -1083,7 +1089,9 @@ operator()(
             ddc::KokkosAllocator<double, MemorySpace>());
     auto spline_derivs_max2_max3 = spline_derivs_max2_max3_alloc.span_view();
     auto spline_derivs_max2_max3_opt = std::optional(spline_derivs_max2_max3.span_cview());
-    if constexpr (BcUpper2 == ddc::BoundCond::HERMITE || BcUpper3 == ddc::BoundCond::HERMITE) {
+    if constexpr (
+            SBCUpper2 == ddc::SplineBuilderClosure::HERMITE
+            || SBCUpper3 == ddc::SplineBuilderClosure::HERMITE) {
         m_spline_builder1(
                 spline_derivs_max2_max3,
                 *mixed_derivs_max2_max3,

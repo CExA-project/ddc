@@ -46,22 +46,22 @@ struct DimY
 constexpr std::size_t s_degree = DEGREE;
 
 #if defined(BC_PERIODIC)
-constexpr ddc::BoundCond s_bcl1 = ddc::BoundCond::GREVILLE;
-constexpr ddc::BoundCond s_bcr1 = ddc::BoundCond::GREVILLE;
-constexpr ddc::BoundCond s_bcl2 = ddc::BoundCond::PERIODIC;
-constexpr ddc::BoundCond s_bcr2 = ddc::BoundCond::PERIODIC;
+constexpr ddc::SplineBuilderClosure s_sbcl1 = ddc::SplineBuilderClosure::GREVILLE;
+constexpr ddc::SplineBuilderClosure s_sbcr1 = ddc::SplineBuilderClosure::GREVILLE;
+constexpr ddc::SplineBuilderClosure s_sbcl2 = ddc::SplineBuilderClosure::PERIODIC;
+constexpr ddc::SplineBuilderClosure s_sbcr2 = ddc::SplineBuilderClosure::PERIODIC;
 #elif defined(BC_GREVILLE)
-constexpr ddc::BoundCond s_bcl1 = ddc::BoundCond::GREVILLE;
-constexpr ddc::BoundCond s_bcr1 = ddc::BoundCond::GREVILLE;
-constexpr ddc::BoundCond s_bcl2 = ddc::BoundCond::GREVILLE;
-constexpr ddc::BoundCond s_bcr2 = ddc::BoundCond::GREVILLE;
+constexpr ddc::SplineBuilderClosure s_sbcl1 = ddc::SplineBuilderClosure::GREVILLE;
+constexpr ddc::SplineBuilderClosure s_sbcr1 = ddc::SplineBuilderClosure::GREVILLE;
+constexpr ddc::SplineBuilderClosure s_sbcl2 = ddc::SplineBuilderClosure::GREVILLE;
+constexpr ddc::SplineBuilderClosure s_sbcr2 = ddc::SplineBuilderClosure::GREVILLE;
 #endif
 
 template <typename BSpX>
-using GrevillePoints1 = ddc::GrevilleInterpolationPoints<BSpX, s_bcl1, s_bcr1>;
+using GrevillePoints1 = ddc::GrevilleInterpolationPoints<BSpX, s_sbcl1, s_sbcr1>;
 
 template <typename BSpX>
-using GrevillePoints2 = ddc::GrevilleInterpolationPoints<BSpX, s_bcl2, s_bcr2>;
+using GrevillePoints2 = ddc::GrevilleInterpolationPoints<BSpX, s_sbcl2, s_sbcr2>;
 
 #if defined(BSPLINES_TYPE_UNIFORM)
 template <typename X>
@@ -178,7 +178,7 @@ void TestExtrapolationRuleSpline()
             ddc::DiscreteDomain<DDims>(DElem<DDims>(0), DVect<DDims>(ncells))...);
     ddc::DiscreteDomain<DDims...> const dom_vals(dom_vals_tmp, interpolation_domain);
 
-    // Create a SplineBuilder over BSplines<I> and batched along other dimensions using some boundary conditions
+    // Create a SplineBuilder over BSplines<I> and batched along other dimensions using some closure relations
     ddc::SplineBuilder2D<
             ExecSpace,
             MemorySpace,
@@ -186,10 +186,10 @@ void TestExtrapolationRuleSpline()
             BSplines<I2>,
             DDimI1,
             DDimI2,
-            s_bcl1,
-            s_bcr1,
-            s_bcl2,
-            s_bcr2,
+            s_sbcl1,
+            s_sbcr1,
+            s_sbcl2,
+            s_sbcr2,
             ddc::SplineSolver::GINKGO> const spline_builder(interpolation_domain);
 
     // Compute useful domains (dom_interpolation, dom_batch, dom_bsplines and dom_spline)

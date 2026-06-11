@@ -295,14 +295,13 @@ if("${DDC_BUILD_KERNELS_SPLINES}")
     target_compile_features(ddc_splines PUBLIC cxx_std_20)
     target_link_libraries(
         ddc_splines
-        INTERFACE DDC::core
         PRIVATE Ginkgo::ginkgo Kokkos::kokkoskernels LAPACKE::LAPACKE
-        PUBLIC Kokkos::kokkos
+        PUBLIC DDC::core Kokkos::kokkos
     )
     target_sources(
         ddc_splines
         PRIVATE
-            src/ddc/kernels/splines/spline_boundary_conditions.cpp
+            src/ddc/kernels/splines/spline_builder_closures.cpp
             src/ddc/kernels/splines/splines_linear_problem.cpp
             src/ddc/kernels/splines/splines_linear_problem_2x2_blocks.cpp
             src/ddc/kernels/splines/splines_linear_problem_3x3_blocks.cpp
@@ -327,10 +326,10 @@ if("${DDC_BUILD_KERNELS_SPLINES}")
                     src/ddc/kernels/splines/math_tools.hpp
                     src/ddc/kernels/splines/null_extrapolation_rule.hpp
                     src/ddc/kernels/splines/periodic_extrapolation_rule.hpp
-                    src/ddc/kernels/splines/spline_boundary_conditions.hpp
                     src/ddc/kernels/splines/spline_builder.hpp
                     src/ddc/kernels/splines/spline_builder_2d.hpp
                     src/ddc/kernels/splines/spline_builder_3d.hpp
+                    src/ddc/kernels/splines/spline_builder_closures.hpp
                     src/ddc/kernels/splines/spline_evaluator.hpp
                     src/ddc/kernels/splines/spline_evaluator_2d.hpp
                     src/ddc/kernels/splines/spline_evaluator_3d.hpp

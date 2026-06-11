@@ -14,7 +14,7 @@
 
 #include "bsplines_uniform.hpp"
 #include "knot_discrete_dimension_type.hpp"
-#include "spline_boundary_conditions.hpp"
+#include "spline_builder_closures.hpp"
 
 namespace ddc {
 
@@ -23,21 +23,21 @@ namespace ddc {
  *
  * A helper class for the initialisation of the mesh of interpolation points. This
  * class should be used when the interpolation points should be located at the
- * knots of the spline. This is possible with any kind of boundary condition except
- * Greville boundary conditions (as there will not be enough interpolation points).
+ * knots of the spline. This is possible with any kind of closure relation except
+ * Greville closure relation (as there will not be enough interpolation points).
  * In the case of strongly non-uniform splines this choice may result in a less
  * well conditioned problem, however most mathematical stability results are proven
  * with this choice of interpolation points.
  *
  * @tparam BSplines The type of the uniform or non-uniform spline basis whose knots are used as interpolation points.
- * @tparam BcLower The lower boundary condition.
- * @tparam BcLower The upper boundary condition.
+ * @tparam SBCLower The lower closure relation.
+ * @tparam SBCLower The upper closure relation.
  */
-template <class BSplines, ddc::BoundCond BcLower, ddc::BoundCond BcUpper>
+template <class BSplines, ddc::SplineBuilderClosure SBCLower, ddc::SplineBuilderClosure SBCUpper>
 class KnotsAsInterpolationPoints
 {
-    static_assert(BcLower != ddc::BoundCond::GREVILLE);
-    static_assert(BcUpper != ddc::BoundCond::GREVILLE);
+    static_assert(SBCLower != ddc::SplineBuilderClosure::GREVILLE);
+    static_assert(SBCUpper != ddc::SplineBuilderClosure::GREVILLE);
 
     using continuous_dimension_type = BSplines::continuous_dimension_type;
 

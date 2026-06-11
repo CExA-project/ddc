@@ -32,16 +32,16 @@ struct DimX
 
 static constexpr std::size_t s_degree = DEGREE;
 
-#if defined(BCL_GREVILLE)
-static constexpr ddc::BoundCond s_bcl = ddc::BoundCond::GREVILLE;
-#elif defined(BCL_HERMITE)
-static constexpr ddc::BoundCond s_bcl = ddc::BoundCond::HERMITE;
+#if defined(SBCL_GREVILLE)
+static constexpr ddc::SplineBuilderClosure s_sbcl = ddc::SplineBuilderClosure::GREVILLE;
+#elif defined(SBCL_HERMITE)
+static constexpr ddc::SplineBuilderClosure s_sbcl = ddc::SplineBuilderClosure::HERMITE;
 #endif
 
-#if defined(BCR_GREVILLE)
-static constexpr ddc::BoundCond s_bcr = ddc::BoundCond::GREVILLE;
-#elif defined(BCR_HERMITE)
-static constexpr ddc::BoundCond s_bcr = ddc::BoundCond::HERMITE;
+#if defined(SBCR_GREVILLE)
+static constexpr ddc::SplineBuilderClosure s_sbcr = ddc::SplineBuilderClosure::GREVILLE;
+#elif defined(SBCR_HERMITE)
+static constexpr ddc::SplineBuilderClosure s_sbcr = ddc::SplineBuilderClosure::HERMITE;
 #endif
 
 #if defined(BSPLINES_TYPE_UNIFORM)
@@ -54,7 +54,7 @@ struct BSplinesX : ddc::NonUniformBSplines<DimX, s_degree>
 };
 #endif
 
-using GrevillePoints = ddc::GrevilleInterpolationPoints<BSplinesX, s_bcl, s_bcr>;
+using GrevillePoints = ddc::GrevilleInterpolationPoints<BSplinesX, s_sbcl, s_sbcr>;
 
 struct DDimX : GrevillePoints::interpolation_discrete_dimension_type
 {
@@ -112,14 +112,14 @@ void TestNonPeriodicSplineBuilderTestIdentity()
     ddc::init_discrete_space<DDimX>(GrevillePoints::get_sampling<DDimX>());
     ddc::DiscreteDomain<DDimX> const interpolation_domain(GrevillePoints::get_domain<DDimX>());
 
-    // 4. Create a SplineBuilder over BSplines using some boundary conditions
+    // 4. Create a SplineBuilder over BSplines using some closure relations
     ddc::SplineBuilder<
             execution_space,
             memory_space,
             BSplinesX,
             DDimX,
-            s_bcl,
-            s_bcr,
+            s_sbcl,
+            s_sbcr,
             ddc::SplineSolver::GINKGO> const spline_builder(interpolation_domain);
 
     // 5. Allocate and fill a chunk over the interpolation domain
@@ -133,7 +133,7 @@ void TestNonPeriodicSplineBuilderTestIdentity()
 
     ddc::Chunk derivs_lhs_alloc(derivs_domain, ddc::KokkosAllocator<double, memory_space>());
     ddc::ChunkSpan const derivs_lhs = derivs_lhs_alloc.span_view();
-    if (s_bcl == ddc::BoundCond::HERMITE) {
+    if (s_sbcl == ddc::SplineBuilderClosure::HERMITE) {
         ddc::parallel_for_each(
                 execution_space(),
                 derivs_domain,
@@ -144,7 +144,7 @@ void TestNonPeriodicSplineBuilderTestIdentity()
 
     ddc::Chunk derivs_rhs_alloc(derivs_domain, ddc::KokkosAllocator<double, memory_space>());
     ddc::ChunkSpan const derivs_rhs = derivs_rhs_alloc.span_view();
-    if (s_bcr == ddc::BoundCond::HERMITE) {
+    if (s_sbcr == ddc::SplineBuilderClosure::HERMITE) {
         ddc::parallel_for_each(
                 execution_space(),
                 derivs_domain,
@@ -154,13 +154,13 @@ void TestNonPeriodicSplineBuilderTestIdentity()
     }
 
     // 6. Finally build the spline by filling `coef`
-#if defined(BCL_HERMITE)
+#if defined(SBCL_HERMITE)
     std::optional const deriv_l(derivs_lhs.span_cview());
 #else
     decltype(std::optional(derivs_lhs.span_cview())) const deriv_l = std::nullopt;
 #endif
 
-#if defined(BCR_HERMITE)
+#if defined(SBCR_HERMITE)
     std::optional const deriv_r(derivs_rhs.span_cview());
 #else
     decltype(std::optional(derivs_rhs.span_cview())) const deriv_r = std::nullopt;
@@ -225,7 +225,7 @@ void TestNonPeriodicSplineBuilderTestIdentity()
                 quadrature_coefficients_derivs_xmax_alloc)
             = spline_builder.quadrature_coefficients();
     ddc::ChunkSpan const quadrature_coefficients(quadrature_coefficients_alloc.span_view());
-#if defined(BCL_HERMITE)
+#if defined(SBCL_HERMITE)
     ddc::ChunkSpan const quadrature_coefficients_derivs_xmin(
             quadrature_coefficients_derivs_xmin_alloc.span_view());
     double const quadrature_integral_derivs_xmin = ddc::parallel_transform_reduce(
@@ -247,7 +247,7 @@ void TestNonPeriodicSplineBuilderTestIdentity()
             KOKKOS_LAMBDA(ddc::DiscreteElement<DDimX> const ix) {
                 return quadrature_coefficients(ix) * yvals(ix);
             });
-#if defined(BCR_HERMITE)
+#if defined(SBCR_HERMITE)
     ddc::ChunkSpan const quadrature_coefficients_derivs_xmax(
             quadrature_coefficients_derivs_xmax_alloc.span_view());
     double const quadrature_integral_derivs_xmax = ddc::parallel_transform_reduce(

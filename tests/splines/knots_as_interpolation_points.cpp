@@ -43,8 +43,8 @@ struct UniformBSplinesFixture<std::tuple<
     {
     };
 
-    static constexpr ddc::BoundCond Bc
-            = IsPeriodic ? ddc::BoundCond::PERIODIC : ddc::BoundCond::HERMITE;
+    static constexpr ddc::SplineBuilderClosure s_sbc
+            = IsPeriodic ? ddc::SplineBuilderClosure::PERIODIC : ddc::SplineBuilderClosure::HERMITE;
 
     struct BSplinesX : ddc::UniformBSplines<DimX, 2>
     {
@@ -69,8 +69,8 @@ struct NonUniformBSplinesFixture<std::tuple<std::integral_constant<bool, IsPerio
     {
     };
 
-    static constexpr ddc::BoundCond Bc
-            = IsPeriodic ? ddc::BoundCond::PERIODIC : ddc::BoundCond::HERMITE;
+    static constexpr ddc::SplineBuilderClosure s_sbc
+            = IsPeriodic ? ddc::SplineBuilderClosure::PERIODIC : ddc::SplineBuilderClosure::HERMITE;
 
     struct BSplinesX : ddc::NonUniformBSplines<DimX, 2>
     {
@@ -106,8 +106,8 @@ TYPED_TEST(UniformBSplinesFixture, KnotsAsInterpolationPoints)
     using DDimX = TestFixture::DDimX;
     using BSplinesX = TestFixture::BSplinesX;
     using CoordX = ddc::Coordinate<DimX>;
-    ddc::BoundCond const Bc = TestFixture::Bc;
-    using KnotsAsInterpolationPoints = ddc::KnotsAsInterpolationPoints<BSplinesX, Bc, Bc>;
+    ddc::SplineBuilderClosure const sbc = TestFixture::s_sbc;
+    using KnotsAsInterpolationPoints = ddc::KnotsAsInterpolationPoints<BSplinesX, sbc, sbc>;
     using Knots = ddc::knot_discrete_dimension_t<BSplinesX>;
 
     CoordX const xmin(0.);
@@ -140,8 +140,8 @@ TYPED_TEST(NonUniformBSplinesFixture, KnotsAsInterpolationPoints)
     using DDimX = TestFixture::DDimX;
     using BSplinesX = TestFixture::BSplinesX;
     using CoordX = ddc::Coordinate<DimX>;
-    constexpr ddc::BoundCond Bc = TestFixture::Bc;
-    using KnotsAsInterpolationPoints = ddc::KnotsAsInterpolationPoints<BSplinesX, Bc, Bc>;
+    constexpr ddc::SplineBuilderClosure sbc = TestFixture::s_sbc;
+    using KnotsAsInterpolationPoints = ddc::KnotsAsInterpolationPoints<BSplinesX, sbc, sbc>;
     using Knots = ddc::knot_discrete_dimension_t<BSplinesX>;
 
     CoordX const xmin(0.);

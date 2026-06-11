@@ -42,27 +42,27 @@ foreach(degree RANGE "${DDC_SPLINES_TEST_DEGREE_MIN}" "${DDC_SPLINES_TEST_DEGREE
     endforeach()
 endforeach()
 
-foreach(bcl "greville" "hermite")
-    foreach(bcr "greville" "hermite")
+foreach(sbcl "greville" "hermite")
+    foreach(sbcr "greville" "hermite")
         foreach(evaluator "cosine" "polynomial")
             foreach(degree RANGE "${DDC_SPLINES_TEST_DEGREE_MIN}" "${DDC_SPLINES_TEST_DEGREE_MAX}")
                 foreach(bsplines_type "uniform" "non_uniform")
-                    string(TOUPPER "bcl_${bcl}" bcl_macro)
-                    string(TOUPPER "bcr_${bcr}" bcr_macro)
+                    string(TOUPPER "sbcl_${sbcl}" sbcl_macro)
+                    string(TOUPPER "sbcr_${sbcr}" sbcr_macro)
                     string(TOUPPER "evaluator_${evaluator}" evaluator_macro)
                     string(TOUPPER "degree=${degree}" degree_macro)
                     string(TOUPPER "bsplines_type_${bsplines_type}" bsplines_type_macro)
                     set(test_filename "non_periodic_spline_builder")
                     set(test_name
-                        "${test_filename}_tests_degree_${degree}_${bsplines_type}_${evaluator}_${bcl}_${bcr}"
+                        "${test_filename}_tests_degree_${degree}_${bsplines_type}_${evaluator}_${sbcl}_${sbcr}"
                     )
 
                     add_executable("${test_name}" "${test_filename}.cpp")
                     target_compile_definitions(
                         "${test_name}"
                         PRIVATE
-                            -D${bcl_macro}
-                            -D${bcr_macro}
+                            -D${sbcl_macro}
+                            -D${sbcr_macro}
                             -D${evaluator_macro}
                             -D${degree_macro}
                             -D${bsplines_type_macro}

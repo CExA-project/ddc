@@ -15,7 +15,7 @@
 
 #include "bsplines_non_uniform.hpp"
 #include "bsplines_uniform.hpp"
-#include "spline_boundary_conditions.hpp"
+#include "spline_builder_closures.hpp"
 
 namespace ddc {
 
@@ -23,10 +23,10 @@ namespace ddc {
  * A class which provides helper functions to initialise the Greville points from a B-Spline definition.
  *
  * @tparam BSplines The bspline class relative to which the Greville points will be calculated.
- * @tparam BcLower The lower boundary condition that will be used to build the splines.
- * @tparam BcUpper The upper boundary condition that will be used to build the splines.
+ * @tparam SBCLower The lower closure relation that will be used to build the splines.
+ * @tparam SBCUpper The upper closure relation that will be used to build the splines.
  */
-template <class BSplines, ddc::BoundCond BcLower, ddc::BoundCond BcUpper>
+template <class BSplines, ddc::SplineBuilderClosure SBCLower, ddc::SplineBuilderClosure SBCUpper>
 class GrevilleInterpolationPoints
 {
     using continuous_dimension_type = BSplines::continuous_dimension_type;
@@ -131,8 +131,8 @@ class GrevilleInterpolationPoints
         return SamplingImpl(greville_points);
     }
 
-    static constexpr std::size_t N_BE_MIN = n_boundary_equations(BcLower, BSplines::degree());
-    static constexpr std::size_t N_BE_MAX = n_boundary_equations(BcUpper, BSplines::degree());
+    static constexpr std::size_t N_BE_MIN = n_boundary_equations(SBCLower, BSplines::degree());
+    static constexpr std::size_t N_BE_MAX = n_boundary_equations(SBCUpper, BSplines::degree());
     static constexpr std::size_t N_BE = N_BE_MIN + N_BE_MAX;
     template <class U>
     static constexpr bool is_uniform_discrete_dimension_v
@@ -143,7 +143,7 @@ public:
      * Get the UniformPointSampling defining the Greville points.
      *
      * This function is called when the result is a UniformPointSampling. This is the case
-     * when uniform splines are used with an odd degree and with boundary conditions which
+     * when uniform splines are used with an odd degree and with closure relations which
      * do not introduce additional interpolation points.
      *
      * @tparam Sampling The discrete dimension supporting the Greville points.
@@ -180,7 +180,7 @@ public:
             std::vector<double> points_with_bcs(npoints);
 
             // Construct Greville-like points at the edge
-            if constexpr (BcLower == ddc::BoundCond::GREVILLE) {
+            if constexpr (SBCLower == ddc::SplineBuilderClosure::GREVILLE) {
                 for (std::size_t i(0); i < BSplines::degree() / 2 + 1; ++i) {
                     points_with_bcs[i]
                             = (BSplines::degree() - i) * ddc::discrete_space<BSplines>().rmin();
@@ -202,8 +202,9 @@ public:
                         = points_wo_bcs.coordinate(ddc::DiscreteElement<IntermediateSampling>(0));
             }
 
-            std::size_t const n_start
-                    = (BcLower == ddc::BoundCond::GREVILLE) ? BSplines::degree() / 2 + 1 : 1;
+            std::size_t const n_start = (SBCLower == ddc::SplineBuilderClosure::GREVILLE)
+                                                ? BSplines::degree() / 2 + 1
+                                                : 1;
             std::size_t const domain_size = n_break_points - 2;
             ddc::DiscreteElement<IntermediateSampling> domain_start(1);
             ddc::DiscreteDomain<IntermediateSampling> const
@@ -215,7 +216,7 @@ public:
             });
 
             // Construct Greville-like points at the edge
-            if constexpr (BcUpper == ddc::BoundCond::GREVILLE) {
+            if constexpr (SBCUpper == ddc::SplineBuilderClosure::GREVILLE) {
                 for (std::size_t i(0); i < BSplines::degree() / 2 + 1; ++i) {
                     points_with_bcs[npoints - 1 - i]
                             = (BSplines::degree() - i) * ddc::discrete_space<BSplines>().rmax();

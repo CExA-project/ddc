@@ -12,21 +12,21 @@
 TEST(SplineBoundaryConditions, StreamOperator)
 {
     std::stringstream ss;
-    ss << ddc::BoundCond::GREVILLE;
+    ss << ddc::SplineBuilderClosure::GREVILLE;
     EXPECT_EQ("GREVILLE", ss.str());
 
     ss.str("");
-    ss << ddc::BoundCond::HERMITE;
+    ss << ddc::SplineBuilderClosure::HERMITE;
     EXPECT_EQ("HERMITE", ss.str());
 
     ss.str("");
-    ss << ddc::BoundCond::HOMOGENEOUS_HERMITE;
+    ss << ddc::SplineBuilderClosure::HOMOGENEOUS_HERMITE;
     EXPECT_EQ("HOMOGENEOUS_HERMITE", ss.str());
 
     ss.str("");
-    ss << ddc::BoundCond::PERIODIC;
+    ss << ddc::SplineBuilderClosure::PERIODIC;
     EXPECT_EQ("PERIODIC", ss.str());
 
     ss.str("");
-    EXPECT_THROW((ss << static_cast<ddc::BoundCond>(-1)), std::runtime_error);
+    EXPECT_THROW((ss << static_cast<ddc::SplineBuilderClosure>(-1)), std::runtime_error);
 }

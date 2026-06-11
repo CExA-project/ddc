@@ -53,8 +53,8 @@ TEST(SplineBuilder, ShortInterpolationGrid)
                     memory_space,
                     BSplinesX,
                     DDimX,
-                    ddc::BoundCond::PERIODIC,
-                    ddc::BoundCond::PERIODIC,
+                    ddc::SplineBuilderClosure::PERIODIC,
+                    ddc::SplineBuilderClosure::PERIODIC,
                     ddc::SplineSolver::GINKGO>(interpolation_domain)),
             std::runtime_error);
 }
@@ -79,8 +79,8 @@ TEST(SplineBuilder, LongInterpolationGrid)
                     memory_space,
                     BSplinesX,
                     DDimX,
-                    ddc::BoundCond::PERIODIC,
-                    ddc::BoundCond::PERIODIC,
+                    ddc::SplineBuilderClosure::PERIODIC,
+                    ddc::SplineBuilderClosure::PERIODIC,
                     ddc::SplineSolver::GINKGO>(interpolation_domain)),
             std::runtime_error);
 }
@@ -105,8 +105,8 @@ TEST(SplineBuilder, BadShapeInterpolationGrid)
                     memory_space,
                     BSplinesX,
                     DDimX,
-                    ddc::BoundCond::PERIODIC,
-                    ddc::BoundCond::PERIODIC,
+                    ddc::SplineBuilderClosure::PERIODIC,
+                    ddc::SplineBuilderClosure::PERIODIC,
                     ddc::SplineSolver::GINKGO>(interpolation_domain)),
             std::runtime_error);
 }
@@ -129,7 +129,7 @@ TEST(SplineBuilder, CorrectInterpolationGrid)
                      memory_space,
                      BSplinesX,
                      DDimX,
-                     ddc::BoundCond::PERIODIC,
-                     ddc::BoundCond::PERIODIC,
+                     ddc::SplineBuilderClosure::PERIODIC,
+                     ddc::SplineBuilderClosure::PERIODIC,
                      ddc::SplineSolver::GINKGO>(interpolation_domain)));
 }

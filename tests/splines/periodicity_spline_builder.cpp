@@ -26,8 +26,10 @@ struct DimX
 constexpr std::size_t s_degree = DEGREE;
 
 template <typename BSpX>
-using GrevillePoints = ddc::
-        GrevilleInterpolationPoints<BSpX, ddc::BoundCond::PERIODIC, ddc::BoundCond::PERIODIC>;
+using GrevillePoints = ddc::GrevilleInterpolationPoints<
+        BSpX,
+        ddc::SplineBuilderClosure::PERIODIC,
+        ddc::SplineBuilderClosure::PERIODIC>;
 
 #if defined(BSPLINES_TYPE_UNIFORM)
 template <typename X>
@@ -123,14 +125,14 @@ void TestPeriodicitySplineBuilder()
     ddc::DiscreteDomain<DDim<X>> const dom_vals
             = GrevillePoints<BSplines<X>>::template get_domain<DDim<X>>();
 
-    // Create a SplineBuilder over BSplines<I> and batched along other dimensions using some boundary conditions
+    // Create a SplineBuilder over BSplines<I> and batched along other dimensions using some closure relations
     ddc::SplineBuilder<
             ExecSpace,
             MemorySpace,
             BSplines<X>,
             DDim<X>,
-            ddc::BoundCond::PERIODIC,
-            ddc::BoundCond::PERIODIC,
+            ddc::SplineBuilderClosure::PERIODIC,
+            ddc::SplineBuilderClosure::PERIODIC,
             ddc::SplineSolver::GINKGO> const spline_builder(dom_vals);
 
     // Compute useful domains (dom_interpolation, dom_batch, dom_bsplines and dom_spline)

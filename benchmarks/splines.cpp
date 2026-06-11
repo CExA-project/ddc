@@ -46,8 +46,8 @@ struct BSplinesX
 template <bool IsNonUniform, std::size_t DegreeX>
 using GrevillePoints = ddc::GrevilleInterpolationPoints<
         BSplinesX<IsNonUniform, DegreeX>,
-        ddc::BoundCond::PERIODIC,
-        ddc::BoundCond::PERIODIC>;
+        ddc::SplineBuilderClosure::PERIODIC,
+        ddc::SplineBuilderClosure::PERIODIC>;
 
 template <bool IsNonUniform, std::size_t DegreeX>
 struct DDimX : GrevillePoints<IsNonUniform, DegreeX>::interpolation_discrete_dimension_type
@@ -129,8 +129,8 @@ void characteristics_advection_unitary(benchmark::State& state)
     ddc::init_discrete_space<DDimX<IsNonUniform, DegreeX>>(
             ddc::GrevilleInterpolationPoints<
                     BSplinesX<IsNonUniform, DegreeX>,
-                    ddc::BoundCond::PERIODIC,
-                    ddc::BoundCond::PERIODIC>::
+                    ddc::SplineBuilderClosure::PERIODIC,
+                    ddc::SplineBuilderClosure::PERIODIC>::
                     template get_sampling<DDimX<IsNonUniform, DegreeX>>());
     ddc::DiscreteDomain<DDimY> const y_domain = ddc::init_discrete_space<DDimY>(DDimY::init<DDimY>(
             ddc::Coordinate<Y>(-1.),
@@ -139,8 +139,9 @@ void characteristics_advection_unitary(benchmark::State& state)
 
     auto const x_domain = ddc::GrevilleInterpolationPoints<
             BSplinesX<IsNonUniform, DegreeX>,
-            ddc::BoundCond::PERIODIC,
-            ddc::BoundCond::PERIODIC>::template get_domain<DDimX<IsNonUniform, DegreeX>>();
+            ddc::SplineBuilderClosure::PERIODIC,
+            ddc::SplineBuilderClosure::PERIODIC>::
+            template get_domain<DDimX<IsNonUniform, DegreeX>>();
     ddc::Chunk density_alloc(
             ddc::DiscreteDomain<DDimX<IsNonUniform, DegreeX>, DDimY>(x_domain, y_domain),
             ddc::KokkosAllocator<double, memory_space>());
@@ -163,8 +164,8 @@ void characteristics_advection_unitary(benchmark::State& state)
             memory_space,
             BSplinesX<IsNonUniform, DegreeX>,
             DDimX<IsNonUniform, DegreeX>,
-            ddc::BoundCond::PERIODIC,
-            ddc::BoundCond::PERIODIC,
+            ddc::SplineBuilderClosure::PERIODIC,
+            ddc::SplineBuilderClosure::PERIODIC,
             Backend> const spline_builder(x_domain, cols_per_chunk, preconditioner_max_block_size);
     ddc::PeriodicExtrapolationRule<X> const periodic_extrapolation;
     ddc::SplineEvaluator<

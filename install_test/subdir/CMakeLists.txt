@@ -2,4 +2,4 @@
 #
 # SPDX-License-Identifier: MIT
 
-find_package(DDC 0.14 REQUIRED COMPONENTS fft pdi splines)
+find_package(DDC 0.15 REQUIRED COMPONENTS fft pdi splines)

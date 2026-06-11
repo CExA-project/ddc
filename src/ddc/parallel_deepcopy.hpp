@@ -18,11 +18,9 @@ namespace ddc {
  * @param[in]  src the borrowed chunk from which to copy
  * @return dst as a ChunkSpan
 */
-template <class ChunkDst, class ChunkSrc>
+template <concepts::borrowed_chunk ChunkDst, concepts::borrowed_chunk ChunkSrc>
 auto parallel_deepcopy(ChunkDst&& dst, ChunkSrc&& src)
 {
-    static_assert(is_borrowed_chunk_v<ChunkDst>);
-    static_assert(is_borrowed_chunk_v<ChunkSrc>);
     static_assert(
             std::is_assignable_v<chunk_reference_t<ChunkDst>, chunk_reference_t<ChunkSrc>>,
             "Not assignable");
@@ -38,11 +36,9 @@ auto parallel_deepcopy(ChunkDst&& dst, ChunkSrc&& src)
  * @param[in]  src the borrowed chunk from which to copy
  * @return dst as a ChunkSpan
 */
-template <class ExecSpace, class ChunkDst, class ChunkSrc>
+template <class ExecSpace, concepts::borrowed_chunk ChunkDst, concepts::borrowed_chunk ChunkSrc>
 auto parallel_deepcopy(ExecSpace const& execution_space, ChunkDst&& dst, ChunkSrc&& src)
 {
-    static_assert(is_borrowed_chunk_v<ChunkDst>);
-    static_assert(is_borrowed_chunk_v<ChunkSrc>);
     static_assert(
             std::is_assignable_v<chunk_reference_t<ChunkDst>, chunk_reference_t<ChunkSrc>>,
             "Not assignable");

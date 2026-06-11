@@ -71,11 +71,9 @@ CopyKokkosLambdaAdapter(ChunkSpanDst const& dst, ChunkSpanSrc const& src)
  * @param[in]  src the borrowed chunk from which to copy
  * @return dst as a ChunkSpan
 */
-template <class ExecSpace, class ChunkDst, class ChunkSrc>
+template <class ExecSpace, concepts::borrowed_chunk ChunkDst, concepts::borrowed_chunk ChunkSrc>
 auto parallel_copy(ExecSpace const& execution_space, ChunkDst&& dst, ChunkSrc&& src)
 {
-    static_assert(is_borrowed_chunk_v<ChunkDst>);
-    static_assert(is_borrowed_chunk_v<ChunkSrc>);
     static_assert(Kokkos::SpaceAccessibility<
                   ExecSpace,
                   typename std::remove_cvref_t<ChunkDst>::memory_space>::accessible);

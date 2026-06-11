@@ -363,7 +363,7 @@ TransformReducerChunkKokkosLambdaAdapter(
 template <
         class ExecSpace,
         class Support,
-        class ChunkDst,
+        concepts::borrowed_chunk ChunkDst,
         class BinaryReductionOp,
         class UnaryTransformOp>
 void parallel_transform_reduce(
@@ -373,7 +373,6 @@ void parallel_transform_reduce(
         ChunkDst&& out,
         BinaryReductionOp const& reduce,
         UnaryTransformOp const& transform) noexcept
-    requires(ddc::is_borrowed_chunk_v<ChunkDst>)
 {
     using DDomOut = std::remove_cvref_t<ChunkDst>::discrete_domain_type;
     using DElemOut = DDomOut::discrete_element_type;

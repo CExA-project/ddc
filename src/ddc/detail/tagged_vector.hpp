@@ -8,6 +8,7 @@
 #include <concepts>
 #include <cstddef>
 #include <ostream>
+#include <span>
 #include <type_traits>
 #include <utility>
 
@@ -388,13 +389,13 @@ public:
 };
 
 template <class ElementType>
-void print_tagged_vector(std::ostream& os, ElementType const* const data, std::size_t const n)
+void print_tagged_vector(std::ostream& os, std::span<ElementType const> const view)
 {
     os << '(';
-    if (n > 0) {
-        os << data[0];
-        for (std::size_t i = 1; i < n; ++i) {
-            os << ", " << data[i];
+    if (!view.empty()) {
+        os << view.front();
+        for (ElementType const value : view.subspan(1)) {
+            os << ", " << value;
         }
     }
     os << ')';
@@ -403,8 +404,8 @@ void print_tagged_vector(std::ostream& os, ElementType const* const data, std::s
 template <class ElementType, class... Tags>
 std::ostream& operator<<(std::ostream& os, TaggedVector<ElementType, Tags...> const& arr)
 {
-    auto const& std_arr = arr.array();
-    detail::print_tagged_vector(os, std_arr.data(), std_arr.size());
+    std::span<ElementType const> const view(arr.array());
+    detail::print_tagged_vector(os, view);
     return os;
 }
 

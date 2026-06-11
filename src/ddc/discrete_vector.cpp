@@ -2,23 +2,20 @@
 //
 // SPDX-License-Identifier: MIT
 
-#include <cstddef>
 #include <ostream>
+#include <span>
 
 #include "discrete_vector.hpp"
 
 namespace ddc::detail {
 
-void print_discrete_vector(
-        std::ostream& os,
-        DiscreteVectorElement const* const data,
-        std::size_t const n)
+void print_discrete_vector(std::ostream& os, std::span<DiscreteVectorElement const> const view)
 {
     os << '(';
-    if (n > 0) {
-        os << data[0];
-        for (std::size_t i = 1; i < n; ++i) {
-            os << ", " << data[i];
+    if (!view.empty()) {
+        os << view.front();
+        for (DiscreteVectorElement const value : view.subspan(1)) {
+            os << ", " << value;
         }
     }
     os << ')';

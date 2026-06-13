@@ -85,17 +85,13 @@ void display(double time, ChunkType density)
     double const mean_density
             = ddc::host_transform_reduce(density.domain(), 0., ddc::reducer::sum<double>(), density)
               / density.domain().size();
+    ddc::DiscreteVector<DDimY> const yslice(ddc::get_domain<DDimY>(density).size() / 2);
     std::cout << std::fixed << std::setprecision(3);
     std::cout << "At t = " << time << ",\n";
     std::cout << "  * mean density  = " << mean_density << "\n";
-    // take a slice in the middle of the box
-    ddc::ChunkSpan const density_slice = density
-            [ddc::get_domain<DDimY>(density).front() + ddc::get_domain<DDimY>(density).size() / 2];
-    std::cout << "  * density[y:" << ddc::get_domain<DDimY>(density).size() / 2 << "] = {";
-    ddc::host_for_each(ddc::get_domain<DDimX>(density), [=](ddc::DiscreteElement<DDimX> const ix) {
-        std::cout << std::setw(6) << density_slice(ix) << " ";
-    });
-    std::cout << " }\n" << std::flush;
+    std::cout << "  * density[y:" << yslice.value() << "] = ";
+    ddc::print_content(std::cout, density[yslice]);
+    std::cout << '\n' << std::flush;
 }
 //! [display]
 

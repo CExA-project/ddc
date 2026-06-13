@@ -9,6 +9,13 @@ add_test(
     COMMAND ddc_benchmark_deepcopy --benchmark_dry_run --benchmark_filter=.*_small
 )
 
+add_executable(ddc_benchmark_repeated_allocations repeated_allocations.cpp)
+target_link_libraries(ddc_benchmark_repeated_allocations PUBLIC benchmark::benchmark DDC::core)
+add_test(
+    NAME BenchmarksDryRun.RepeatedAllocations
+    COMMAND ddc_benchmark_repeated_allocations --benchmark_dry_run --benchmark_filter=.*_small
+)
+
 add_executable(ddc_benchmark_parallel_copy parallel_copy.cpp)
 target_link_libraries(ddc_benchmark_parallel_copy PUBLIC benchmark::benchmark DDC::core)
 add_test(

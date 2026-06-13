@@ -119,6 +119,8 @@ if("${DDC_BUILD_DOCUMENTATION}")
     find_package(Doxygen 1.9.8 REQUIRED OPTIONAL_COMPONENTS dot)
 endif()
 
+find_package(umpire REQUIRED)
+
 # Our project
 
 ## The library itself
@@ -127,7 +129,7 @@ add_library(ddc_core)
 add_library(DDC::core ALIAS ddc_core)
 configure_file(cmake/config.hpp.in generated/ddc/config.hpp NO_SOURCE_PERMISSIONS @ONLY)
 target_compile_features(ddc_core PUBLIC cxx_std_20)
-target_link_libraries(ddc_core PUBLIC Kokkos::kokkos)
+target_link_libraries(ddc_core PUBLIC Kokkos::kokkos umpire)
 target_sources(
     ddc_core
     PRIVATE

@@ -87,12 +87,6 @@ using DVect = ddc::DiscreteVector<DDimX...>;
 template <typename... X>
 using Coord = ddc::Coordinate<X...>;
 
-#if defined(SOLVER_LAPACK)
-constexpr ddc::SplineSolver s_spline_solver = ddc::SplineSolver::LAPACK;
-#elif defined(SOLVER_GINKGO)
-constexpr ddc::SplineSolver s_spline_solver = ddc::SplineSolver::GINKGO;
-#endif
-
 // Templated function giving first coordinate of the mesh in given dimension.
 template <typename X>
 KOKKOS_FUNCTION Coord<X> x0()
@@ -303,7 +297,7 @@ std::tuple<double, double, double> compute_evaluation_error(
 // multiple batch patterns using the same builders and evaluators, one
 // recovers values that were used to build the spline
 template <typename ExecSpace, typename MemorySpace, typename DDimI, typename... DDims>
-void TestMultipleBatchDomainSpline()
+void TestMultipleBatchDomainSpline(ddc::SplineSolver const solver)
 {
     using I = DDimI::continuous_dimension_type;
 
@@ -328,14 +322,8 @@ void TestMultipleBatchDomainSpline()
             dom_vals_extra(dom_vals_tmp, interpolation_domain, extra_domain);
 
     // Create a SplineBuilder over BSplines<I> using some closure relations
-    ddc::SplineBuilder<
-            ExecSpace,
-            MemorySpace,
-            BSplines<I>,
-            DDimI,
-            s_sbcl,
-            s_sbcr,
-            s_spline_solver> const spline_builder(interpolation_domain);
+    ddc::SplineBuilder<ExecSpace, MemorySpace, BSplines<I>, DDimI, s_sbcl, s_sbcr> const
+            spline_builder(interpolation_domain, std::nullopt, std::nullopt, solver);
 
     // Instantiate a SplineEvaluator over interest dimension
 #if defined(BC_PERIODIC)
@@ -415,33 +403,20 @@ void TestMultipleBatchDomainSpline()
                         1.0e-14 * max_norm_int_extra));
 }
 
-
 } // namespace anonymous_namespace_workaround_batched_spline_builder_cpp
 
-#if defined(BC_PERIODIC) && defined(BSPLINES_TYPE_UNIFORM) && defined(SOLVER_LAPACK)
-#    define SUFFIX_DEGREE(name, degree) name##Lapack##Periodic##Uniform##Degree##degree
-#elif defined(BC_PERIODIC) && defined(BSPLINES_TYPE_NON_UNIFORM) && defined(SOLVER_LAPACK)
-#    define SUFFIX_DEGREE(name, degree) name##Lapack##Periodic##NonUniform##Degree##degree
-#elif defined(BC_GREVILLE) && defined(BSPLINES_TYPE_UNIFORM) && defined(SOLVER_LAPACK)
-#    define SUFFIX_DEGREE(name, degree) name##Lapack##Greville##Uniform##Degree##degree
-#elif defined(BC_GREVILLE) && defined(BSPLINES_TYPE_NON_UNIFORM) && defined(SOLVER_LAPACK)
-#    define SUFFIX_DEGREE(name, degree) name##Lapack##Greville##NonUniform##Degree##degree
-#elif defined(BC_HERMITE) && defined(BSPLINES_TYPE_UNIFORM) && defined(SOLVER_LAPACK)
-#    define SUFFIX_DEGREE(name, degree) name##Lapack##Hermite##Uniform##Degree##degree
-#elif defined(BC_HERMITE) && defined(BSPLINES_TYPE_NON_UNIFORM) && defined(SOLVER_LAPACK)
-#    define SUFFIX_DEGREE(name, degree) name##Lapack##Hermite##NonUniform##Degree##degree
-#elif defined(BC_PERIODIC) && defined(BSPLINES_TYPE_UNIFORM) && defined(SOLVER_GINKGO)
-#    define SUFFIX_DEGREE(name, degree) name##Ginkgo##Periodic##Uniform##Degree##degree
-#elif defined(BC_PERIODIC) && defined(BSPLINES_TYPE_NON_UNIFORM) && defined(SOLVER_GINKGO)
-#    define SUFFIX_DEGREE(name, degree) name##Ginkgo##Periodic##NonUniform##Degree##degree
-#elif defined(BC_GREVILLE) && defined(BSPLINES_TYPE_UNIFORM) && defined(SOLVER_GINKGO)
-#    define SUFFIX_DEGREE(name, degree) name##Ginkgo##Greville##Uniform##Degree##degree
-#elif defined(BC_GREVILLE) && defined(BSPLINES_TYPE_NON_UNIFORM) && defined(SOLVER_GINKGO)
-#    define SUFFIX_DEGREE(name, degree) name##Ginkgo##Greville##NonUniform##Degree##degree
-#elif defined(BC_HERMITE) && defined(BSPLINES_TYPE_UNIFORM) && defined(SOLVER_GINKGO)
-#    define SUFFIX_DEGREE(name, degree) name##Ginkgo##Hermite##Uniform##Degree##degree
-#elif defined(BC_HERMITE) && defined(BSPLINES_TYPE_NON_UNIFORM) && defined(SOLVER_GINKGO)
-#    define SUFFIX_DEGREE(name, degree) name##Ginkgo##Hermite##NonUniform##Degree##degree
+#if defined(BC_PERIODIC) && defined(BSPLINES_TYPE_UNIFORM)
+#    define SUFFIX_DEGREE(name, degree) name##Periodic##Uniform##Degree##degree
+#elif defined(BC_PERIODIC) && defined(BSPLINES_TYPE_NON_UNIFORM)
+#    define SUFFIX_DEGREE(name, degree) name##Periodic##NonUniform##Degree##degree
+#elif defined(BC_GREVILLE) && defined(BSPLINES_TYPE_UNIFORM)
+#    define SUFFIX_DEGREE(name, degree) name##Greville##Uniform##Degree##degree
+#elif defined(BC_GREVILLE) && defined(BSPLINES_TYPE_NON_UNIFORM)
+#    define SUFFIX_DEGREE(name, degree) name##Greville##NonUniform##Degree##degree
+#elif defined(BC_HERMITE) && defined(BSPLINES_TYPE_UNIFORM)
+#    define SUFFIX_DEGREE(name, degree) name##Hermite##Uniform##Degree##degree
+#elif defined(BC_HERMITE) && defined(BSPLINES_TYPE_NON_UNIFORM)
+#    define SUFFIX_DEGREE(name, degree) name##Hermite##NonUniform##Degree##degree
 #endif
 #define SUFFIX_DEGREE_MACRO_EXP(name, degree) SUFFIX_DEGREE(name, degree)
 #define SUFFIX(name) SUFFIX_DEGREE_MACRO_EXP(name, DEGREE)
@@ -452,7 +427,12 @@ TEST(SUFFIX(MultipleBatchDomainSpline), 1DX)
             Kokkos::DefaultExecutionSpace,
             Kokkos::DefaultExecutionSpace::memory_space,
             DDimGPS<DimX>,
-            DDimGPS<DimX>>();
+            DDimGPS<DimX>>(ddc::SplineSolver::GINKGO);
+    TestMultipleBatchDomainSpline<
+            Kokkos::DefaultExecutionSpace,
+            Kokkos::DefaultExecutionSpace::memory_space,
+            DDimGPS<DimX>,
+            DDimGPS<DimX>>(ddc::SplineSolver::LAPACK);
 }
 
 TEST(SUFFIX(MultipleBatchDomainSpline), 2DXB)
@@ -462,7 +442,13 @@ TEST(SUFFIX(MultipleBatchDomainSpline), 2DXB)
             Kokkos::DefaultExecutionSpace::memory_space,
             DDimGPS<DimX>,
             DDimGPS<DimX>,
-            DDimBatch>();
+            DDimBatch>(ddc::SplineSolver::GINKGO);
+    TestMultipleBatchDomainSpline<
+            Kokkos::DefaultExecutionSpace,
+            Kokkos::DefaultExecutionSpace::memory_space,
+            DDimGPS<DimX>,
+            DDimGPS<DimX>,
+            DDimBatch>(ddc::SplineSolver::LAPACK);
 }
 
 TEST(SUFFIX(MultipleBatchDomainSpline), 2DBX)
@@ -472,5 +458,11 @@ TEST(SUFFIX(MultipleBatchDomainSpline), 2DBX)
             Kokkos::DefaultExecutionSpace::memory_space,
             DDimGPS<DimX>,
             DDimBatch,
-            DDimGPS<DimX>>();
+            DDimGPS<DimX>>(ddc::SplineSolver::GINKGO);
+    TestMultipleBatchDomainSpline<
+            Kokkos::DefaultExecutionSpace,
+            Kokkos::DefaultExecutionSpace::memory_space,
+            DDimGPS<DimX>,
+            DDimBatch,
+            DDimGPS<DimX>>(ddc::SplineSolver::LAPACK);
 }

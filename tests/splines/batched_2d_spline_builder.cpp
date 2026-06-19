@@ -209,8 +209,12 @@ void TestBatched2dSpline()
             s_sbcl,
             s_sbcr,
             s_sbcl,
-            s_sbcr,
-            ddc::SplineSolver::GINKGO> const spline_builder(interpolation_domain);
+            s_sbcr> const
+            spline_builder(
+                    interpolation_domain,
+                    std::nullopt,
+                    std::nullopt,
+                    ddc::SplineSolver::GINKGO);
 
     // Compute useful domains (dom_interpolation, dom_batch, dom_bsplines and dom_spline)
     ddc::DiscreteDomain<DDimI1, DDimI2> const dom_interpolation

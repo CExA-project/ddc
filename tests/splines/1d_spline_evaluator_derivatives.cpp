@@ -228,14 +228,8 @@ void TestSplineEvaluator1dDerivatives()
     ddc::DiscreteDomain<DDims...> const dom_vals(dom_vals_tmp, interpolation_domain);
 
     // Create a SplineBuilder over BSplines<I> and batched along other dimensions using some closure relations
-    ddc::SplineBuilder<
-            ExecSpace,
-            MemorySpace,
-            BSplines<I>,
-            DDimI,
-            s_sbcl,
-            s_sbcr,
-            s_spline_solver> const spline_builder(interpolation_domain);
+    ddc::SplineBuilder<ExecSpace, MemorySpace, BSplines<I>, DDimI, s_sbcl, s_sbcr> const
+            spline_builder(interpolation_domain, std::nullopt, std::nullopt, s_spline_solver);
 
     // Compute useful domains (dom_interpolation, dom_batch, dom_bsplines and dom_spline)
     ddc::DiscreteDomain<DDimI> const dom_interpolation = spline_builder.interpolation_domain();

@@ -165,8 +165,8 @@ void characteristics_advection_unitary(benchmark::State& state)
             BSplinesX<IsNonUniform, DegreeX>,
             DDimX<IsNonUniform, DegreeX>,
             ddc::SplineBuilderClosure::PERIODIC,
-            ddc::SplineBuilderClosure::PERIODIC,
-            Backend> const spline_builder(x_domain, cols_per_chunk, preconditioner_max_block_size);
+            ddc::SplineBuilderClosure::PERIODIC> const
+            spline_builder(x_domain, cols_per_chunk, preconditioner_max_block_size, Backend);
     ddc::PeriodicExtrapolationRule<X> const periodic_extrapolation;
     ddc::SplineEvaluator<
             ExecSpace,

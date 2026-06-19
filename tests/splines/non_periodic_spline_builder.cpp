@@ -113,14 +113,12 @@ void TestNonPeriodicSplineBuilderTestIdentity()
     ddc::DiscreteDomain<DDimX> const interpolation_domain(GrevillePoints::get_domain<DDimX>());
 
     // 4. Create a SplineBuilder over BSplines using some closure relations
-    ddc::SplineBuilder<
-            execution_space,
-            memory_space,
-            BSplinesX,
-            DDimX,
-            s_sbcl,
-            s_sbcr,
-            ddc::SplineSolver::GINKGO> const spline_builder(interpolation_domain);
+    ddc::SplineBuilder<execution_space, memory_space, BSplinesX, DDimX, s_sbcl, s_sbcr> const
+            spline_builder(
+                    interpolation_domain,
+                    std::nullopt,
+                    std::nullopt,
+                    ddc::SplineSolver::GINKGO);
 
     // 5. Allocate and fill a chunk over the interpolation domain
     ddc::Chunk yvals_alloc(interpolation_domain, ddc::KokkosAllocator<double, memory_space>());

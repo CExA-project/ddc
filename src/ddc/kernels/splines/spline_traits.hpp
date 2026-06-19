@@ -25,16 +25,10 @@ template <
         class BSplines,
         class InterpolationDDim,
         ddc::SplineBuilderClosure SBCLower,
-        ddc::SplineBuilderClosure SBCUpper,
-        SplineSolver Solver>
-struct is_spline_builder<SplineBuilder<
-        ExecSpace,
-        MemorySpace,
-        BSplines,
-        InterpolationDDim,
-        SBCLower,
-        SBCUpper,
-        Solver>> : std::true_type
+        ddc::SplineBuilderClosure SBCUpper>
+struct is_spline_builder<
+        SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, SBCLower, SBCUpper>>
+    : std::true_type
 {
 };
 
@@ -60,8 +54,7 @@ template <
         ddc::SplineBuilderClosure SBCLower1,
         ddc::SplineBuilderClosure SBCUpper1,
         ddc::SplineBuilderClosure SBCLower2,
-        ddc::SplineBuilderClosure SBCUpper2,
-        ddc::SplineSolver Solver>
+        ddc::SplineBuilderClosure SBCUpper2>
 struct is_spline_builder2d<SplineBuilder2D<
         ExecSpace,
         MemorySpace,
@@ -72,8 +65,7 @@ struct is_spline_builder2d<SplineBuilder2D<
         SBCLower1,
         SBCUpper1,
         SBCLower2,
-        SBCUpper2,
-        Solver>> : std::true_type
+        SBCUpper2>> : std::true_type
 {
 };
 
@@ -162,18 +154,10 @@ template <
         class InterpolationDDim,
         ddc::SplineBuilderClosure SBCLower,
         ddc::SplineBuilderClosure SBCUpper,
-        SplineSolver Solver,
         class LowerExtrapolationRule,
         class UpperExtrapolationRule>
 struct is_evaluator_admissible<
-        SplineBuilder<
-                ExecSpace,
-                MemorySpace,
-                BSplines,
-                InterpolationDDim,
-                SBCLower,
-                SBCUpper,
-                Solver>,
+        SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, SBCLower, SBCUpper>,
         SplineEvaluator<
                 ExecSpace,
                 MemorySpace,
@@ -195,7 +179,6 @@ template <
         ddc::SplineBuilderClosure SBCUpper1,
         ddc::SplineBuilderClosure SBCLower2,
         ddc::SplineBuilderClosure SBCUpper2,
-        SplineSolver Solver,
         class LowerExtrapolationRule1,
         class UpperExtrapolationRule1,
         class LowerExtrapolationRule2,
@@ -211,8 +194,7 @@ struct is_evaluator_admissible<
                 SBCLower1,
                 SBCUpper1,
                 SBCLower2,
-                SBCUpper2,
-                Solver>,
+                SBCUpper2>,
         SplineEvaluator2D<
                 ExecSpace,
                 MemorySpace,

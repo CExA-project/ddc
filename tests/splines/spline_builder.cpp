@@ -54,8 +54,11 @@ TEST(SplineBuilder, ShortInterpolationGrid)
                     BSplinesX,
                     DDimX,
                     ddc::SplineBuilderClosure::PERIODIC,
-                    ddc::SplineBuilderClosure::PERIODIC,
-                    ddc::SplineSolver::GINKGO>(interpolation_domain)),
+                    ddc::SplineBuilderClosure::PERIODIC>(
+                    interpolation_domain,
+                    std::nullopt,
+                    std::nullopt,
+                    ddc::SplineSolver::GINKGO)),
             std::runtime_error);
 }
 
@@ -80,8 +83,11 @@ TEST(SplineBuilder, LongInterpolationGrid)
                     BSplinesX,
                     DDimX,
                     ddc::SplineBuilderClosure::PERIODIC,
-                    ddc::SplineBuilderClosure::PERIODIC,
-                    ddc::SplineSolver::GINKGO>(interpolation_domain)),
+                    ddc::SplineBuilderClosure::PERIODIC>(
+                    interpolation_domain,
+                    std::nullopt,
+                    std::nullopt,
+                    ddc::SplineSolver::GINKGO)),
             std::runtime_error);
 }
 
@@ -106,8 +112,11 @@ TEST(SplineBuilder, BadShapeInterpolationGrid)
                     BSplinesX,
                     DDimX,
                     ddc::SplineBuilderClosure::PERIODIC,
-                    ddc::SplineBuilderClosure::PERIODIC,
-                    ddc::SplineSolver::GINKGO>(interpolation_domain)),
+                    ddc::SplineBuilderClosure::PERIODIC>(
+                    interpolation_domain,
+                    std::nullopt,
+                    std::nullopt,
+                    ddc::SplineSolver::GINKGO)),
             std::runtime_error);
 }
 
@@ -130,6 +139,9 @@ TEST(SplineBuilder, CorrectInterpolationGrid)
                      BSplinesX,
                      DDimX,
                      ddc::SplineBuilderClosure::PERIODIC,
-                     ddc::SplineBuilderClosure::PERIODIC,
-                     ddc::SplineSolver::GINKGO>(interpolation_domain)));
+                     ddc::SplineBuilderClosure::PERIODIC>(
+            interpolation_domain,
+            std::nullopt,
+            std::nullopt,
+            ddc::SplineSolver::GINKGO)));
 }

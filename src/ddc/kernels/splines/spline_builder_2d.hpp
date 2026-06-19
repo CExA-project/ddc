@@ -34,8 +34,7 @@ template <
         ddc::SplineBuilderClosure SBCLower1,
         ddc::SplineBuilderClosure SBCUpper1,
         ddc::SplineBuilderClosure SBCLower2,
-        ddc::SplineBuilderClosure SBCUpper2,
-        ddc::SplineSolver Solver>
+        ddc::SplineBuilderClosure SBCUpper2>
 class SplineBuilder2D
 {
 public:
@@ -46,12 +45,12 @@ public:
     using memory_space = MemorySpace;
 
     /// @brief The type of the SplineBuilder used by this class to spline-approximate along first dimension.
-    using builder_type1 = ddc::
-            SplineBuilder<ExecSpace, MemorySpace, BSpline1, DDimI1, SBCLower1, SBCUpper1, Solver>;
+    using builder_type1
+            = ddc::SplineBuilder<ExecSpace, MemorySpace, BSpline1, DDimI1, SBCLower1, SBCUpper1>;
 
     /// @brief The type of the SplineBuilder used by this class to spline-approximate along second dimension.
-    using builder_type2 = ddc::
-            SplineBuilder<ExecSpace, MemorySpace, BSpline2, DDimI2, SBCLower2, SBCUpper2, Solver>;
+    using builder_type2
+            = ddc::SplineBuilder<ExecSpace, MemorySpace, BSpline2, DDimI2, SBCLower2, SBCUpper2>;
 
     /// @brief The type of the first interpolation continuous dimension.
     using continuous_dimension_type1 = builder_type1::continuous_dimension_type;
@@ -205,17 +204,20 @@ public:
             std::string const& label,
             interpolation_domain_type const& interpolation_domain,
             std::optional<std::size_t> cols_per_chunk = std::nullopt,
-            std::optional<unsigned int> preconditioner_max_block_size = std::nullopt)
+            std::optional<unsigned int> preconditioner_max_block_size = std::nullopt,
+            std::optional<SplineSolver> solver = std::nullopt)
         : m_spline_builder1(
                   label,
                   interpolation_domain,
                   cols_per_chunk,
-                  preconditioner_max_block_size)
+                  preconditioner_max_block_size,
+                  solver)
         , m_spline_builder2(
                   label,
                   interpolation_domain,
                   cols_per_chunk,
-                  preconditioner_max_block_size)
+                  preconditioner_max_block_size,
+                  solver)
         , m_label(label)
     {
     }
@@ -239,12 +241,14 @@ public:
     explicit SplineBuilder2D(
             interpolation_domain_type const& interpolation_domain,
             std::optional<std::size_t> cols_per_chunk = std::nullopt,
-            std::optional<unsigned int> preconditioner_max_block_size = std::nullopt)
+            std::optional<unsigned int> preconditioner_max_block_size = std::nullopt,
+            std::optional<SplineSolver> solver = std::nullopt)
         : SplineBuilder2D(
                   "no-label",
                   interpolation_domain,
                   cols_per_chunk,
-                  preconditioner_max_block_size)
+                  preconditioner_max_block_size,
+                  solver)
     {
     }
 
@@ -271,12 +275,14 @@ public:
             std::string const& label,
             BatchedInterpolationDDom const& batched_interpolation_domain,
             std::optional<std::size_t> cols_per_chunk = std::nullopt,
-            std::optional<unsigned int> preconditioner_max_block_size = std::nullopt)
+            std::optional<unsigned int> preconditioner_max_block_size = std::nullopt,
+            std::optional<SplineSolver> solver = std::nullopt)
         : SplineBuilder2D(
                   label,
                   interpolation_domain_type(batched_interpolation_domain),
                   cols_per_chunk,
-                  preconditioner_max_block_size)
+                  preconditioner_max_block_size,
+                  solver)
     {
     }
 
@@ -300,12 +306,14 @@ public:
     explicit SplineBuilder2D(
             BatchedInterpolationDDom const& batched_interpolation_domain,
             std::optional<std::size_t> cols_per_chunk = std::nullopt,
-            std::optional<unsigned int> preconditioner_max_block_size = std::nullopt)
+            std::optional<unsigned int> preconditioner_max_block_size = std::nullopt,
+            std::optional<SplineSolver> solver = std::nullopt)
         : SplineBuilder2D(
                   "no-label",
                   interpolation_domain_type(batched_interpolation_domain),
                   cols_per_chunk,
-                  preconditioner_max_block_size)
+                  preconditioner_max_block_size,
+                  solver)
     {
     }
 
@@ -521,8 +529,7 @@ template <
         ddc::SplineBuilderClosure SBCLower1,
         ddc::SplineBuilderClosure SBCUpper1,
         ddc::SplineBuilderClosure SBCLower2,
-        ddc::SplineBuilderClosure SBCUpper2,
-        ddc::SplineSolver Solver>
+        ddc::SplineBuilderClosure SBCUpper2>
 template <class Layout, class BatchedInterpolationDDom>
 void SplineBuilder2D<
         ExecSpace,
@@ -534,8 +541,7 @@ void SplineBuilder2D<
         SBCLower1,
         SBCUpper1,
         SBCLower2,
-        SBCUpper2,
-        Solver>::
+        SBCUpper2>::
 operator()(
         ddc::ChunkSpan<
                 double,

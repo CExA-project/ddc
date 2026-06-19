@@ -59,8 +59,7 @@ template <
         class BSplines,
         class InterpolationDDim,
         ddc::SplineBuilderClosure SBCLower,
-        ddc::SplineBuilderClosure SBCUpper,
-        SplineSolver Solver>
+        ddc::SplineBuilderClosure SBCUpper>
 class SplineBuilder
 {
     static_assert(
@@ -186,9 +185,6 @@ public:
     /// @brief The closure relation implemented at the upper bound.
     static constexpr ddc::SplineBuilderClosure s_sbc_xmax = SBCUpper;
 
-    /// @brief The SplineSolver giving the backend used to perform the spline approximation.
-    static constexpr SplineSolver s_spline_solver = Solver;
-
 private:
     interpolation_domain_type m_interpolation_domain;
 
@@ -200,6 +196,8 @@ private:
     std::unique_ptr<ddc::detail::SplinesLinearProblem<exec_space>> m_matrix;
 
     std::string m_label;
+
+    SplineSolver m_solver;
 
     /// Calculate offset so that the matrix is diagonally dominant
     void compute_offset(interpolation_domain_type const& interpolation_domain, int& offset);
@@ -227,11 +225,13 @@ public:
             std::string label,
             interpolation_domain_type const& interpolation_domain,
             std::optional<std::size_t> cols_per_chunk = std::nullopt,
-            std::optional<unsigned int> preconditioner_max_block_size = std::nullopt)
+            std::optional<unsigned int> preconditioner_max_block_size = std::nullopt,
+            std::optional<SplineSolver> solver = std::nullopt)
         : m_interpolation_domain(interpolation_domain)
         , m_dx((ddc::discrete_space<BSplines>().rmax() - ddc::discrete_space<BSplines>().rmin())
                / ddc::discrete_space<BSplines>().ncells())
         , m_label(std::move(label))
+        , m_solver(solver.value_or(SplineSolver::LAPACK))
     {
         static_assert(
                 ((SBCLower == SplineBuilderClosure::PERIODIC)
@@ -277,12 +277,14 @@ public:
     explicit SplineBuilder(
             interpolation_domain_type const& interpolation_domain,
             std::optional<std::size_t> cols_per_chunk = std::nullopt,
-            std::optional<unsigned int> preconditioner_max_block_size = std::nullopt)
+            std::optional<unsigned int> preconditioner_max_block_size = std::nullopt,
+            std::optional<SplineSolver> solver = std::nullopt)
         : SplineBuilder(
                   "no-label",
                   interpolation_domain,
                   cols_per_chunk,
-                  preconditioner_max_block_size)
+                  preconditioner_max_block_size,
+                  solver)
     {
     }
 
@@ -309,12 +311,14 @@ public:
             std::string label,
             BatchedInterpolationDDom const& batched_interpolation_domain,
             std::optional<std::size_t> cols_per_chunk = std::nullopt,
-            std::optional<unsigned int> preconditioner_max_block_size = std::nullopt)
+            std::optional<unsigned int> preconditioner_max_block_size = std::nullopt,
+            std::optional<SplineSolver> solver = std::nullopt)
         : SplineBuilder(
                   std::move(label),
                   interpolation_domain_type(batched_interpolation_domain),
                   cols_per_chunk,
-                  preconditioner_max_block_size)
+                  preconditioner_max_block_size,
+                  solver)
     {
     }
 
@@ -338,12 +342,14 @@ public:
     explicit SplineBuilder(
             BatchedInterpolationDDom const& batched_interpolation_domain,
             std::optional<std::size_t> cols_per_chunk = std::nullopt,
-            std::optional<unsigned int> preconditioner_max_block_size = std::nullopt)
+            std::optional<unsigned int> preconditioner_max_block_size = std::nullopt,
+            std::optional<SplineSolver> solver = std::nullopt)
         : SplineBuilder(
                   "no-label",
                   interpolation_domain_type(batched_interpolation_domain),
                   cols_per_chunk,
-                  preconditioner_max_block_size)
+                  preconditioner_max_block_size,
+                  solver)
     {
     }
 
@@ -546,14 +552,12 @@ public:
                     Real const,
                     batched_derivs_domain_type<BatchedInterpolationDDom>,
                     Layout,
-                    memory_space>> derivs_xmin
-            = std::nullopt,
+                    memory_space>> derivs_xmin = std::nullopt,
             std::optional<ddc::ChunkSpan<
                     Real const,
                     batched_derivs_domain_type<BatchedInterpolationDDom>,
                     Layout,
-                    memory_space>> derivs_xmax
-            = std::nullopt) const;
+                    memory_space>> derivs_xmax = std::nullopt) const;
 
     /**
      * @brief Compute the quadrature coefficients associated to the b-splines used by this SplineBuilder.
@@ -621,16 +625,9 @@ template <
         class BSplines,
         class InterpolationDDim,
         ddc::SplineBuilderClosure SBCLower,
-        ddc::SplineBuilderClosure SBCUpper,
-        SplineSolver Solver>
-void SplineBuilder<
-        ExecSpace,
-        MemorySpace,
-        BSplines,
-        InterpolationDDim,
-        SBCLower,
-        SBCUpper,
-        Solver>::compute_offset(interpolation_domain_type const& interpolation_domain, int& offset)
+        ddc::SplineBuilderClosure SBCUpper>
+void SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, SBCLower, SBCUpper>::
+        compute_offset(interpolation_domain_type const& interpolation_domain, int& offset)
 {
     if constexpr (bsplines_type::is_periodic()) {
         // Calculate offset so that the matrix is diagonally dominant
@@ -662,9 +659,8 @@ template <
         class BSplines,
         class InterpolationDDim,
         ddc::SplineBuilderClosure SBCLower,
-        ddc::SplineBuilderClosure SBCUpper,
-        SplineSolver Solver>
-int SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, SBCLower, SBCUpper, Solver>::
+        ddc::SplineBuilderClosure SBCUpper>
+int SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, SBCLower, SBCUpper>::
         compute_block_sizes_uniform(ddc::SplineBuilderClosure const bound_cond, int const nbc)
 {
     if (bound_cond == ddc::SplineBuilderClosure::PERIODIC) {
@@ -689,9 +685,8 @@ template <
         class BSplines,
         class InterpolationDDim,
         ddc::SplineBuilderClosure SBCLower,
-        ddc::SplineBuilderClosure SBCUpper,
-        SplineSolver Solver>
-int SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, SBCLower, SBCUpper, Solver>::
+        ddc::SplineBuilderClosure SBCUpper>
+int SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, SBCLower, SBCUpper>::
         compute_block_sizes_non_uniform(ddc::SplineBuilderClosure const bound_cond, int const nbc)
 {
     if (bound_cond == ddc::SplineBuilderClosure::PERIODIC
@@ -713,16 +708,8 @@ template <
         class BSplines,
         class InterpolationDDim,
         ddc::SplineBuilderClosure SBCLower,
-        ddc::SplineBuilderClosure SBCUpper,
-        SplineSolver Solver>
-void SplineBuilder<
-        ExecSpace,
-        MemorySpace,
-        BSplines,
-        InterpolationDDim,
-        SBCLower,
-        SBCUpper,
-        Solver>::
+        ddc::SplineBuilderClosure SBCUpper>
+void SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, SBCLower, SBCUpper>::
         allocate_matrix(
                 [[maybe_unused]] int lower_block_size,
                 [[maybe_unused]] int upper_block_size,
@@ -736,7 +723,7 @@ void SplineBuilder<
     //     return;
     // }
 
-    if constexpr (Solver == ddc::SplineSolver::LAPACK) {
+    if (m_solver == ddc::SplineSolver::LAPACK) {
         int upper_band_width;
         if (bsplines_type::is_uniform()) {
             upper_band_width = bsplines_type::degree() / 2;
@@ -760,7 +747,7 @@ void SplineBuilder<
                             lower_block_size,
                             upper_block_size);
         }
-    } else if constexpr (Solver == ddc::SplineSolver::GINKGO) {
+    } else if (m_solver == ddc::SplineSolver::GINKGO) {
         m_matrix = ddc::detail::SplinesLinearProblemMaker::make_new_sparse<ExecSpace>(
                 ddc::discrete_space<BSplines>().nbasis(),
                 cols_per_chunk,
@@ -778,16 +765,9 @@ template <
         class BSplines,
         class InterpolationDDim,
         ddc::SplineBuilderClosure SBCLower,
-        ddc::SplineBuilderClosure SBCUpper,
-        SplineSolver Solver>
-void SplineBuilder<
-        ExecSpace,
-        MemorySpace,
-        BSplines,
-        InterpolationDDim,
-        SBCLower,
-        SBCUpper,
-        Solver>::build_matrix_system()
+        ddc::SplineBuilderClosure SBCUpper>
+void SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, SBCLower, SBCUpper>::
+        build_matrix_system()
 {
     // Hermite closure relations at xmin, if any
     if constexpr (
@@ -890,17 +870,9 @@ template <
         class BSplines,
         class InterpolationDDim,
         ddc::SplineBuilderClosure SBCLower,
-        ddc::SplineBuilderClosure SBCUpper,
-        SplineSolver Solver>
+        ddc::SplineBuilderClosure SBCUpper>
 template <class Layout, class BatchedInterpolationDDom>
-void SplineBuilder<
-        ExecSpace,
-        MemorySpace,
-        BSplines,
-        InterpolationDDim,
-        SBCLower,
-        SBCUpper,
-        Solver>::
+void SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, SBCLower, SBCUpper>::
 operator()(
         ddc::ChunkSpan<
                 Real,
@@ -1105,8 +1077,7 @@ template <
         class BSplines,
         class InterpolationDDim,
         ddc::SplineBuilderClosure SBCLower,
-        ddc::SplineBuilderClosure SBCUpper,
-        SplineSolver Solver>
+        ddc::SplineBuilderClosure SBCUpper>
 template <class OutMemorySpace>
 std::tuple<
         ddc::Chunk<
@@ -1123,7 +1094,7 @@ std::tuple<
                 ddc::DiscreteDomain<
                         ddc::Deriv<typename InterpolationDDim::continuous_dimension_type>>,
                 ddc::KokkosAllocator<Real, OutMemorySpace>>>
-SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, SBCLower, SBCUpper, Solver>::
+SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, SBCLower, SBCUpper>::
         quadrature_coefficients() const
 {
     // Compute integrals of bsplines
@@ -1236,17 +1207,9 @@ template <
         class BSplines,
         class InterpolationDDim,
         ddc::SplineBuilderClosure SBCLower,
-        ddc::SplineBuilderClosure SBCUpper,
-        SplineSolver Solver>
+        ddc::SplineBuilderClosure SBCUpper>
 template <class KnotElement>
-void SplineBuilder<
-        ExecSpace,
-        MemorySpace,
-        BSplines,
-        InterpolationDDim,
-        SBCLower,
-        SBCUpper,
-        Solver>::
+void SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, SBCLower, SBCUpper>::
         check_n_points_in_cell(int const n_points_in_cell, KnotElement const current_cell_end_idx)
 {
     if (n_points_in_cell > BSplines::degree() + 1) {
@@ -1265,16 +1228,9 @@ template <
         class BSplines,
         class InterpolationDDim,
         ddc::SplineBuilderClosure SBCLower,
-        ddc::SplineBuilderClosure SBCUpper,
-        SplineSolver Solver>
-void SplineBuilder<
-        ExecSpace,
-        MemorySpace,
-        BSplines,
-        InterpolationDDim,
-        SBCLower,
-        SBCUpper,
-        Solver>::check_valid_grid()
+        ddc::SplineBuilderClosure SBCUpper>
+void SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, SBCLower, SBCUpper>::
+        check_valid_grid()
 {
     std::size_t const n_interp_points = interpolation_domain().size();
     std::size_t const expected_npoints

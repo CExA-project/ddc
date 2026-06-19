@@ -91,8 +91,7 @@ struct BSplinesTraits<std::tuple<
             BSplinesX1,
             DDimX,
             ddc::SplineBuilderClosure::PERIODIC,
-            ddc::SplineBuilderClosure::PERIODIC,
-            ddc::SplineSolver::LAPACK>;
+            ddc::SplineBuilderClosure::PERIODIC>;
 
     using Evaluator1D_1 = std::conditional_t<
             LegacyEvaluator,
@@ -118,8 +117,7 @@ struct BSplinesTraits<std::tuple<
             BSplinesX2,
             DDimX,
             ddc::SplineBuilderClosure::PERIODIC,
-            ddc::SplineBuilderClosure::PERIODIC,
-            ddc::SplineSolver::LAPACK>;
+            ddc::SplineBuilderClosure::PERIODIC>;
 
     using Evaluator1D_2 = std::conditional_t<
             LegacyEvaluator,
@@ -149,8 +147,7 @@ struct BSplinesTraits<std::tuple<
             ddc::SplineBuilderClosure::PERIODIC,
             ddc::SplineBuilderClosure::PERIODIC,
             ddc::SplineBuilderClosure::PERIODIC,
-            ddc::SplineBuilderClosure::PERIODIC,
-            ddc::SplineSolver::LAPACK>;
+            ddc::SplineBuilderClosure::PERIODIC>;
 
     using Evaluator2D_1 = std::conditional_t<
             LegacyEvaluator,
@@ -186,8 +183,7 @@ struct BSplinesTraits<std::tuple<
             ddc::SplineBuilderClosure::PERIODIC,
             ddc::SplineBuilderClosure::PERIODIC,
             ddc::SplineBuilderClosure::PERIODIC,
-            ddc::SplineBuilderClosure::PERIODIC,
-            ddc::SplineSolver::LAPACK>;
+            ddc::SplineBuilderClosure::PERIODIC>;
 
     using Evaluator2D_2 = std::conditional_t<
             LegacyEvaluator,

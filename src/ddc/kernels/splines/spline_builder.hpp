@@ -181,18 +181,6 @@ public:
                                               ? 0
                                               : n_boundary_equations(SBCUpper, BSplines::degree());
 
-#if DDC_BUILD_DEPRECATED_CODE()
-    /// @brief The boundary condition implemented at the lower bound.
-    /// @deprecated Use s_sbc_xmin instead
-    [[deprecated("Use s_sbc_xmin instead")]] static constexpr ddc::SplineBuilderClosure s_bc_xmin
-            = SBCLower;
-
-    /// @brief The boundary condition implemented at the upper bound.
-    /// @deprecated Use s_sbc_xmax instead
-    [[deprecated("Use s_sbc_xmax instead")]] static constexpr ddc::SplineBuilderClosure s_bc_xmax
-            = SBCUpper;
-#endif
-
     /// @brief The closure relation implemented at the lower bound.
     static constexpr ddc::SplineBuilderClosure s_sbc_xmin = SBCLower;
 

@@ -11,6 +11,8 @@
 
 #include <Kokkos_Core.hpp>
 
+#include "detail/kokkos.hpp"
+
 #include "chunk_traits.hpp"
 #include "ddc_to_kokkos_execution_policy.hpp"
 #include "discrete_vector.hpp"
@@ -145,7 +147,12 @@ TransformReducerKokkosLambdaAdapter(Reducer const& r, Functor const& f, Support 
  * @param[in] transform a unary FunctionObject that will be applied to each element of the input
  *            range. The return type must be acceptable as input to reduce
  */
-template <class ExecSpace, class Support, class T, class BinaryReductionOp, class UnaryTransformOp>
+template <
+        detail::execution_space ExecSpace,
+        class Support,
+        class T,
+        class BinaryReductionOp,
+        class UnaryTransformOp>
 T transform_reduce_kokkos(
         std::string const& label,
         ExecSpace const& execution_space,
@@ -175,7 +182,12 @@ T transform_reduce_kokkos(
  * @param[in] transform a unary FunctionObject that will be applied to each element of the input
  *            range. The return type must be acceptable as input to reduce
  */
-template <class ExecSpace, class Support, class T, class BinaryReductionOp, class UnaryTransformOp>
+template <
+        detail::execution_space ExecSpace,
+        class Support,
+        class T,
+        class BinaryReductionOp,
+        class UnaryTransformOp>
 T parallel_transform_reduce(
         std::string const& label,
         ExecSpace const& execution_space,
@@ -202,14 +214,18 @@ T parallel_transform_reduce(
  * @param[in] transform a unary FunctionObject that will be applied to each element of the input
  *            range. The return type must be acceptable as input to reduce
  */
-template <class ExecSpace, class Support, class T, class BinaryReductionOp, class UnaryTransformOp>
+template <
+        detail::execution_space ExecSpace,
+        class Support,
+        class T,
+        class BinaryReductionOp,
+        class UnaryTransformOp>
 T parallel_transform_reduce(
         ExecSpace const& execution_space,
         Support const& domain,
         T neutral,
         BinaryReductionOp&& reduce,
         UnaryTransformOp&& transform) noexcept
-    requires(Kokkos::is_execution_space_v<ExecSpace>)
 {
     return detail::transform_reduce_kokkos(
             "ddc_parallel_transform_reduce_default",
@@ -361,7 +377,7 @@ TransformReducerChunkKokkosLambdaAdapter(
  *                      subdomain. Its return type must be accepted by `reduce`.
  */
 template <
-        class ExecSpace,
+        ::ddc::detail::execution_space ExecSpace,
         class Support,
         concepts::borrowed_chunk ChunkDst,
         class BinaryReductionOp,

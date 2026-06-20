@@ -192,4 +192,10 @@ KOKKOS_FUNCTION auto build_mdspan(
     DDC_IF_NVCC_THEN_POP
 }
 
+template <typename T>
+concept execution_space = Kokkos::is_execution_space_v<T>;
+
+template <typename T>
+concept memory_space = Kokkos::is_memory_space_v<T>;
+
 } // namespace ddc::detail

@@ -10,6 +10,8 @@
 
 #include <Kokkos_Core.hpp>
 
+#include "detail/kokkos.hpp"
+
 #include "ddc_to_kokkos_execution_policy.hpp"
 #include "discrete_vector.hpp"
 
@@ -56,7 +58,7 @@ template <class F, class Support>
 ForEachKokkosLambdaAdapter(F const& f, Support const& support)
         -> ForEachKokkosLambdaAdapter<F, Support, std::make_index_sequence<Support::rank()>>;
 
-template <class ExecSpace, class Support, class Functor>
+template <detail::execution_space ExecSpace, class Support, class Functor>
 void for_each_kokkos(
         std::string const& label,
         ExecSpace const& execution_space,
@@ -77,7 +79,7 @@ void for_each_kokkos(
  * @param[in] domain the domain over which to iterate
  * @param[in] f      a functor taking an index as parameter
  */
-template <class ExecSpace, class Support, class Functor>
+template <detail::execution_space ExecSpace, class Support, class Functor>
 void parallel_for_each(
         std::string const& label,
         ExecSpace const& execution_space,
@@ -92,12 +94,11 @@ void parallel_for_each(
  * @param[in] domain the domain over which to iterate
  * @param[in] f      a functor taking an index as parameter
  */
-template <class ExecSpace, class Support, class Functor>
+template <detail::execution_space ExecSpace, class Support, class Functor>
 void parallel_for_each(
         ExecSpace const& execution_space,
         Support const& domain,
         Functor&& f) noexcept
-    requires(Kokkos::is_execution_space_v<ExecSpace>)
 {
     detail::for_each_kokkos(
             "ddc_for_each_default",

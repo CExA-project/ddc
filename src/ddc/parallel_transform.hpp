@@ -8,6 +8,8 @@
 
 #include <Kokkos_Macros.hpp>
 
+#include "detail/kokkos.hpp"
+
 #include "chunk_span.hpp"
 #include "chunk_traits.hpp"
 #include "parallel_for_each.hpp"
@@ -71,7 +73,7 @@ auto parallel_transform(std::string const& label, ChunkDst&& dst, UnaryTransform
  *            range. The return type must be assignable to dst
  * @return dst as a ChunkSpan
  */
-template <class ChunkDst, class UnaryTransformOp>
+template <concepts::borrowed_chunk ChunkDst, class UnaryTransformOp>
 auto parallel_transform(ChunkDst&& dst, UnaryTransformOp&& transform)
 {
     return parallel_transform("ddc_parallel_transform_default", dst, transform);
@@ -85,7 +87,10 @@ auto parallel_transform(ChunkDst&& dst, UnaryTransformOp&& transform)
  *            range. The return type must be acceptable as input to reduce
  * @return dst as a ChunkSpan
  */
-template <class ExecSpace, concepts::borrowed_chunk ChunkDst, class UnaryTransformOp>
+template <
+        detail::execution_space ExecSpace,
+        concepts::borrowed_chunk ChunkDst,
+        class UnaryTransformOp>
 auto parallel_transform(
         std::string const& label,
         ExecSpace const& execution_space,
@@ -108,12 +113,14 @@ auto parallel_transform(
  *            range. The return type must be acceptable as input to reduce
  * @return dst as a ChunkSpan
  */
-template <class ExecSpace, class ChunkDst, class UnaryTransformOp>
+template <
+        detail::execution_space ExecSpace,
+        concepts::borrowed_chunk ChunkDst,
+        class UnaryTransformOp>
 auto parallel_transform(
         ExecSpace const& execution_space,
         ChunkDst&& dst,
         UnaryTransformOp&& transform)
-    requires(Kokkos::is_execution_space_v<ExecSpace>)
 {
     return parallel_transform("ddc_parallel_transform_default", execution_space, dst, transform);
 }

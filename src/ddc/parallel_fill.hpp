@@ -8,6 +8,8 @@
 
 #include <Kokkos_Core.hpp>
 
+#include "detail/kokkos.hpp"
+
 #include "chunk_traits.hpp"
 
 namespace ddc {
@@ -31,7 +33,7 @@ auto parallel_fill(ChunkDst&& dst, T const& value)
  * @param[in]  value the value to fill `dst`
  * @return dst as a ChunkSpan
  */
-template <class ExecSpace, concepts::borrowed_chunk ChunkDst, class T>
+template <detail::execution_space ExecSpace, concepts::borrowed_chunk ChunkDst, class T>
 auto parallel_fill(ExecSpace const& execution_space, ChunkDst&& dst, T const& value)
 {
     static_assert(std::is_assignable_v<chunk_reference_t<ChunkDst>, T>, "Not assignable");

@@ -10,6 +10,8 @@
 
 #include <Kokkos_Core.hpp>
 
+#include "detail/kokkos.hpp"
+
 #include "chunk_traits.hpp"
 #include "ddc_to_kokkos_execution_policy.hpp"
 #include "discrete_element.hpp"
@@ -104,7 +106,7 @@ public:
 };
 
 template <
-        class ExecSpace,
+        ::ddc::detail::execution_space ExecSpace,
         detail::ScanType ScanValue,
         class DDim,
         concepts::borrowed_chunk ChunkDst,
@@ -145,7 +147,7 @@ void parallel_transform_scan(
 } // namespace detail
 
 template <
-        class ExecSpace,
+        ::ddc::detail::execution_space ExecSpace,
         class DDim,
         concepts::borrowed_chunk ChunkDst,
         class BinaryReductionOp,
@@ -169,7 +171,7 @@ void parallel_transform_inclusive_scan(
 }
 
 template <
-        class ExecSpace,
+        ::ddc::detail::execution_space ExecSpace,
         class DDim,
         concepts::borrowed_chunk ChunkDst,
         class BinaryReductionOp,

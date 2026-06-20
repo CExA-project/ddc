@@ -9,6 +9,8 @@
 
 #include <Kokkos_Core.hpp>
 
+#include "detail/kokkos.hpp"
+
 #include "chunk_traits.hpp"
 
 namespace ddc {
@@ -36,7 +38,10 @@ auto parallel_deepcopy(ChunkDst&& dst, ChunkSrc&& src)
  * @param[in]  src the borrowed chunk from which to copy
  * @return dst as a ChunkSpan
 */
-template <class ExecSpace, concepts::borrowed_chunk ChunkDst, concepts::borrowed_chunk ChunkSrc>
+template <
+        detail::execution_space ExecSpace,
+        concepts::borrowed_chunk ChunkDst,
+        concepts::borrowed_chunk ChunkSrc>
 auto parallel_deepcopy(ExecSpace const& execution_space, ChunkDst&& dst, ChunkSrc&& src)
 {
     static_assert(

@@ -22,14 +22,6 @@ enum class SplineBuilderClosure {
     GREVILLE, ///< Use Greville points instead of conditions on derivative for B-Spline interpolation
 };
 
-#if DDC_BUILD_DEPRECATED_CODE()
-/** @brief An enum representing a spline closure relation. Please refer to
- * Emily Bourne's thesis (https://theses.fr/2022AIXM0412.pdf)
- * @deprecated Use ddc::SplineBuilderClosure instead
- */
-using BoundCond [[deprecated("Use ddc::SplineBuilderClosure instead")]] = SplineBuilderClosure;
-#endif
-
 /**
  * @brief Prints a closure relation in a std::ostream.
  *

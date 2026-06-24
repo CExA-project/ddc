@@ -8,8 +8,6 @@
 #include <cstddef>
 #include <utility>
 
-#include <ddc/config.hpp>
-
 #include <Kokkos_Macros.hpp>
 
 #include "detail/macros.hpp"
@@ -115,31 +113,6 @@ KOKKOS_FUNCTION T device_transform_reduce_serial(
 }
 
 } // namespace detail
-
-#if DDC_BUILD_DEPRECATED_CODE()
-/** A reduction over a nD domain in serial
- * @param[in] domain the range over which to apply the algorithm
- * @param[in] neutral the neutral element of the reduction operation
- * @param[in] reduce a binary FunctionObject that will be applied in unspecified order to the
- *            results of transform, the results of other reduce and neutral.
- * @param[in] transform a unary FunctionObject that will be applied to each element of the input
- *            range. The return type must be acceptable as input to reduce
- */
-template <class Support, class T, class BinaryReductionOp, class UnaryTransformOp>
-[[deprecated("Use host_transform_reduce instead")]]
-T transform_reduce(
-        Support const& domain,
-        T neutral,
-        BinaryReductionOp&& reduce,
-        UnaryTransformOp&& transform) noexcept
-{
-    return host_transform_reduce(
-            domain,
-            neutral,
-            std::forward<BinaryReductionOp>(reduce),
-            std::forward<UnaryTransformOp>(transform));
-}
-#endif
 
 /** A reduction over a nD domain in serial
  * @param[in] domain the range over which to apply the algorithm

@@ -563,8 +563,7 @@ public:
                                                 ddc::coordinate(i1),
                                                 ddc::coordinate(i2),
                                                 ddc::coordinate(i3));
-                                spline_eval_3D(i1, i2, i3)
-                                        = eval(coord_eval_3D, spline_coef_3D);
+                                spline_eval_3D(i1, i2, i3) = eval(coord_eval_3D, spline_coef_3D);
                             }
                         }
                     }

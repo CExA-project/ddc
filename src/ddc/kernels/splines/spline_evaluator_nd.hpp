@@ -422,7 +422,7 @@ public:
                             [&](evaluation_domain_type::discrete_element_type const i) {
                                 ddc::Coordinate<typename BSplines::continuous_dimension_type...>
                                         coord_eval_ND(ddc::coordinate(i));
-                                spline_eval_ND(i) = eval(coord_eval_3D(i), spline_coef_ND);
+                                spline_eval_ND(i) = eval(coord_eval_ND, spline_coef_ND);
                             });
                 });
     }

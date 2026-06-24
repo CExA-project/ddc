@@ -578,7 +578,7 @@ $(document).ready(function(){initNavTree('spline__evaluator__2d_8hpp_source.html
 <div class="line"><a id="l00449" name="l00449"></a><span class="lineno">  449</span>                        <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span> i2 : evaluation_domain2) {</div>
 <div class="line"><a id="l00450" name="l00450"></a><span class="lineno">  450</span>                            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;continuous_dimension_type1, continuous_dimension_type2&gt;</div>
 <div class="line"><a id="l00451" name="l00451"></a><span class="lineno">  451</span>                                    coord_eval_2D(<a class="code hl_namespace" href="namespaceddc.html">ddc</a>::coordinate(i1), <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::coordinate(i2));</div>
-<div class="line"><a id="l00452" name="l00452"></a><span class="lineno">  452</span>                            spline_eval_2D(i1, i2) = eval(coord_eval_2D(i1, i2), spline_coef_2D);</div>
+<div class="line"><a id="l00452" name="l00452"></a><span class="lineno">  452</span>                            spline_eval_2D(i1, i2) = eval(coord_eval_2D, spline_coef_2D);</div>
 <div class="line"><a id="l00453" name="l00453"></a><span class="lineno">  453</span>                        }</div>
 <div class="line"><a id="l00454" name="l00454"></a><span class="lineno">  454</span>                    }</div>
 <div class="line"><a id="l00455" name="l00455"></a><span class="lineno">  455</span>                });</div>

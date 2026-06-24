@@ -449,7 +449,7 @@ public:
                         for (auto const i2 : evaluation_domain2) {
                             ddc::Coordinate<continuous_dimension_type1, continuous_dimension_type2>
                                     coord_eval_2D(ddc::coordinate(i1), ddc::coordinate(i2));
-                            spline_eval_2D(i1, i2) = eval(coord_eval_2D(i1, i2), spline_coef_2D);
+                            spline_eval_2D(i1, i2) = eval(coord_eval_2D, spline_coef_2D);
                         }
                     }
                 });

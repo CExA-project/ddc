@@ -48,6 +48,8 @@ TEST(TypeSeqTest, Rank)
     EXPECT_EQ((ddc::type_seq_rank_v<T0, A>), 0);
     EXPECT_EQ((ddc::type_seq_rank_v<T1, A>), 1);
     EXPECT_EQ((ddc::type_seq_rank_v<T2, A>), 2);
+    constexpr std::size_t max_val = std::numeric_limits<std::size_t>::max();
+    EXPECT_EQ((ddc::type_seq_rank_v<T3, A>), max_val);
 }
 
 TEST(TypeSeqTest, Element)

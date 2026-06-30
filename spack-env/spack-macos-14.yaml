@@ -28,11 +28,11 @@ spack:
         - '~mpi'
         - '~fortran'
     c:
-      require: 'apple-clang@15.0'
+      require: 'apple-clang@15'
     cxx:
-      require: 'apple-clang@15.0'
+      require: 'apple-clang@15'
     fortran:
-      require: 'gcc@15.2'
+      require: 'gcc@15'
     lapack:
       require: 'openblas@0.3'
   repos:

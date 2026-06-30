@@ -49,7 +49,8 @@ struct TypeSeqRank<SingleType<QueryTag>, TypeSeq<TagsHead, TagsTail...>>
     static constexpr bool present
             = TypeSeqRank<SingleType<QueryTag>, TypeSeq<TagsTail...>>::present;
     static constexpr std::size_t val
-            = 1 + TypeSeqRank<SingleType<QueryTag>, TypeSeq<TagsTail...>>::val;
+            = present ? 1 + TypeSeqRank<SingleType<QueryTag>, TypeSeq<TagsTail...>>::val
+                      : std::numeric_limits<std::size_t>::max();
 };
 
 template <class... QueryTags, class... Tags>

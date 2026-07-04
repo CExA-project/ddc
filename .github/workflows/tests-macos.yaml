@@ -68,20 +68,23 @@ jobs:
       - name: Set up Spack
         uses: spack/setup-spack@16b756799ede8b28951287f89bcd3fdb32ec1ca3  # v3.0.0
         with:
-          spack_ref: v1.1.1
+          spack_ref: v1.2.0
           buildcache: true
       - name: Install
         shell: spack-bash {0}
         run: |
           spack env create . spack-env/spack-${{matrix.os}}.yaml
-          spack --env . repo update
-          spack --env . install
+          spack env activate .
+          spack repo update
+          spack install
       - name: Push packages and update index
         shell: spack-bash {0}
         env:
           GITHUB_USER: ${{github.actor}}
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-        run: spack --env . buildcache push --update-index local-buildcache
+        run: |
+          spack env activate .
+          spack buildcache push --fail-fast --update-index --without-build-dependencies local-buildcache
         if: ${{!cancelled()}}
       - name: Build DDC
         shell: spack-bash {0}

@@ -101,11 +101,11 @@ USER ci:ci
 WORKDIR /data
 
 COPY spack-env /data/spack-env
-RUN git clone --branch v1.1.1 --depth 1 https://github.com/spack/spack.git \
+RUN git clone --branch v1.2.0 --depth 1 https://github.com/spack/spack.git \
  && . /data/spack/share/spack/setup-env.sh \
  && spack env create ddc /data/spack-env/spack-${BACKEND}.yaml \
  && spack --env ddc repo update \
- && spack --env ddc install --fail-fast
+ && spack --env ddc install --deprecated --fail-fast
 
 ENTRYPOINT ["/bin/bash_run.sh"]
 CMD ["/bin/bash", "-li"]

@@ -37,23 +37,22 @@ spack:
       require: 'openblas@0.3'
   repos:
     builtin:
-      tag: v2026.03.0
+      tag: v2026.06.0
   specs:
     - 'apple-clang@17'
     - 'benchmark@1.9 ~performance_counters'
     - 'cmake@4.2'
     - 'ginkgo@1.11'
     - 'googletest@1.17 +gmock'
-    - 'kokkos@5.0'
-    - 'kokkos-fft@1.0 host_backend=fftw-serial'
-    - 'kokkos-kernels@5.0'
+    - 'kokkos@5.1'
+    - 'kokkos-fft@1.1 host_backend=fftw-serial'
+    - 'kokkos-kernels@5.1'
     - 'lapack'
     - 'paraconf@1.0'
-    - 'pkgconfig'
-    - 'pdi@1.10.1:1.10 ~python'
-    - 'pdiplugin-decl-hdf5@1.10.1:1.10'
-    - 'pdiplugin-user-code@1.10.1:1.10'
-    - 'pdiplugin-trace@1.10.1:1.10'
+    - 'pdi@1.11'
+    - 'pdiplugin-decl-hdf5@1.11'
+    - 'pdiplugin-user-code@1.11'
+    - 'pdiplugin-trace@1.11'
   view:
     default:
       root: .spack-env/view

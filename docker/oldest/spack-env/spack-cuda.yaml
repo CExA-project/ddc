@@ -31,7 +31,7 @@ spack:
       require: 'openblas@0.3'
   repos:
     builtin:
-      tag: v2026.03.0
+      tag: v2026.06.0
   specs:
     - 'gcc@11'
     - 'benchmark@1.9 ~performance_counters'
@@ -43,7 +43,6 @@ spack:
     - 'kokkos-kernels@4.7'
     - 'lapack'
     - 'paraconf@1.0'
-    - 'pkgconfig'
     - 'pdi@1.10.1:1.10'
     - 'pdiplugin-decl-hdf5@1.10.1:1.10'
     - 'pdiplugin-user-code@1.10.1:1.10'

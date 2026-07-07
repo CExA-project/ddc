@@ -25,37 +25,37 @@ RUN chmod +x /bin/bash_run.sh \
  && export DEBIAN_FRONTEND=noninteractive \
  && echo tzdata tzdata/Areas string Etc | debconf-set-selections \
  && echo tzdata tzdata/Zones/Etc string UTC | debconf-set-selections \
- && apt-get update -y \
- && apt-get install -y --no-install-recommends \
+ && apt-get update --yes \
+ && apt-get install --yes --no-install-recommends \
     apt-transport-https \
     apt-utils \
     ca-certificates \
     gpg \
     wget \
  && mkdir --parents --mode=0755 /etc/apt/keyrings \
- && wget -O /usr/share/keyrings/apt.llvm.org.asc https://apt.llvm.org/llvm-snapshot.gpg.key \
+ && wget --output-document=/usr/share/keyrings/apt.llvm.org.asc https://apt.llvm.org/llvm-snapshot.gpg.key \
  && echo "deb [arch=amd64 signed-by=/usr/share/keyrings/apt.llvm.org.asc] http://apt.llvm.org/jammy/ llvm-toolchain-jammy-${LLVM_VERSION} main" > /etc/apt/sources.list.d/llvm.list \
  && case "x${BACKEND}" in \
     "xhip") \
       echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/rocm.gpg] https://repo.radeon.com/amdgpu/${AMDGPU_VERSION}/ubuntu jammy main" > /etc/apt/sources.list.d/amdgpu.list \
       && echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/rocm.gpg] https://repo.radeon.com/rocm/apt/${ROCM_VERSION} jammy main" > /etc/apt/sources.list.d/rocm.list \
-      && wget -q -O - https://repo.radeon.com/rocm/rocm.gpg.key | gpg --dearmor --output /etc/apt/keyrings/rocm.gpg \
+      && wget --quiet --output-document=- https://repo.radeon.com/rocm/rocm.gpg.key | gpg --dearmor --output /etc/apt/keyrings/rocm.gpg \
       && echo -e "Package: *\nPin: release o=repo.radeon.com\nPin-Priority: 600" > /etc/apt/preferences.d/rocm-pin-600 \
  ;; "xcuda" ) \
-      wget -O /usr/share/keyrings/cuda-archive-keyring.asc https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/3bf863cc.pub \
+      wget --output-document=/usr/share/keyrings/cuda-archive-keyring.asc https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/3bf863cc.pub \
       && echo "deb [arch=amd64 signed-by=/usr/share/keyrings/cuda-archive-keyring.asc] https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64 /" > /etc/apt/sources.list.d/cuda.list \
-      && wget -O /etc/apt/preferences.d/cuda-repository-pin-600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-ubuntu2204.pin \
+      && wget --output-document=/etc/apt/preferences.d/cuda-repository-pin-600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-ubuntu2204.pin \
  ;; esac \
- && apt-get update -y \
+ && apt-get update --yes \
  && case "${BACKEND}" in \
     "cpu") \
-      apt-get install -y --no-install-recommends \
+      apt-get install --yes --no-install-recommends \
       clang-${LLVM_VERSION} \
       && update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-${LLVM_VERSION} 100 \
       && update-alternatives --install /usr/bin/clang clang /usr/bin/clang-${LLVM_VERSION} 100 \
  ;; "cuda") \
       # libnvjitlink seems to be a missing dependency of cusparse
-      apt-get install -y --no-install-recommends \
+      apt-get install --yes --no-install-recommends \
       cuda-minimal-build-${CUDA_MAJOR_VERSION}-${CUDA_MINOR_VERSION} \
       cuda-nvtx-${CUDA_MAJOR_VERSION}-${CUDA_MINOR_VERSION} \
       libcublas-dev-${CUDA_MAJOR_VERSION}-${CUDA_MINOR_VERSION} \
@@ -65,7 +65,7 @@ RUN chmod +x /bin/bash_run.sh \
       libcusparse-dev-${CUDA_MAJOR_VERSION}-${CUDA_MINOR_VERSION} \
       libnvjitlink-${CUDA_MAJOR_VERSION}-${CUDA_MINOR_VERSION} \
  ;; "hip") \
-      apt-get install -y --no-install-recommends \
+      apt-get install --yes --no-install-recommends \
       # libxml2 seems to be a missing dependency of rocm-hip-runtime
       libxml2 \
       hipblas-dev${ROCM_VERSION} \
@@ -79,23 +79,38 @@ RUN chmod +x /bin/bash_run.sh \
       && echo "/opt/rocm/lib64" >> /etc/ld.so.conf.d/rocm.conf \
       && ldconfig \
  ;; esac \
- && apt-get purge -y \
+ && apt-get purge --yes \
     apt-transport-https \
     apt-utils \
     ca-certificates \
     wget \
- && apt-get autoremove -y \
- && apt-get clean -y \
- && apt-get autoclean -y \
- && rm -rf /var/lib/apt/lists/* \
- && useradd -d /data -m -U ci \
+ && apt-get autoremove --yes \
+ && apt-get clean --yes \
+ && apt-get autoclean --yes \
+ && rm --force --recursive /var/lib/apt/lists/* \
+ && useradd --create-home --home-dir /data --user-group ci \
  && if [ "xcuda" = "x${BACKEND}" ] \
   ; then echo 'CUDA_GCC=gcc' > /etc/profile.d/ddc-cuda.sh \
        ; echo 'CUDA_GXX=g++' >> /etc/profile.d/ddc-cuda.sh \
  ;  fi
 
-RUN apt-get update -y \
- && apt-get install -y --no-install-recommends file bzip2 ca-certificates g++ gcc gfortran git gzip lsb-release patch python3 tar unzip xz-utils zstd
+RUN apt-get update --yes \
+ && apt-get install --yes --no-install-recommends \
+    file \
+    bzip2 \
+    ca-certificates \
+    g++ \
+    gcc \
+    gfortran \
+    git \
+    gzip \
+    lsb-release \
+    patch \
+    python3 \
+    tar \
+    unzip \
+    xz-utils \
+    zstd
 
 USER ci:ci
 WORKDIR /data

@@ -14,29 +14,44 @@ RUN chmod +x /bin/bash_run.sh \
  && export DEBIAN_FRONTEND=noninteractive \
  && echo tzdata tzdata/Areas string Etc | debconf-set-selections \
  && echo tzdata tzdata/Zones/Etc string UTC | debconf-set-selections \
- && apt-get update -y \
- && apt-get install -y --no-install-recommends \
+ && apt-get update --yes \
+ && apt-get install --yes --no-install-recommends \
     apt-transport-https \
     apt-utils \
     ca-certificates \
     wget \
- && apt-get update -y \
- && apt-get install -y --no-install-recommends \
+ && apt-get update --yes \
+ && apt-get install --yes --no-install-recommends \
     clang \
     cm-super-minimal \
     doxygen-latex \
     ghostscript \
     graphviz \
- && apt-get purge -y \
+ && apt-get purge --yes \
     apt-transport-https \
- && apt-get autoremove -y \
- && apt-get clean -y \
- && apt-get autoclean -y \
- && rm -rf /var/lib/apt/lists/* \
- && useradd -d /data -m -U ci
+ && apt-get autoremove --yes \
+ && apt-get clean --yes \
+ && apt-get autoclean --yes \
+ && rm --force --recursive /var/lib/apt/lists/* \
+ && useradd --create-home --home-dir /data --user-group ci
 
-RUN apt-get update -y \
- && apt-get install -y --no-install-recommends file bzip2 ca-certificates g++ gcc gfortran git gzip lsb-release patch python3 tar unzip xz-utils zstd
+RUN apt-get update --yes \
+ && apt-get install --yes --no-install-recommends \
+    file \
+    bzip2 \
+    ca-certificates \
+    g++ \
+    gcc \
+    gfortran \
+    git \
+    gzip \
+    lsb-release \
+    patch \
+    python3 \
+    tar \
+    unzip \
+    xz-utils \
+    zstd
 
 USER ci:ci
 WORKDIR /data

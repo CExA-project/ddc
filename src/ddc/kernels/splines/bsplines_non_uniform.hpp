@@ -513,8 +513,8 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<CDim, D>::
 
     KOKKOS_ASSERT(icell >= m_break_point_domain.front())
     KOKKOS_ASSERT(icell <= m_break_point_domain.back())
-    KOKKOS_ASSERT(ddc::coordinate(icell) <= x)
-    KOKKOS_ASSERT(ddc::coordinate(icell + 1) >= x)
+    KOKKOS_ASSERT(ddc::coordinate(icell) - x <= length() * 1e-14)
+    KOKKOS_ASSERT(x - ddc::coordinate(icell + 1) <= length() * 1e-14)
 
     // 2. Compute values of derivatives of B-splines with support over cell 'icell'
 
@@ -586,8 +586,8 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<CDim, D>::
 
     KOKKOS_ASSERT(icell >= m_break_point_domain.front())
     KOKKOS_ASSERT(icell <= m_break_point_domain.back())
-    KOKKOS_ASSERT(ddc::coordinate(icell) <= x)
-    KOKKOS_ASSERT(ddc::coordinate(icell + 1) >= x)
+    KOKKOS_ASSERT(ddc::coordinate(icell) - x <= length() * 1e-14)
+    KOKKOS_ASSERT(x - ddc::coordinate(icell + 1) <= length() * 1e-14)
 
     // 2. Compute nonzero basis functions and knot differences for splines
     //    up to degree (degree-1) which are needed to compute derivative

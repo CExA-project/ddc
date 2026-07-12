@@ -12,7 +12,7 @@ spack:
       padded_length: 128
   mirrors:
     local-buildcache:
-      url: oci://ghcr.io/CExA-project/ddc-spack-buildcache
+      url: oci://ghcr.io/CExA-project/ddc-spack-buildcache-new
       binary: true
       signed: false
       access_pair:

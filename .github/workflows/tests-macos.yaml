@@ -72,20 +72,15 @@ jobs:
           buildcache: true
       - name: Install
         shell: spack-bash {0}
-        run: |
-          spack env create . spack-env/spack-${{matrix.os}}.yaml
-          spack env activate .
-          spack repo update
-          spack install
-      - name: Push packages and update index
-        shell: spack-bash {0}
         env:
           GITHUB_USER: ${{github.actor}}
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         run: |
+          spack env create . spack-env/spack-${{matrix.os}}.yaml
           spack env activate .
-          spack buildcache push --fail-fast --update-index --without-build-dependencies local-buildcache
-        if: ${{!cancelled()}}
+          spack mirror set --autopush local-buildcache
+          spack repo update
+          spack install --fail-fast
       - name: Build DDC
         shell: spack-bash {0}
         run: |

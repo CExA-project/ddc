@@ -68,7 +68,7 @@ jobs:
       - name: Set up Spack
         uses: spack/setup-spack@16b756799ede8b28951287f89bcd3fdb32ec1ca3  # v3.0.0
         with:
-          spack_ref: v1.2.0
+          spack_ref: v1.2.1
           buildcache: true
       - name: Install
         shell: spack-bash {0}

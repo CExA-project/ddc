@@ -4,7 +4,7 @@
 
 cmake_minimum_required(VERSION 3.25...4.2)
 
-project(DDC VERSION 0.15.0 LANGUAGES CXX)
+project(DDC VERSION 0.15.1 LANGUAGES CXX)
 
 # List of options
 

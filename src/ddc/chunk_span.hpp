@@ -206,7 +206,7 @@ public:
             ChunkSpan<OElementType, SupportType, OLayout, MemorySpace> const& other) noexcept
         requires(std::constructible_from<
                  allocation_mdspan_type,
-                 decltype(other.allocation_mdspan())>)
+                 Kokkos::mdspan<OElementType, extents_type, OLayout>>)
         : base_type(other.m_allocation_mdspan, other.m_domain)
     {
     }

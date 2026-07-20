@@ -97,6 +97,19 @@ TEST(ChunkSpan1DTest, CtadOnDevice)
     TestChunkSpan1DTestCtadOnDevice();
 }
 
+TEST(ChunkSpan2DTest, CtorConversionLayoutStride)
+{
+    ddc::DiscreteElement<DDimX> const delem_x = ddc::init_trivial_half_bounded_space<DDimX>();
+    ddc::DiscreteElement<DDimY> const delem_y = ddc::init_trivial_half_bounded_space<DDimY>();
+    ddc::DiscreteDomain<DDimX, DDimY> const
+            ddom_xy(ddc::DiscreteElement<DDimX, DDimY>(delem_x, delem_y),
+                    ddc::DiscreteVector<DDimX, DDimY>(10, 11));
+    ddc::Chunk chk("chk", ddom_xy, ddc::HostAllocator<int>());
+    EXPECT_NO_FATAL_FAILURE(
+            (ddc::ChunkSpan<int, ddc::DiscreteDomain<DDimX, DDimY>, Kokkos::layout_stride>(
+                    chk.span_view())));
+}
+
 TEST(ChunkSpan2DTest, CtorContiguousLayoutRightKokkosView)
 {
     Kokkos::View<int**, Kokkos::LayoutRight> const view("view", 133, 189);

@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <concepts>
 #include <cstddef>
 #include <type_traits>
 #include <utility>
@@ -200,9 +201,12 @@ public:
     /** Constructs a new ChunkSpan by copy of a chunk, yields a new view to the same data
      * @param other the ChunkSpan to move
      */
-    template <class OElementType>
+    template <class OElementType, class OLayout>
     KOKKOS_FUNCTION constexpr explicit ChunkSpan(
-            ChunkSpan<OElementType, SupportType, layout_type, MemorySpace> const& other) noexcept
+            ChunkSpan<OElementType, SupportType, OLayout, MemorySpace> const& other) noexcept
+        requires(std::constructible_from<
+                 allocation_mdspan_type,
+                 Kokkos::mdspan<OElementType, extents_type, OLayout>>)
         : base_type(other.m_allocation_mdspan, other.m_domain)
     {
     }

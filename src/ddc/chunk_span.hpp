@@ -50,6 +50,9 @@ class ChunkSpan : public ChunkCommon<ElementType, SupportType, LayoutStridedPoli
                     || std::is_same_v<LayoutStridedPolicy, Kokkos::layout_right>
                     || std::is_same_v<LayoutStridedPolicy, Kokkos::layout_stride>,
             "ChunkSpan only supports layout_left, layout_right or layout_stride");
+    static_assert(
+            Kokkos::is_memory_space_v<MemorySpace>,
+            "ChunkSpan requires a valid Kokkos memory space");
 
 protected:
     using base_type = ChunkCommon<ElementType, SupportType, LayoutStridedPolicy>;

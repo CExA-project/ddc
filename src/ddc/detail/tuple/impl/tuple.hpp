@@ -543,7 +543,7 @@ KOKKOS_INLINE_FUNCTION constexpr bool operator>=(tuple<> const&, tuple<> const&)
 namespace impl {
 // We use sfinae instead of a concept since the concept would depend on itself
 // NOLINTBEGIN(bugprone-macro-parentheses)
-#define CONVERTING_TUPLE_CTOR_CONSTRAINTS(CONST, REF)                                              \
+#define CEXA_CONVERTING_TUPLE_CTOR_CONSTRAINTS(CONST, REF)                                         \
     class = std::enable_if_t<std::conjunction_v<                                                   \
             std::bool_constant<sizeof...(Types) == sizeof...(UTypes)>,                             \
             impl::all_types_constructible<tuple<Types...>, CONST tuple<UTypes...> REF>,            \
@@ -678,7 +678,7 @@ public:
     {
     }
 
-    template <class... UTypes, CONVERTING_TUPLE_CTOR_CONSTRAINTS(const, &)>
+    template <class... UTypes, CEXA_CONVERTING_TUPLE_CTOR_CONSTRAINTS(const, &)>
     KOKKOS_INLINE_FUNCTION explicit(
             !(impl::all_types_convertible_v<
                     tuple<UTypes...> const&,
@@ -687,7 +687,7 @@ public:
     {
     }
 
-    template <class... UTypes, CONVERTING_TUPLE_CTOR_CONSTRAINTS(, &&)>
+    template <class... UTypes, CEXA_CONVERTING_TUPLE_CTOR_CONSTRAINTS(, &&)>
     KOKKOS_INLINE_FUNCTION explicit(!(impl::all_types_convertible_v<
                                       tuple<UTypes...>&&,
                                       tuple<Types...>>)) constexpr tuple(tuple<UTypes...>&& other)
@@ -696,7 +696,7 @@ public:
     }
 
 #if defined(CEXA_HAS_CXX23)
-    template <class... UTypes, CONVERTING_TUPLE_CTOR_CONSTRAINTS(, &)>
+    template <class... UTypes, CEXA_CONVERTING_TUPLE_CTOR_CONSTRAINTS(, &)>
     KOKKOS_INLINE_FUNCTION explicit(!(impl::all_types_convertible_v<
                                       tuple<UTypes...>&,
                                       tuple<Types...>>)) constexpr tuple(tuple<UTypes...>& other)
@@ -704,7 +704,7 @@ public:
     {
     }
 
-    template <class... UTypes, CONVERTING_TUPLE_CTOR_CONSTRAINTS(const, &&)>
+    template <class... UTypes, CEXA_CONVERTING_TUPLE_CTOR_CONSTRAINTS(const, &&)>
     KOKKOS_INLINE_FUNCTION explicit(
             !(impl::all_types_convertible_v<
                     tuple<UTypes...> const&&,

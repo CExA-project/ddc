@@ -53,6 +53,7 @@ add_executable(
     transform_reduce.cpp
     trivial_space.cpp
     type_seq.cpp
+    uniform_mesh.cpp
     uniform_point_sampling.cpp
 )
 target_compile_features(ddc_tests PRIVATE cxx_std_20)

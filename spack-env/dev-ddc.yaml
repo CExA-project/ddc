@@ -1,0 +1,63 @@
+---
+spack:
+  concretizer:
+    reuse: false
+    unify: true
+  config:
+    sandbox:
+      enable: true
+      allow_network: false
+      allow_read:
+        - /
+  mirrors:
+    local-buildcache:
+      url: oci://ghcr.io/tpadioleau/dev-spack-ubuntu-26.04
+      binary: true
+      signed: false
+      access_pair:
+        id_variable: GITHUB_USER
+        secret_variable: GITHUB_TOKEN
+  packages:
+    all:
+      require:
+        - 'target=x86_64'
+      prefer:
+        - '~cuda'
+        - '~rocm'
+        - '~openmp'
+        - '~mpi'
+        - '~fortran'
+    c:
+      require: 'gcc@15.2'
+    cxx:
+      require: 'gcc@15.2'
+    fortran:
+      require: 'gcc@15.2'
+  repos:
+    builtin:
+      branch: releases/v2026.06
+  specs:
+    - 'gcc@15.2'
+    - 'benchmark@1.9 ~performance_counters'
+    - 'cmake@4.2'
+    - 'doxygen@1.17'
+    - 'ginkgo@1.11'
+    - 'googletest@1.17 +gmock'
+    - 'kokkos@5.1'
+    - 'kokkos-fft@1.1 host_backend=fftw-serial'
+    - 'kokkos-kernels@5.1'
+    - 'ninja@1.13'
+    - 'openblas@0.3'
+    - 'paraconf@1.0'
+    - 'pdi@1.11'
+    - 'pdiplugin-decl-hdf5@1.11'
+    - 'pdiplugin-user-code@1.11'
+    - 'pdiplugin-trace@1.11'
+    - 'py-gcovr@8.6'
+    - 'py-numpy@2.4'
+    - 'py-pytest@9.0'
+  view:
+    default:
+      projections:
+        all: "{name}-{version}-{hash}"
+      root: .spack-env/view

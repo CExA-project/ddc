@@ -255,17 +255,16 @@ void TestExtrapolationRuleSpline()
 #    endif
 #endif
 
-    ddc::SplineEvaluator2D<
+    ddc::SplineEvaluatorND<
             ExecSpace,
             MemorySpace,
-            BSplines<I1>,
-            BSplines<I2>,
-            DDimI1,
-            DDimI2,
-            extrapolation_rule_dim_1_type,
-            extrapolation_rule_dim_1_type,
-            extrapolation_rule_dim_2_type,
-            extrapolation_rule_dim_2_type> const
+            ddc::detail::TypeSeq<BSplines<I1>, BSplines<I2>>,
+            ddc::detail::TypeSeq<DDimI1, DDimI2>,
+            ddc::detail::TypeSeq<
+                    extrapolation_rule_dim_1_type,
+                    extrapolation_rule_dim_1_type,
+                    extrapolation_rule_dim_2_type,
+                    extrapolation_rule_dim_2_type>> const
             spline_evaluator_batched(
                     extrapolation_rule_left_dim_1,
                     extrapolation_rule_right_dim_1,

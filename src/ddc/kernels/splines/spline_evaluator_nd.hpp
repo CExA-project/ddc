@@ -152,6 +152,17 @@ private:
     cexa::tuple<ddc::type_seq_element_t<s_idx<BSplines>, upper_extrap_rule_ts>...>
             m_upper_extrap_rules;
 
+    /**
+     * @brief Build a SplineEvaluatorND acting on batched_spline_domain.
+     *
+     * @param extrap_rules The extrapolation rules at the lower then upper boundary, for each dimension.
+     */
+    explicit SplineEvaluatorND(cexa::tuple<ExtrapolationRule...> const& extrap_rules)
+        : m_lower_extrap_rules(cexa::get<2 * s_idx<BSplines>>(extrap_rules)...)
+        , m_upper_extrap_rules(cexa::get<2 * s_idx<BSplines> + 1>(extrap_rules)...)
+    {
+    }
+
 public:
     static_assert(
             sizeof...(BSplines) == dimension,
@@ -182,10 +193,10 @@ public:
             (std::is_invocable_r_v<
                      double,
                      ddc::type_seq_element_t<s_idx<BSplines>, lower_extrap_rule_ts>,
-                     ddc::Coordinate<typename BSplines::continuous_dimension_type>,
+                     ddc::Coordinate<typename BSplines::continuous_dimension_type...>,
                      ddc::ChunkSpan<
                              double const,
-                             ddc::DiscreteDomain<BSplines>,
+                             ddc::DiscreteDomain<BSplines...>,
                              Kokkos::layout_right,
                              memory_space>>
              && ...),
@@ -195,10 +206,10 @@ public:
             (std::is_invocable_r_v<
                      double,
                      ddc::type_seq_element_t<s_idx<BSplines>, upper_extrap_rule_ts>,
-                     ddc::Coordinate<typename BSplines::continuous_dimension_type>,
+                     ddc::Coordinate<typename BSplines::continuous_dimension_type...>,
                      ddc::ChunkSpan<
                              double const,
-                             ddc::DiscreteDomain<BSplines>,
+                             ddc::DiscreteDomain<BSplines...>,
                              Kokkos::layout_right,
                              memory_space>>
              && ...),
@@ -212,19 +223,9 @@ public:
      *
      * @see NullExtrapolationRule ConstantExtrapolationRule PeriodicExtrapolationRule
      */
-    template <class... ExtrapRules>
-    explicit SplineEvaluatorND(ExtrapRules const&... extrap_rules)
+    explicit SplineEvaluatorND(ExtrapolationRule const&... extrap_rules)
+        : SplineEvaluatorND(cexa::make_tuple(extrap_rules...))
     {
-        static_assert(
-                (std::is_same_v<ExtrapRules, ExtrapolationRule> && ...),
-                "The type of the extrapolation rules passed to the constructor should be the same "
-                "as the ones passed as template argument to the class");
-
-        cexa::tuple<ExtrapRules...> extrap_rules_tuple(extrap_rules...);
-        m_lower_extrap_rules
-                = cexa::make_tuple(cexa::get<2 * s_idx<BSplines>>(extrap_rules_tuple)...);
-        m_upper_extrap_rules
-                = cexa::make_tuple(cexa::get<2 * s_idx<BSplines> + 1>(extrap_rules_tuple)...);
     }
 
     /**

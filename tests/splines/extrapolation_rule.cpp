@@ -255,6 +255,7 @@ void TestExtrapolationRuleSpline()
 #    endif
 #endif
 
+#if defined(EVALUATOR_CLASS_2D)
     ddc::SplineEvaluator2D<
             ExecSpace,
             MemorySpace,
@@ -271,6 +272,23 @@ void TestExtrapolationRuleSpline()
                     extrapolation_rule_right_dim_1,
                     extrapolation_rule_left_dim_2,
                     extrapolation_rule_right_dim_2);
+#elif defined(EVALUATOR_CLASS_ND)
+    ddc::SplineEvaluatorND<
+            ExecSpace,
+            MemorySpace,
+            ddc::detail::TypeSeq<BSplines<I1>, BSplines<I2>>,
+            ddc::detail::TypeSeq<DDimI1, DDimI2>,
+            ddc::detail::TypeSeq<
+                    extrapolation_rule_dim_1_type,
+                    extrapolation_rule_dim_1_type,
+                    extrapolation_rule_dim_2_type,
+                    extrapolation_rule_dim_2_type>> const
+            spline_evaluator_batched(
+                    extrapolation_rule_left_dim_1,
+                    extrapolation_rule_right_dim_1,
+                    extrapolation_rule_left_dim_2,
+                    extrapolation_rule_right_dim_2);
+#endif
 
     // Instantiate chunk of coordinates of dom_interpolation
     ddc::Chunk coords_eval_alloc(dom_vals, ddc::KokkosAllocator<Coord<I1, I2>, MemorySpace>());

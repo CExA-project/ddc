@@ -83,26 +83,34 @@ foreach(bc "periodic" "greville")
     foreach(degree RANGE "${DDC_SPLINES_TEST_DEGREE_MIN}" "${DDC_SPLINES_TEST_DEGREE_MAX}")
         foreach(bsplines_type "uniform" "non_uniform")
             foreach(er "null" "constant")
-                string(TOUPPER "bc_${bc}" bc_macro)
-                string(TOUPPER "degree=${degree}" degree_macro)
-                string(TOUPPER "bsplines_type_${bsplines_type}" bsplines_type_macro)
-                string(TOUPPER "er_${er}" er_macro)
-                set(test_filename "extrapolation_rule")
-                set(test_name
-                    "${test_filename}_tests_degree_${degree}_${bsplines_type}_${bc}_${er}"
-                )
+                foreach(evaluator_class "2d" "nd")
+                    string(TOUPPER "bc_${bc}" bc_macro)
+                    string(TOUPPER "degree=${degree}" degree_macro)
+                    string(TOUPPER "bsplines_type_${bsplines_type}" bsplines_type_macro)
+                    string(TOUPPER "er_${er}" er_macro)
+                    string(TOUPPER "evaluator_class_${evaluator_class}" evaluator_class_macro)
+                    set(test_filename "extrapolation_rule")
+                    set(test_name
+                        "${test_filename}_tests_degree_${degree}_${bsplines_type}_${bc}_${er}_evaluator_${evaluator_class}"
+                    )
 
-                add_executable("${test_name}" "${test_filename}.cpp")
-                target_compile_definitions(
-                    "${test_name}"
-                    PRIVATE -D${bc_macro} -D${degree_macro} -D${bsplines_type_macro} -D${er_macro}
-                )
-                target_compile_features("${test_name}" PRIVATE cxx_std_20)
-                target_link_libraries(
-                    "${test_name}"
-                    PRIVATE ddc_gtest_main DDC::core DDC::splines GTest::gtest
-                )
-                gtest_discover_tests("${test_name}" DISCOVERY_MODE PRE_TEST)
+                    add_executable("${test_name}" "${test_filename}.cpp")
+                    target_compile_definitions(
+                        "${test_name}"
+                        PRIVATE
+                            -D${bc_macro}
+                            -D${degree_macro}
+                            -D${bsplines_type_macro}
+                            -D${er_macro}
+                            -D${evaluator_class_macro}
+                    )
+                    target_compile_features("${test_name}" PRIVATE cxx_std_20)
+                    target_link_libraries(
+                        "${test_name}"
+                        PRIVATE ddc_gtest_main DDC::core DDC::splines GTest::gtest
+                    )
+                    gtest_discover_tests("${test_name}" DISCOVERY_MODE PRE_TEST)
+                endforeach()
             endforeach()
         endforeach()
     endforeach()

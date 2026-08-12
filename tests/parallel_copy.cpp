@@ -129,7 +129,7 @@ TEST(ParallelCopy, BroadcastX2XY)
     EXPECT_EQ(Kokkos::Experimental::count(exec_space, storage, 1), dom_x_y.size());
 }
 
-TEST(ParallelCopy, TransposeXY2XY)
+TEST(ParallelCopy, TransposeYX2XY)
 {
     Kokkos::DefaultExecutionSpace const exec_space;
 
@@ -138,10 +138,11 @@ TEST(ParallelCopy, TransposeXY2XY)
             chunk_x_y_out(Kokkos::View<int**>(storage.data(), nelems_x, nelems_y), dom_x_y);
     ddc::parallel_fill(exec_space, chunk_x_y_out, 0);
 
-    ddc::Chunk chunk_x_y_in(dom_x_y, ddc::DeviceAllocator<int>());
-    ddc::parallel_fill(exec_space, chunk_x_y_in, 1);
+    DDomYX const dom_y_x(dom_x_y);
+    ddc::Chunk chunk_y_x_in(dom_y_x, ddc::DeviceAllocator<int>());
+    ddc::parallel_fill(exec_space, chunk_y_x_in, 1);
 
-    ddc::parallel_copy(exec_space, chunk_x_y_out, chunk_x_y_in);
+    ddc::parallel_copy(exec_space, chunk_x_y_out, chunk_y_x_in);
 
     EXPECT_EQ(Kokkos::Experimental::count(exec_space, storage, 1), dom_x_y.size());
 }

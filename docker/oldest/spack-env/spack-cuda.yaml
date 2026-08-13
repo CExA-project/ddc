@@ -36,7 +36,7 @@ spack:
     - 'gcc@11'
     - 'benchmark@1.9 ~performance_counters'
     - 'cmake@3.25'
-    - 'ginkgo@1.8'
+    - 'ginkgo@1.9'
     - 'googletest@1.14 +gmock'
     - 'kokkos@4.7 +cuda_constexpr +cuda_relocatable_device_code'
     - 'kokkos-fft@0.3 host_backend=fftw-serial device_backend=cufft'

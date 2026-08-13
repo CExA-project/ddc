@@ -136,14 +136,7 @@ public:
 
 private:
     using matrix_sparse_type = gko::matrix::Csr<double, gko::int32>;
-#if defined(KOKKOS_ENABLE_OPENMP)
-    using solver_type = std::conditional_t<
-            std::is_same_v<ExecSpace, Kokkos::OpenMP>,
-            gko::solver::Gmres<double>,
-            gko::solver::Bicgstab<double>>;
-#else
     using solver_type = gko::solver::Bicgstab<double>;
-#endif
 
 private:
     std::size_t m_mat_size;
@@ -223,7 +216,7 @@ public:
     /**
      * @brief Solve the multiple right-hand sides linear problem Ax=b or its transposed version A^tx=b inplace.
      *
-     * The solver method is currently Bicgstab on CPU Serial and GPU and Gmres on OMP (because of Ginkgo issue #1563).
+     * The solver method is currently BiCGSTAB.
      *
      * Multiple right-hand sides are sliced in chunks of size cols_per_chunk which are passed one-after-the-other to Ginkgo.
      *

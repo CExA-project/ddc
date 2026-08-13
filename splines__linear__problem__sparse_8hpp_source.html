@@ -204,7 +204,7 @@ $(document).ready(function(){initNavTree('splines__linear__problem__sparse_8hpp_
 <div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    <span class="comment">/**</span></div>
 <div class="line"><span class="lineno">   76</span><span class="comment">     * @brief Solve the multiple right-hand sides linear problem Ax=b or its transposed version A^tx=b inplace.</span></div>
 <div class="line"><span class="lineno">   77</span><span class="comment">     *</span></div>
-<div class="line"><span class="lineno">   78</span><span class="comment">     * The solver method is currently Bicgstab on CPU Serial and GPU and Gmres on OMP (because of Ginkgo issue #1563).</span></div>
+<div class="line"><span class="lineno">   78</span><span class="comment">     * The solver method is currently BiCGSTAB.</span></div>
 <div class="line"><span class="lineno">   79</span><span class="comment">     *</span></div>
 <div class="line"><span class="lineno">   80</span><span class="comment">     * Multiple right-hand sides are sliced in chunks of size cols_per_chunk which are passed one-after-the-other to Ginkgo.</span></div>
 <div class="line"><span class="lineno">   81</span><span class="comment">     *</span></div>

@@ -54,6 +54,7 @@ void device_throw_on_error(
 #endif
 
 // Global CPU variable storing resetters. Required to correctly free data.
+// NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
 std::optional<std::map<std::string, std::function<void()>>> g_discretization_store;
 
 void display_discretization_store(std::ostream& os)

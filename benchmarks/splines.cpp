@@ -269,24 +269,24 @@ void characteristics_advection(benchmark::State& state)
 } // namespace anonymous_namespace_workaround_splines_cpp
 
 // Reference parameters: the benchmarks sweep on two parameters and fix all the others according to those reference parameters.
-bool on_gpu_ref = true;
-bool non_uniform_ref = false;
-std::size_t degree_x_ref = 3;
+bool const on_gpu_ref = true;
+bool const non_uniform_ref = false;
+std::size_t const degree_x_ref = 3;
 #if defined(KOKKOS_ENABLE_CUDA) || defined(KOKKOS_ENABLE_HIP) || defined(KOKKOS_ENABLE_SYCL)
-std::size_t cols_per_chunk_ref = 65535;
-unsigned int preconditioner_max_block_size_ref = 1U;
+std::size_t const cols_per_chunk_ref = 65535;
+unsigned int const preconditioner_max_block_size_ref = 1U;
 #elif defined(KOKKOS_ENABLE_OPENMP)
-std::size_t cols_per_chunk_ref = 8192;
-unsigned int preconditioner_max_block_size_ref = 1U;
+std::size_t const cols_per_chunk_ref = 8192;
+unsigned int const preconditioner_max_block_size_ref = 1U;
 #elif defined(KOKKOS_ENABLE_SERIAL)
-std::size_t cols_per_chunk_ref = 8192;
-unsigned int preconditioner_max_block_size_ref = 32U;
+std::size_t const cols_per_chunk_ref = 8192;
+unsigned int const preconditioner_max_block_size_ref = 32U;
 #endif
-// std::size_t ny_ref = 100000;
-std::size_t ny_ref = 1000;
+// std::size_t const ny_ref = 100000;
+std::size_t const ny_ref = 1000;
 
 // Sweep on spline order
-std::string_view name = "degree_x";
+std::string_view const name = "degree_x";
 // NOLINTBEGIN(misc-use-anonymous-namespace)
 BENCHMARK(characteristics_advection)
         ->Name("characteristics_advection_small")

@@ -13,7 +13,6 @@ Checks: >
   cert-*,
   cppcoreguidelines-*,
   -cppcoreguidelines-avoid-magic-numbers,
-  -cppcoreguidelines-avoid-non-const-global-variables,
   -cppcoreguidelines-init-variables,
   -cppcoreguidelines-macro-usage,
   -cppcoreguidelines-missing-std-forward,

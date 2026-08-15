@@ -22,7 +22,6 @@ struct CosineEvaluator
 
         static constexpr ddc::Real s_pi_2 = Kokkos::numbers::pi / 2;
 
-    private:
         ddc::Real m_coef0;
 
         ddc::Real m_coef1;

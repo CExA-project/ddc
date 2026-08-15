@@ -14,7 +14,6 @@ Checks: >
   -bugprone-return-const-ref-from-parameter,
   -bugprone-unchecked-optional-access,
   cert-*,
-  -cert-dcl21-cpp,
   -cert-err58-cpp,
   cppcoreguidelines-*,
   -cppcoreguidelines-avoid-magic-numbers,

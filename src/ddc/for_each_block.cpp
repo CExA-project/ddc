@@ -14,7 +14,7 @@ namespace {
 
 bool is_power_of_2(std::size_t const n) noexcept
 {
-    return n > 0 && !(n & (n - 1));
+    return n > 0 && !static_cast<bool>(n & (n - 1));
 }
 
 } // namespace

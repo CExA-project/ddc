@@ -359,7 +359,7 @@ public:
          */
         KOKKOS_INLINE_FUNCTION std::size_t nbasis() const noexcept
         {
-            return ncells() + !is_periodic() * degree();
+            return ncells() + static_cast<std::size_t>(!is_periodic()) * degree();
         }
 
         /** @brief Returns the number of cells over which the B-splines are defined.

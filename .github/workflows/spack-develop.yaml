@@ -26,7 +26,7 @@ jobs:
         uses: spack/setup-spack@16b756799ede8b28951287f89bcd3fdb32ec1ca3  # v3.0.0
         with:
           spack_ref: v1.2.2
-          buildcache: false
+          buildcache: true
       - name: Prepare environment
         shell: spack-bash {0}
         run: |

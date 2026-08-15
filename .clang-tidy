@@ -6,7 +6,6 @@
 Checks: >
   -*,
   bugprone-*,
-  -bugprone-crtp-constructor-accessibility,
   -bugprone-easily-swappable-parameters,
   -bugprone-exception-escape,
   -bugprone-integer-division,

@@ -123,7 +123,8 @@ TEST(CreateMirrorView, Device)
     ddc::parallel_fill(chunk, 3);
     auto mirror = ddc::create_mirror_view(chunk.span_view());
     EXPECT_EQ(chunk.domain(), mirror.domain());
-    if (Kokkos::SpaceAccessibility<Kokkos::HostSpace, decltype(chunk)::memory_space>::accessible) {
+    if (Kokkos::SpaceAccessibility<Kokkos::HostSpace, decltype(chunk)::memory_space>::accessible
+        != 0) {
         EXPECT_EQ(chunk.data_handle(), mirror.data_handle());
     } else {
         EXPECT_NE(chunk.data_handle(), mirror.data_handle());
@@ -138,7 +139,8 @@ TEST(CreateMirrorViewWithExecutionSpace, HostToDevice)
     auto mirror = ddc::create_mirror_view(Kokkos::DefaultExecutionSpace(), chunk.span_view());
     EXPECT_EQ(chunk.domain(), mirror.domain());
     if (Kokkos::SpaceAccessibility<Kokkos::DefaultExecutionSpace, decltype(chunk)::memory_space>::
-                accessible) {
+                accessible
+        != 0) {
         EXPECT_EQ(chunk.data_handle(), mirror.data_handle());
     } else {
         EXPECT_NE(chunk.data_handle(), mirror.data_handle());
@@ -165,7 +167,8 @@ TEST(CreateMirrorViewAndCopy, Device)
     ddc::parallel_fill(chunk, 3);
     auto mirror = ddc::create_mirror_view_and_copy(chunk.span_cview());
     EXPECT_EQ(chunk.domain(), mirror.domain());
-    if (Kokkos::SpaceAccessibility<Kokkos::HostSpace, decltype(chunk)::memory_space>::accessible) {
+    if (Kokkos::SpaceAccessibility<Kokkos::HostSpace, decltype(chunk)::memory_space>::accessible
+        != 0) {
         EXPECT_EQ(chunk.data_handle(), mirror.data_handle());
     } else {
         EXPECT_NE(chunk.data_handle(), mirror.data_handle());
@@ -182,7 +185,8 @@ TEST(CreateMirrorViewAndCopyWithExecutionSpace, HostToDevice)
             = ddc::create_mirror_view_and_copy(Kokkos::DefaultExecutionSpace(), chunk.span_cview());
     EXPECT_EQ(chunk.domain(), mirror.domain());
     if (Kokkos::SpaceAccessibility<Kokkos::DefaultExecutionSpace, decltype(chunk)::memory_space>::
-                accessible) {
+                accessible
+        != 0) {
         EXPECT_EQ(chunk.data_handle(), mirror.data_handle());
     } else {
         EXPECT_NE(chunk.data_handle(), mirror.data_handle());

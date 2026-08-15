@@ -225,11 +225,20 @@ namespace detail {
 template <class T>
 class DiscreteVectorConversionOperators
 {
+private:
+    friend T;
+
+    DiscreteVectorConversionOperators() = default;
 };
 
 template <class Tag>
 class DiscreteVectorConversionOperators<DiscreteVector<Tag>>
 {
+private:
+    friend DiscreteVector<Tag>;
+
+    DiscreteVectorConversionOperators() = default;
+
 public:
     // NOLINTBEGIN(google-explicit-constructor)
     KOKKOS_FUNCTION constexpr operator DiscreteVectorElement const&() const noexcept

@@ -212,11 +212,20 @@ KOKKOS_FUNCTION constexpr auto const& take(
 template <class T>
 class TaggedVectorConversionOperators
 {
+private:
+    friend T;
+
+    TaggedVectorConversionOperators() = default;
 };
 
 template <class ElementType, class Tag>
 class TaggedVectorConversionOperators<TaggedVector<ElementType, Tag>>
 {
+private:
+    friend TaggedVector<ElementType, Tag>;
+
+    TaggedVectorConversionOperators() = default;
+
 public:
     // NOLINTBEGIN(google-explicit-constructor)
     KOKKOS_FUNCTION constexpr operator ElementType const&() const noexcept

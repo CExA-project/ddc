@@ -956,6 +956,9 @@ operator()(
     auto spline_derivs_min2 = spline_derivs_min2_alloc.span_view();
     auto spline_derivs_min2_opt = std::optional(spline_derivs_min2.span_cview());
     if constexpr (SBCLower2 == ddc::SplineBuilderClosure::HERMITE) {
+        if (!derivs_min2.has_value()) {
+            throw std::runtime_error("omg");
+        }
         m_spline_builder1(
                 spline_derivs_min2,
                 *derivs_min2,
@@ -972,6 +975,9 @@ operator()(
     auto spline_derivs_max2 = spline_derivs_max2_alloc.span_view();
     auto spline_derivs_max2_opt = std::optional(spline_derivs_max2.span_cview());
     if constexpr (SBCUpper2 == ddc::SplineBuilderClosure::HERMITE) {
+        if (!derivs_max2.has_value()) {
+            throw std::runtime_error("omg");
+        }
         m_spline_builder1(
                 spline_derivs_max2,
                 *derivs_max2,
@@ -996,6 +1002,9 @@ operator()(
     auto spline_derivs_min3 = spline_derivs_min3_alloc.span_view();
     auto spline_derivs_min3_opt = std::optional(spline_derivs_min3.span_cview());
     if constexpr (SBCLower3 == ddc::SplineBuilderClosure::HERMITE) {
+        if (!derivs_min3.has_value()) {
+            throw std::runtime_error("omg");
+        }
         m_spline_builder1(
                 spline_derivs_min3,
                 *derivs_min3,
@@ -1012,6 +1021,9 @@ operator()(
     auto spline_derivs_max3 = spline_derivs_max3_alloc.span_view();
     auto spline_derivs_max3_opt = std::optional(spline_derivs_max3.span_cview());
     if constexpr (SBCUpper3 == ddc::SplineBuilderClosure::HERMITE) {
+        if (!derivs_max3.has_value()) {
+            throw std::runtime_error("omg");
+        }
         m_spline_builder1(
                 spline_derivs_max3,
                 *derivs_max3,
@@ -1038,6 +1050,9 @@ operator()(
     if constexpr (
             SBCLower2 == ddc::SplineBuilderClosure::HERMITE
             || SBCLower3 == ddc::SplineBuilderClosure::HERMITE) {
+        if (!mixed_derivs_min2_min3.has_value()) {
+            throw std::runtime_error("omg");
+        }
         m_spline_builder1(
                 spline_derivs_min2_min3,
                 *mixed_derivs_min2_min3,
@@ -1056,6 +1071,9 @@ operator()(
     if constexpr (
             SBCLower2 == ddc::SplineBuilderClosure::HERMITE
             || SBCUpper3 == ddc::SplineBuilderClosure::HERMITE) {
+        if (!mixed_derivs_min2_max3.has_value()) {
+            throw std::runtime_error("omg");
+        }
         m_spline_builder1(
                 spline_derivs_min2_max3,
                 *mixed_derivs_min2_max3,
@@ -1074,6 +1092,9 @@ operator()(
     if constexpr (
             SBCUpper2 == ddc::SplineBuilderClosure::HERMITE
             || SBCLower3 == ddc::SplineBuilderClosure::HERMITE) {
+        if (!mixed_derivs_max2_min3.has_value()) {
+            throw std::runtime_error("omg");
+        }
         m_spline_builder1(
                 spline_derivs_max2_min3,
                 *mixed_derivs_max2_min3,
@@ -1092,6 +1113,9 @@ operator()(
     if constexpr (
             SBCUpper2 == ddc::SplineBuilderClosure::HERMITE
             || SBCUpper3 == ddc::SplineBuilderClosure::HERMITE) {
+        if (!mixed_derivs_max2_max3.has_value()) {
+            throw std::runtime_error("omg");
+        }
         m_spline_builder1(
                 spline_derivs_max2_max3,
                 *mixed_derivs_max2_max3,

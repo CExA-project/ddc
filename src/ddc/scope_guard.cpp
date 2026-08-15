@@ -32,10 +32,12 @@ ScopeGuard::ScopeGuard(int /*argc*/, char**& /*argv*/) : ScopeGuard() {}
 
 ScopeGuard::~ScopeGuard() noexcept
 {
-    for (auto const& [name, fn] : *detail::g_discretization_store) {
-        fn();
+    if (detail::g_discretization_store.has_value()) {
+        for (auto const& [name, fn] : *detail::g_discretization_store) {
+            fn();
+        }
+        detail::g_discretization_store.reset();
     }
-    detail::g_discretization_store.reset();
 }
 
 } // namespace ddc

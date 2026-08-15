@@ -136,10 +136,13 @@ void init_discrete_space(Args&&... args)
     static_assert(
             !std::is_same_v<DDim, typename DDim::discrete_dimension_type>,
             "Discrete dimensions should inherit from the discretization, not use an alias");
-    if (detail::g_discrete_space_dual<DDim>) {
+    if (detail::g_discrete_space_dual<DDim>.has_value()) {
         throw std::runtime_error("Discrete space function already initialized.");
     }
     detail::g_discrete_space_dual<DDim>.emplace(std::forward<Args>(args)...);
+    if (!detail::g_discretization_store.has_value()) {
+        throw std::runtime_error("DDC is not initialized.");
+    }
     detail::g_discretization_store->emplace(typeid(DDim).name(), []() {
         detail::g_discrete_space_dual<DDim>.reset();
     });
@@ -208,8 +211,10 @@ KOKKOS_FUNCTION detail::ddim_impl_t<DDim, MemorySpace> const& discrete_space()
 {
     // This function requires that `ddc::init_discrete_space<DDim>(...);` be called first
     if constexpr (std::is_same_v<MemorySpace, Kokkos::HostSpace>) {
+        // NOLINTBEGIN(bugprone-unchecked-optional-access)
         KOKKOS_ASSERT(is_discrete_space_initialized<DDim>())
         return detail::g_discrete_space_dual<DDim>->get_host();
+        // NOLINTEND(bugprone-unchecked-optional-access)
     }
 #if defined(KOKKOS_ENABLE_CUDA) || defined(KOKKOS_ENABLE_HIP)
     else if constexpr (std::is_same_v<MemorySpace, detail::GlobalVariableDeviceSpace>) {
@@ -230,6 +235,7 @@ detail::ddim_impl_t<DDim, Kokkos::HostSpace> const& host_discrete_space()
 {
     // This function requires that `ddc::init_discrete_space<DDim>(...);` be called first
     assert(is_discrete_space_initialized<DDim>());
+    // NOLINTNEXTLINE(bugprone-unchecked-optional-access)
     return detail::g_discrete_space_dual<DDim>->get_host();
 }
 

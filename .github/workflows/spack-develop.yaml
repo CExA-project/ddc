@@ -1,0 +1,47 @@
+# Copyright (C) The DDC development team, see COPYRIGHT.md file
+#
+# SPDX-License-Identifier: MIT
+
+---
+name: Spack develop testing
+
+# yamllint disable-line rule:truthy
+on:
+  schedule:
+    - cron: "0 1 * * 1-5"  # every weekday at 1am
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  docker-build:
+    runs-on: ubuntu-26.04
+    steps:
+      - name: Checkout built branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+      - name: Set up Spack
+        uses: spack/setup-spack@16b756799ede8b28951287f89bcd3fdb32ec1ca3  # v3.0.0
+        with:
+          spack_ref: v1.2.2
+          buildcache: false
+      - name: Prepare environment
+        shell: spack-bash {0}
+        run: |
+          spack bootstrap now
+          spack env create . spack-env/spack-develop-ubuntu-26.04.yaml
+          spack --env . config add config:install_tree:padded_length:128
+          spack --env . repo update
+          spack --env . buildcache list
+      - name: Install
+        shell: spack-bash {0}
+        run: |
+          spack --env . concretize --test root
+          spack --env . install --test root --fail-fast --include-build-deps --show-log-on-error
+      - name: Push packages and update index
+        shell: spack-bash {0}
+        env:
+          GITHUB_USER: ${{github.actor}}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        run: spack --env . buildcache push --fail-fast --update-index local-buildcache
+        if: ${{!cancelled()}}

@@ -15,7 +15,7 @@ spack:
         - /
   mirrors:
     local-buildcache:
-      url: oci://ghcr.io/cexa-project/ddc/spack-develop-ubuntu-26.04
+      url: oci://ghcr.io/cexa-project/ddc-spack-develop-ubuntu-26.04
       binary: true
       signed: false
       access_pair:

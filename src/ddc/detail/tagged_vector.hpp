@@ -249,7 +249,6 @@ public:
         return sizeof...(Tags);
     }
 
-public:
     KOKKOS_DEFAULTED_FUNCTION constexpr TaggedVector() = default;
 
     KOKKOS_DEFAULTED_FUNCTION constexpr TaggedVector(TaggedVector const&) = default;

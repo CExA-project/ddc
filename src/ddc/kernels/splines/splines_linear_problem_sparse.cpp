@@ -138,7 +138,6 @@ private:
     using matrix_sparse_type = gko::matrix::Csr<double, gko::int32>;
     using solver_type = gko::solver::Bicgstab<double>;
 
-private:
     std::size_t m_mat_size;
 
     std::unique_ptr<gko::matrix::Dense<double>> m_matrix_dense;

@@ -65,7 +65,6 @@ Checks: >
   -readability-magic-numbers,
   -readability-math-missing-parentheses,
   -readability-named-parameter,
-  -readability-redundant-access-specifiers,
   -readability-use-concise-preprocessor-directives
 WarningsAsErrors: '*'
 CheckOptions:

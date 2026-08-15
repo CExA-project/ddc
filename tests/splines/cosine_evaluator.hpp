@@ -22,7 +22,6 @@ struct CosineEvaluator
 
         static constexpr double s_pi_2 = Kokkos::numbers::pi / 2;
 
-    private:
         double m_coef0;
 
         double m_coef1;

@@ -293,7 +293,6 @@ public:
         return sizeof...(Tags);
     }
 
-public:
     KOKKOS_DEFAULTED_FUNCTION constexpr DiscreteVector() = default;
 
     KOKKOS_DEFAULTED_FUNCTION constexpr DiscreteVector(DiscreteVector const&) = default;

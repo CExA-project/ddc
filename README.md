@@ -50,7 +50,7 @@ To use DDC core, one needs the following dependencies:
 To use DDC components, one needs the following dependencies:
 
 * (optional, fft interface) DDC::fft
-  * Kokkos-fft 0.3.0...<2
+  * Kokkos-fft 0.3.0...<3
 * (optional, IO interface) DDC::pdi
   * PDI 1.10.1...<2
 * (optional, spline interpolation) DDC::splines

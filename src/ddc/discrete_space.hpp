@@ -91,11 +91,14 @@ public:
 };
 
 // Global CPU variable storing resetters. Required to correctly free data.
+// NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
 extern std::optional<std::map<std::string, std::function<void()>>> g_discretization_store;
 
 // Global CPU variable owning discrete spaces data for CPU and GPU
+// NOLINTBEGIN(cppcoreguidelines-avoid-non-const-global-variables)
 template <class DDim>
 inline std::optional<DualDiscretization<DDim>> g_discrete_space_dual;
+// NOLINTEND(cppcoreguidelines-avoid-non-const-global-variables)
 
 #if defined(KOKKOS_ENABLE_CUDA)
 // Global GPU variable viewing data owned by the CPU

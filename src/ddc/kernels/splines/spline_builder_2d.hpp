@@ -611,6 +611,9 @@ operator()(
     auto spline1_deriv_min = spline1_deriv_min_alloc.span_view();
     auto spline1_deriv_min_opt = std::optional(spline1_deriv_min.span_cview());
     if constexpr (SBCLower2 == ddc::SplineBuilderClosure::HERMITE) {
+        if (!derivs_min2.has_value()) {
+            throw std::runtime_error("omg");
+        }
         m_spline_builder1(
                 spline1_deriv_min,
                 *derivs_min2,
@@ -637,6 +640,9 @@ operator()(
     auto spline1_deriv_max = spline1_deriv_max_alloc.span_view();
     auto spline1_deriv_max_opt = std::optional(spline1_deriv_max.span_cview());
     if constexpr (SBCUpper2 == ddc::SplineBuilderClosure::HERMITE) {
+        if (!derivs_max2.has_value()) {
+            throw std::runtime_error("omg");
+        }
         m_spline_builder1(
                 spline1_deriv_max,
                 *derivs_max2,

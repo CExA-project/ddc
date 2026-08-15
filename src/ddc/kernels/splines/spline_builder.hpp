@@ -950,6 +950,9 @@ operator()(
     // NOTE: For consistency with the linear system, the i-th derivative
     //       provided by the user must be multiplied by dx^i
     if constexpr (SBCLower == SplineBuilderClosure::HERMITE) {
+        if (!derivs_xmin.has_value()) {
+            throw std::runtime_error("omg");
+        }
         assert(derivs_xmin->template extent<deriv_type>() == s_nbe_xmin);
         auto derivs_xmin_values = *derivs_xmin;
         auto const dx_proxy = m_dx;
@@ -1004,6 +1007,9 @@ operator()(
     //       provided by the user must be multiplied by dx^i
     auto const& nbasis_proxy = ddc::discrete_space<bsplines_type>().nbasis();
     if constexpr (SBCUpper == SplineBuilderClosure::HERMITE) {
+        if (!derivs_xmax.has_value()) {
+            throw std::runtime_error("omg");
+        }
         assert(derivs_xmax->template extent<deriv_type>() == s_nbe_xmax);
         auto derivs_xmax_values = *derivs_xmax;
         auto const dx_proxy = m_dx;

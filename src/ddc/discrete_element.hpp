@@ -187,7 +187,6 @@ public:
         return sizeof...(Tags);
     }
 
-public:
     KOKKOS_DEFAULTED_FUNCTION constexpr DiscreteElement() = default;
 
     KOKKOS_DEFAULTED_FUNCTION constexpr DiscreteElement(DiscreteElement const&) = default;

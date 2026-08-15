@@ -45,7 +45,6 @@ public:
 
     using discrete_dimension_type = PeriodicSampling;
 
-public:
     template <class DDim, class MemorySpace>
     class Impl
     {

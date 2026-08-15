@@ -41,7 +41,6 @@ public:
 
     using discrete_dimension_type = UniformPointSampling;
 
-public:
     template <class DDim, class MemorySpace>
     class Impl
     {

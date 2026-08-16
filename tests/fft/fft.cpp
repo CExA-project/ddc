@@ -153,7 +153,7 @@ void test_fft()
                         double const xn2
                                 = (pow2(ddc::coordinate(DElem<DFDim<ddc::Fourier<X>>>(e))) + ...);
                         double const diff = Kokkos::abs(Ff_host(e)) - Kokkos::exp(-xn2 / 2);
-                        return pow2(diff) / (mesh_size / 2);
+                        return pow2(diff) / (static_cast<double>(mesh_size) / 2);
                     }));
 
     double const criterion2 = Kokkos::sqrt(

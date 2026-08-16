@@ -227,7 +227,7 @@ private:
     TaggedVectorConversionOperators() = default;
 
 public:
-    // NOLINTBEGIN(google-explicit-constructor)
+    // NOLINTBEGIN(google-explicit-constructor,hicpp-explicit-conversions)
     KOKKOS_FUNCTION constexpr operator ElementType const&() const noexcept
     {
         return static_cast<TaggedVector<ElementType, Tag> const*>(this)->m_values[0];
@@ -237,7 +237,7 @@ public:
     {
         return static_cast<TaggedVector<ElementType, Tag>*>(this)->m_values[0];
     }
-    // NOLINTEND(google-explicit-constructor)
+    // NOLINTEND(google-explicit-constructor,hicpp-explicit-conversions)
 };
 
 template <class ElementType, class... Tags>

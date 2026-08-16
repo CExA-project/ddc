@@ -172,7 +172,7 @@ KOKKOS_FUNCTION bool is_kokkos_layout_compatible(Kokkos::View<DataType, Properti
 
 template <class DataType, class... Properties, std::size_t... Is>
 KOKKOS_FUNCTION auto build_mdspan(
-        Kokkos::View<DataType, Properties...> const view,
+        Kokkos::View<DataType, Properties...> const& view,
         std::index_sequence<Is...>)
 {
     KOKKOS_ASSERT(is_kokkos_layout_compatible(view))

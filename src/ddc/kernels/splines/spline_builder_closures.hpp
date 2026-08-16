@@ -15,7 +15,7 @@ namespace ddc {
 /** @brief An enum representing a spline closure relation. Please refer to
  * Emily Bourne's thesis (https://theses.fr/2022AIXM0412.pdf)
  */
-enum class SplineBuilderClosure {
+enum class SplineBuilderClosure : char {
     PERIODIC, ///< Periodic closure relation u(1)=u(n)
     HERMITE, ///< Hermite closure relation
     HOMOGENEOUS_HERMITE, ///< Homogeneous Hermite closure relation (derivatives are 0)

@@ -41,7 +41,6 @@ Checks: >
   -modernize-use-nodiscard,
   -modernize-use-trailing-return-type,
   performance-*,
-  -performance-enum-size,
   portability-*,
   -portability-avoid-pragma-once,
   -portability-template-virtual-member-function,

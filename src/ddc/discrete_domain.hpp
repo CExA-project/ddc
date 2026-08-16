@@ -340,7 +340,7 @@ public:
 
     KOKKOS_DEFAULTED_FUNCTION DiscreteDomain& operator=(DiscreteDomain const& x) = default;
 
-    KOKKOS_DEFAULTED_FUNCTION DiscreteDomain& operator=(DiscreteDomain&& x) = default;
+    KOKKOS_DEFAULTED_FUNCTION DiscreteDomain& operator=(DiscreteDomain&& /*x*/) = default;
 
     KOKKOS_FUNCTION constexpr bool operator==(DiscreteDomain const& /*other*/) const
     {

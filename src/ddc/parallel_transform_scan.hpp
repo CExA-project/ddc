@@ -25,7 +25,7 @@ struct Dims
 
 namespace detail {
 
-enum class ScanType { inclusive, exclusive };
+enum class ScanType : char { inclusive, exclusive };
 
 inline constexpr std::integral_constant<ScanType, ScanType::exclusive> exclusive_tag;
 inline constexpr std::integral_constant<ScanType, ScanType::inclusive> inclusive_tag;

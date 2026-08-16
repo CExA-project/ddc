@@ -30,7 +30,7 @@ struct Fourier
  *
  * @see kwArgsImpl, kwArgs_fft
  */
-enum class FFT_Direction {
+enum class FFT_Direction : char {
     FORWARD, ///< Forward, corresponds to direct FFT up to normalization
     BACKWARD ///< Backward, corresponds to inverse FFT up to normalization
 };
@@ -40,7 +40,7 @@ enum class FFT_Direction {
  *
  * @see kwArgsImpl, kwArgs_fft
  */
-enum class FFT_Normalization {
+enum class FFT_Normalization : char {
     OFF, ///< No normalization. Un-normalized FFT is sum_j f(x_j)*e^-ikx_j
     FORWARD, ///< Multiply by 1/N for forward FFT, no normalization for backward FFT
     BACKWARD, ///< No normalization for forward FFT, multiply by 1/N for backward FFT

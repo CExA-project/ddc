@@ -32,7 +32,7 @@ namespace ddc {
  *
  * An enum determining the backend solver of a SplineBuilder or SplineBuilder2d.
  */
-enum class SplineSolver {
+enum class SplineSolver : char {
     GINKGO, ///< Enum member to identify the Ginkgo-based solver (iterative method)
     LAPACK ///< Enum member to identify the LAPACK-based solver (direct method)
 };

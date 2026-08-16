@@ -122,7 +122,8 @@ void parallel_transform_scan(
     using DDomOut = std::remove_cvref_t<ChunkDst>::discrete_domain_type;
     using DDomScan = ::ddc::detail::Rebind<DDomOut, ::ddc::detail::TypeSeq<DDim>>::type;
 
-    DDomOut const ddom_out = out.domain();
+    auto out_view = std::forward<ChunkDst>(out).span_view();
+    DDomOut const ddom_out = out_view.domain();
     DDomScan const ddom_scan(ddom_out);
     auto const ddom_batch = remove_dims_of(ddom_out, ddom_scan);
 
@@ -136,7 +137,7 @@ void parallel_transform_scan(
                         scan_tag,
                         reduce,
                         transform,
-                        out.span_view(),
+                        out_view,
                         ddom_scan,
                         ibatch));
     });

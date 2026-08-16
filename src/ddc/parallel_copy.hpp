@@ -83,14 +83,16 @@ auto parallel_copy(ExecSpace const& execution_space, ChunkDst&& dst, ChunkSrc&& 
     static_assert(
             std::is_assignable_v<chunk_reference_t<ChunkDst>, chunk_reference_t<ChunkSrc>>,
             "Not assignable");
-    using DDomDst = decltype(dst.domain());
-    using DDomSrc = decltype(src.domain());
-    assert(DDomSrc(dst.domain()) == src.domain());
+    auto dst_view = std::forward<ChunkDst>(dst).span_view();
+    auto const src_view = std::forward<ChunkSrc>(src).span_cview();
+    using DDomDst = decltype(dst_view.domain());
+    using DDomSrc = decltype(src_view.domain());
+    assert(DDomSrc(dst_view.domain()) == src_view.domain());
     if constexpr (std::is_same_v<DDomDst, DDomSrc>) {
         Kokkos::deep_copy(
                 execution_space,
-                dst.allocation_kokkos_view(),
-                src.allocation_kokkos_view());
+                dst_view.allocation_kokkos_view(),
+                src_view.allocation_kokkos_view());
     } else {
         // The current implementation uses a loop over dst dimensions.
         // Alternative implementations:
@@ -100,10 +102,10 @@ auto parallel_copy(ExecSpace const& execution_space, ChunkDst&& dst, ChunkSrc&& 
                 "ddc_copy_default",
                 detail::ddc_to_kokkos_execution_policy(
                         execution_space,
-                        detail::array(dst.domain().extents())),
-                detail::CopyKokkosLambdaAdapter(dst.span_view(), src.span_cview()));
+                        detail::array(dst_view.domain().extents())),
+                detail::CopyKokkosLambdaAdapter(dst_view, src_view));
     }
-    return dst.span_view();
+    return dst_view;
 }
 
 } // namespace ddc

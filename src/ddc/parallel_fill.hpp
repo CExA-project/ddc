@@ -21,8 +21,9 @@ template <concepts::borrowed_chunk ChunkDst, class T>
 auto parallel_fill(ChunkDst&& dst, T const& value)
 {
     static_assert(std::is_assignable_v<chunk_reference_t<ChunkDst>, T>, "Not assignable");
-    Kokkos::deep_copy(dst.allocation_kokkos_view(), value);
-    return dst.span_view();
+    auto dst_view = std::forward<ChunkDst>(dst).span_view();
+    Kokkos::deep_copy(dst_view.allocation_kokkos_view(), value);
+    return dst_view;
 }
 
 /** Fill a borrowed chunk with a given value
@@ -35,8 +36,9 @@ template <class ExecSpace, concepts::borrowed_chunk ChunkDst, class T>
 auto parallel_fill(ExecSpace const& execution_space, ChunkDst&& dst, T const& value)
 {
     static_assert(std::is_assignable_v<chunk_reference_t<ChunkDst>, T>, "Not assignable");
-    Kokkos::deep_copy(execution_space, dst.allocation_kokkos_view(), value);
-    return dst.span_view();
+    auto dst_view = std::forward<ChunkDst>(dst).span_view();
+    Kokkos::deep_copy(execution_space, dst_view.allocation_kokkos_view(), value);
+    return dst_view;
 }
 
 } // namespace ddc

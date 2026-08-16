@@ -374,13 +374,14 @@ void parallel_transform_reduce(
         BinaryReductionOp const& reduce,
         UnaryTransformOp const& transform) noexcept
 {
+    auto const out_view = std::forward<ChunkDst>(out).span_view();
     using DDomOut = std::remove_cvref_t<ChunkDst>::discrete_domain_type;
     using DElemOut = DDomOut::discrete_element_type;
     using MemorySpaceOut = std::remove_cvref_t<ChunkDst>::memory_space;
-    assert(out.domain() == DDomOut(domain));
+    assert(out_view.domain() == DDomOut(domain));
 
-    auto ddom_interest = remove_dims_of(domain, out.domain());
-    host_for_each(out.domain(), [&](DElemOut iout) {
+    auto ddom_interest = remove_dims_of(domain, out_view.domain());
+    host_for_each(out_view.domain(), [&](DElemOut iout) {
         Kokkos::parallel_reduce(
                 label,
                 ddc::detail::ddc_to_kokkos_execution_policy(
@@ -392,7 +393,7 @@ void parallel_transform_reduce(
                         ddom_interest,
                         iout),
                 ddc::detail::ddc_to_kokkos_reducer_t<BinaryReductionOp, MemorySpaceOut>(
-                        out[iout].allocation_kokkos_view()));
+                        out_view[iout].allocation_kokkos_view()));
     });
 }
 

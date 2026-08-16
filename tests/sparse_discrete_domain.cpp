@@ -161,7 +161,7 @@ void TestDeviceForEachSparseDevice2D(
                 int,
                 DDomXY,
                 Kokkos::layout_right,
-                Kokkos::DefaultExecutionSpace::memory_space> view)
+                Kokkos::DefaultExecutionSpace::memory_space> const& view)
 {
     ddc::parallel_for_each(
             Kokkos::DefaultExecutionSpace(),
@@ -205,7 +205,7 @@ int TestDeviceTransformReduceSparse(
                 int,
                 DDomXY,
                 Kokkos::layout_right,
-                Kokkos::DefaultExecutionSpace::memory_space> chunk)
+                Kokkos::DefaultExecutionSpace::memory_space> const& chunk)
 {
     Kokkos::View<int, Kokkos::LayoutRight, Kokkos::DefaultExecutionSpace> const count("");
     ddc::parallel_for_each(

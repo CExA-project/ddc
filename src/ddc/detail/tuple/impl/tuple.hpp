@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: Copyright (C) The CExA project
 // SPDX-License-Identifier: MIT or Apache-2.0 with LLVM-exception
 
-// NOLINTBEGIN(readability-identifier-naming)
+// NOLINTBEGIN(cppcoreguidelines-missing-std-forward,readability-identifier-naming)
 #pragma once
 
 #include <cstddef>
@@ -1170,4 +1170,4 @@ KOKKOS_INLINE_FUNCTION constexpr void swap(
 #endif
 
 } // namespace cexa
-// NOLINTEND(readability-identifier-naming)
+// NOLINTEND(cppcoreguidelines-missing-std-forward,readability-identifier-naming)

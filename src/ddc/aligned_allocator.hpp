@@ -46,6 +46,7 @@ public:
 
     [[nodiscard]] T* allocate(std::size_t n) const
     {
+        // NOLINTNEXTLINE(cppcoreguidelines-owning-memory)
         return new (std::align_val_t(N)) value_type[n];
     }
 

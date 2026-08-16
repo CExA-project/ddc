@@ -42,7 +42,6 @@ Checks: >
   -modernize-use-trailing-return-type,
   performance-*,
   -performance-enum-size,
-  -performance-unnecessary-value-param,
   portability-*,
   -portability-avoid-pragma-once,
   -portability-template-virtual-member-function,

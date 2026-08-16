@@ -240,7 +240,7 @@ private:
     DiscreteVectorConversionOperators() = default;
 
 public:
-    // NOLINTBEGIN(google-explicit-constructor)
+    // NOLINTBEGIN(google-explicit-constructor,hicpp-explicit-conversions)
     KOKKOS_FUNCTION constexpr operator DiscreteVectorElement const&() const noexcept
     {
         return static_cast<DiscreteVector<Tag> const*>(this)->m_values[0];
@@ -250,7 +250,7 @@ public:
     {
         return static_cast<DiscreteVector<Tag>*>(this)->m_values[0];
     }
-    // NOLINTEND(google-explicit-constructor)
+    // NOLINTEND(google-explicit-constructor,hicpp-explicit-conversions)
 };
 
 /// Returns a reference to the underlying `std::array`

@@ -28,7 +28,7 @@ struct is_empty_copy_list_initializable
 {
     struct helper
     {
-        // NOLINTNEXTLINE(google-explicit-constructor)
+        // NOLINTNEXTLINE(google-explicit-constructor,hicpp-explicit-conversions)
         helper(T const&) {}
     };
 

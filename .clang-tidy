@@ -27,7 +27,6 @@ Checks: >
   -google-runtime-float,
   -google-runtime-int,
   hicpp-*,
-  -hicpp-explicit-conversions,
   -hicpp-member-init,
   -hicpp-named-parameter,
   -hicpp-use-auto,

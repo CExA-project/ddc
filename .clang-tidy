@@ -33,7 +33,6 @@ Checks: >
   misc-*,
   -misc-include-cleaner,
   -misc-non-private-member-variables-in-classes,
-  -misc-unused-parameters,
   -misc-use-internal-linkage,
   modernize-*,
   -modernize-pass-by-value,

@@ -30,7 +30,6 @@ Checks: >
   -hicpp-explicit-conversions,
   -hicpp-member-init,
   -hicpp-named-parameter,
-  -hicpp-special-member-functions,
   -hicpp-static-assert,
   -hicpp-use-auto,
   misc-*,

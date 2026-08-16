@@ -119,8 +119,8 @@ SYCL_EXTERNAL inline sycl::ext::oneapi::experimental::device_global<
 
 void display_discretization_store(std::ostream& os);
 
-template <class Tuple, std::size_t... Ids>
-auto extract_after(Tuple&& t, std::index_sequence<Ids...>)
+template <class... Types, std::size_t... Ids>
+auto extract_after(std::tuple<Types...>&& t, std::index_sequence<Ids...>)
 {
     return std::make_tuple(std::move(std::get<Ids + 1>(t))...);
 }

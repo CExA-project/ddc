@@ -21,13 +21,15 @@ namespace ddc {
 template <concepts::borrowed_chunk ChunkDst, concepts::borrowed_chunk ChunkSrc>
 auto parallel_deepcopy(ChunkDst&& dst, ChunkSrc&& src)
 {
+    auto&& dst_ref = std::forward<ChunkDst>(dst);
+    auto&& src_ref = std::forward<ChunkSrc>(src);
     static_assert(
             std::is_assignable_v<chunk_reference_t<ChunkDst>, chunk_reference_t<ChunkSrc>>,
             "Not assignable");
-    static_assert(std::is_same_v<decltype(dst.domain()), decltype(src.domain())>);
-    assert(dst.domain() == src.domain());
-    Kokkos::deep_copy(dst.allocation_kokkos_view(), src.allocation_kokkos_view());
-    return dst.span_view();
+    static_assert(std::is_same_v<decltype(dst_ref.domain()), decltype(src_ref.domain())>);
+    assert(dst_ref.domain() == src_ref.domain());
+    Kokkos::deep_copy(dst_ref.allocation_kokkos_view(), src_ref.allocation_kokkos_view());
+    return dst_ref.span_view();
 }
 
 /** Copy the content of a borrowed chunk into another
@@ -45,9 +47,14 @@ auto parallel_deepcopy(ExecSpace const& execution_space, ChunkDst&& dst, ChunkSr
     static_assert(
             std::is_same_v<decltype(dst.domain()), decltype(src.domain())>,
             "ddc::parallel_deepcopy only supports domains whose dimensions are of the same order");
-    assert(dst.domain() == src.domain());
-    Kokkos::deep_copy(execution_space, dst.allocation_kokkos_view(), src.allocation_kokkos_view());
-    return dst.span_view();
+    auto&& dst_ref = std::forward<ChunkDst>(dst);
+    auto&& src_ref = std::forward<ChunkSrc>(src);
+    assert(dst_ref.domain() == src_ref.domain());
+    Kokkos::deep_copy(
+            execution_space,
+            dst_ref.allocation_kokkos_view(),
+            src_ref.allocation_kokkos_view());
+    return dst_ref.span_view();
 }
 
 } // namespace ddc

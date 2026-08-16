@@ -56,13 +56,14 @@ public:
 template <concepts::borrowed_chunk ChunkDst, class UnaryTransformOp>
 auto parallel_transform(std::string const& label, ChunkDst&& dst, UnaryTransformOp&& transform)
 {
+    auto dst_view = std::forward<ChunkDst>(dst).span_view();
     parallel_for_each(
             label,
-            dst.domain(),
+            dst_view.domain(),
             detail::TransformKokkosLambdaAdapter(
-                    dst.span_view(),
+                    dst_view,
                     std::forward<UnaryTransformOp>(transform)));
-    return dst.span_view();
+    return dst_view;
 }
 
 /** Transform a borrowed chunk with a given transform functor
@@ -74,7 +75,10 @@ auto parallel_transform(std::string const& label, ChunkDst&& dst, UnaryTransform
 template <class ChunkDst, class UnaryTransformOp>
 auto parallel_transform(ChunkDst&& dst, UnaryTransformOp&& transform)
 {
-    return parallel_transform("ddc_parallel_transform_default", dst, transform);
+    return parallel_transform(
+            "ddc_parallel_transform_default",
+            std::forward<ChunkDst>(dst),
+            std::forward<UnaryTransformOp>(transform));
 }
 
 /** Transform a borrowed chunk with a given transform functor
@@ -92,15 +96,17 @@ auto parallel_transform(
         ChunkDst&& dst,
         UnaryTransformOp&& transform)
 {
+    auto dst_view = std::forward<ChunkDst>(dst).span_view();
     parallel_for_each(
             label,
             execution_space,
-            dst.domain(),
+            dst_view.domain(),
             detail::TransformKokkosLambdaAdapter(
-                    dst.span_view(),
+                    dst_view,
                     std::forward<UnaryTransformOp>(transform)));
-    return dst.span_view();
+    return dst_view;
 }
+
 /** Transform a borrowed chunk with a given transform functor
  * @param[in] execution_space a Kokkos execution space where the loop will be executed on
  * @param[out] dst the borrowed chunk in which to copyW
@@ -115,7 +121,11 @@ auto parallel_transform(
         UnaryTransformOp&& transform)
     requires(Kokkos::is_execution_space_v<ExecSpace>)
 {
-    return parallel_transform("ddc_parallel_transform_default", execution_space, dst, transform);
+    return parallel_transform(
+            "ddc_parallel_transform_default",
+            execution_space,
+            std::forward<ChunkDst>(dst),
+            std::forward<UnaryTransformOp>(transform));
 }
 
 } // namespace ddc

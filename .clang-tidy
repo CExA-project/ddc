@@ -8,7 +8,6 @@ Checks: >
   bugprone-*,
   -bugprone-easily-swappable-parameters,
   -bugprone-exception-escape,
-  -bugprone-integer-division,
   -bugprone-narrowing-conversions,
   -bugprone-return-const-ref-from-parameter,
   cert-*,

@@ -125,8 +125,20 @@ target_sources(
 )
 
 set_target_properties(ddc_core PROPERTIES EXPORT_NAME core)
-install(TARGETS ddc_core EXPORT DDCCoreTargets FILE_SET core_interface FILE_SET core_public)
-install(EXPORT DDCCoreTargets NAMESPACE DDC:: DESTINATION ${DDC_INSTALL_CMAKEDIR})
+install(
+    TARGETS ddc_core
+    EXPORT DDCCoreTargets
+    ARCHIVE COMPONENT Development
+    FILE_SET core_interface COMPONENT Development
+    FILE_SET core_public COMPONENT Development
+    LIBRARY COMPONENT Runtime
+)
+install(
+    EXPORT DDCCoreTargets
+    NAMESPACE DDC::
+    DESTINATION ${DDC_INSTALL_CMAKEDIR}
+    COMPONENT Development
+)
 
 # Link library to DDC
 
@@ -152,8 +164,19 @@ if("${DDC_BUILD_KERNELS_FFT}")
             EXPORT_NAME fft
             INSTALL_RPATH "$<$<PLATFORM_ID:Linux>:$ORIGIN>;$<$<PLATFORM_ID:Darwin>:@loader_path>"
     )
-    install(TARGETS ddc_fft EXPORT DDCFftTargets FILE_SET HEADERS)
-    install(EXPORT DDCFftTargets NAMESPACE DDC:: DESTINATION ${DDC_INSTALL_CMAKEDIR})
+    install(
+        TARGETS ddc_fft
+        EXPORT DDCFftTargets
+        ARCHIVE COMPONENT Development
+        FILE_SET HEADERS COMPONENT Development
+        LIBRARY COMPONENT Runtime
+    )
+    install(
+        EXPORT DDCFftTargets
+        NAMESPACE DDC::
+        DESTINATION ${DDC_INSTALL_CMAKEDIR}
+        COMPONENT Development
+    )
 endif()
 
 if("${DDC_BUILD_KERNELS_SPLINES}")
@@ -218,15 +241,26 @@ if("${DDC_BUILD_KERNELS_SPLINES}")
                     src/ddc/kernels/splines/view.hpp
     )
 
-    install(FILES cmake/FindLAPACKE.cmake DESTINATION ${DDC_INSTALL_CMAKEDIR})
+    install(FILES cmake/FindLAPACKE.cmake DESTINATION ${DDC_INSTALL_CMAKEDIR} COMPONENT Development)
     set_target_properties(
         ddc_splines
         PROPERTIES
             EXPORT_NAME splines
             INSTALL_RPATH "$<$<PLATFORM_ID:Linux>:$ORIGIN>;$<$<PLATFORM_ID:Darwin>:@loader_path>"
     )
-    install(TARGETS ddc_splines EXPORT DDCSplinesTargets FILE_SET HEADERS)
-    install(EXPORT DDCSplinesTargets NAMESPACE DDC:: DESTINATION ${DDC_INSTALL_CMAKEDIR})
+    install(
+        TARGETS ddc_splines
+        EXPORT DDCSplinesTargets
+        ARCHIVE COMPONENT Development
+        FILE_SET HEADERS COMPONENT Development
+        LIBRARY COMPONENT Runtime
+    )
+    install(
+        EXPORT DDCSplinesTargets
+        NAMESPACE DDC::
+        DESTINATION ${DDC_INSTALL_CMAKEDIR}
+        COMPONENT Development
+    )
 endif()
 
 ## The PDI wrapper
@@ -250,8 +284,19 @@ if("${DDC_BUILD_PDI_WRAPPER}")
             EXPORT_NAME pdi
             INSTALL_RPATH "$<$<PLATFORM_ID:Linux>:$ORIGIN>;$<$<PLATFORM_ID:Darwin>:@loader_path>"
     )
-    install(TARGETS ddc_pdi EXPORT DDCPdiTargets FILE_SET HEADERS)
-    install(EXPORT DDCPdiTargets NAMESPACE DDC:: DESTINATION ${DDC_INSTALL_CMAKEDIR})
+    install(
+        TARGETS ddc_pdi
+        EXPORT DDCPdiTargets
+        ARCHIVE COMPONENT Development
+        FILE_SET HEADERS COMPONENT Development
+        LIBRARY COMPONENT Runtime
+    )
+    install(
+        EXPORT DDCPdiTargets
+        NAMESPACE DDC::
+        DESTINATION ${DDC_INSTALL_CMAKEDIR}
+        COMPONENT Development
+    )
 endif()
 
 ## if examples are enabled, build them
@@ -308,4 +353,5 @@ install(
         ${CMAKE_CURRENT_BINARY_DIR}/DDCConfig.cmake
         ${CMAKE_CURRENT_BINARY_DIR}/DDCConfigVersion.cmake
     DESTINATION ${DDC_INSTALL_CMAKEDIR}
+    COMPONENT Development
 )

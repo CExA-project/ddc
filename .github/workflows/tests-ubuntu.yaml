@@ -19,7 +19,6 @@ on:
       - '**.cmake'
       - '**.cmake.in'
       - 'docker/**'
-      - 'vendor/**'
   push:
     branches:
       - main
@@ -34,7 +33,6 @@ on:
       - '**.cmake'
       - '**.cmake.in'
       - 'docker/**'
-      - 'vendor/**'
 
 concurrency:
   group: ${{github.workflow}}-${{github.ref == github.ref_protected && github.run_id || github.event.pull_request.number || github.ref}}
@@ -167,10 +165,6 @@ jobs:
               -D DDC_BUILD_KERNELS_SPLINES=ON \
               -D DDC_BUILD_PDI_WRAPPER=ON \
               -D DDC_BUILD_EXAMPLES=OFF \
-              -D DDC_GTest_DEPENDENCY_POLICY=INSTALLED \
-              -D DDC_Kokkos_DEPENDENCY_POLICY=INSTALLED \
-              -D DDC_KokkosFFT_DEPENDENCY_POLICY=INSTALLED \
-              -D DDC_KokkosKernels_DEPENDENCY_POLICY=INSTALLED \
               -B build
 
             cmake --build build
@@ -298,11 +292,6 @@ jobs:
               -D DDC_BUILD_KERNELS_SPLINES=ON \
               -D DDC_BUILD_PDI_WRAPPER=ON \
               -D DDC_BUILD_EXAMPLES=ON \
-              -D DDC_benchmark_DEPENDENCY_POLICY=INSTALLED \
-              -D DDC_GTest_DEPENDENCY_POLICY=INSTALLED \
-              -D DDC_Kokkos_DEPENDENCY_POLICY=INSTALLED \
-              -D DDC_KokkosFFT_DEPENDENCY_POLICY=INSTALLED \
-              -D DDC_KokkosKernels_DEPENDENCY_POLICY=INSTALLED \
               -D DDC_SPLINES_TEST_DEGREE_MIN=${{env.DDC_SPLINES_TEST_DEGREE_MIN}} \
               -D DDC_SPLINES_TEST_DEGREE_MAX=${{env.DDC_SPLINES_TEST_DEGREE_MAX}} \
               -B build \
@@ -400,11 +389,6 @@ jobs:
               -D DDC_BUILD_KERNELS_SPLINES=ON \
               -D DDC_BUILD_PDI_WRAPPER=ON \
               -D DDC_BUILD_EXAMPLES=ON \
-              -D DDC_benchmark_DEPENDENCY_POLICY=INSTALLED \
-              -D DDC_GTest_DEPENDENCY_POLICY=INSTALLED \
-              -D DDC_Kokkos_DEPENDENCY_POLICY=INSTALLED \
-              -D DDC_KokkosFFT_DEPENDENCY_POLICY=INSTALLED \
-              -D DDC_KokkosKernels_DEPENDENCY_POLICY=INSTALLED \
               -B build \
               -S /src
             cmake --build build
@@ -485,11 +469,6 @@ jobs:
               -D DDC_BUILD_KERNELS_SPLINES=ON \
               -D DDC_BUILD_PDI_WRAPPER=ON \
               -D DDC_BUILD_EXAMPLES=ON \
-              -D DDC_benchmark_DEPENDENCY_POLICY=INSTALLED \
-              -D DDC_GTest_DEPENDENCY_POLICY=INSTALLED \
-              -D DDC_Kokkos_DEPENDENCY_POLICY=INSTALLED \
-              -D DDC_KokkosFFT_DEPENDENCY_POLICY=INSTALLED \
-              -D DDC_KokkosKernels_DEPENDENCY_POLICY=INSTALLED \
               -B build \
               -S /src
             cmake --build build

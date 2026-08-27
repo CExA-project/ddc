@@ -7,7 +7,8 @@
 #include <gtest/gtest.h>
 
 #include <Kokkos_Core.hpp>
-#include <Kokkos_StdAlgorithms.hpp>
+
+#include "helper_count.hpp"
 
 inline namespace anonymous_namespace_workaround_sparse_discrete_domain_cpp {
 
@@ -191,13 +192,7 @@ TEST(DeviceForEachSparseDevice, TwoDimensions)
             Kokkos::DefaultExecutionSpace::memory_space> const view(storage.data(), dom);
 
     TestDeviceForEachSparseDevice2D(view);
-    EXPECT_EQ(
-            Kokkos::Experimental::
-                    count(Kokkos::DefaultExecutionSpace(),
-                          Kokkos::Experimental::begin(storage),
-                          Kokkos::Experimental::end(storage),
-                          1),
-            dom.size());
+    EXPECT_EQ(ddc::testing::count(Kokkos::DefaultExecutionSpace(), storage, 1), dom.size());
 }
 
 int TestDeviceTransformReduceSparse(

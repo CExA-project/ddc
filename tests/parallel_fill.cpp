@@ -7,7 +7,8 @@
 #include <gtest/gtest.h>
 
 #include <Kokkos_Core.hpp>
-#include <Kokkos_StdAlgorithms.hpp>
+
+#include "helper_count.hpp"
 
 inline namespace anonymous_namespace_workaround_parallel_fill_cpp {
 
@@ -47,7 +48,7 @@ TEST(ParallelFill, OneDimension)
     ddc::ChunkSpan const view(storage, dom);
 
     ddc::parallel_fill(view, 1);
-    EXPECT_EQ(Kokkos::Experimental::count(Kokkos::DefaultExecutionSpace(), storage, 1), dom.size());
+    EXPECT_EQ(ddc::testing::count(Kokkos::DefaultExecutionSpace(), storage, 1), dom.size());
 }
 
 TEST(ParallelFill, TwoDimensions)
@@ -57,7 +58,7 @@ TEST(ParallelFill, TwoDimensions)
     ddc::ChunkSpan const view(Kokkos::View<int**>(storage.data(), nelems_x, nelems_y), dom);
 
     ddc::parallel_fill(view, 1);
-    EXPECT_EQ(Kokkos::Experimental::count(Kokkos::DefaultExecutionSpace(), storage, 1), dom.size());
+    EXPECT_EQ(ddc::testing::count(Kokkos::DefaultExecutionSpace(), storage, 1), dom.size());
 }
 
 TEST(ParallelFill, OneDimensionWithExecutionSpace)
@@ -68,7 +69,7 @@ TEST(ParallelFill, OneDimensionWithExecutionSpace)
     ddc::ChunkSpan const view(storage, dom);
 
     ddc::parallel_fill(exec_space, view, 1);
-    EXPECT_EQ(Kokkos::Experimental::count(exec_space, storage, 1), dom.size());
+    EXPECT_EQ(ddc::testing::count(exec_space, storage, 1), dom.size());
 }
 
 TEST(ParallelFill, TwoDimensionsWithExecutionSpace)
@@ -79,5 +80,5 @@ TEST(ParallelFill, TwoDimensionsWithExecutionSpace)
     ddc::ChunkSpan const view(Kokkos::View<int**>(storage.data(), nelems_x, nelems_y), dom);
 
     ddc::parallel_fill(exec_space, view, 1);
-    EXPECT_EQ(Kokkos::Experimental::count(exec_space, storage, 1), dom.size());
+    EXPECT_EQ(ddc::testing::count(exec_space, storage, 1), dom.size());
 }

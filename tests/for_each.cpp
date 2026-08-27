@@ -10,7 +10,8 @@
 #include <gtest/gtest.h>
 
 #include <Kokkos_Core.hpp>
-#include <Kokkos_StdAlgorithms.hpp>
+
+#include "helper_count.hpp"
 
 inline namespace anonymous_namespace_workaround_for_each_cpp {
 
@@ -110,13 +111,7 @@ TEST(DeviceForEachSerialDevice, OneDimension)
             Kokkos::layout_right,
             Kokkos::DefaultExecutionSpace::memory_space> const view(storage.data(), dom);
     TestDeviceForEachSerialDevice1D(view);
-    EXPECT_EQ(
-            Kokkos::Experimental::
-                    count(Kokkos::DefaultExecutionSpace(),
-                          Kokkos::Experimental::begin(storage),
-                          Kokkos::Experimental::end(storage),
-                          1),
-            dom.size());
+    EXPECT_EQ(ddc::testing::count(Kokkos::DefaultExecutionSpace(), storage, 1), dom.size());
 }
 
 void TestDeviceForEachSerialDevice2D(
@@ -145,11 +140,5 @@ TEST(DeviceForEachSerialDevice, TwoDimensions)
             Kokkos::layout_right,
             Kokkos::DefaultExecutionSpace::memory_space> const view(storage.data(), dom);
     TestDeviceForEachSerialDevice2D(view);
-    EXPECT_EQ(
-            Kokkos::Experimental::
-                    count(Kokkos::DefaultExecutionSpace(),
-                          Kokkos::Experimental::begin(storage),
-                          Kokkos::Experimental::end(storage),
-                          1),
-            dom.size());
+    EXPECT_EQ(ddc::testing::count(Kokkos::DefaultExecutionSpace(), storage, 1), dom.size());
 }

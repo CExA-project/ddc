@@ -7,7 +7,8 @@
 #include <gtest/gtest.h>
 
 #include <Kokkos_Core.hpp>
-#include <Kokkos_StdAlgorithms.hpp>
+
+#include "helper_count.hpp"
 
 inline namespace anonymous_namespace_workaround_parallel_transform_reduce_cpp {
 
@@ -184,5 +185,5 @@ TEST(ParallelTransformReduceDevice, SumXY2X)
             ddc::reducer::sum<int>(),
             chunk_x_y.span_cview());
 
-    EXPECT_EQ(Kokkos::Experimental::count(exec_space, storage, 12), dom_x.size());
+    EXPECT_EQ(ddc::testing::count(exec_space, storage, 12), dom_x.size());
 }

@@ -7,7 +7,8 @@
 #include <gtest/gtest.h>
 
 #include <Kokkos_Core.hpp>
-#include <Kokkos_StdAlgorithms.hpp>
+
+#include "helper_count.hpp"
 
 inline namespace anonymous_namespace_workaround_strided_discrete_domain_cpp {
 
@@ -340,13 +341,7 @@ TEST(DeviceForEachStritedSerialDevice, OneDimension)
             Kokkos::layout_right,
             Kokkos::DefaultExecutionSpace::memory_space> const view(storage.data(), dom);
     TestDeviceForEachStritedSerialDevice1D(view);
-    EXPECT_EQ(
-            Kokkos::Experimental::
-                    count(Kokkos::DefaultExecutionSpace(),
-                          Kokkos::Experimental::begin(storage),
-                          Kokkos::Experimental::end(storage),
-                          1),
-            dom.size());
+    EXPECT_EQ(ddc::testing::count(Kokkos::DefaultExecutionSpace(), storage, 1), dom.size());
 }
 
 void TestDeviceForEachStritedSerialDevice2D(
@@ -375,13 +370,7 @@ TEST(DeviceForEachStritedSerialDevice, TwoDimensions)
             Kokkos::layout_right,
             Kokkos::DefaultExecutionSpace::memory_space> const view(storage.data(), dom);
     TestDeviceForEachStritedSerialDevice2D(view);
-    EXPECT_EQ(
-            Kokkos::Experimental::
-                    count(Kokkos::DefaultExecutionSpace(),
-                          Kokkos::Experimental::begin(storage),
-                          Kokkos::Experimental::end(storage),
-                          1),
-            dom.size());
+    EXPECT_EQ(ddc::testing::count(Kokkos::DefaultExecutionSpace(), storage, 1), dom.size());
 }
 
 int TestDeviceTransformReduceStrided(

@@ -282,13 +282,22 @@ public:
         Slicer<to_type_seq_t<SupportType>> const slicer;
         auto subview = slicer(this->allocation_mdspan(), slice_spec);
         using layout_type = decltype(subview)::layout_type;
+        using mapping_type = decltype(subview)::mapping_type;
         using extents_type = decltype(subview)::extents_type;
         using OutTypeSeqDDims
                 = type_seq_remove_t<to_type_seq_t<SupportType>, TypeSeq<QueryDDims...>>;
         using OutDDom = detail::Rebind<SupportType, OutTypeSeqDDims>::type;
         if constexpr (
-                std::is_same_v<layout_type, Kokkos::Experimental::layout_left_padded<>>
-                || std::is_same_v<layout_type, Kokkos::Experimental::layout_right_padded<>>) {
+                std::is_same_v<layout_type, Kokkos::layout_left>
+                || std::is_same_v<layout_type, Kokkos::layout_right>
+                || std::is_same_v<layout_type, Kokkos::layout_stride>) {
+            return ChunkSpan<
+                    ElementType,
+                    OutDDom,
+                    layout_type,
+                    memory_space>(subview, OutDDom(this->m_domain));
+        } else {
+            static_assert(mapping_type::is_always_strided() && mapping_type::is_always_unique());
             Kokkos::layout_stride::mapping<extents_type> const mapping_stride(subview.mapping());
             Kokkos::mdspan<ElementType, extents_type, Kokkos::layout_stride> const
                     a(subview.data_handle(), mapping_stride);
@@ -297,12 +306,6 @@ public:
                     OutDDom,
                     Kokkos::layout_stride,
                     memory_space>(a, OutDDom(this->m_domain));
-        } else {
-            return ChunkSpan<
-                    ElementType,
-                    OutDDom,
-                    layout_type,
-                    memory_space>(subview, OutDDom(this->m_domain));
         }
     }
 
@@ -330,10 +333,19 @@ public:
         Slicer<to_type_seq_t<SupportType>> const slicer;
         auto subview = slicer(this->allocation_mdspan(), odomain, this->m_domain);
         using layout_type = decltype(subview)::layout_type;
+        using mapping_type = decltype(subview)::mapping_type;
         using extents_type = decltype(subview)::extents_type;
         if constexpr (
-                std::is_same_v<layout_type, Kokkos::Experimental::layout_left_padded<>>
-                || std::is_same_v<layout_type, Kokkos::Experimental::layout_right_padded<>>) {
+                std::is_same_v<layout_type, Kokkos::layout_left>
+                || std::is_same_v<layout_type, Kokkos::layout_right>
+                || std::is_same_v<layout_type, Kokkos::layout_stride>) {
+            return ChunkSpan<
+                    ElementType,
+                    decltype(this->m_domain.restrict_with(odomain)),
+                    layout_type,
+                    memory_space>(subview, this->m_domain.restrict_with(odomain));
+        } else {
+            static_assert(mapping_type::is_always_strided() && mapping_type::is_always_unique());
             Kokkos::layout_stride::mapping<extents_type> const mapping_stride(subview.mapping());
             Kokkos::mdspan<ElementType, extents_type, Kokkos::layout_stride> const
                     a(subview.data_handle(), mapping_stride);
@@ -342,12 +354,6 @@ public:
                     decltype(this->m_domain.restrict_with(odomain)),
                     Kokkos::layout_stride,
                     memory_space>(a, this->m_domain.restrict_with(odomain));
-        } else {
-            return ChunkSpan<
-                    ElementType,
-                    decltype(this->m_domain.restrict_with(odomain)),
-                    layout_type,
-                    memory_space>(subview, this->m_domain.restrict_with(odomain));
         }
     }
 

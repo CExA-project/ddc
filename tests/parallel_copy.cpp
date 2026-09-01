@@ -7,7 +7,8 @@
 #include <gtest/gtest.h>
 
 #include <Kokkos_Core.hpp>
-#include <Kokkos_StdAlgorithms.hpp>
+
+#include "helper_count.hpp"
 
 inline namespace anonymous_namespace_workaround_parallel_copy_cpp {
 
@@ -109,7 +110,7 @@ TEST(ParallelCopy, BroadcastScalar2XY)
 
     ddc::parallel_copy(exec_space, chunk_x_y, chunk);
 
-    EXPECT_EQ(Kokkos::Experimental::count(exec_space, storage, 1), dom_x_y.size());
+    EXPECT_EQ(ddc::testing::count(exec_space, storage, 1), dom_x_y.size());
 }
 
 TEST(ParallelCopy, BroadcastX2XY)
@@ -126,7 +127,7 @@ TEST(ParallelCopy, BroadcastX2XY)
 
     ddc::parallel_copy(exec_space, chunk_x_y, chunk_x);
 
-    EXPECT_EQ(Kokkos::Experimental::count(exec_space, storage, 1), dom_x_y.size());
+    EXPECT_EQ(ddc::testing::count(exec_space, storage, 1), dom_x_y.size());
 }
 
 TEST(ParallelCopy, TransposeYX2XY)
@@ -144,7 +145,7 @@ TEST(ParallelCopy, TransposeYX2XY)
 
     ddc::parallel_copy(exec_space, chunk_x_y_out, chunk_y_x_in);
 
-    EXPECT_EQ(Kokkos::Experimental::count(exec_space, storage, 1), dom_x_y.size());
+    EXPECT_EQ(ddc::testing::count(exec_space, storage, 1), dom_x_y.size());
 }
 
 TEST(ParallelCopy, BroadcastAndTransposeYX2XYZ)
@@ -163,5 +164,5 @@ TEST(ParallelCopy, BroadcastAndTransposeYX2XYZ)
 
     ddc::parallel_copy(exec_space, chunk_x_y_z, chunk_y_x);
 
-    EXPECT_EQ(Kokkos::Experimental::count(exec_space, storage, 1), dom_x_y_z.size());
+    EXPECT_EQ(ddc::testing::count(exec_space, storage, 1), dom_x_y_z.size());
 }

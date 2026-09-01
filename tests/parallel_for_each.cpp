@@ -9,7 +9,8 @@
 #include <gtest/gtest.h>
 
 #include <Kokkos_Core.hpp>
-#include <Kokkos_StdAlgorithms.hpp>
+
+#include "helper_count.hpp"
 
 inline namespace anonymous_namespace_workaround_parallel_for_each_cpp {
 
@@ -71,7 +72,7 @@ TEST(ParallelForEachParallelHost, ZeroDimension)
 
     ddc::parallel_for_each(Kokkos::DefaultHostExecutionSpace(), dom, IncrementFn(view));
     EXPECT_EQ(
-            Kokkos::Experimental::
+            ddc::testing::
                     count(Kokkos::DefaultHostExecutionSpace(),
                           Kokkos::View<int*, Kokkos::HostSpace>(storage.data(), 1),
                           1),
@@ -85,9 +86,7 @@ TEST(ParallelForEachParallelHost, OneDimension)
     ddc::ChunkSpan const view(storage, dom);
 
     ddc::parallel_for_each(Kokkos::DefaultHostExecutionSpace(), dom, IncrementFn(view));
-    EXPECT_EQ(
-            Kokkos::Experimental::count(Kokkos::DefaultHostExecutionSpace(), storage, 1),
-            dom.size());
+    EXPECT_EQ(ddc::testing::count(Kokkos::DefaultHostExecutionSpace(), storage, 1), dom.size());
 }
 
 TEST(ParallelForEachParallelHost, TwoDimensions)
@@ -98,9 +97,7 @@ TEST(ParallelForEachParallelHost, TwoDimensions)
             view(Kokkos::View<int**, Kokkos::HostSpace>(storage.data(), nelems_x, nelems_y), dom);
 
     ddc::parallel_for_each(Kokkos::DefaultHostExecutionSpace(), dom, IncrementFn(view));
-    EXPECT_EQ(
-            Kokkos::Experimental::count(Kokkos::DefaultHostExecutionSpace(), storage, 1),
-            dom.size());
+    EXPECT_EQ(ddc::testing::count(Kokkos::DefaultHostExecutionSpace(), storage, 1), dom.size());
 }
 
 TEST(ParallelForEachParallelDevice, ZeroDimension)
@@ -111,7 +108,7 @@ TEST(ParallelForEachParallelDevice, ZeroDimension)
 
     ddc::parallel_for_each(dom, IncrementFn(view));
     EXPECT_EQ(
-            Kokkos::Experimental::
+            ddc::testing::
                     count(Kokkos::DefaultExecutionSpace(),
                           Kokkos::View<int*>(storage.data(), 1),
                           1),
@@ -125,7 +122,7 @@ TEST(ParallelForEachParallelDevice, OneDimension)
     ddc::ChunkSpan const view(storage, dom);
 
     ddc::parallel_for_each(dom, IncrementFn(view));
-    EXPECT_EQ(Kokkos::Experimental::count(Kokkos::DefaultExecutionSpace(), storage, 1), dom.size());
+    EXPECT_EQ(ddc::testing::count(Kokkos::DefaultExecutionSpace(), storage, 1), dom.size());
 }
 
 TEST(ParallelForEachParallelDevice, TwoDimensions)
@@ -135,7 +132,7 @@ TEST(ParallelForEachParallelDevice, TwoDimensions)
     ddc::ChunkSpan const view(Kokkos::View<int**>(storage.data(), nelems_x, nelems_y), dom);
 
     ddc::parallel_for_each(dom, IncrementFn(view));
-    EXPECT_EQ(Kokkos::Experimental::count(Kokkos::DefaultExecutionSpace(), storage, 1), dom.size());
+    EXPECT_EQ(ddc::testing::count(Kokkos::DefaultExecutionSpace(), storage, 1), dom.size());
 }
 
 TEST(ParallelForEachParallelDevice, TwoDimensionsStrided)
@@ -146,5 +143,5 @@ TEST(ParallelForEachParallelDevice, TwoDimensionsStrided)
     ddc::ChunkSpan const view(Kokkos::View<int**>(storage.data(), nelems_x, nelems_y), dom);
 
     ddc::parallel_for_each(dom, IncrementFn(view));
-    EXPECT_EQ(Kokkos::Experimental::count(Kokkos::DefaultExecutionSpace(), storage, 1), dom.size());
+    EXPECT_EQ(ddc::testing::count(Kokkos::DefaultExecutionSpace(), storage, 1), dom.size());
 }

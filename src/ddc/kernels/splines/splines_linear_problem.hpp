@@ -9,6 +9,8 @@
 
 #include <Kokkos_Core.hpp>
 
+#include <ddc/real_type.hpp>
+
 namespace ddc::detail {
 
 /**
@@ -24,7 +26,7 @@ public:
     using memory_space = ExecSpace::memory_space;
 
     /// @brief The type of a Kokkos::View storing multiple right-hand sides.
-    using MultiRHS = Kokkos::View<double**, Kokkos::LayoutRight, memory_space>;
+    using MultiRHS = Kokkos::View<Real**, Kokkos::LayoutRight, memory_space>;
 
 private:
     std::size_t m_size;
@@ -52,7 +54,7 @@ public:
      *
      * @return The value of the element of the matrix.
      */
-    virtual double get_element(std::size_t i, std::size_t j) const = 0;
+    virtual Real get_element(std::size_t i, std::size_t j) const = 0;
 
     /**
      * @brief Set an element of the matrix at indexes i, j. It must not be called after `setup_solver`.
@@ -61,7 +63,7 @@ public:
      * @param j The column index of the set element.
      * @param aij The value to set in the element of the matrix.
      */
-    virtual void set_element(std::size_t i, std::size_t j, double aij) = 0;
+    virtual void set_element(std::size_t i, std::size_t j, Real aij) = 0;
 
     /**
      * @brief Perform a pre-process operation on the solver. Must be called after filling the matrix.

@@ -5,6 +5,7 @@
 #pragma once
 
 #include <cstddef>
+#include <limits>
 #include <memory>
 
 #include <Kokkos_Core.hpp>
@@ -44,9 +45,9 @@ public:
 
 protected:
     std::unique_ptr<SplinesLinearProblem<ExecSpace>> m_top_left_block;
-    Kokkos::DualView<double**, Kokkos::LayoutRight, memory_space> m_top_right_block;
+    Kokkos::DualView<Real**, Kokkos::LayoutRight, memory_space> m_top_right_block;
     std::unique_ptr<Coo> m_top_right_block_coo;
-    Kokkos::DualView<double**, Kokkos::LayoutRight, memory_space> m_bottom_left_block;
+    Kokkos::DualView<Real**, Kokkos::LayoutRight, memory_space> m_bottom_left_block;
     std::unique_ptr<Coo> m_bottom_left_block_coo;
     std::unique_ptr<SplinesLinearProblem<ExecSpace>> m_bottom_right_block;
 
@@ -71,9 +72,9 @@ public:
 
     SplinesLinearProblem2x2Blocks& operator=(SplinesLinearProblem2x2Blocks&& rhs) = delete;
 
-    double get_element(std::size_t i, std::size_t j) const override;
+    Real get_element(std::size_t i, std::size_t j) const override;
 
-    void set_element(std::size_t i, std::size_t j, double aij) override;
+    void set_element(std::size_t i, std::size_t j, Real aij) override;
 
     /**
      * @brief Fill a COO version of a Dense matrix (remove zeros).
@@ -86,8 +87,8 @@ public:
      * @return The COO storage matrix filled with the non-zeros from dense_matrix.
      */
     std::unique_ptr<Coo> dense2coo(
-            Kokkos::View<double const**, Kokkos::LayoutRight, memory_space> dense_matrix,
-            double tol = 1e-14);
+            Kokkos::View<Real const**, Kokkos::LayoutRight, memory_space> dense_matrix,
+            Real tol = 100 * std::numeric_limits<Real>::epsilon());
 
 private:
     /// @brief Compute the Schur complement delta - lambda*Q^-1*gamma.

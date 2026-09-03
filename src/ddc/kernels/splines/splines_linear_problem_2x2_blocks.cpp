@@ -22,7 +22,7 @@ struct SplinesLinearProblem2x2Blocks<ExecSpace>::Coo
     std::size_t m_ncols;
     Kokkos::View<int*, Kokkos::LayoutRight, memory_space> m_rows_idx;
     Kokkos::View<int*, Kokkos::LayoutRight, memory_space> m_cols_idx;
-    Kokkos::View<double*, Kokkos::LayoutRight, memory_space> m_values;
+    Kokkos::View<Real*, Kokkos::LayoutRight, memory_space> m_values;
 
     Coo() : m_nrows(0), m_ncols(0) {}
 
@@ -30,7 +30,7 @@ struct SplinesLinearProblem2x2Blocks<ExecSpace>::Coo
         std::size_t const ncols_,
         Kokkos::View<int*, Kokkos::LayoutRight, memory_space> rows_idx_,
         Kokkos::View<int*, Kokkos::LayoutRight, memory_space> cols_idx_,
-        Kokkos::View<double*, Kokkos::LayoutRight, memory_space> values_)
+        Kokkos::View<Real*, Kokkos::LayoutRight, memory_space> values_)
         : m_nrows(nrows_)
         , m_ncols(ncols_)
         , m_rows_idx(std::move(rows_idx_))
@@ -66,7 +66,7 @@ struct SplinesLinearProblem2x2Blocks<ExecSpace>::Coo
         return m_cols_idx;
     }
 
-    KOKKOS_FUNCTION Kokkos::View<double*, Kokkos::LayoutRight, memory_space> values() const
+    KOKKOS_FUNCTION Kokkos::View<Real*, Kokkos::LayoutRight, memory_space> values() const
     {
         return m_values;
     }
@@ -99,7 +99,7 @@ template <class ExecSpace>
 SplinesLinearProblem2x2Blocks<ExecSpace>::~SplinesLinearProblem2x2Blocks() = default;
 
 template <class ExecSpace>
-double SplinesLinearProblem2x2Blocks<ExecSpace>::get_element(
+Real SplinesLinearProblem2x2Blocks<ExecSpace>::get_element(
         std::size_t const i,
         std::size_t const j) const
 {
@@ -126,7 +126,7 @@ template <class ExecSpace>
 void SplinesLinearProblem2x2Blocks<ExecSpace>::set_element(
         std::size_t const i,
         std::size_t const j,
-        double const aij)
+        Real const aij)
 {
     assert(i < size());
     assert(j < size());
@@ -146,14 +146,14 @@ void SplinesLinearProblem2x2Blocks<ExecSpace>::set_element(
 template <class ExecSpace>
 std::unique_ptr<typename SplinesLinearProblem2x2Blocks<ExecSpace>::Coo>
 SplinesLinearProblem2x2Blocks<ExecSpace>::dense2coo(
-        Kokkos::View<double const**, Kokkos::LayoutRight, memory_space> dense_matrix,
-        double const tol)
+        Kokkos::View<Real const**, Kokkos::LayoutRight, memory_space> dense_matrix,
+        Real const tol)
 {
     Kokkos::View<int*, Kokkos::LayoutRight, memory_space>
             rows_idx("ddc_splines_coo_rows_idx", dense_matrix.extent(0) * dense_matrix.extent(1));
     Kokkos::View<int*, Kokkos::LayoutRight, memory_space>
             cols_idx("ddc_splines_coo_cols_idx", dense_matrix.extent(0) * dense_matrix.extent(1));
-    Kokkos::View<double*, Kokkos::LayoutRight, memory_space>
+    Kokkos::View<Real*, Kokkos::LayoutRight, memory_space>
             values("ddc_splines_coo_values", dense_matrix.extent(0) * dense_matrix.extent(1));
 
     Kokkos::DualView<std::size_t, Kokkos::LayoutRight, memory_space> n_nonzeros(
@@ -169,7 +169,7 @@ SplinesLinearProblem2x2Blocks<ExecSpace>::dense2coo(
             KOKKOS_LAMBDA(int const) {
                 for (int i = 0; i < dense_matrix.extent(0); ++i) {
                     for (int j = 0; j < dense_matrix.extent(1); ++j) {
-                        double const aij = dense_matrix(i, j);
+                        Real const aij = dense_matrix(i, j);
                         if (Kokkos::abs(aij) >= tol) {
                             rows_idx(n_nonzeros_device()) = i;
                             cols_idx(n_nonzeros_device()) = j;
@@ -200,7 +200,7 @@ void SplinesLinearProblem2x2Blocks<ExecSpace>::compute_schur_complement()
                     {0, 0},
                     {m_bottom_right_block->size(), m_bottom_right_block->size()}),
             [&](int const i, int const j) {
-                double val = 0.0;
+                Real val = 0.0;
                 for (int l = 0; l < m_top_left_block->size(); ++l) {
                     val += bottom_left_block(i, l) * top_right_block(l, j);
                 }

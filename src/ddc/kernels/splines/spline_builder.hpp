@@ -195,7 +195,7 @@ private:
 
     int m_offset = 0;
 
-    double m_dx; // average cell size for normalization of derivatives
+    Real m_dx; // average cell size for normalization of derivatives
 
     // interpolator specific
     std::unique_ptr<ddc::detail::SplinesLinearProblem<exec_space>> m_matrix;
@@ -538,19 +538,19 @@ public:
     template <class Layout, class BatchedInterpolationDDom>
     void operator()(
             ddc::ChunkSpan<
-                    double,
+                    Real,
                     batched_spline_domain_type<BatchedInterpolationDDom>,
                     Layout,
                     memory_space> spline,
-            ddc::ChunkSpan<double const, BatchedInterpolationDDom, Layout, memory_space> vals,
+            ddc::ChunkSpan<Real const, BatchedInterpolationDDom, Layout, memory_space> vals,
             std::optional<ddc::ChunkSpan<
-                    double const,
+                    Real const,
                     batched_derivs_domain_type<BatchedInterpolationDDom>,
                     Layout,
                     memory_space>> derivs_xmin
             = std::nullopt,
             std::optional<ddc::ChunkSpan<
-                    double const,
+                    Real const,
                     batched_derivs_domain_type<BatchedInterpolationDDom>,
                     Layout,
                     memory_space>> derivs_xmax
@@ -582,19 +582,19 @@ public:
     template <class OutMemorySpace = MemorySpace>
     std::tuple<
             ddc::Chunk<
-                    double,
+                    Real,
                     ddc::DiscreteDomain<
                             ddc::Deriv<typename InterpolationDDim::continuous_dimension_type>>,
-                    ddc::KokkosAllocator<double, OutMemorySpace>>,
+                    ddc::KokkosAllocator<Real, OutMemorySpace>>,
             ddc::Chunk<
-                    double,
+                    Real,
                     ddc::DiscreteDomain<InterpolationDDim>,
-                    ddc::KokkosAllocator<double, OutMemorySpace>>,
+                    ddc::KokkosAllocator<Real, OutMemorySpace>>,
             ddc::Chunk<
-                    double,
+                    Real,
                     ddc::DiscreteDomain<
                             ddc::Deriv<typename InterpolationDDim::continuous_dimension_type>>,
-                    ddc::KokkosAllocator<double, OutMemorySpace>>>
+                    ddc::KokkosAllocator<Real, OutMemorySpace>>>
     quadrature_coefficients() const;
 
 private:
@@ -635,8 +635,8 @@ void SplineBuilder<
 {
     if constexpr (bsplines_type::is_periodic()) {
         // Calculate offset so that the matrix is diagonally dominant
-        std::array<double, bsplines_type::degree() + 1> values_ptr;
-        Kokkos::mdspan<double, Kokkos::extents<std::size_t, bsplines_type::degree() + 1>> const
+        std::array<Real, bsplines_type::degree() + 1> values_ptr;
+        Kokkos::mdspan<Real, Kokkos::extents<std::size_t, bsplines_type::degree() + 1>> const
                 values(values_ptr.data());
         ddc::DiscreteElement<interpolation_discrete_dimension_type> start(
                 interpolation_domain.front());
@@ -794,7 +794,7 @@ void SplineBuilder<
     if constexpr (
             SBCLower == ddc::SplineBuilderClosure::HERMITE
             || SBCLower == ddc::SplineBuilderClosure::HOMOGENEOUS_HERMITE) {
-        std::array<double, (bsplines_type::degree() / 2 + 1) * (bsplines_type::degree() + 1)>
+        std::array<Real, (bsplines_type::degree() / 2 + 1) * (bsplines_type::degree() + 1)>
                 derivs_ptr;
         ddc::DSpan2D const
                 derivs(derivs_ptr.data(),
@@ -824,8 +824,8 @@ void SplineBuilder<
     }
 
     // Interpolation points
-    std::array<double, bsplines_type::degree() + 1> values_ptr;
-    Kokkos::mdspan<double, Kokkos::extents<std::size_t, bsplines_type::degree() + 1>> const values(
+    std::array<Real, bsplines_type::degree() + 1> values_ptr;
+    Kokkos::mdspan<Real, Kokkos::extents<std::size_t, bsplines_type::degree() + 1>> const values(
             values_ptr.data());
 
     int start = interpolation_domain().front().uid();
@@ -848,10 +848,10 @@ void SplineBuilder<
     if constexpr (
             SBCUpper == ddc::SplineBuilderClosure::HERMITE
             || SBCUpper == ddc::SplineBuilderClosure::HOMOGENEOUS_HERMITE) {
-        std::array<double, (bsplines_type::degree() / 2 + 1) * (bsplines_type::degree() + 1)>
+        std::array<Real, (bsplines_type::degree() / 2 + 1) * (bsplines_type::degree() + 1)>
                 derivs_ptr;
         Kokkos::mdspan<
-                double,
+                Real,
                 Kokkos::extents<
                         std::size_t,
                         bsplines_type::degree() + 1,
@@ -904,18 +904,18 @@ void SplineBuilder<
         Solver>::
 operator()(
         ddc::ChunkSpan<
-                double,
+                Real,
                 batched_spline_domain_type<BatchedInterpolationDDom>,
                 Layout,
                 memory_space> spline,
-        ddc::ChunkSpan<double const, BatchedInterpolationDDom, Layout, memory_space> vals,
+        ddc::ChunkSpan<Real const, BatchedInterpolationDDom, Layout, memory_space> vals,
         std::optional<ddc::ChunkSpan<
-                double const,
+                Real const,
                 batched_derivs_domain_type<BatchedInterpolationDDom>,
                 Layout,
                 memory_space>> const derivs_xmin,
         std::optional<ddc::ChunkSpan<
-                double const,
+                Real const,
                 batched_derivs_domain_type<BatchedInterpolationDDom>,
                 Layout,
                 memory_space>> const derivs_xmax) const
@@ -1037,7 +1037,7 @@ operator()(
     ddc::Chunk spline_tr_alloc(
             m_label + " > spline_tr (ddc::SplineBuilder::operator())",
             batched_spline_tr_domain(batched_interpolation_domain),
-            ddc::KokkosAllocator<double, memory_space>());
+            ddc::KokkosAllocator<Real, memory_space>());
     ddc::ChunkSpan const spline_tr = spline_tr_alloc.span_view();
     ddc::parallel_for_each(
             m_label + " > ddc_splines_transpose_rhs",
@@ -1051,7 +1051,7 @@ operator()(
                 }
             });
     // Create a 2D Kokkos::View to manage spline_tr as a matrix
-    Kokkos::View<double**, Kokkos::LayoutRight, exec_space> const bcoef_section(
+    Kokkos::View<Real**, Kokkos::LayoutRight, exec_space> const bcoef_section(
             spline_tr.data_handle(),
             static_cast<std::size_t>(spline_tr.template extent<bsplines_type>()),
             batch_domain(batched_interpolation_domain).size());
@@ -1111,24 +1111,24 @@ template <
 template <class OutMemorySpace>
 std::tuple<
         ddc::Chunk<
-                double,
+                Real,
                 ddc::DiscreteDomain<
                         ddc::Deriv<typename InterpolationDDim::continuous_dimension_type>>,
-                ddc::KokkosAllocator<double, OutMemorySpace>>,
+                ddc::KokkosAllocator<Real, OutMemorySpace>>,
         ddc::Chunk<
-                double,
+                Real,
                 ddc::DiscreteDomain<InterpolationDDim>,
-                ddc::KokkosAllocator<double, OutMemorySpace>>,
+                ddc::KokkosAllocator<Real, OutMemorySpace>>,
         ddc::Chunk<
-                double,
+                Real,
                 ddc::DiscreteDomain<
                         ddc::Deriv<typename InterpolationDDim::continuous_dimension_type>>,
-                ddc::KokkosAllocator<double, OutMemorySpace>>>
+                ddc::KokkosAllocator<Real, OutMemorySpace>>>
 SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, SBCLower, SBCUpper, Solver>::
         quadrature_coefficients() const
 {
     // Compute integrals of bsplines
-    ddc::Chunk integral_bsplines(spline_domain(), ddc::KokkosAllocator<double, MemorySpace>());
+    ddc::Chunk integral_bsplines(spline_domain(), ddc::KokkosAllocator<Real, MemorySpace>());
     ddc::integrals(ExecSpace(), integral_bsplines.span_view());
 
     // Remove additional B-splines in the periodic case (cf. UniformBSplines::full_domain() documentation)
@@ -1137,14 +1137,14 @@ SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, SBCLower, SBC
                     ddc::DiscreteVector<bsplines_type>(m_matrix->size()))];
 
     // Allocate mirror with additional rows (cf. SplinesLinearProblem3x3Blocks documentation)
-    Kokkos::View<double**, Kokkos::LayoutRight, MemorySpace> const
+    Kokkos::View<Real**, Kokkos::LayoutRight, MemorySpace> const
             integral_bsplines_mirror_with_additional_allocation(
                     m_label + " > integral_bsplines_mirror_with_additional_allocation",
                     m_matrix->required_number_of_rhs_rows(),
                     1);
 
     // Extract relevant subview
-    Kokkos::View<double*, Kokkos::LayoutRight, MemorySpace> const integral_bsplines_mirror
+    Kokkos::View<Real*, Kokkos::LayoutRight, MemorySpace> const integral_bsplines_mirror
             = Kokkos::
                     subview(integral_bsplines_mirror_with_additional_allocation,
                             std::
@@ -1208,16 +1208,16 @@ SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, SBCLower, SBC
     ddc::Chunk coefficients_derivs_xmin_out(
             ddc::DiscreteDomain<
                     deriv_type>(first_deriv, ddc::DiscreteVector<deriv_type>(s_nbv_xmin)),
-            ddc::KokkosAllocator<double, OutMemorySpace>());
+            ddc::KokkosAllocator<Real, OutMemorySpace>());
     ddc::Chunk coefficients_out(
             interpolation_domain().take_first(
                     ddc::DiscreteVector<interpolation_discrete_dimension_type>(
                             coefficients.size())),
-            ddc::KokkosAllocator<double, OutMemorySpace>());
+            ddc::KokkosAllocator<Real, OutMemorySpace>());
     ddc::Chunk coefficients_derivs_xmax_out(
             ddc::DiscreteDomain<
                     deriv_type>(first_deriv, ddc::DiscreteVector<deriv_type>(s_nbv_xmax)),
-            ddc::KokkosAllocator<double, OutMemorySpace>());
+            ddc::KokkosAllocator<Real, OutMemorySpace>());
     Kokkos::deep_copy(
             coefficients_derivs_xmin_out.allocation_kokkos_view(),
             coefficients_derivs_xmin.allocation_kokkos_view());

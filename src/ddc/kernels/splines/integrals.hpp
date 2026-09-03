@@ -30,7 +30,7 @@ namespace detail {
 template <class ExecSpace, class DDim, class Layout, class MemorySpace>
 void uniform_bsplines_integrals(
         ExecSpace const& execution_space,
-        ddc::ChunkSpan<double, ddc::DiscreteDomain<DDim>, Layout, MemorySpace> int_vals)
+        ddc::ChunkSpan<Real, ddc::DiscreteDomain<DDim>, Layout, MemorySpace> int_vals)
 {
     static_assert(is_uniform_bsplines_v<DDim>);
     static_assert(
@@ -78,8 +78,8 @@ void uniform_bsplines_integrals(
                         ExecSpace,
                         Kokkos::IndexType<std::size_t>>(execution_space, 0, DDim::degree()),
                 KOKKOS_LAMBDA(std::size_t i) {
-                    std::array<double, DDim::degree() + 2> edge_vals_ptr;
-                    Kokkos::mdspan<double, Kokkos::extents<std::size_t, DDim::degree() + 2>> const
+                    std::array<Real, DDim::degree() + 2> edge_vals_ptr;
+                    Kokkos::mdspan<Real, Kokkos::extents<std::size_t, DDim::degree() + 2>> const
                             edge_vals(edge_vals_ptr.data());
 
                     ddc::discrete_space<DDim>().eval_basis(
@@ -87,11 +87,11 @@ void uniform_bsplines_integrals(
                             ddc::discrete_space<DDim>().rmin(),
                             DDim::degree() + 1);
 
-                    double const d_eval = ddc::detail::sum(edge_vals);
+                    Real const d_eval = ddc::detail::sum(edge_vals);
 
-                    double const c_eval = ddc::detail::sum(edge_vals, 0, DDim::degree() - i);
+                    Real const c_eval = ddc::detail::sum(edge_vals, 0, DDim::degree() - i);
 
-                    double const edge_value
+                    Real const edge_value
                             = ddc::step<UniformBsplinesKnots<DDim>>() * (d_eval - c_eval);
 
                     int_vals(first_bspline + i) = edge_value;
@@ -110,7 +110,7 @@ void uniform_bsplines_integrals(
 template <class ExecSpace, class DDim, class Layout, class MemorySpace>
 void non_uniform_bsplines_integrals(
         ExecSpace const& execution_space,
-        ddc::ChunkSpan<double, ddc::DiscreteDomain<DDim>, Layout, MemorySpace> int_vals)
+        ddc::ChunkSpan<Real, ddc::DiscreteDomain<DDim>, Layout, MemorySpace> int_vals)
 {
     static_assert(is_non_uniform_bsplines_v<DDim>);
     static_assert(
@@ -128,7 +128,7 @@ void non_uniform_bsplines_integrals(
 
     ddc::DiscreteDomain<DDim> const full_dom_splines(ddc::discrete_space<DDim>().full_domain());
 
-    double const inv_deg = 1.0 / (DDim::degree() + 1);
+    Real const inv_deg = 1.0 / (DDim::degree() + 1);
 
     ddc::DiscreteDomain<DDim> const dom_bsplines(full_dom_splines.take_first(
             ddc::DiscreteVector<DDim> {ddc::discrete_space<DDim>().nbasis()}));
@@ -163,9 +163,9 @@ void non_uniform_bsplines_integrals(
  * @return The values of the integrals.
  */
 template <class ExecSpace, class DDim, class Layout, class MemorySpace>
-ddc::ChunkSpan<double, ddc::DiscreteDomain<DDim>, Layout, MemorySpace> integrals(
+ddc::ChunkSpan<Real, ddc::DiscreteDomain<DDim>, Layout, MemorySpace> integrals(
         ExecSpace const& execution_space,
-        ddc::ChunkSpan<double, ddc::DiscreteDomain<DDim>, Layout, MemorySpace> int_vals)
+        ddc::ChunkSpan<Real, ddc::DiscreteDomain<DDim>, Layout, MemorySpace> int_vals)
 {
     static_assert(is_uniform_bsplines_v<DDim> || is_non_uniform_bsplines_v<DDim>);
     if constexpr (is_uniform_bsplines_v<DDim>) {

@@ -8,6 +8,8 @@
 
 #include <Kokkos_Core.hpp>
 
+#include <ddc/real_type.hpp>
+
 namespace ddc::detail {
 
 template <std::size_t N, class ElementType, bool CONTIGUOUS = true>
@@ -51,16 +53,16 @@ using View1D = ViewND<1, ElementType>;
 template <class ElementType>
 using View2D = ViewND<2, ElementType>;
 
-using DSpan1D = ddc::Span1D<double>;
+using DSpan1D = ddc::Span1D<Real>;
 
-using DSpan2D = ddc::Span2D<double>;
+using DSpan2D = ddc::Span2D<Real>;
 
-using CDSpan1D = ddc::Span1D<double const>;
+using CDSpan1D = ddc::Span1D<Real const>;
 
-using CDSpan2D = ddc::Span2D<double const>;
+using CDSpan2D = ddc::Span2D<Real const>;
 
-using DView1D = View1D<double>;
+using DView1D = View1D<Real>;
 
-using DView2D = View2D<double>;
+using DView2D = View2D<Real>;
 
 } // namespace ddc

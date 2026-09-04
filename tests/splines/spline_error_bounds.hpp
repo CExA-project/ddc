@@ -14,17 +14,17 @@ template <class Evaluator>
 class SplineErrorBounds
 {
 private:
-    static constexpr std::array<double, 10> tikhomirov_error_bound_array = std::array<double, 10>(
-            {1.0 / 2.0,
-             1.0 / 8.0,
-             1.0 / 24.0,
-             5.0 / 384.0,
-             1.0 / 240.0,
-             61.0 / 46080.0,
-             17.0 / 40320.0,
-             277.0 / 2064384.0,
-             31.0 / 725760.0,
-             50521.0 / 3715891200.0});
+    static constexpr std::array<ddc::Real, 10> tikhomirov_error_bound_array = std::array<ddc::Real, 10>(
+            {static_cast<ddc::Real>(1.0 / 2.0),
+             static_cast<ddc::Real>(1.0 / 8.0),
+             static_cast<ddc::Real>(1.0 / 24.0),
+             static_cast<ddc::Real>(5.0 / 384.0),
+             static_cast<ddc::Real>(1.0 / 240.0),
+             static_cast<ddc::Real>(61.0 / 46080.0),
+             static_cast<ddc::Real>(17.0 / 40320.0),
+             static_cast<ddc::Real>(277.0 / 2064384.0),
+             static_cast<ddc::Real>(31.0 / 725760.0),
+             static_cast<ddc::Real>(50521.0 / 3715891200.0)});
 
     Evaluator m_evaluator;
 
@@ -40,7 +40,7 @@ private:
      * Also applicable to first derivative by passing deg-1 instead of deg
      * Volkov & Subbotin 2015, eq. 15
      *******************************************************************************/
-    static double tikhomirov_error_bound(double cell_width, int degree, double max_norm)
+    static ddc::Real tikhomirov_error_bound(ddc::Real cell_width, int degree, ddc::Real max_norm)
     {
         degree = std::min(degree, 9);
         return tikhomirov_error_bound_array[degree] * ddc::detail::ipow(cell_width, degree + 1)
@@ -49,7 +49,7 @@ private:
 
     /// @brief Computes the max norm on the ith component
     template <std::size_t N, std::size_t... Ints>
-    double max_norm(
+    ddc::Real max_norm(
             std::array<ddc::DiscreteElementType, N> const& orders,
             std::array<std::size_t, N> const& degrees,
             std::size_t i,
@@ -61,101 +61,101 @@ private:
 public:
     explicit SplineErrorBounds(Evaluator const& evaluator) : m_evaluator(evaluator) {}
 
-    double error_bound(double cell_width, int degree) const
+    ddc::Real error_bound(ddc::Real cell_width, int degree) const
     {
         return tikhomirov_error_bound(cell_width, degree, m_evaluator.max_norm(degree + 1));
     }
 
-    double error_bound(double cell_width1, double cell_width2, int degree1, int degree2) const
+    ddc::Real error_bound(ddc::Real cell_width1, ddc::Real cell_width2, int degree1, int degree2) const
     {
-        double const norm1 = m_evaluator.max_norm(degree1 + 1, 0);
-        double const norm2 = m_evaluator.max_norm(0, degree2 + 1);
+        ddc::Real const norm1 = m_evaluator.max_norm(degree1 + 1, 0);
+        ddc::Real const norm2 = m_evaluator.max_norm(0, degree2 + 1);
         return tikhomirov_error_bound(cell_width1, degree1, norm1)
                + tikhomirov_error_bound(cell_width2, degree2, norm2);
     }
 
-    double error_bound(
-            double cell_width1,
-            double cell_width2,
-            double cell_width3,
+    ddc::Real error_bound(
+            ddc::Real cell_width1,
+            ddc::Real cell_width2,
+            ddc::Real cell_width3,
             int degree1,
             int degree2,
             int degree3) const
     {
-        double const norm1 = m_evaluator.max_norm(degree1 + 1, 0, 0);
-        double const norm2 = m_evaluator.max_norm(0, degree2 + 1, 0);
-        double const norm3 = m_evaluator.max_norm(0, 0, degree3 + 1);
+        ddc::Real const norm1 = m_evaluator.max_norm(degree1 + 1, 0, 0);
+        ddc::Real const norm2 = m_evaluator.max_norm(0, degree2 + 1, 0);
+        ddc::Real const norm3 = m_evaluator.max_norm(0, 0, degree3 + 1);
         return tikhomirov_error_bound(cell_width1, degree1, norm1)
                + tikhomirov_error_bound(cell_width2, degree2, norm2)
                + tikhomirov_error_bound(cell_width3, degree3, norm3);
     }
 
-    double error_bound_on_deriv(double cell_width, int degree) const
+    ddc::Real error_bound_on_deriv(ddc::Real cell_width, int degree) const
     {
         return tikhomirov_error_bound(cell_width, degree - 1, m_evaluator.max_norm(degree + 1));
     }
 
-    double error_bound_on_deriv_1(double cell_width1, double cell_width2, int degree1, int degree2)
+    ddc::Real error_bound_on_deriv_1(ddc::Real cell_width1, ddc::Real cell_width2, int degree1, int degree2)
             const
     {
-        double const norm1 = m_evaluator.max_norm(degree1 + 1, 0);
-        double const norm2 = m_evaluator.max_norm(0, degree2 + 1);
+        ddc::Real const norm1 = m_evaluator.max_norm(degree1 + 1, 0);
+        ddc::Real const norm2 = m_evaluator.max_norm(0, degree2 + 1);
         return tikhomirov_error_bound(cell_width1, degree1 - 1, norm1)
                + tikhomirov_error_bound(cell_width2, degree2, norm2);
     }
 
-    double error_bound_on_deriv_1(
-            double cell_width1,
-            double cell_width2,
-            double cell_width3,
+    ddc::Real error_bound_on_deriv_1(
+            ddc::Real cell_width1,
+            ddc::Real cell_width2,
+            ddc::Real cell_width3,
             int degree1,
             int degree2,
             int degree3) const
     {
-        double const norm1 = m_evaluator.max_norm(degree1 + 1, 0, 0);
-        double const norm2 = m_evaluator.max_norm(0, degree2 + 1, 0);
-        double const norm3 = m_evaluator.max_norm(0, 0, degree3 + 1);
+        ddc::Real const norm1 = m_evaluator.max_norm(degree1 + 1, 0, 0);
+        ddc::Real const norm2 = m_evaluator.max_norm(0, degree2 + 1, 0);
+        ddc::Real const norm3 = m_evaluator.max_norm(0, 0, degree3 + 1);
         return tikhomirov_error_bound(cell_width1, degree1 - 1, norm1)
                + tikhomirov_error_bound(cell_width2, degree2, norm2)
                + tikhomirov_error_bound(cell_width3, degree3, norm3);
     }
 
-    double error_bound_on_deriv_2(double cell_width1, double cell_width2, int degree1, int degree2)
+    ddc::Real error_bound_on_deriv_2(ddc::Real cell_width1, ddc::Real cell_width2, int degree1, int degree2)
             const
     {
-        double const norm1 = m_evaluator.max_norm(degree1 + 1, 0);
-        double const norm2 = m_evaluator.max_norm(0, degree2 + 1);
+        ddc::Real const norm1 = m_evaluator.max_norm(degree1 + 1, 0);
+        ddc::Real const norm2 = m_evaluator.max_norm(0, degree2 + 1);
         return tikhomirov_error_bound(cell_width1, degree1, norm1)
                + tikhomirov_error_bound(cell_width2, degree2 - 1, norm2);
     }
 
-    double error_bound_on_deriv_2(
-            double cell_width1,
-            double cell_width2,
-            double cell_width3,
+    ddc::Real error_bound_on_deriv_2(
+            ddc::Real cell_width1,
+            ddc::Real cell_width2,
+            ddc::Real cell_width3,
             int degree1,
             int degree2,
             int degree3) const
     {
-        double const norm1 = m_evaluator.max_norm(degree1 + 1, 0, 0);
-        double const norm2 = m_evaluator.max_norm(0, degree2 + 1, 0);
-        double const norm3 = m_evaluator.max_norm(0, 0, degree3 + 1);
+        ddc::Real const norm1 = m_evaluator.max_norm(degree1 + 1, 0, 0);
+        ddc::Real const norm2 = m_evaluator.max_norm(0, degree2 + 1, 0);
+        ddc::Real const norm3 = m_evaluator.max_norm(0, 0, degree3 + 1);
         return tikhomirov_error_bound(cell_width1, degree1, norm1)
                + tikhomirov_error_bound(cell_width2, degree2 - 1, norm2)
                + tikhomirov_error_bound(cell_width3, degree3, norm3);
     }
 
-    double error_bound_on_deriv_3(
-            double cell_width1,
-            double cell_width2,
-            double cell_width3,
+    ddc::Real error_bound_on_deriv_3(
+            ddc::Real cell_width1,
+            ddc::Real cell_width2,
+            ddc::Real cell_width3,
             int degree1,
             int degree2,
             int degree3) const
     {
-        double const norm1 = m_evaluator.max_norm(degree1 + 1, 0, 0);
-        double const norm2 = m_evaluator.max_norm(0, degree2 + 1, 0);
-        double const norm3 = m_evaluator.max_norm(0, 0, degree3 + 1);
+        ddc::Real const norm1 = m_evaluator.max_norm(degree1 + 1, 0, 0);
+        ddc::Real const norm2 = m_evaluator.max_norm(0, degree2 + 1, 0);
+        ddc::Real const norm3 = m_evaluator.max_norm(0, 0, degree3 + 1);
         return tikhomirov_error_bound(cell_width1, degree1, norm1)
                + tikhomirov_error_bound(cell_width2, degree2, norm2)
                + tikhomirov_error_bound(cell_width3, degree3 - 1, norm3);
@@ -166,80 +166,80 @@ public:
      *       the correct asympthotic rate of convergence.
      *       The error constant may be overestimated.
      *******************************************************************************/
-    double error_bound_on_deriv_12(double cell_width1, double cell_width2, int degree1, int degree2)
+    ddc::Real error_bound_on_deriv_12(ddc::Real cell_width1, ddc::Real cell_width2, int degree1, int degree2)
             const
     {
-        double const norm1 = m_evaluator.max_norm(degree1 + 1, 1);
-        double const norm2 = m_evaluator.max_norm(1, degree2 + 1);
+        ddc::Real const norm1 = m_evaluator.max_norm(degree1 + 1, 1);
+        ddc::Real const norm2 = m_evaluator.max_norm(1, degree2 + 1);
         return tikhomirov_error_bound(cell_width1, degree1 - 1, norm1)
                + tikhomirov_error_bound(cell_width2, degree2 - 1, norm2);
     }
 
-    double error_bound_on_deriv_12(
-            double cell_width1,
-            double cell_width2,
-            double cell_width3,
+    ddc::Real error_bound_on_deriv_12(
+            ddc::Real cell_width1,
+            ddc::Real cell_width2,
+            ddc::Real cell_width3,
             int degree1,
             int degree2,
             int degree3) const
     {
-        double const norm1 = m_evaluator.max_norm(degree1 + 1, 1, 0);
-        double const norm2 = m_evaluator.max_norm(1, degree2 + 1, 0);
-        double const norm3 = m_evaluator.max_norm(0, 0, degree3 + 1);
+        ddc::Real const norm1 = m_evaluator.max_norm(degree1 + 1, 1, 0);
+        ddc::Real const norm2 = m_evaluator.max_norm(1, degree2 + 1, 0);
+        ddc::Real const norm3 = m_evaluator.max_norm(0, 0, degree3 + 1);
         return tikhomirov_error_bound(cell_width1, degree1 - 1, norm1)
                + tikhomirov_error_bound(cell_width2, degree2 - 1, norm2)
                + tikhomirov_error_bound(cell_width3, degree3, norm3);
     }
 
-    double error_bound_on_deriv_23(
-            double cell_width1,
-            double cell_width2,
-            double cell_width3,
+    ddc::Real error_bound_on_deriv_23(
+            ddc::Real cell_width1,
+            ddc::Real cell_width2,
+            ddc::Real cell_width3,
             int degree1,
             int degree2,
             int degree3) const
     {
-        double const norm1 = m_evaluator.max_norm(degree1 + 1, 0, 0);
-        double const norm2 = m_evaluator.max_norm(0, degree2 + 1, 1);
-        double const norm3 = m_evaluator.max_norm(0, 1, degree3 + 1);
+        ddc::Real const norm1 = m_evaluator.max_norm(degree1 + 1, 0, 0);
+        ddc::Real const norm2 = m_evaluator.max_norm(0, degree2 + 1, 1);
+        ddc::Real const norm3 = m_evaluator.max_norm(0, 1, degree3 + 1);
         return tikhomirov_error_bound(cell_width1, degree1, norm1)
                + tikhomirov_error_bound(cell_width2, degree2 - 1, norm2)
                + tikhomirov_error_bound(cell_width3, degree3 - 1, norm3);
     }
 
-    double error_bound_on_deriv_13(
-            double cell_width1,
-            double cell_width2,
-            double cell_width3,
+    ddc::Real error_bound_on_deriv_13(
+            ddc::Real cell_width1,
+            ddc::Real cell_width2,
+            ddc::Real cell_width3,
             int degree1,
             int degree2,
             int degree3) const
     {
-        double const norm1 = m_evaluator.max_norm(degree1 + 1, 0, 1);
-        double const norm2 = m_evaluator.max_norm(0, degree2 + 1, 0);
-        double const norm3 = m_evaluator.max_norm(1, 0, degree3 + 1);
+        ddc::Real const norm1 = m_evaluator.max_norm(degree1 + 1, 0, 1);
+        ddc::Real const norm2 = m_evaluator.max_norm(0, degree2 + 1, 0);
+        ddc::Real const norm3 = m_evaluator.max_norm(1, 0, degree3 + 1);
         return tikhomirov_error_bound(cell_width1, degree1 - 1, norm1)
                + tikhomirov_error_bound(cell_width2, degree2, norm2)
                + tikhomirov_error_bound(cell_width3, degree3 - 1, norm3);
     }
 
-    double error_bound_on_deriv_123(
-            double cell_width1,
-            double cell_width2,
-            double cell_width3,
+    ddc::Real error_bound_on_deriv_123(
+            ddc::Real cell_width1,
+            ddc::Real cell_width2,
+            ddc::Real cell_width3,
             int degree1,
             int degree2,
             int degree3) const
     {
-        double const norm1 = m_evaluator.max_norm(degree1 + 1, 1, 1);
-        double const norm2 = m_evaluator.max_norm(1, degree2 + 1, 1);
-        double const norm3 = m_evaluator.max_norm(1, 1, degree3 + 1);
+        ddc::Real const norm1 = m_evaluator.max_norm(degree1 + 1, 1, 1);
+        ddc::Real const norm2 = m_evaluator.max_norm(1, degree2 + 1, 1);
+        ddc::Real const norm3 = m_evaluator.max_norm(1, 1, degree3 + 1);
         return tikhomirov_error_bound(cell_width1, degree1 - 1, norm1)
                + tikhomirov_error_bound(cell_width2, degree2 - 1, norm2)
                + tikhomirov_error_bound(cell_width3, degree3 - 1, norm3);
     }
 
-    double error_bound_on_int(double cell_width, int degree) const
+    ddc::Real error_bound_on_int(ddc::Real cell_width, int degree) const
     {
         return tikhomirov_error_bound(cell_width, degree + 1, m_evaluator.max_norm(degree + 1));
     }
@@ -250,12 +250,12 @@ public:
      *******************************************************************************/
 
     template <std::size_t N>
-    double error_bound(
+    ddc::Real error_bound(
             std::array<ddc::DiscreteElementType, N> const& orders,
-            std::array<double, N> const& cell_width,
+            std::array<ddc::Real, N> const& cell_width,
             std::array<std::size_t, N> const& degrees) const
     {
-        double error = 0.;
+        ddc::Real error = 0.;
         for (std::size_t i = 0; i < N; i++) {
             error += tikhomirov_error_bound(
                     cell_width[i],

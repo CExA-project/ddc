@@ -22,9 +22,9 @@ struct PolynomialEvaluator
         using Dim = DDim;
 
     private:
-        std::array<double, Degree + 1> m_coeffs;
+        std::array<ddc::Real, Degree + 1> m_coeffs;
 
-        double m_xn;
+        ddc::Real m_xn;
 
     public:
         template <class Domain>
@@ -39,12 +39,12 @@ struct PolynomialEvaluator
             }
         }
 
-        KOKKOS_FUNCTION double operator()(double const x) const noexcept
+        KOKKOS_FUNCTION ddc::Real operator()(ddc::Real const x) const noexcept
         {
             return eval(x, 0);
         }
 
-        void operator()(ddc::ChunkSpan<double, ddc::DiscreteDomain<DDim>> chunk) const
+        void operator()(ddc::ChunkSpan<ddc::Real, ddc::DiscreteDomain<DDim>> chunk) const
         {
             ddc::DiscreteDomain<DDim> const domain = chunk.domain();
 
@@ -53,12 +53,12 @@ struct PolynomialEvaluator
             }
         }
 
-        KOKKOS_FUNCTION double deriv(double const x, int const derivative) const noexcept
+        KOKKOS_FUNCTION ddc::Real deriv(ddc::Real const x, int const derivative) const noexcept
         {
             return eval(x, derivative);
         }
 
-        void deriv(ddc::ChunkSpan<double, ddc::DiscreteDomain<DDim>> chunk, int const derivative)
+        void deriv(ddc::ChunkSpan<ddc::Real, ddc::DiscreteDomain<DDim>> chunk, int const derivative)
                 const
         {
             ddc::DiscreteDomain<DDim> const domain = chunk.domain();
@@ -68,27 +68,27 @@ struct PolynomialEvaluator
             }
         }
 
-        KOKKOS_FUNCTION double max_norm(int diff = 0) const
+        KOKKOS_FUNCTION ddc::Real max_norm(int diff = 0) const
         {
             return Kokkos::abs(deriv(m_xn, diff));
         }
 
     private:
-        KOKKOS_FUNCTION double eval(double const x, int const derivative) const
+        KOKKOS_FUNCTION ddc::Real eval(ddc::Real const x, int const derivative) const
         {
-            double result(0.0);
+            ddc::Real result(0.0);
             int const start = derivative < 0 ? 0 : derivative;
             for (int i(start); i < Degree + 1; ++i) {
-                double const v
-                        = double(falling_factorial(i, derivative)) * Kokkos::pow(x, i - derivative);
+                ddc::Real const v
+                        = ddc::Real(falling_factorial(i, derivative)) * Kokkos::pow(x, i - derivative);
                 result += m_coeffs[i] * v;
             }
             return result;
         }
 
-        KOKKOS_FUNCTION double falling_factorial(int i, int d) const
+        KOKKOS_FUNCTION ddc::Real falling_factorial(int i, int d) const
         {
-            double c = 1.0;
+            ddc::Real c = 1.0;
             if (d >= 0) {
                 for (int k(0); k < d; ++k) {
                     c *= (i - k);

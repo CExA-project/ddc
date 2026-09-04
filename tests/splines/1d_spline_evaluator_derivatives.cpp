@@ -86,7 +86,7 @@ KOKKOS_FUNCTION Coord<X> xn()
 
 // Templated function giving step of the mesh in given dimension.
 template <typename X>
-double dx(std::size_t ncells)
+ddc::Real dx(std::size_t ncells)
 {
     return (xn<X>() - x0<X>()) / ncells;
 }
@@ -142,17 +142,17 @@ void test_deriv(
 
     auto const order = ddc::select_or(deriv_order, ddc::DiscreteElement<ddc::Deriv<I>>(0)).uid();
 
-    double const max_norm_error_diff = ddc::parallel_transform_reduce(
+    ddc::Real const max_norm_error_diff = ddc::parallel_transform_reduce(
             exec_space,
             spline_eval_deriv.domain(),
-            0.,
-            ddc::reducer::max<double>(),
+            ddc::Real(0.),
+            ddc::reducer::max<ddc::Real>(),
             KOKKOS_LAMBDA(domain::discrete_element_type const e) {
                 Coord<I> const x = ddc::coordinate(ddc::DiscreteElement<DDimI>(e));
                 return Kokkos::abs(spline_eval_deriv(e) - evaluator.deriv(x, order));
             });
 
-    double const max_norm_diff = evaluator.max_norm(order);
+    ddc::Real const max_norm_diff = evaluator.max_norm(order);
 
     SplineErrorBounds<evaluator_type<DDimI>> const error_bounds(evaluator);
 
@@ -163,7 +163,7 @@ void test_deriv(
                                 std::array<ddc::DiscreteElementType, 1> {order},
                                 {dx<I>(ncells)},
                                 {s_degree}),
-                        1e-11 * max_norm_diff));
+                        static_cast<ddc::Real>(1e-11) * max_norm_diff));
 }
 
 template <
@@ -242,14 +242,14 @@ void TestSplineEvaluator1dDerivatives()
     auto const dom_spline = spline_builder.batched_spline_domain(dom_vals);
 
     // Allocate and fill a chunk containing values to be passed as input to spline_builder. Those are values of cosine along interest dimension duplicated along batch dimensions
-    ddc::Chunk vals_1d_host_alloc(dom_interpolation, ddc::HostAllocator<double>());
+    ddc::Chunk vals_1d_host_alloc(dom_interpolation, ddc::HostAllocator<ddc::Real>());
     ddc::ChunkSpan const vals_1d_host = vals_1d_host_alloc.span_view();
     evaluator_type<DDimI> const evaluator(dom_interpolation);
     evaluator(vals_1d_host);
     auto vals_1d_alloc = ddc::create_mirror_view_and_copy(exec_space, vals_1d_host);
     ddc::ChunkSpan const vals_1d = vals_1d_alloc.span_view();
 
-    ddc::Chunk vals_alloc(dom_vals, ddc::KokkosAllocator<double, MemorySpace>());
+    ddc::Chunk vals_alloc(dom_vals, ddc::KokkosAllocator<ddc::Real, MemorySpace>());
     ddc::ChunkSpan const vals = vals_alloc.span_view();
     ddc::parallel_for_each(
             exec_space,
@@ -257,7 +257,7 @@ void TestSplineEvaluator1dDerivatives()
             KOKKOS_LAMBDA(DElem<DDims...> const e) { vals(e) = vals_1d(DElem<DDimI>(e)); });
 
     // Instantiate chunk of spline coefs to receive output of spline_builder
-    ddc::Chunk coef_alloc(dom_spline, ddc::KokkosAllocator<double, MemorySpace>());
+    ddc::Chunk coef_alloc(dom_spline, ddc::KokkosAllocator<ddc::Real, MemorySpace>());
     ddc::ChunkSpan const coef = coef_alloc.span_view();
 
     // Finally compute the spline by filling `coef`
@@ -288,7 +288,7 @@ void TestSplineEvaluator1dDerivatives()
 
 
     // Instantiate chunks to receive outputs of spline_evaluator
-    ddc::Chunk spline_eval_deriv_alloc(dom_vals, ddc::KokkosAllocator<double, MemorySpace>());
+    ddc::Chunk spline_eval_deriv_alloc(dom_vals, ddc::KokkosAllocator<ddc::Real, MemorySpace>());
     ddc::ChunkSpan const spline_eval_deriv = spline_eval_deriv_alloc.span_view();
 
     launch_deriv_tests(

@@ -34,8 +34,8 @@ struct DDimX : GrevillePoints::interpolation_discrete_dimension_type
 
 using DElemX = ddc::DiscreteElement<DDimX>;
 using DVectX = ddc::DiscreteVector<DDimX>;
-using SplineX = ddc::Chunk<double, ddc::DiscreteDomain<BSplinesX>>;
-using FieldX = ddc::Chunk<double, ddc::DiscreteDomain<DDimX>>;
+using SplineX = ddc::Chunk<ddc::Real, ddc::DiscreteDomain<BSplinesX>>;
+using FieldX = ddc::Chunk<ddc::Real, ddc::DiscreteDomain<DDimX>>;
 using CoordX = ddc::Coordinate<DimX>;
 
 TEST(PeriodicSplineBuilderOrderTest, OrderedPoints)
@@ -44,7 +44,7 @@ TEST(PeriodicSplineBuilderOrderTest, OrderedPoints)
 
     // 1. Create BSplines
     int const npoints(ncells + 1);
-    std::vector<double> d_breaks({0, 0.01, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0});
+    std::vector<ddc::Real> d_breaks({0, 0.01, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0});
     std::vector<CoordX> breaks(npoints);
     for (std::size_t i(0); i < npoints; ++i) {
         breaks[i] = CoordX(d_breaks[i]);
@@ -55,8 +55,8 @@ TEST(PeriodicSplineBuilderOrderTest, OrderedPoints)
     ddc::init_discrete_space<DDimX>(GrevillePoints::get_sampling<DDimX>());
     ddc::DiscreteDomain<DDimX> const interpolation_domain(GrevillePoints::get_domain<DDimX>());
 
-    double last(ddc::coordinate(interpolation_domain.front()));
-    double current;
+    ddc::Real last(ddc::coordinate(interpolation_domain.front()));
+    ddc::Real current;
     for (DElemX const ix : interpolation_domain) {
         current = ddc::coordinate(ix);
         EXPECT_LE(current, ddc::discrete_space<BSplinesX>().rmax());

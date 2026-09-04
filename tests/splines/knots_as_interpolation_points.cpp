@@ -148,7 +148,7 @@ TYPED_TEST(NonUniformBSplinesFixture, KnotsAsInterpolationPoints)
     CoordX const xmax(1.);
     std::size_t const ncells = 20;
     std::vector<CoordX> breaks(ncells + 1);
-    double const dx = (xmax - xmin) / ncells;
+    ddc::Real const dx = (xmax - xmin) / ncells;
     for (std::size_t i = 0; i < ncells + 1; ++i) {
         breaks[i] = xmin + i * dx;
     }

@@ -70,7 +70,7 @@ void TestPeriodicSplineBuilderTestIdentity()
 #elif defined(BSPLINES_TYPE_NON_UNIFORM)
         DVectX const npoints(ncells + 1);
         std::vector<CoordX> breaks(npoints);
-        double const dx = (xN - x0) / ncells;
+        ddc::Real const dx = (xN - x0) / ncells;
         for (int i(0); i < npoints; ++i) {
             breaks[i] = CoordX(x0 + i * dx);
         }
@@ -82,7 +82,7 @@ void TestPeriodicSplineBuilderTestIdentity()
 
     // 2. Create a Spline represented by a chunk over BSplines
     // The chunk is filled with garbage data, we need to initialize it
-    ddc::Chunk coef(dom_bsplines_x, ddc::KokkosAllocator<double, memory_space>());
+    ddc::Chunk coef(dom_bsplines_x, ddc::KokkosAllocator<ddc::Real, memory_space>());
 
     // 3. Create the interpolation domain
     ddc::init_discrete_space<DDimX>(GrevillePoints::get_sampling<DDimX>());
@@ -99,7 +99,7 @@ void TestPeriodicSplineBuilderTestIdentity()
             ddc::SplineSolver::GINKGO> const spline_builder(interpolation_domain);
 
     // 5. Allocate and fill a chunk over the interpolation domain
-    ddc::Chunk yvals_alloc(interpolation_domain, ddc::KokkosAllocator<double, memory_space>());
+    ddc::Chunk yvals_alloc(interpolation_domain, ddc::KokkosAllocator<ddc::Real, memory_space>());
     ddc::ChunkSpan const yvals(yvals_alloc.span_view());
     evaluator_type const evaluator(interpolation_domain);
     ddc::parallel_for_each(
@@ -130,13 +130,13 @@ void TestPeriodicSplineBuilderTestIdentity()
             KOKKOS_LAMBDA(DElemX const ix) { coords_eval(ix) = ddc::coordinate(ix); });
 
     ddc::Chunk
-            spline_eval_alloc(interpolation_domain, ddc::KokkosAllocator<double, memory_space>());
+            spline_eval_alloc(interpolation_domain, ddc::KokkosAllocator<ddc::Real, memory_space>());
     ddc::ChunkSpan const spline_eval(spline_eval_alloc.span_view());
     spline_evaluator(spline_eval.span_view(), coords_eval.span_cview(), coef.span_cview());
 
     ddc::Chunk spline_eval_deriv_alloc(
             interpolation_domain,
-            ddc::KokkosAllocator<double, memory_space>());
+            ddc::KokkosAllocator<ddc::Real, memory_space>());
     ddc::ChunkSpan const spline_eval_deriv(spline_eval_deriv_alloc.span_view());
     spline_evaluator
             .deriv(ddc::DiscreteElement<ddc::Deriv<DimX>>(1),
@@ -146,65 +146,65 @@ void TestPeriodicSplineBuilderTestIdentity()
 
     ddc::Chunk integral(
             spline_builder.batch_domain(interpolation_domain),
-            ddc::KokkosAllocator<double, memory_space>());
+            ddc::KokkosAllocator<ddc::Real, memory_space>());
     spline_evaluator.integrate(integral.span_view(), coef.span_cview());
 
-    ddc::Chunk<double, ddc::DiscreteDomain<DDimX>, ddc::KokkosAllocator<double, memory_space>>
+    ddc::Chunk<ddc::Real, ddc::DiscreteDomain<DDimX>, ddc::KokkosAllocator<ddc::Real, memory_space>>
             quadrature_coefficients_alloc;
     std::tie(std::ignore, quadrature_coefficients_alloc, std::ignore)
             = spline_builder.quadrature_coefficients();
     ddc::ChunkSpan const quadrature_coefficients = quadrature_coefficients_alloc.span_cview();
-    double const quadrature_integral = ddc::parallel_transform_reduce(
+    ddc::Real const quadrature_integral = ddc::parallel_transform_reduce(
             execution_space(),
             quadrature_coefficients.domain(),
-            0.0,
-            ddc::reducer::sum<double>(),
+            ddc::Real(0.0),
+            ddc::reducer::sum<ddc::Real>(),
             KOKKOS_LAMBDA(DElemX const ix) { return quadrature_coefficients(ix) * yvals(ix); });
 
     // 8. Checking errors
-    double const max_norm_error = ddc::parallel_transform_reduce(
+    ddc::Real const max_norm_error = ddc::parallel_transform_reduce(
             execution_space(),
             interpolation_domain,
-            0.0,
-            ddc::reducer::max<double>(),
+            ddc::Real(0.0),
+            ddc::reducer::max<ddc::Real>(),
             KOKKOS_LAMBDA(DElemX const ix) {
-                double const error = spline_eval(ix) - yvals(ix);
+                ddc::Real const error = spline_eval(ix) - yvals(ix);
                 return Kokkos::fabs(error);
             });
-    double const max_norm_error_diff = ddc::parallel_transform_reduce(
+    ddc::Real const max_norm_error_diff = ddc::parallel_transform_reduce(
             execution_space(),
             interpolation_domain,
-            0.0,
-            ddc::reducer::max<double>(),
+            ddc::Real(0.0),
+            ddc::reducer::max<ddc::Real>(),
             KOKKOS_LAMBDA(DElemX const ix) {
                 CoordX const x = ddc::coordinate(ix);
-                double const error_deriv = spline_eval_deriv(ix) - evaluator.deriv(x, 1);
+                ddc::Real const error_deriv = spline_eval_deriv(ix) - evaluator.deriv(x, 1);
                 return Kokkos::fabs(error_deriv);
             });
 
     auto integral_host = ddc::create_mirror_view_and_copy(integral.span_view());
-    double const max_norm_error_integ = std::fabs(
+    ddc::Real const max_norm_error_integ = std::fabs(
             integral_host(ddc::DiscreteElement<>()) - evaluator.deriv(xN, -1)
             + evaluator.deriv(x0, -1));
-    double const max_norm_error_quadrature_integ
+    ddc::Real const max_norm_error_quadrature_integ
             = std::fabs(quadrature_integral - evaluator.deriv(xN, -1) + evaluator.deriv(x0, -1));
 
-    double const max_norm = evaluator.max_norm();
-    double const max_norm_diff = evaluator.max_norm(1);
-    double const max_norm_int = evaluator.max_norm(-1);
+    ddc::Real const max_norm = evaluator.max_norm();
+    ddc::Real const max_norm_diff = evaluator.max_norm(1);
+    ddc::Real const max_norm_int = evaluator.max_norm(-1);
 
     SplineErrorBounds<evaluator_type> const error_bounds(evaluator);
-    double const h = (xN - x0) / ncells;
-    EXPECT_LE(max_norm_error, std::max(error_bounds.error_bound(h, s_degree), 1.0e-14 * max_norm));
+    ddc::Real const h = (xN - x0) / ncells;
+    EXPECT_LE(max_norm_error, std::max(error_bounds.error_bound(h, s_degree), static_cast<ddc::Real>(1.0e-14) * max_norm));
     EXPECT_LE(
             max_norm_error_diff,
-            std::max(error_bounds.error_bound_on_deriv(h, s_degree), 1e-12 * max_norm_diff));
+            std::max(error_bounds.error_bound_on_deriv(h, s_degree), static_cast<ddc::Real>(1e-12) * max_norm_diff));
     EXPECT_LE(
             max_norm_error_integ,
-            std::max(error_bounds.error_bound_on_int(h, s_degree), 1.0e-14 * max_norm_int));
+            std::max(error_bounds.error_bound_on_int(h, s_degree), static_cast<ddc::Real>(1.0e-14) * max_norm_int));
     EXPECT_LE(
             max_norm_error_quadrature_integ,
-            std::max(error_bounds.error_bound_on_int(h, s_degree), 1.0e-14 * max_norm_int));
+            std::max(error_bounds.error_bound_on_int(h, s_degree), static_cast<ddc::Real>(1.0e-14) * max_norm_int));
 }
 
 TEST(PeriodicSplineBuilderTest, Identity)

@@ -7,6 +7,7 @@
 #include <array>
 #include <cassert>
 #include <cstddef>
+#include <limits>
 #include <tuple>
 #include <type_traits>
 
@@ -486,8 +487,8 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<CDim, D>::
     Real offset;
     int jmin;
 
-    KOKKOS_ASSERT(x - rmin() >= -length() * 1e-14)
-    KOKKOS_ASSERT(rmax() - x >= -length() * 1e-14)
+    KOKKOS_ASSERT(x - rmin() >= -length() * 100 * std::numeric_limits<Real>::epsilon())
+    KOKKOS_ASSERT(rmax() - x >= -length() * 100 * std::numeric_limits<Real>::epsilon())
     // KOKKOS_ASSERT(n >= 0) as long as n is unsigned
     KOKKOS_ASSERT(n <= degree())
     KOKKOS_ASSERT(derivs.extent(0) == 1 + degree())
@@ -570,8 +571,8 @@ KOKKOS_INLINE_FUNCTION void UniformBSplines<CDim, D>::Impl<DDim, MemorySpace>::g
         Real& offset,
         ddc::Coordinate<CDim> const& x) const
 {
-    KOKKOS_ASSERT(x - rmin() >= -length() * 1e-14)
-    KOKKOS_ASSERT(rmax() - x >= -length() * 1e-14)
+    KOKKOS_ASSERT(x - rmin() >= -length() * 100 * std::numeric_limits<Real>::epsilon())
+    KOKKOS_ASSERT(rmax() - x >= -length() * 100 * std::numeric_limits<Real>::epsilon())
 
     Real const inv_dx = inv_step();
     if (x <= rmin()) {

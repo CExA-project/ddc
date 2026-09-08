@@ -39,7 +39,7 @@ struct NonUniformBsplinesKnots : NonUniformPointSampling<typename T::continuous_
  * @tparam CDim The tag identifying the continuous dimension on which the support of the B-spline functions are defined.
  * @tparam D The degree of the B-splines.
  */
-template <class CDim, std::size_t D>
+template <class CDim, std::size_t D, bool Periodic = CDim::PERIODIC>
 class NonUniformBSplines : detail::NonUniformBSplinesBase
 {
     static_assert(D > 0, "Parameter `D` must be positive");
@@ -66,7 +66,7 @@ public:
      */
     static constexpr bool is_periodic() noexcept
     {
-        return CDim::PERIODIC;
+        return Periodic;
     }
 
     /** @brief Indicates if the B-splines are uniform or not (this is not the case here).
@@ -411,10 +411,10 @@ concept non_uniform_bsplines = is_non_uniform_bsplines_v<DDim>;
 
 }
 
-template <class CDim, std::size_t D>
+template <class CDim, std::size_t D, bool Periodic>
 template <class DDim, class MemorySpace>
 template <class RandomIt>
-NonUniformBSplines<CDim, D>::Impl<DDim, MemorySpace>::Impl(
+NonUniformBSplines<CDim, D, Periodic>::Impl<DDim, MemorySpace>::Impl(
         RandomIt const breaks_begin,
         RandomIt const breaks_end)
     : m_knot_domain(
@@ -456,9 +456,9 @@ NonUniformBSplines<CDim, D>::Impl<DDim, MemorySpace>::Impl(
     ddc::init_discrete_space<knot_discrete_dimension_type>(knots);
 }
 
-template <class CDim, std::size_t D>
+template <class CDim, std::size_t D, bool Periodic>
 template <class DDim, class MemorySpace>
-KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<CDim, D>::
+KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<CDim, D, Periodic>::
         Impl<DDim, MemorySpace>::eval_basis(
                 Kokkos::mdspan<double, Kokkos::dextents<std::size_t, 1>> values,
                 ddc::Coordinate<CDim> const& x) const
@@ -498,9 +498,9 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<CDim, D>::
     return get_first_bspline_in_cell(icell);
 }
 
-template <class CDim, std::size_t D>
+template <class CDim, std::size_t D, bool Periodic>
 template <class DDim, class MemorySpace>
-KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<CDim, D>::
+KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<CDim, D, Periodic>::
         Impl<DDim, MemorySpace>::eval_deriv(
                 Kokkos::mdspan<double, Kokkos::dextents<std::size_t, 1>> derivs,
                 ddc::Coordinate<CDim> const& x) const
@@ -560,9 +560,9 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<CDim, D>::
     return get_first_bspline_in_cell(icell);
 }
 
-template <class CDim, std::size_t D>
+template <class CDim, std::size_t D, bool Periodic>
 template <class DDim, class MemorySpace>
-KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<CDim, D>::
+KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<CDim, D, Periodic>::
         Impl<DDim, MemorySpace>::eval_basis_and_n_derivs(
                 Kokkos::mdspan<double, Kokkos::dextents<std::size_t, 2>> const derivs,
                 ddc::Coordinate<CDim> const& x,
@@ -667,11 +667,12 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<CDim, D>::
     return get_first_bspline_in_cell(icell);
 }
 
-template <class CDim, std::size_t D>
+template <class CDim, std::size_t D, bool Periodic>
 template <class DDim, class MemorySpace>
 KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<NonUniformBsplinesKnots<DDim>> NonUniformBSplines<
         CDim,
-        D>::Impl<DDim, MemorySpace>::find_cell_start(ddc::Coordinate<CDim> const& x) const
+        D,
+        Periodic>::Impl<DDim, MemorySpace>::find_cell_start(ddc::Coordinate<CDim> const& x) const
 {
     KOKKOS_ASSERT(x - rmin() >= -length() * 1e-14)
     KOKKOS_ASSERT(rmax() - x >= -length() * 1e-14)

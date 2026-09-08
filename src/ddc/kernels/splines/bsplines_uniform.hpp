@@ -43,7 +43,7 @@ struct UniformBsplinesKnots : UniformPointSampling<typename T::continuous_dimens
  * @tparam CDim The tag identifying the continuous dimension on which the support of the B-spline functions are defined.
  * @tparam D The degree of the B-splines.
  */
-template <class CDim, std::size_t D>
+template <class CDim, std::size_t D, bool Periodic = CDim::PERIODIC>
 class UniformBSplines : detail::UniformBSplinesBase
 {
     static_assert(D > 0, "Parameter `D` must be positive");
@@ -70,7 +70,7 @@ public:
      */
     static constexpr bool is_periodic() noexcept
     {
-        return CDim::PERIODIC;
+        return Periodic;
     }
 
     /** @brief Indicates if the B-splines are uniform or not (this is the case here).
@@ -391,9 +391,9 @@ concept uniform_bsplines = is_uniform_bsplines_v<DDim>;
 
 }
 
-template <class CDim, std::size_t D>
+template <class CDim, std::size_t D, bool Periodic>
 template <class DDim, class MemorySpace>
-KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<CDim, D>::
+KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<CDim, D, Periodic>::
         Impl<DDim, MemorySpace>::eval_basis(
                 Kokkos::mdspan<double, Kokkos::dextents<std::size_t, 1>> values,
                 ddc::Coordinate<CDim> const& x,
@@ -427,9 +427,9 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<CDim, D>::
     return m_reference + jmin;
 }
 
-template <class CDim, std::size_t D>
+template <class CDim, std::size_t D, bool Periodic>
 template <class DDim, class MemorySpace>
-KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<CDim, D>::
+KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<CDim, D, Periodic>::
         Impl<DDim, MemorySpace>::eval_deriv(
                 Kokkos::mdspan<double, Kokkos::dextents<std::size_t, 1>> derivs,
                 ddc::Coordinate<CDim> const& x) const
@@ -474,9 +474,9 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<CDim, D>::
     return m_reference + jmin;
 }
 
-template <class CDim, std::size_t D>
+template <class CDim, std::size_t D, bool Periodic>
 template <class DDim, class MemorySpace>
-KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<CDim, D>::
+KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<CDim, D, Periodic>::
         Impl<DDim, MemorySpace>::eval_basis_and_n_derivs(
                 Kokkos::mdspan<double, Kokkos::dextents<std::size_t, 2>> const derivs,
                 ddc::Coordinate<CDim> const& x,
@@ -567,12 +567,10 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<CDim, D>::
     return m_reference + jmin;
 }
 
-template <class CDim, std::size_t D>
+template <class CDim, std::size_t D, bool Periodic>
 template <class DDim, class MemorySpace>
-KOKKOS_INLINE_FUNCTION void UniformBSplines<CDim, D>::Impl<DDim, MemorySpace>::get_icell_and_offset(
-        int& icell,
-        double& offset,
-        ddc::Coordinate<CDim> const& x) const
+KOKKOS_INLINE_FUNCTION void UniformBSplines<CDim, D, Periodic>::Impl<DDim, MemorySpace>::
+        get_icell_and_offset(int& icell, double& offset, ddc::Coordinate<CDim> const& x) const
 {
     KOKKOS_ASSERT(x - rmin() >= -length() * 1e-14)
     KOKKOS_ASSERT(rmax() - x >= -length() * 1e-14)

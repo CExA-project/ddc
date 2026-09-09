@@ -159,7 +159,7 @@ void test_deriv(
     ddc::Real const max_norm_error_diff = ddc::parallel_transform_reduce(
             exec_space,
             spline_eval_deriv.domain(),
-            ddc::Real(0.),
+            static_cast<ddc::Real>(0.),
             ddc::reducer::max<ddc::Real>(),
             KOKKOS_LAMBDA(domain::discrete_element_type const e) {
                 Coord<I1> const x = ddc::coordinate(ddc::DiscreteElement<DDimI1>(e));

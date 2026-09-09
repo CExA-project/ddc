@@ -295,7 +295,7 @@ void TestBatchedNd1dSpline()
     ddc::Real const max_norm_error = ddc::parallel_transform_reduce(
             exec_space,
             spline_eval.domain(),
-            ddc::Real(0.),
+            static_cast<ddc::Real>(0.),
             ddc::reducer::max<ddc::Real>(),
             KOKKOS_LAMBDA(DElem<DDims...> const e) {
                 return Kokkos::abs(spline_eval(e) - vals(e));
@@ -304,7 +304,7 @@ void TestBatchedNd1dSpline()
     ddc::Real const max_norm_error_diff = ddc::parallel_transform_reduce(
             exec_space,
             spline_eval_deriv.domain(),
-            ddc::Real(0.),
+            static_cast<ddc::Real>(0.),
             ddc::reducer::max<ddc::Real>(),
             KOKKOS_LAMBDA(DElem<DDims...> const e) {
                 Coord<I> const x = ddc::coordinate(DElem<DDimI>(e));
@@ -313,7 +313,7 @@ void TestBatchedNd1dSpline()
     ddc::Real const max_norm_error_integ = ddc::parallel_transform_reduce(
             exec_space,
             spline_eval_integrals.domain(),
-            ddc::Real(0.),
+            static_cast<ddc::Real>(0.),
             ddc::reducer::max<ddc::Real>(),
             KOKKOS_LAMBDA(
                     decltype(spline_builder)::template batch_domain_type<

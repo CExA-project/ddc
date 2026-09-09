@@ -79,8 +79,8 @@ struct PolynomialEvaluator
             ddc::Real result(0.0);
             int const start = derivative < 0 ? 0 : derivative;
             for (int i(start); i < Degree + 1; ++i) {
-                ddc::Real const v = ddc::Real(falling_factorial(i, derivative))
-                                    * Kokkos::pow(x, i - derivative);
+                ddc::Real const v
+                        = falling_factorial(i, derivative) * Kokkos::pow(x, i - derivative);
                 result += m_coeffs[i] * v;
             }
             return result;

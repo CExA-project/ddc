@@ -186,7 +186,7 @@ void TestPeriodicitySplineBuilder()
     ddc::Real const max_norm_error = ddc::parallel_transform_reduce(
             exec_space,
             spline_eval.domain(),
-            ddc::Real(0.),
+            static_cast<ddc::Real>(0.),
             ddc::reducer::max<ddc::Real>(),
             KOKKOS_LAMBDA(DElem<DDim<X>> const e) {
                 return Kokkos::abs(

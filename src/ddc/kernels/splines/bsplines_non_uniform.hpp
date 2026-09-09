@@ -467,8 +467,8 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<CDim, D>::
     std::array<Real, degree()> left;
     std::array<Real, degree()> right;
 
-    KOKKOS_ASSERT(x - rmin() >= -length() * 100 * Kokkos::Experimental::epsilon_v<Real>)
-    KOKKOS_ASSERT(rmax() - x >= -length() * 100 * Kokkos::Experimental::epsilon_v<Real>)
+    KOKKOS_ASSERT(x - rmin() >= -length() * 100 * std::numeric_limits<Real>::epsilon())
+    KOKKOS_ASSERT(rmax() - x >= -length() * 100 * std::numeric_limits<Real>::epsilon())
     KOKKOS_ASSERT(values.size() == degree() + 1)
 
     // 1. Compute cell index 'icell'
@@ -477,10 +477,9 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<CDim, D>::
     KOKKOS_ASSERT(icell >= m_break_point_domain.front())
     KOKKOS_ASSERT(icell <= m_break_point_domain.back())
     KOKKOS_ASSERT(
-            ddc::coordinate(icell) - x <= length() * 100 * Kokkos::Experimental::epsilon_v<Real>)
+            ddc::coordinate(icell) - x <= length() * 100 * std::numeric_limits<Real>::epsilon())
     KOKKOS_ASSERT(
-            x - ddc::coordinate(icell + 1)
-            <= length() * 100 * Kokkos::Experimental::epsilon_v<Real>)
+            x - ddc::coordinate(icell + 1) <= length() * 100 * std::numeric_limits<Real>::epsilon())
 
     // 2. Compute values of B-splines with support over cell 'icell'
     Real temp;
@@ -508,8 +507,8 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<CDim, D>::
     std::array<Real, degree()> left;
     std::array<Real, degree()> right;
 
-    KOKKOS_ASSERT(x - rmin() >= -length() * 100 * Kokkos::Experimental::epsilon_v<Real>)
-    KOKKOS_ASSERT(rmax() - x >= -length() * 100 * Kokkos::Experimental::epsilon_v<Real>)
+    KOKKOS_ASSERT(x - rmin() >= -length() * 100 * std::numeric_limits<Real>::epsilon())
+    KOKKOS_ASSERT(rmax() - x >= -length() * 100 * std::numeric_limits<Real>::epsilon())
     KOKKOS_ASSERT(derivs.size() == degree() + 1)
 
     // 1. Compute cell index 'icell'
@@ -518,10 +517,9 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<CDim, D>::
     KOKKOS_ASSERT(icell >= m_break_point_domain.front())
     KOKKOS_ASSERT(icell <= m_break_point_domain.back())
     KOKKOS_ASSERT(
-            ddc::coordinate(icell) - x <= length() * 100 * Kokkos::Experimental::epsilon_v<Real>)
+            ddc::coordinate(icell) - x <= length() * 100 * std::numeric_limits<Real>::epsilon())
     KOKKOS_ASSERT(
-            x - ddc::coordinate(icell + 1)
-            <= length() * 100 * Kokkos::Experimental::epsilon_v<Real>)
+            x - ddc::coordinate(icell + 1) <= length() * 100 * std::numeric_limits<Real>::epsilon())
 
     // 2. Compute values of derivatives of B-splines with support over cell 'icell'
 
@@ -581,8 +579,8 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<CDim, D>::
     Kokkos::mdspan<Real, Kokkos::extents<std::size_t, degree() + 1, degree() + 1>> const ndu(
             ndu_ptr.data());
 
-    KOKKOS_ASSERT(x - rmin() >= -length() * 100 * Kokkos::Experimental::epsilon_v<Real>)
-    KOKKOS_ASSERT(rmax() - x >= -length() * 100 * Kokkos::Experimental::epsilon_v<Real>)
+    KOKKOS_ASSERT(x - rmin() >= -length() * 100 * std::numeric_limits<Real>::epsilon())
+    KOKKOS_ASSERT(rmax() - x >= -length() * 100 * std::numeric_limits<Real>::epsilon())
     // KOKKOS_ASSERT(n >= 0) as long as n is unsigned
     KOKKOS_ASSERT(n <= degree())
     KOKKOS_ASSERT(derivs.extent(0) == 1 + degree())
@@ -594,10 +592,9 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<CDim, D>::
     KOKKOS_ASSERT(icell >= m_break_point_domain.front())
     KOKKOS_ASSERT(icell <= m_break_point_domain.back())
     KOKKOS_ASSERT(
-            ddc::coordinate(icell) - x <= length() * 100 * Kokkos::Experimental::epsilon_v<Real>)
+            ddc::coordinate(icell) - x <= length() * 100 * std::numeric_limits<Real>::epsilon())
     KOKKOS_ASSERT(
-            x - ddc::coordinate(icell + 1)
-            <= length() * 100 * Kokkos::Experimental::epsilon_v<Real>)
+            x - ddc::coordinate(icell + 1) <= length() * 100 * std::numeric_limits<Real>::epsilon())
 
     // 2. Compute nonzero basis functions and knot differences for splines
     //    up to degree (degree-1) which are needed to compute derivative
@@ -679,8 +676,8 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<NonUniformBsplinesKnots<DDim>> NonUn
         CDim,
         D>::Impl<DDim, MemorySpace>::find_cell_start(ddc::Coordinate<CDim> const& x) const
 {
-    KOKKOS_ASSERT(x - rmin() >= -length() * 100 * Kokkos::Experimental::epsilon_v<Real>)
-    KOKKOS_ASSERT(rmax() - x >= -length() * 100 * Kokkos::Experimental::epsilon_v<Real>)
+    KOKKOS_ASSERT(x - rmin() >= -length() * 100 * std::numeric_limits<Real>::epsilon())
+    KOKKOS_ASSERT(rmax() - x >= -length() * 100 * std::numeric_limits<Real>::epsilon())
 
     if (x <= rmin()) {
         return m_break_point_domain.front();

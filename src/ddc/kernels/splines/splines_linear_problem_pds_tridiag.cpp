@@ -75,7 +75,7 @@ void SplinesLinearProblemPDSTridiag<ExecSpace>::set_element(
     if (j - i < 2) {
         m_q.view_host()(j - i, i) = aij;
     } else {
-        assert(std::fabs(aij) < 10 * Kokkos::Experimental::epsilon_v<Real>);
+        assert(std::fabs(aij) < 10 * std::numeric_limits<Real>::epsilon());
     }
 }
 

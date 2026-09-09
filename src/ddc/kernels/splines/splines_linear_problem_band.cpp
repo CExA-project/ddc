@@ -103,7 +103,7 @@ void SplinesLinearProblemBand<ExecSpace>::set_element(
         && i < std::min(size(), j + m_kl + 1)) {
         m_q.view_host()(band_storage_row_index(i, j), j) = aij;
     } else {
-        assert(std::fabs(aij) < 10 * Kokkos::Experimental::epsilon_v<Real>);
+        assert(std::fabs(aij) < 10 * std::numeric_limits<Real>::epsilon());
     }
 }
 

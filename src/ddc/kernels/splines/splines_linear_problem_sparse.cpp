@@ -193,7 +193,7 @@ public:
         // Create the solver factory
         std::shared_ptr const residual_criterion
                 = gko::stop::ResidualNorm<Real>::build()
-                          .with_reduction_factor(10 * Kokkos::Experimental::epsilon_v<Real>)
+                          .with_reduction_factor(10 * std::numeric_limits<Real>::epsilon())
                           .on(gko_exec);
 
         std::shared_ptr const iterations_criterion

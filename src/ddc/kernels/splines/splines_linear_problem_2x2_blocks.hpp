@@ -88,7 +88,7 @@ public:
      */
     std::unique_ptr<Coo> dense2coo(
             Kokkos::View<Real const**, Kokkos::LayoutRight, memory_space> dense_matrix,
-            Real tol = 100 * Kokkos::Experimental::epsilon_v<Real>);
+            Real tol = 100 * std::numeric_limits<Real>::epsilon());
 
 private:
     /// @brief Compute the Schur complement delta - lambda*Q^-1*gamma.

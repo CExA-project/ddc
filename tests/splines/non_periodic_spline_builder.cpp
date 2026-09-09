@@ -232,7 +232,7 @@ void TestNonPeriodicSplineBuilderTestIdentity()
     ddc::Real const quadrature_integral_derivs_xmin = ddc::parallel_transform_reduce(
             execution_space(),
             quadrature_coefficients_derivs_xmin.domain(),
-            ddc::Real(0.0),
+            static_cast<ddc::Real>(0.0),
             ddc::reducer::sum<ddc::Real>(),
             KOKKOS_LAMBDA(ddc::DiscreteElement<ddc::Deriv<DimX>> const ix) {
                 return quadrature_coefficients_derivs_xmin(ix) * derivs_lhs(ix);
@@ -243,7 +243,7 @@ void TestNonPeriodicSplineBuilderTestIdentity()
     ddc::Real quadrature_integral = ddc::parallel_transform_reduce(
             execution_space(),
             quadrature_coefficients.domain(),
-            ddc::Real(0.0),
+            static_cast<ddc::Real>(0.0),
             ddc::reducer::sum<ddc::Real>(),
             KOKKOS_LAMBDA(ddc::DiscreteElement<DDimX> const ix) {
                 return quadrature_coefficients(ix) * yvals(ix);
@@ -254,7 +254,7 @@ void TestNonPeriodicSplineBuilderTestIdentity()
     ddc::Real const quadrature_integral_derivs_xmax = ddc::parallel_transform_reduce(
             execution_space(),
             quadrature_coefficients_derivs_xmax.domain(),
-            ddc::Real(0.0),
+            static_cast<ddc::Real>(0.0),
             ddc::reducer::sum<ddc::Real>(),
             KOKKOS_LAMBDA(ddc::DiscreteElement<ddc::Deriv<DimX>> const ix) {
                 return quadrature_coefficients_derivs_xmax(ix) * derivs_rhs(ix);
@@ -268,7 +268,7 @@ void TestNonPeriodicSplineBuilderTestIdentity()
     ddc::Real const max_norm_error = ddc::parallel_transform_reduce(
             execution_space(),
             interpolation_domain,
-            ddc::Real(0.0),
+            static_cast<ddc::Real>(0.0),
             ddc::reducer::max<ddc::Real>(),
             KOKKOS_LAMBDA(DElemX const ix) {
                 ddc::Real const error = spline_eval(ix) - yvals(ix);
@@ -277,7 +277,7 @@ void TestNonPeriodicSplineBuilderTestIdentity()
     ddc::Real const max_norm_error_diff = ddc::parallel_transform_reduce(
             execution_space(),
             interpolation_domain,
-            ddc::Real(0.0),
+            static_cast<ddc::Real>(0.0),
             ddc::reducer::max<ddc::Real>(),
             KOKKOS_LAMBDA(DElemX const ix) {
                 CoordX const x = ddc::coordinate(ix);

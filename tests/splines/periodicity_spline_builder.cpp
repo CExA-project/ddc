@@ -199,7 +199,9 @@ void TestPeriodicitySplineBuilder()
     SplineErrorBounds<evaluator_type<DDim<X>>> const error_bounds(evaluator);
     EXPECT_LE(
             max_norm_error,
-            std::max(error_bounds.error_bound(dx<X>(ncells), s_degree), static_cast<ddc::Real>(1.0e-14) * max_norm));
+            std::
+                    max(error_bounds.error_bound(dx<X>(ncells), s_degree),
+                        static_cast<ddc::Real>(1.0e-14) * max_norm));
 }
 
 } // namespace anonymous_namespace_workaround_periodicity_spline_builder_cpp

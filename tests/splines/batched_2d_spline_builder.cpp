@@ -340,13 +340,17 @@ void TestBatched2dSpline()
                 });
     }
 
-    ddc::Chunk derivs_mixed_lhs_lhs_alloc(dom_derivs, ddc::KokkosAllocator<ddc::Real, MemorySpace>());
+    ddc::Chunk
+            derivs_mixed_lhs_lhs_alloc(dom_derivs, ddc::KokkosAllocator<ddc::Real, MemorySpace>());
     ddc::ChunkSpan const derivs_mixed_lhs_lhs = derivs_mixed_lhs_lhs_alloc.span_view();
-    ddc::Chunk derivs_mixed_rhs_lhs_alloc(dom_derivs, ddc::KokkosAllocator<ddc::Real, MemorySpace>());
+    ddc::Chunk
+            derivs_mixed_rhs_lhs_alloc(dom_derivs, ddc::KokkosAllocator<ddc::Real, MemorySpace>());
     ddc::ChunkSpan const derivs_mixed_rhs_lhs = derivs_mixed_rhs_lhs_alloc.span_view();
-    ddc::Chunk derivs_mixed_lhs_rhs_alloc(dom_derivs, ddc::KokkosAllocator<ddc::Real, MemorySpace>());
+    ddc::Chunk
+            derivs_mixed_lhs_rhs_alloc(dom_derivs, ddc::KokkosAllocator<ddc::Real, MemorySpace>());
     ddc::ChunkSpan const derivs_mixed_lhs_rhs = derivs_mixed_lhs_rhs_alloc.span_view();
-    ddc::Chunk derivs_mixed_rhs_rhs_alloc(dom_derivs, ddc::KokkosAllocator<ddc::Real, MemorySpace>());
+    ddc::Chunk
+            derivs_mixed_rhs_rhs_alloc(dom_derivs, ddc::KokkosAllocator<ddc::Real, MemorySpace>());
     ddc::ChunkSpan const derivs_mixed_rhs_rhs = derivs_mixed_rhs_rhs_alloc.span_view();
 
     if (s_sbcl == ddc::SplineBuilderClosure::HERMITE) {

@@ -512,16 +512,20 @@ void TestBatchedNd3dSpline()
             = derivs_mixed_rhs1_rhs2_view_alloc.span_view();
 
     if (s_sbcl == ddc::SplineBuilderClosure::HERMITE) {
-        ddc::Chunk derivs_mixed_lhs1_lhs2_host_alloc(derivs_domain12, ddc::HostAllocator<ddc::Real>());
+        ddc::Chunk
+                derivs_mixed_lhs1_lhs2_host_alloc(derivs_domain12, ddc::HostAllocator<ddc::Real>());
         ddc::ChunkSpan const derivs_mixed_lhs1_lhs2_host
                 = derivs_mixed_lhs1_lhs2_host_alloc.span_view();
-        ddc::Chunk derivs_mixed_rhs1_lhs2_host_alloc(derivs_domain12, ddc::HostAllocator<ddc::Real>());
+        ddc::Chunk
+                derivs_mixed_rhs1_lhs2_host_alloc(derivs_domain12, ddc::HostAllocator<ddc::Real>());
         ddc::ChunkSpan const derivs_mixed_rhs1_lhs2_host
                 = derivs_mixed_rhs1_lhs2_host_alloc.span_view();
-        ddc::Chunk derivs_mixed_lhs1_rhs2_host_alloc(derivs_domain12, ddc::HostAllocator<ddc::Real>());
+        ddc::Chunk
+                derivs_mixed_lhs1_rhs2_host_alloc(derivs_domain12, ddc::HostAllocator<ddc::Real>());
         ddc::ChunkSpan const derivs_mixed_lhs1_rhs2_host
                 = derivs_mixed_lhs1_rhs2_host_alloc.span_view();
-        ddc::Chunk derivs_mixed_rhs1_rhs2_host_alloc(derivs_domain12, ddc::HostAllocator<ddc::Real>());
+        ddc::Chunk
+                derivs_mixed_rhs1_rhs2_host_alloc(derivs_domain12, ddc::HostAllocator<ddc::Real>());
         ddc::ChunkSpan const derivs_mixed_rhs1_rhs2_host
                 = derivs_mixed_rhs1_rhs2_host_alloc.span_view();
 
@@ -592,16 +596,20 @@ void TestBatchedNd3dSpline()
             = derivs_mixed_rhs2_rhs3_view_alloc.span_view();
 
     if (s_sbcl == ddc::SplineBuilderClosure::HERMITE) {
-        ddc::Chunk derivs_mixed_lhs2_lhs3_host_alloc(derivs_domain23, ddc::HostAllocator<ddc::Real>());
+        ddc::Chunk
+                derivs_mixed_lhs2_lhs3_host_alloc(derivs_domain23, ddc::HostAllocator<ddc::Real>());
         ddc::ChunkSpan const derivs_mixed_lhs2_lhs3_host
                 = derivs_mixed_lhs2_lhs3_host_alloc.span_view();
-        ddc::Chunk derivs_mixed_rhs2_lhs3_host_alloc(derivs_domain23, ddc::HostAllocator<ddc::Real>());
+        ddc::Chunk
+                derivs_mixed_rhs2_lhs3_host_alloc(derivs_domain23, ddc::HostAllocator<ddc::Real>());
         ddc::ChunkSpan const derivs_mixed_rhs2_lhs3_host
                 = derivs_mixed_rhs2_lhs3_host_alloc.span_view();
-        ddc::Chunk derivs_mixed_lhs2_rhs3_host_alloc(derivs_domain23, ddc::HostAllocator<ddc::Real>());
+        ddc::Chunk
+                derivs_mixed_lhs2_rhs3_host_alloc(derivs_domain23, ddc::HostAllocator<ddc::Real>());
         ddc::ChunkSpan const derivs_mixed_lhs2_rhs3_host
                 = derivs_mixed_lhs2_rhs3_host_alloc.span_view();
-        ddc::Chunk derivs_mixed_rhs2_rhs3_host_alloc(derivs_domain23, ddc::HostAllocator<ddc::Real>());
+        ddc::Chunk
+                derivs_mixed_rhs2_rhs3_host_alloc(derivs_domain23, ddc::HostAllocator<ddc::Real>());
         ddc::ChunkSpan const derivs_mixed_rhs2_rhs3_host
                 = derivs_mixed_rhs2_rhs3_host_alloc.span_view();
 
@@ -672,16 +680,20 @@ void TestBatchedNd3dSpline()
             = derivs_mixed_rhs1_rhs3_view_alloc.span_view();
 
     if (s_sbcl == ddc::SplineBuilderClosure::HERMITE) {
-        ddc::Chunk derivs_mixed_lhs1_lhs3_host_alloc(derivs_domain13, ddc::HostAllocator<ddc::Real>());
+        ddc::Chunk
+                derivs_mixed_lhs1_lhs3_host_alloc(derivs_domain13, ddc::HostAllocator<ddc::Real>());
         ddc::ChunkSpan const derivs_mixed_lhs1_lhs3_host
                 = derivs_mixed_lhs1_lhs3_host_alloc.span_view();
-        ddc::Chunk derivs_mixed_rhs1_lhs3_host_alloc(derivs_domain13, ddc::HostAllocator<ddc::Real>());
+        ddc::Chunk
+                derivs_mixed_rhs1_lhs3_host_alloc(derivs_domain13, ddc::HostAllocator<ddc::Real>());
         ddc::ChunkSpan const derivs_mixed_rhs1_lhs3_host
                 = derivs_mixed_rhs1_lhs3_host_alloc.span_view();
-        ddc::Chunk derivs_mixed_lhs1_rhs3_host_alloc(derivs_domain13, ddc::HostAllocator<ddc::Real>());
+        ddc::Chunk
+                derivs_mixed_lhs1_rhs3_host_alloc(derivs_domain13, ddc::HostAllocator<ddc::Real>());
         ddc::ChunkSpan const derivs_mixed_lhs1_rhs3_host
                 = derivs_mixed_lhs1_rhs3_host_alloc.span_view();
-        ddc::Chunk derivs_mixed_rhs1_rhs3_host_alloc(derivs_domain13, ddc::HostAllocator<ddc::Real>());
+        ddc::Chunk
+                derivs_mixed_rhs1_rhs3_host_alloc(derivs_domain13, ddc::HostAllocator<ddc::Real>());
         ddc::ChunkSpan const derivs_mixed_rhs1_rhs3_host
                 = derivs_mixed_rhs1_rhs3_host_alloc.span_view();
 

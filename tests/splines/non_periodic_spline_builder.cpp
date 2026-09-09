@@ -187,8 +187,9 @@ void TestNonPeriodicSplineBuilderTestIdentity()
             interpolation_domain,
             KOKKOS_LAMBDA(DElemX const ix) { coords_eval(ix) = ddc::coordinate(ix); });
 
-    ddc::Chunk
-            spline_eval_alloc(interpolation_domain, ddc::KokkosAllocator<ddc::Real, memory_space>());
+    ddc::Chunk spline_eval_alloc(
+            interpolation_domain,
+            ddc::KokkosAllocator<ddc::Real, memory_space>());
     ddc::ChunkSpan const spline_eval(spline_eval_alloc.span_view());
     spline_evaluator(spline_eval.span_view(), coords_eval.span_cview(), coef.span_cview());
 
@@ -304,16 +305,24 @@ void TestNonPeriodicSplineBuilderTestIdentity()
         ddc::Real const h = (xN - x0) / ncells;
         EXPECT_LE(
                 max_norm_error,
-                std::max(error_bounds.error_bound(h, s_degree), static_cast<ddc::Real>(1.0e-14) * max_norm));
+                std::
+                        max(error_bounds.error_bound(h, s_degree),
+                            static_cast<ddc::Real>(1.0e-14) * max_norm));
         EXPECT_LE(
                 max_norm_error_diff,
-                std::max(error_bounds.error_bound_on_deriv(h, s_degree), static_cast<ddc::Real>(1e-12) * max_norm_diff));
+                std::
+                        max(error_bounds.error_bound_on_deriv(h, s_degree),
+                            static_cast<ddc::Real>(1e-12) * max_norm_diff));
         EXPECT_LE(
                 max_norm_error_integ,
-                std::max(error_bounds.error_bound_on_int(h, s_degree), static_cast<ddc::Real>(1.0e-14) * max_norm_int));
+                std::
+                        max(error_bounds.error_bound_on_int(h, s_degree),
+                            static_cast<ddc::Real>(1.0e-14) * max_norm_int));
         EXPECT_LE(
                 max_norm_error_quadrature_integ,
-                std::max(error_bounds.error_bound_on_int(h, s_degree), static_cast<ddc::Real>(1.0e-14) * max_norm_int));
+                std::
+                        max(error_bounds.error_bound_on_int(h, s_degree),
+                            static_cast<ddc::Real>(1.0e-14) * max_norm_int));
     }
 }
 

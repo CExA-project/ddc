@@ -278,7 +278,8 @@ void TestBatchedNd1dSpline()
     ddc::ChunkSpan const spline_eval = spline_eval_alloc.span_view();
     ddc::Chunk spline_eval_deriv_alloc(dom_vals, ddc::KokkosAllocator<ddc::Real, MemorySpace>());
     ddc::ChunkSpan const spline_eval_deriv = spline_eval_deriv_alloc.span_view();
-    ddc::Chunk spline_eval_integrals_alloc(dom_batch, ddc::KokkosAllocator<ddc::Real, MemorySpace>());
+    ddc::Chunk
+            spline_eval_integrals_alloc(dom_batch, ddc::KokkosAllocator<ddc::Real, MemorySpace>());
     ddc::ChunkSpan const spline_eval_integrals = spline_eval_integrals_alloc.span_view();
 
     // Call spline_evaluator on the same mesh we started with
@@ -329,7 +330,9 @@ void TestBatchedNd1dSpline()
     SplineErrorBounds<evaluator_type<DDimI>> const error_bounds(evaluator);
     EXPECT_LE(
             max_norm_error,
-            std::max(error_bounds.error_bound(dx<I>(ncells), s_degree), static_cast<ddc::Real>(1.0e-14) * max_norm));
+            std::
+                    max(error_bounds.error_bound(dx<I>(ncells), s_degree),
+                        static_cast<ddc::Real>(1.0e-14) * max_norm));
     EXPECT_LE(
             max_norm_error_diff,
             std::

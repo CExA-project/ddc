@@ -99,9 +99,8 @@ template <class ExecSpace>
 SplinesLinearProblem2x2Blocks<ExecSpace>::~SplinesLinearProblem2x2Blocks() = default;
 
 template <class ExecSpace>
-Real SplinesLinearProblem2x2Blocks<ExecSpace>::get_element(
-        std::size_t const i,
-        std::size_t const j) const
+Real SplinesLinearProblem2x2Blocks<ExecSpace>::get_element(std::size_t const i, std::size_t const j)
+        const
 {
     assert(i < size());
     assert(j < size());

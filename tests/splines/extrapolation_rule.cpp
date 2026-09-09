@@ -327,7 +327,8 @@ void TestExtrapolationRuleSpline()
                         vals.template domain<DDimI1>()))::discrete_element_type const
                         e_without_interest(e);
 #    if defined(BC_PERIODIC)
-                ddc::Real const tmp = vals(vals.template domain<DDimI1>().back(), e_without_interest);
+                ddc::Real const tmp
+                        = vals(vals.template domain<DDimI1>().back(), e_without_interest);
 #    else
                 ddc::Real tmp;
                 if (Coord<I2>(coords_eval(e)) > xn<I2>()) {

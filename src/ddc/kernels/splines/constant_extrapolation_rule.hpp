@@ -155,9 +155,14 @@ public:
         static_assert(
                 in_tags_v<DimI, to_type_seq_t<CoordType>>
                 && in_tags_v<DimNI, to_type_seq_t<CoordType>>);
+        using bsplines_ni_type = std::conditional_t<
+                std::is_same_v<typename BSplines1::continuous_dimension_type, DimNI>,
+                BSplines1,
+                BSplines2>;
+        static_assert(std::is_same_v<typename bsplines_ni_type::continuous_dimension_type, DimNI>);
 
         ddc::Coordinate<DimI, DimNI> eval_pos;
-        if constexpr (DimNI::PERIODIC) {
+        if constexpr (bsplines_ni_type::is_periodic()) {
             eval_pos = ddc::
                     Coordinate<DimI, DimNI>(m_eval_pos, ddc::Coordinate<DimNI>(coord_extrap));
         } else {

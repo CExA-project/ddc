@@ -138,14 +138,18 @@ TYPED_TEST(BSplinesFixture, PartitionOfUnityNonUniform)
 
 TEST(KnotDiscreteDimension, Type)
 {
-    struct DDim1 : ddc::UniformBSplines<struct X, 1>
+    struct X
+    {
+        static constexpr bool PERIODIC = false;
+    };
+    struct DDim1 : ddc::UniformBSplines<X, 1>
     {
     };
     EXPECT_TRUE((std::is_same_v<
                  ddc::knot_discrete_dimension_t<DDim1>,
                  ddc::UniformBsplinesKnots<DDim1>>));
 
-    struct DDim2 : ddc::NonUniformBSplines<struct X, 1>
+    struct DDim2 : ddc::NonUniformBSplines<X, 1>
     {
     };
     EXPECT_TRUE((std::is_same_v<

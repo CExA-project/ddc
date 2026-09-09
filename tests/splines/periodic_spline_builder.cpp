@@ -157,7 +157,7 @@ void TestPeriodicSplineBuilderTestIdentity()
     ddc::Real const quadrature_integral = ddc::parallel_transform_reduce(
             execution_space(),
             quadrature_coefficients.domain(),
-            ddc::Real(0.0),
+            static_cast<ddc::Real>(0.0),
             ddc::reducer::sum<ddc::Real>(),
             KOKKOS_LAMBDA(DElemX const ix) { return quadrature_coefficients(ix) * yvals(ix); });
 
@@ -165,7 +165,7 @@ void TestPeriodicSplineBuilderTestIdentity()
     ddc::Real const max_norm_error = ddc::parallel_transform_reduce(
             execution_space(),
             interpolation_domain,
-            ddc::Real(0.0),
+            static_cast<ddc::Real>(0.0),
             ddc::reducer::max<ddc::Real>(),
             KOKKOS_LAMBDA(DElemX const ix) {
                 ddc::Real const error = spline_eval(ix) - yvals(ix);
@@ -174,7 +174,7 @@ void TestPeriodicSplineBuilderTestIdentity()
     ddc::Real const max_norm_error_diff = ddc::parallel_transform_reduce(
             execution_space(),
             interpolation_domain,
-            ddc::Real(0.0),
+            static_cast<ddc::Real>(0.0),
             ddc::reducer::max<ddc::Real>(),
             KOKKOS_LAMBDA(DElemX const ix) {
                 CoordX const x = ddc::coordinate(ix);

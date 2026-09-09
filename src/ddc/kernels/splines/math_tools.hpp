@@ -7,9 +7,9 @@
 #include <array>
 #include <cstddef>
 
-#include <Kokkos_Core.hpp>
-
 #include <ddc/real_type.hpp>
+
+#include <Kokkos_Core.hpp>
 
 namespace ddc::detail {
 

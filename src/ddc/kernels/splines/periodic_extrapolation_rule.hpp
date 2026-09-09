@@ -4,10 +4,10 @@
 
 #pragma once
 
+#include <ddc/real_type.hpp>
+
 #include <Kokkos_Assert.hpp>
 #include <Kokkos_Macros.hpp>
-
-#include <ddc/real_type.hpp>
 
 namespace ddc {
 

@@ -14,17 +14,18 @@ template <class Evaluator>
 class SplineErrorBounds
 {
 private:
-    static constexpr std::array<ddc::Real, 10> tikhomirov_error_bound_array = std::array<ddc::Real, 10>(
-            {static_cast<ddc::Real>(1.0 / 2.0),
-             static_cast<ddc::Real>(1.0 / 8.0),
-             static_cast<ddc::Real>(1.0 / 24.0),
-             static_cast<ddc::Real>(5.0 / 384.0),
-             static_cast<ddc::Real>(1.0 / 240.0),
-             static_cast<ddc::Real>(61.0 / 46080.0),
-             static_cast<ddc::Real>(17.0 / 40320.0),
-             static_cast<ddc::Real>(277.0 / 2064384.0),
-             static_cast<ddc::Real>(31.0 / 725760.0),
-             static_cast<ddc::Real>(50521.0 / 3715891200.0)});
+    static constexpr std::array<ddc::Real, 10> tikhomirov_error_bound_array
+            = std::array<ddc::Real, 10>(
+                    {static_cast<ddc::Real>(1.0 / 2.0),
+                     static_cast<ddc::Real>(1.0 / 8.0),
+                     static_cast<ddc::Real>(1.0 / 24.0),
+                     static_cast<ddc::Real>(5.0 / 384.0),
+                     static_cast<ddc::Real>(1.0 / 240.0),
+                     static_cast<ddc::Real>(61.0 / 46080.0),
+                     static_cast<ddc::Real>(17.0 / 40320.0),
+                     static_cast<ddc::Real>(277.0 / 2064384.0),
+                     static_cast<ddc::Real>(31.0 / 725760.0),
+                     static_cast<ddc::Real>(50521.0 / 3715891200.0)});
 
     Evaluator m_evaluator;
 
@@ -66,7 +67,8 @@ public:
         return tikhomirov_error_bound(cell_width, degree, m_evaluator.max_norm(degree + 1));
     }
 
-    ddc::Real error_bound(ddc::Real cell_width1, ddc::Real cell_width2, int degree1, int degree2) const
+    ddc::Real error_bound(ddc::Real cell_width1, ddc::Real cell_width2, int degree1, int degree2)
+            const
     {
         ddc::Real const norm1 = m_evaluator.max_norm(degree1 + 1, 0);
         ddc::Real const norm2 = m_evaluator.max_norm(0, degree2 + 1);
@@ -95,8 +97,11 @@ public:
         return tikhomirov_error_bound(cell_width, degree - 1, m_evaluator.max_norm(degree + 1));
     }
 
-    ddc::Real error_bound_on_deriv_1(ddc::Real cell_width1, ddc::Real cell_width2, int degree1, int degree2)
-            const
+    ddc::Real error_bound_on_deriv_1(
+            ddc::Real cell_width1,
+            ddc::Real cell_width2,
+            int degree1,
+            int degree2) const
     {
         ddc::Real const norm1 = m_evaluator.max_norm(degree1 + 1, 0);
         ddc::Real const norm2 = m_evaluator.max_norm(0, degree2 + 1);
@@ -120,8 +125,11 @@ public:
                + tikhomirov_error_bound(cell_width3, degree3, norm3);
     }
 
-    ddc::Real error_bound_on_deriv_2(ddc::Real cell_width1, ddc::Real cell_width2, int degree1, int degree2)
-            const
+    ddc::Real error_bound_on_deriv_2(
+            ddc::Real cell_width1,
+            ddc::Real cell_width2,
+            int degree1,
+            int degree2) const
     {
         ddc::Real const norm1 = m_evaluator.max_norm(degree1 + 1, 0);
         ddc::Real const norm2 = m_evaluator.max_norm(0, degree2 + 1);
@@ -166,8 +174,11 @@ public:
      *       the correct asympthotic rate of convergence.
      *       The error constant may be overestimated.
      *******************************************************************************/
-    ddc::Real error_bound_on_deriv_12(ddc::Real cell_width1, ddc::Real cell_width2, int degree1, int degree2)
-            const
+    ddc::Real error_bound_on_deriv_12(
+            ddc::Real cell_width1,
+            ddc::Real cell_width2,
+            int degree1,
+            int degree2) const
     {
         ddc::Real const norm1 = m_evaluator.max_norm(degree1 + 1, 1);
         ddc::Real const norm2 = m_evaluator.max_norm(1, degree2 + 1);

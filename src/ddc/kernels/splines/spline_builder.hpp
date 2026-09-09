@@ -1144,14 +1144,12 @@ SplineBuilder<ExecSpace, MemorySpace, BSplines, InterpolationDDim, SBCLower, SBC
                     1);
 
     // Extract relevant subview
-    Kokkos::View<Real*, Kokkos::LayoutRight, MemorySpace> const integral_bsplines_mirror
-            = Kokkos::
-                    subview(integral_bsplines_mirror_with_additional_allocation,
-                            std::
-                                    pair {static_cast<std::size_t>(0),
-                                          integral_bsplines_without_periodic_additional_bsplines
-                                                  .size()},
-                            0);
+    Kokkos::View<Real*, Kokkos::LayoutRight, MemorySpace> const integral_bsplines_mirror = Kokkos::
+            subview(integral_bsplines_mirror_with_additional_allocation,
+                    std::
+                            pair {static_cast<std::size_t>(0),
+                                  integral_bsplines_without_periodic_additional_bsplines.size()},
+                    0);
 
     // Solve matrix equation A^t*X=integral_bsplines
     Kokkos::deep_copy(

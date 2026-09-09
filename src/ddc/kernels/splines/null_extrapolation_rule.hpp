@@ -4,9 +4,9 @@
 
 #pragma once
 
-#include <Kokkos_Macros.hpp>
-
 #include <ddc/real_type.hpp>
+
+#include <Kokkos_Macros.hpp>
 
 namespace ddc {
 

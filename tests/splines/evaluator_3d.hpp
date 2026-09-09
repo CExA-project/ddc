@@ -25,8 +25,10 @@ struct Evaluator3D
         {
         }
 
-        KOKKOS_FUNCTION ddc::Real operator()(ddc::Real const x, ddc::Real const y, ddc::Real const z)
-                const noexcept
+        KOKKOS_FUNCTION ddc::Real operator()(
+                ddc::Real const x,
+                ddc::Real const y,
+                ddc::Real const z) const noexcept
         {
             return m_eval_func1(x) * m_eval_func2(y) * m_eval_func3(z);
         }

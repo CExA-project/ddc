@@ -443,8 +443,8 @@ public:
     template <class Layout, class... CoordsDims>
     KOKKOS_FUNCTION Real operator()(
             ddc::Coordinate<CoordsDims...> const& coord_eval,
-            ddc::ChunkSpan<Real const, spline_domain_type, Layout, memory_space> const
-                    spline_coef) const
+            ddc::ChunkSpan<Real const, spline_domain_type, Layout, memory_space> const spline_coef)
+            const
     {
         return eval(coord_eval, spline_coef);
     }
@@ -476,8 +476,7 @@ public:
             class BatchedInterpolationDDom,
             class... CoordsDims>
     void operator()(
-            ddc::ChunkSpan<Real, BatchedInterpolationDDom, Layout1, memory_space> const
-                    spline_eval,
+            ddc::ChunkSpan<Real, BatchedInterpolationDDom, Layout1, memory_space> const spline_eval,
             ddc::ChunkSpan<
                     ddc::Coordinate<CoordsDims...> const,
                     BatchedInterpolationDDom,
@@ -531,8 +530,7 @@ public:
      */
     template <class Layout1, class Layout2, class BatchedInterpolationDDom>
     void operator()(
-            ddc::ChunkSpan<Real, BatchedInterpolationDDom, Layout1, memory_space> const
-                    spline_eval,
+            ddc::ChunkSpan<Real, BatchedInterpolationDDom, Layout1, memory_space> const spline_eval,
             ddc::ChunkSpan<
                     Real const,
                     batched_spline_domain_type<BatchedInterpolationDDom>,
@@ -584,11 +582,11 @@ public:
      * @return The derivative of the spline function at the desired coordinate.
      */
     template <class DElem, class Layout, class... CoordsDims>
-    KOKKOS_FUNCTION Real deriv(
-            DElem const& deriv_order,
-            ddc::Coordinate<CoordsDims...> const& coord_eval,
-            ddc::ChunkSpan<Real const, spline_domain_type, Layout, memory_space> const
-                    spline_coef) const
+    KOKKOS_FUNCTION Real
+    deriv(DElem const& deriv_order,
+          ddc::Coordinate<CoordsDims...> const& coord_eval,
+          ddc::ChunkSpan<Real const, spline_domain_type, Layout, memory_space> const spline_coef)
+            const
     {
         static_assert(is_discrete_element_v<DElem>);
         return eval_no_bc(deriv_order, coord_eval, spline_coef);
@@ -623,8 +621,7 @@ public:
             class... CoordsDims>
     void deriv(
             DElem const& deriv_order,
-            ddc::ChunkSpan<Real, BatchedInterpolationDDom, Layout1, memory_space> const
-                    spline_eval,
+            ddc::ChunkSpan<Real, BatchedInterpolationDDom, Layout1, memory_space> const spline_eval,
             ddc::ChunkSpan<
                     ddc::Coordinate<CoordsDims...> const,
                     BatchedInterpolationDDom,
@@ -683,8 +680,7 @@ public:
     template <class DElem, class Layout1, class Layout2, class BatchedInterpolationDDom>
     void deriv(
             DElem const& deriv_order,
-            ddc::ChunkSpan<Real, BatchedInterpolationDDom, Layout1, memory_space> const
-                    spline_eval,
+            ddc::ChunkSpan<Real, BatchedInterpolationDDom, Layout1, memory_space> const spline_eval,
             ddc::ChunkSpan<
                     Real const,
                     batched_spline_domain_type<BatchedInterpolationDDom>,
@@ -741,8 +737,8 @@ public:
     template <class Layout1, class Layout2, class BatchedDDom, class BatchedSplineDDom>
     void integrate(
             ddc::ChunkSpan<Real, BatchedDDom, Layout1, memory_space> const integrals,
-            ddc::ChunkSpan<Real const, BatchedSplineDDom, Layout2, memory_space> const
-                    spline_coef) const
+            ddc::ChunkSpan<Real const, BatchedSplineDDom, Layout2, memory_space> const spline_coef)
+            const
     {
         static_assert(
                 ddc::type_seq_contains_v<
@@ -812,10 +808,10 @@ private:
      * @see SplineBoundaryValue
      */
     template <class Layout, class... CoordsDims>
-    KOKKOS_INLINE_FUNCTION Real eval(
-            ddc::Coordinate<CoordsDims...> coord_eval,
-            ddc::ChunkSpan<Real const, spline_domain_type, Layout, memory_space> const
-                    spline_coef) const
+    KOKKOS_INLINE_FUNCTION Real
+    eval(ddc::Coordinate<CoordsDims...> coord_eval,
+         ddc::ChunkSpan<Real const, spline_domain_type, Layout, memory_space> const spline_coef)
+            const
     {
         using Dim1 = continuous_dimension_type1;
         using Dim2 = continuous_dimension_type2;
@@ -901,8 +897,8 @@ private:
     KOKKOS_INLINE_FUNCTION Real eval_no_bc(
             ddc::DiscreteElement<DerivDims...> const& deriv_order,
             ddc::Coordinate<CoordsDims...> const& coord_eval,
-            ddc::ChunkSpan<Real const, spline_domain_type, Layout, memory_space> const
-                    spline_coef) const
+            ddc::ChunkSpan<Real const, spline_domain_type, Layout, memory_space> const spline_coef)
+            const
     {
         using deriv_dim1 = Deriv<continuous_dimension_type1>;
         using deriv_dim2 = Deriv<continuous_dimension_type2>;

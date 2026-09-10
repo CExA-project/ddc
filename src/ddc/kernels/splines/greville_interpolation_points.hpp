@@ -49,8 +49,8 @@ class GrevilleInterpolationPoints
     {
         using SamplingImpl = Sampling::template Impl<Sampling, Kokkos::HostSpace>;
 
-        double constexpr shift = (BSplines::degree() % 2 == 0) ? 0.5 : 0.0;
-        double const dx
+        Real constexpr shift = (BSplines::degree() % 2 == 0) ? 0.5 : 0.0;
+        Real const dx
                 = (ddc::discrete_space<BSplines>().rmax() - ddc::discrete_space<BSplines>().rmin())
                   / ddc::discrete_space<BSplines>().ncells();
         if constexpr (ddc::is_uniform_point_sampling_v<Sampling>) {
@@ -81,7 +81,7 @@ class GrevilleInterpolationPoints
             n_greville_points = ddc::discrete_space<BSplines>().nbasis();
         }
 
-        std::vector<double> greville_points(n_greville_points);
+        std::vector<Real> greville_points(n_greville_points);
         ddc::DiscreteDomain<BSplines> const bspline_domain
                 = ddc::discrete_space<BSplines>().full_domain().take_first(
                         ddc::DiscreteVector<BSplines>(ddc::discrete_space<BSplines>().nbasis()));
@@ -105,7 +105,7 @@ class GrevilleInterpolationPoints
 
         // Use periodicity to ensure all points are in the domain
         if constexpr (BSplines::is_periodic()) {
-            std::vector<double> temp_knots(BSplines::degree());
+            std::vector<Real> temp_knots(BSplines::degree());
             std::size_t npoints = 0;
             // Count the number of interpolation points that need shifting to preserve the ordering
             while (greville_points[npoints] < ddc::discrete_space<BSplines>().rmin()) {
@@ -177,7 +177,7 @@ public:
                 assert(ddc::discrete_space<BSplines>().nbasis() >= N_BE);
             }
             std::size_t const npoints = ddc::discrete_space<BSplines>().nbasis() - N_BE;
-            std::vector<double> points_with_bcs(npoints);
+            std::vector<Real> points_with_bcs(npoints);
 
             // Construct Greville-like points at the edge
             if constexpr (SBCLower == ddc::SplineBuilderClosure::GREVILLE) {
@@ -247,7 +247,7 @@ public:
             } else {
                 auto points_wo_bcs = non_uniform_greville_points<IntermediateSampling>();
                 // All points are Greville points. Extract unnecessary points near the boundary
-                std::vector<double> points_with_bcs(points_wo_bcs.size() - N_BE);
+                std::vector<Real> points_with_bcs(points_wo_bcs.size() - N_BE);
                 std::size_t constexpr n_start = N_BE_MIN;
 
                 using length = ddc::DiscreteVector<IntermediateSampling>;

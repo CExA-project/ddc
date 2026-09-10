@@ -72,9 +72,9 @@ private:
     void adjust_indices(std::size_t& i, std::size_t& j) const;
 
 public:
-    double get_element(std::size_t i, std::size_t j) const override;
+    Real get_element(std::size_t i, std::size_t j) const override;
 
-    void set_element(std::size_t i, std::size_t j, double aij) override;
+    void set_element(std::size_t i, std::size_t j, Real aij) override;
 
 private:
     /**

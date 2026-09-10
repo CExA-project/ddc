@@ -6,6 +6,7 @@
 #include <cstddef>
 #include <stdexcept>
 #include <string>
+#include <type_traits>
 
 #include <Kokkos_Core.hpp>
 
@@ -44,7 +45,7 @@ template <class ExecSpace>
 SplinesLinearProblemDense<ExecSpace>::~SplinesLinearProblemDense() = default;
 
 template <class ExecSpace>
-double SplinesLinearProblemDense<ExecSpace>::get_element(std::size_t const i, std::size_t const j)
+Real SplinesLinearProblemDense<ExecSpace>::get_element(std::size_t const i, std::size_t const j)
         const
 {
     assert(i < size());
@@ -56,7 +57,7 @@ template <class ExecSpace>
 void SplinesLinearProblemDense<ExecSpace>::set_element(
         std::size_t const i,
         std::size_t const j,
-        double const aij)
+        Real const aij)
 {
     assert(i < size());
     assert(j < size());
@@ -66,15 +67,26 @@ void SplinesLinearProblemDense<ExecSpace>::set_element(
 template <class ExecSpace>
 void SplinesLinearProblemDense<ExecSpace>::setup_solver()
 {
-    int const info = LAPACKE_dgetrf(
-            LAPACK_ROW_MAJOR,
-            size(),
-            size(),
-            m_a.view_host().data(),
-            size(),
-            m_ipiv.view_host().data());
+    int info;
+    if constexpr (std::is_same_v<Real, float>) {
+        info = LAPACKE_sgetrf(
+                LAPACK_ROW_MAJOR,
+                size(),
+                size(),
+                m_a.view_host().data(),
+                size(),
+                m_ipiv.view_host().data());
+    } else {
+        info = LAPACKE_dgetrf(
+                LAPACK_ROW_MAJOR,
+                size(),
+                size(),
+                m_a.view_host().data(),
+                size(),
+                m_ipiv.view_host().data());
+    }
     if (info != 0) {
-        throw std::runtime_error("LAPACKE_dgetrf failed with error code " + std::to_string(info));
+        throw std::runtime_error("LAPACKE_getrf failed with error code " + std::to_string(info));
     }
 
     // Convert 1-based index to 0-based index

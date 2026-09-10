@@ -126,7 +126,7 @@ KOKKOS_FUNCTION Coord<X> xn()
 
 // Templated function giving step of the mesh in given dimension.
 template <typename X>
-double dx(std::size_t ncells)
+ddc::Real dx(std::size_t ncells)
 {
     return (xn<X>() - x0<X>()) / ncells;
 }
@@ -163,7 +163,7 @@ template <
         typename Builder,
         typename Evaluator,
         typename... DDims>
-std::tuple<double, double, double, double> compute_evaluation_error(
+std::tuple<ddc::Real, ddc::Real, ddc::Real, ddc::Real> compute_evaluation_error(
         ExecSpace const& exec_space,
         ddc::DiscreteDomain<DDims...> const& dom_vals,
         Builder const& spline_builder,
@@ -198,13 +198,13 @@ std::tuple<double, double, double, double> compute_evaluation_error(
     auto const dom_spline = spline_builder.batched_spline_domain(dom_vals);
 
     // Allocate and fill a chunk containing values to be passed as input to spline_builder. Those are values of cosine along interest dimension duplicated along batch dimensions
-    ddc::Chunk vals_1d_host_alloc(dom_interpolation, ddc::HostAllocator<double>());
+    ddc::Chunk vals_1d_host_alloc(dom_interpolation, ddc::HostAllocator<ddc::Real>());
     ddc::ChunkSpan const vals_1d_host = vals_1d_host_alloc.span_view();
     evaluator(vals_1d_host);
     auto vals_1d_alloc = ddc::create_mirror_view_and_copy(exec_space, vals_1d_host);
     ddc::ChunkSpan const vals_1d = vals_1d_alloc.span_view();
 
-    ddc::Chunk vals_alloc(dom_vals, ddc::KokkosAllocator<double, MemorySpace>());
+    ddc::Chunk vals_alloc(dom_vals, ddc::KokkosAllocator<ddc::Real, MemorySpace>());
     ddc::ChunkSpan const vals = vals_alloc.span_view();
     ddc::parallel_for_each(
             exec_space,
@@ -215,12 +215,12 @@ std::tuple<double, double, double, double> compute_evaluation_error(
 
 #if defined(BC_HERMITE)
     // Allocate and fill a chunk containing derivs to be passed as input to spline_builder.
-    ddc::Chunk derivs_1d_lhs_alloc(dom_derivs_1d, ddc::KokkosAllocator<double, MemorySpace>());
+    ddc::Chunk derivs_1d_lhs_alloc(dom_derivs_1d, ddc::KokkosAllocator<ddc::Real, MemorySpace>());
     ddc::ChunkSpan const derivs_1d_lhs = derivs_1d_lhs_alloc.span_view();
     if (s_sbcl == ddc::SplineBuilderClosure::HERMITE) {
         ddc::Chunk derivs_1d_lhs1_host_alloc(
                 ddc::DiscreteDomain<ddc::Deriv<I1>, DDimI2>(derivs_domain1, interpolation_domain2),
-                ddc::HostAllocator<double>());
+                ddc::HostAllocator<ddc::Real>());
         ddc::ChunkSpan const derivs_1d_lhs1_host = derivs_1d_lhs1_host_alloc.span_view();
         ddc::host_for_each(
                 derivs_1d_lhs1_host.domain(),
@@ -241,12 +241,12 @@ std::tuple<double, double, double, double> compute_evaluation_error(
                 });
     }
 
-    ddc::Chunk derivs_1d_rhs_alloc(dom_derivs_1d, ddc::KokkosAllocator<double, MemorySpace>());
+    ddc::Chunk derivs_1d_rhs_alloc(dom_derivs_1d, ddc::KokkosAllocator<ddc::Real, MemorySpace>());
     ddc::ChunkSpan const derivs_1d_rhs = derivs_1d_rhs_alloc.span_view();
     if (s_sbcl == ddc::SplineBuilderClosure::HERMITE) {
         ddc::Chunk derivs_1d_rhs1_host_alloc(
                 ddc::DiscreteDomain<ddc::Deriv<I1>, DDimI2>(derivs_domain1, interpolation_domain2),
-                ddc::HostAllocator<double>());
+                ddc::HostAllocator<ddc::Real>());
         ddc::ChunkSpan const derivs_1d_rhs1_host = derivs_1d_rhs1_host_alloc.span_view();
         ddc::host_for_each(
                 derivs_1d_rhs1_host.domain(),
@@ -267,12 +267,12 @@ std::tuple<double, double, double, double> compute_evaluation_error(
                 });
     }
 
-    ddc::Chunk derivs2_lhs_alloc(dom_derivs2, ddc::KokkosAllocator<double, MemorySpace>());
+    ddc::Chunk derivs2_lhs_alloc(dom_derivs2, ddc::KokkosAllocator<ddc::Real, MemorySpace>());
     ddc::ChunkSpan const derivs2_lhs = derivs2_lhs_alloc.span_view();
     if (s_sbcl == ddc::SplineBuilderClosure::HERMITE) {
         ddc::Chunk derivs2_lhs1_host_alloc(
                 ddc::DiscreteDomain<DDimI1, ddc::Deriv<I2>>(interpolation_domain1, derivs_domain2),
-                ddc::HostAllocator<double>());
+                ddc::HostAllocator<ddc::Real>());
         ddc::ChunkSpan const derivs2_lhs1_host = derivs2_lhs1_host_alloc.span_view();
         ddc::host_for_each(
                 derivs2_lhs1_host.domain(),
@@ -293,12 +293,12 @@ std::tuple<double, double, double, double> compute_evaluation_error(
                 });
     }
 
-    ddc::Chunk derivs2_rhs_alloc(dom_derivs2, ddc::KokkosAllocator<double, MemorySpace>());
+    ddc::Chunk derivs2_rhs_alloc(dom_derivs2, ddc::KokkosAllocator<ddc::Real, MemorySpace>());
     ddc::ChunkSpan const derivs2_rhs = derivs2_rhs_alloc.span_view();
     if (s_sbcl == ddc::SplineBuilderClosure::HERMITE) {
         ddc::Chunk derivs2_rhs1_host_alloc(
                 ddc::DiscreteDomain<DDimI1, ddc::Deriv<I2>>(interpolation_domain1, derivs_domain2),
-                ddc::HostAllocator<double>());
+                ddc::HostAllocator<ddc::Real>());
         ddc::ChunkSpan const derivs2_rhs1_host = derivs2_rhs1_host_alloc.span_view();
         ddc::host_for_each(
                 derivs2_rhs1_host.domain(),
@@ -319,26 +319,30 @@ std::tuple<double, double, double, double> compute_evaluation_error(
                 });
     }
 
-    ddc::Chunk derivs_mixed_lhs_lhs_alloc(dom_derivs, ddc::KokkosAllocator<double, MemorySpace>());
+    ddc::Chunk
+            derivs_mixed_lhs_lhs_alloc(dom_derivs, ddc::KokkosAllocator<ddc::Real, MemorySpace>());
     ddc::ChunkSpan const derivs_mixed_lhs_lhs = derivs_mixed_lhs_lhs_alloc.span_view();
-    ddc::Chunk derivs_mixed_rhs_lhs_alloc(dom_derivs, ddc::KokkosAllocator<double, MemorySpace>());
+    ddc::Chunk
+            derivs_mixed_rhs_lhs_alloc(dom_derivs, ddc::KokkosAllocator<ddc::Real, MemorySpace>());
     ddc::ChunkSpan const derivs_mixed_rhs_lhs = derivs_mixed_rhs_lhs_alloc.span_view();
-    ddc::Chunk derivs_mixed_lhs_rhs_alloc(dom_derivs, ddc::KokkosAllocator<double, MemorySpace>());
+    ddc::Chunk
+            derivs_mixed_lhs_rhs_alloc(dom_derivs, ddc::KokkosAllocator<ddc::Real, MemorySpace>());
     ddc::ChunkSpan const derivs_mixed_lhs_rhs = derivs_mixed_lhs_rhs_alloc.span_view();
-    ddc::Chunk derivs_mixed_rhs_rhs_alloc(dom_derivs, ddc::KokkosAllocator<double, MemorySpace>());
+    ddc::Chunk
+            derivs_mixed_rhs_rhs_alloc(dom_derivs, ddc::KokkosAllocator<ddc::Real, MemorySpace>());
     ddc::ChunkSpan const derivs_mixed_rhs_rhs = derivs_mixed_rhs_rhs_alloc.span_view();
 
     if (s_sbcl == ddc::SplineBuilderClosure::HERMITE) {
-        ddc::Chunk derivs_mixed_lhs_lhs1_host_alloc(derivs_domain, ddc::HostAllocator<double>());
+        ddc::Chunk derivs_mixed_lhs_lhs1_host_alloc(derivs_domain, ddc::HostAllocator<ddc::Real>());
         ddc::ChunkSpan const derivs_mixed_lhs_lhs1_host
                 = derivs_mixed_lhs_lhs1_host_alloc.span_view();
-        ddc::Chunk derivs_mixed_rhs_lhs1_host_alloc(derivs_domain, ddc::HostAllocator<double>());
+        ddc::Chunk derivs_mixed_rhs_lhs1_host_alloc(derivs_domain, ddc::HostAllocator<ddc::Real>());
         ddc::ChunkSpan const derivs_mixed_rhs_lhs1_host
                 = derivs_mixed_rhs_lhs1_host_alloc.span_view();
-        ddc::Chunk derivs_mixed_lhs_rhs1_host_alloc(derivs_domain, ddc::HostAllocator<double>());
+        ddc::Chunk derivs_mixed_lhs_rhs1_host_alloc(derivs_domain, ddc::HostAllocator<ddc::Real>());
         ddc::ChunkSpan const derivs_mixed_lhs_rhs1_host
                 = derivs_mixed_lhs_rhs1_host_alloc.span_view();
-        ddc::Chunk derivs_mixed_rhs_rhs1_host_alloc(derivs_domain, ddc::HostAllocator<double>());
+        ddc::Chunk derivs_mixed_rhs_rhs1_host_alloc(derivs_domain, ddc::HostAllocator<ddc::Real>());
         ddc::ChunkSpan const derivs_mixed_rhs_rhs1_host
                 = derivs_mixed_rhs_rhs1_host_alloc.span_view();
 
@@ -382,7 +386,7 @@ std::tuple<double, double, double, double> compute_evaluation_error(
 #endif
 
     // Instantiate chunk of spline coefs to receive output of spline_builder
-    ddc::Chunk coef_alloc(dom_spline, ddc::KokkosAllocator<double, MemorySpace>());
+    ddc::Chunk coef_alloc(dom_spline, ddc::KokkosAllocator<ddc::Real, MemorySpace>());
     ddc::ChunkSpan const coef = coef_alloc.span_view();
 
     // Finally compute the spline by filling `coef`
@@ -414,13 +418,13 @@ std::tuple<double, double, double, double> compute_evaluation_error(
 
 
     // Instantiate chunks to receive outputs of spline_evaluator
-    ddc::Chunk spline_eval_alloc(dom_vals, ddc::KokkosAllocator<double, MemorySpace>());
+    ddc::Chunk spline_eval_alloc(dom_vals, ddc::KokkosAllocator<ddc::Real, MemorySpace>());
     ddc::ChunkSpan const spline_eval = spline_eval_alloc.span_view();
-    ddc::Chunk spline_eval_deriv1_alloc(dom_vals, ddc::KokkosAllocator<double, MemorySpace>());
+    ddc::Chunk spline_eval_deriv1_alloc(dom_vals, ddc::KokkosAllocator<ddc::Real, MemorySpace>());
     ddc::ChunkSpan const spline_eval_deriv1 = spline_eval_deriv1_alloc.span_view();
-    ddc::Chunk spline_eval_deriv2_alloc(dom_vals, ddc::KokkosAllocator<double, MemorySpace>());
+    ddc::Chunk spline_eval_deriv2_alloc(dom_vals, ddc::KokkosAllocator<ddc::Real, MemorySpace>());
     ddc::ChunkSpan const spline_eval_deriv2 = spline_eval_deriv2_alloc.span_view();
-    ddc::Chunk spline_eval_deriv12_alloc(dom_vals, ddc::KokkosAllocator<double, MemorySpace>());
+    ddc::Chunk spline_eval_deriv12_alloc(dom_vals, ddc::KokkosAllocator<ddc::Real, MemorySpace>());
     ddc::ChunkSpan const spline_eval_deriv12 = spline_eval_deriv12_alloc.span_view();
 
     // Call spline_evaluator on the same mesh we started with
@@ -442,39 +446,39 @@ std::tuple<double, double, double, double> compute_evaluation_error(
                    coef.span_cview());
 
     // Checking errors (we recover the initial values)
-    double const max_norm_error = ddc::parallel_transform_reduce(
+    ddc::Real const max_norm_error = ddc::parallel_transform_reduce(
             exec_space,
             spline_eval.domain(),
-            0.,
-            ddc::reducer::max<double>(),
+            static_cast<ddc::Real>(0.),
+            ddc::reducer::max<ddc::Real>(),
             KOKKOS_LAMBDA(DElem<DDims...> const e) {
                 return Kokkos::abs(spline_eval(e) - vals(e));
             });
-    double const max_norm_error_diff1 = ddc::parallel_transform_reduce(
+    ddc::Real const max_norm_error_diff1 = ddc::parallel_transform_reduce(
             exec_space,
             spline_eval_deriv1.domain(),
-            0.,
-            ddc::reducer::max<double>(),
+            static_cast<ddc::Real>(0.),
+            ddc::reducer::max<ddc::Real>(),
             KOKKOS_LAMBDA(DElem<DDims...> const e) {
                 Coord<I1> const x = ddc::coordinate(DElem<DDimI1>(e));
                 Coord<I2> const y = ddc::coordinate(DElem<DDimI2>(e));
                 return Kokkos::abs(spline_eval_deriv1(e) - evaluator.deriv(x, y, 1, 0));
             });
-    double const max_norm_error_diff2 = ddc::parallel_transform_reduce(
+    ddc::Real const max_norm_error_diff2 = ddc::parallel_transform_reduce(
             exec_space,
             spline_eval_deriv2.domain(),
-            0.,
-            ddc::reducer::max<double>(),
+            static_cast<ddc::Real>(0.),
+            ddc::reducer::max<ddc::Real>(),
             KOKKOS_LAMBDA(DElem<DDims...> const e) {
                 Coord<I1> const x = ddc::coordinate(DElem<DDimI1>(e));
                 Coord<I2> const y = ddc::coordinate(DElem<DDimI2>(e));
                 return Kokkos::abs(spline_eval_deriv2(e) - evaluator.deriv(x, y, 0, 1));
             });
-    double const max_norm_error_diff12 = ddc::parallel_transform_reduce(
+    ddc::Real const max_norm_error_diff12 = ddc::parallel_transform_reduce(
             exec_space,
             spline_eval_deriv1.domain(),
-            0.,
-            ddc::reducer::max<double>(),
+            static_cast<ddc::Real>(0.),
+            ddc::reducer::max<ddc::Real>(),
             KOKKOS_LAMBDA(DElem<DDims...> const e) {
                 Coord<I1> const x = ddc::coordinate(DElem<DDimI1>(e));
                 Coord<I2> const y = ddc::coordinate(DElem<DDimI2>(e));
@@ -578,10 +582,10 @@ void TestMultipleBatchDomain2dSpline()
                     ExecSpace,
                     MemorySpace>(exec_space, dom_vals, spline_builder, spline_evaluator, evaluator);
 
-    double const max_norm = evaluator.max_norm();
-    double const max_norm_diff1 = evaluator.max_norm(1, 0);
-    double const max_norm_diff2 = evaluator.max_norm(0, 1);
-    double const max_norm_diff12 = evaluator.max_norm(1, 1);
+    ddc::Real const max_norm = evaluator.max_norm();
+    ddc::Real const max_norm_diff1 = evaluator.max_norm(1, 0);
+    ddc::Real const max_norm_diff2 = evaluator.max_norm(0, 1);
+    ddc::Real const max_norm_diff12 = evaluator.max_norm(1, 1);
 
     SplineErrorBounds<evaluator_type<DDimI1, DDimI2>> const error_bounds(evaluator);
     EXPECT_LE(
@@ -589,7 +593,7 @@ void TestMultipleBatchDomain2dSpline()
             std::
                     max(error_bounds
                                 .error_bound(dx<I1>(ncells), dx<I2>(ncells), s_degree, s_degree),
-                        1.0e-14 * max_norm));
+                        static_cast<ddc::Real>(1.0e-14) * max_norm));
     EXPECT_LE(
             max_norm_error_diff1,
             std::
@@ -598,7 +602,7 @@ void TestMultipleBatchDomain2dSpline()
                                 dx<I2>(ncells),
                                 s_degree,
                                 s_degree),
-                        1e-11 * max_norm_diff1));
+                        static_cast<ddc::Real>(1e-11) * max_norm_diff1));
     EXPECT_LE(
             max_norm_error_diff2,
             std::
@@ -607,7 +611,7 @@ void TestMultipleBatchDomain2dSpline()
                                 dx<I2>(ncells),
                                 s_degree,
                                 s_degree),
-                        1e-10 * max_norm_diff2));
+                        static_cast<ddc::Real>(1e-10) * max_norm_diff2));
     EXPECT_LE(
             max_norm_error_diff12,
             std::
@@ -616,7 +620,7 @@ void TestMultipleBatchDomain2dSpline()
                                 dx<I2>(ncells),
                                 s_degree,
                                 s_degree),
-                        1e-9 * max_norm_diff12));
+                        static_cast<ddc::Real>(1e-9) * max_norm_diff12));
 
     // Check the evaluation error for the domain with an additional batch dimension
     auto const
@@ -631,10 +635,10 @@ void TestMultipleBatchDomain2dSpline()
                     spline_evaluator,
                     evaluator);
 
-    double const max_norm_extra = evaluator.max_norm();
-    double const max_norm_diff1_extra = evaluator.max_norm(1, 0);
-    double const max_norm_diff2_extra = evaluator.max_norm(0, 1);
-    double const max_norm_diff12_extra = evaluator.max_norm(1, 1);
+    ddc::Real const max_norm_extra = evaluator.max_norm();
+    ddc::Real const max_norm_diff1_extra = evaluator.max_norm(1, 0);
+    ddc::Real const max_norm_diff2_extra = evaluator.max_norm(0, 1);
+    ddc::Real const max_norm_diff12_extra = evaluator.max_norm(1, 1);
 
     SplineErrorBounds<evaluator_type<DDimI1, DDimI2>> const error_bounds_extra(evaluator);
     EXPECT_LE(
@@ -642,7 +646,7 @@ void TestMultipleBatchDomain2dSpline()
             std::
                     max(error_bounds_extra
                                 .error_bound(dx<I1>(ncells), dx<I2>(ncells), s_degree, s_degree),
-                        1.0e-13 * max_norm_extra));
+                        static_cast<ddc::Real>(1.0e-13) * max_norm_extra));
     EXPECT_LE(
             max_norm_error_diff1_extra,
             std::
@@ -651,7 +655,7 @@ void TestMultipleBatchDomain2dSpline()
                                 dx<I2>(ncells),
                                 s_degree,
                                 s_degree),
-                        1e-11 * max_norm_diff1_extra));
+                        static_cast<ddc::Real>(1e-11) * max_norm_diff1_extra));
     EXPECT_LE(
             max_norm_error_diff2_extra,
             std::
@@ -660,7 +664,7 @@ void TestMultipleBatchDomain2dSpline()
                                 dx<I2>(ncells),
                                 s_degree,
                                 s_degree),
-                        1e-10 * max_norm_diff2_extra));
+                        static_cast<ddc::Real>(1e-10) * max_norm_diff2_extra));
     EXPECT_LE(
             max_norm_error_diff12_extra,
             std::
@@ -669,7 +673,7 @@ void TestMultipleBatchDomain2dSpline()
                                 dx<I2>(ncells),
                                 s_degree,
                                 s_degree),
-                        1e-9 * max_norm_diff12_extra));
+                        static_cast<ddc::Real>(1e-9) * max_norm_diff12_extra));
 }
 
 } // namespace anonymous_namespace_workaround_batched_2d_spline_builder_cpp

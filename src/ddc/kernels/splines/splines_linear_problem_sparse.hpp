@@ -59,16 +59,16 @@ public:
 
     SplinesLinearProblemSparse& operator=(SplinesLinearProblemSparse&& rhs) = delete;
 
-    double get_element(std::size_t i, std::size_t j) const override;
+    Real get_element(std::size_t i, std::size_t j) const override;
 
-    void set_element(std::size_t i, std::size_t j, double aij) override;
+    void set_element(std::size_t i, std::size_t j, Real aij) override;
 
     /**
      * @brief Perform a pre-process operation on the solver. Must be called after filling the matrix.
      *
      * Removes the zeros from the CSR object and instantiate a Ginkgo solver. It also constructs a transposed version of the solver.
      *
-     * The stopping criterion is a reduction factor ||Ax-b||/||b||<1e-15 with 1000 maximum iterations.
+     * The stopping criterion is a reduction factor ||Ax-b||/||b||<10*epsilon(Real) with 1000 maximum iterations.
      */
     void setup_solver() override;
 

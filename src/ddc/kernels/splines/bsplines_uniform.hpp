@@ -7,6 +7,7 @@
 #include <array>
 #include <cassert>
 #include <cstddef>
+#include <limits>
 #include <tuple>
 #include <type_traits>
 
@@ -27,7 +28,7 @@ struct UniformBSplinesBase
 template <class ExecSpace, class ODDim, class Layout, class OMemorySpace>
 void uniform_bsplines_integrals(
         ExecSpace const& execution_space,
-        ddc::ChunkSpan<double, ddc::DiscreteDomain<ODDim>, Layout, OMemorySpace> int_vals);
+        ddc::ChunkSpan<Real, ddc::DiscreteDomain<ODDim>, Layout, OMemorySpace> int_vals);
 
 } // namespace detail
 
@@ -98,7 +99,7 @@ public:
         template <class ExecSpace, class ODDim, class Layout, class OMemorySpace>
         friend void detail::uniform_bsplines_integrals(
                 ExecSpace const& execution_space,
-                ddc::ChunkSpan<double, ddc::DiscreteDomain<ODDim>, Layout, OMemorySpace> int_vals);
+                ddc::ChunkSpan<Real, ddc::DiscreteDomain<ODDim>, Layout, OMemorySpace> int_vals);
 
     public:
         /// @brief The type of the knots defining the B-splines.
@@ -293,7 +294,7 @@ public:
          *
          * @return The length of the domain.
          */
-        KOKKOS_INLINE_FUNCTION double length() const noexcept
+        KOKKOS_INLINE_FUNCTION Real length() const noexcept
         {
             return rmax() - rmin();
         }
@@ -354,7 +355,7 @@ public:
         }
 
     private:
-        KOKKOS_INLINE_FUNCTION double inv_step() const noexcept
+        KOKKOS_INLINE_FUNCTION Real inv_step() const noexcept
         {
             return 1.0 / ddc::step<knot_discrete_dimension_type>();
         }
@@ -364,7 +365,7 @@ public:
 
         KOKKOS_INLINE_FUNCTION void get_icell_and_offset(
                 int& icell,
-                double& offset,
+                Real& offset,
                 ddc::Coordinate<CDim> const& x) const;
     };
 };
@@ -399,16 +400,16 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<CDim, D>::
 {
     KOKKOS_ASSERT(values.size() == degree + 1)
 
-    double offset;
+    Real offset;
     int jmin;
     // 1. Compute cell index 'icell' and x_offset
     // 2. Compute index range of B-splines with support over cell 'icell'
     get_icell_and_offset(jmin, offset, x);
 
     // 3. Compute values of aforementioned B-splines
-    double xx;
-    double temp;
-    double saved;
+    Real xx;
+    Real temp;
+    Real saved;
     DDC_MDSPAN_ACCESS_OP(values, 0) = 1.0;
     for (std::size_t j = 1; j < values.size(); ++j) {
         xx = -offset;
@@ -432,7 +433,7 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<CDim, D>::
 {
     KOKKOS_ASSERT(derivs.size() == degree() + 1)
 
-    double offset;
+    Real offset;
     int jmin;
     // 1. Compute cell index 'icell' and x_offset
     // 2. Compute index range of B-splines with support over cell 'icell'
@@ -440,9 +441,9 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<CDim, D>::
 
     // 3. Compute derivatives of aforementioned B-splines
     //    Derivatives are normalized, hence they should be divided by dx
-    double xx;
-    double temp;
-    double saved;
+    Real xx;
+    Real temp;
+    Real saved;
     DDC_MDSPAN_ACCESS_OP(derivs, 0) = 1.0 / ddc::step<knot_discrete_dimension_type>();
     for (std::size_t j = 1; j < degree(); ++j) {
         xx = -offset;
@@ -457,8 +458,8 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<CDim, D>::
     }
 
     // Compute derivatives
-    double bjm1 = derivs[0];
-    double bj = bjm1;
+    Real bjm1 = derivs[0];
+    Real bj = bjm1;
     DDC_MDSPAN_ACCESS_OP(derivs, 0) = -bjm1;
     for (std::size_t j = 1; j < degree(); ++j) {
         bj = DDC_MDSPAN_ACCESS_OP(derivs, j);
@@ -478,16 +479,16 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<CDim, D>::
                 ddc::Coordinate<CDim> const& x,
                 std::size_t const n) const
 {
-    std::array<double, (degree() + 1) * (degree() + 1)> ndu_ptr;
-    Kokkos::mdspan<double, Kokkos::extents<std::size_t, degree() + 1, degree() + 1>> const ndu(
+    std::array<Real, (degree() + 1) * (degree() + 1)> ndu_ptr;
+    Kokkos::mdspan<Real, Kokkos::extents<std::size_t, degree() + 1, degree() + 1>> const ndu(
             ndu_ptr.data());
-    std::array<double, 2 * (degree() + 1)> a_ptr;
-    Kokkos::mdspan<double, Kokkos::extents<std::size_t, degree() + 1, 2>> const a(a_ptr.data());
-    double offset;
+    std::array<Real, 2 * (degree() + 1)> a_ptr;
+    Kokkos::mdspan<Real, Kokkos::extents<std::size_t, degree() + 1, 2>> const a(a_ptr.data());
+    Real offset;
     int jmin;
 
-    KOKKOS_ASSERT(x - rmin() >= -length() * 1e-14)
-    KOKKOS_ASSERT(rmax() - x >= -length() * 1e-14)
+    KOKKOS_ASSERT(x - rmin() >= -length() * 100 * std::numeric_limits<Real>::epsilon())
+    KOKKOS_ASSERT(rmax() - x >= -length() * 100 * std::numeric_limits<Real>::epsilon())
     // KOKKOS_ASSERT(n >= 0) as long as n is unsigned
     KOKKOS_ASSERT(n <= degree())
     KOKKOS_ASSERT(derivs.extent(0) == 1 + degree())
@@ -500,9 +501,9 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<CDim, D>::
     // 3. Recursively evaluate B-splines (eval_basis)
     //    up to self%degree, and store them all in the upper-right triangle of
     //    ndu
-    double xx;
-    double temp;
-    double saved;
+    Real xx;
+    Real temp;
+    Real saved;
     DDC_MDSPAN_ACCESS_OP(ndu, 0, 0) = 1.0;
     for (std::size_t j = 1; j < degree() + 1; ++j) {
         xx = -offset;
@@ -524,7 +525,7 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<CDim, D>::
         int s2 = 1;
         DDC_MDSPAN_ACCESS_OP(a, 0, 0) = 1.0;
         for (int k = 1; k < static_cast<int>(n + 1); ++k) {
-            double d = 0.0;
+            Real d = 0.0;
             int const rk = r - k;
             int const pk = degree() - k;
             if (r >= k) {
@@ -551,8 +552,8 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<CDim, D>::
     // Multiply result by correct factors:
     // degree!/(degree-n)! = degree*(degree-1)*...*(degree-n+1)
     // k-th derivatives are normalized, hence they should be divided by dx^k
-    double const inv_dx = inv_step();
-    double d = degree() * inv_dx;
+    Real const inv_dx = inv_step();
+    Real d = degree() * inv_dx;
     for (int k = 1; k < static_cast<int>(n + 1); ++k) {
         for (std::size_t i = 0; i < derivs.extent(0); ++i) {
             DDC_MDSPAN_ACCESS_OP(derivs, i, k) *= d;
@@ -567,13 +568,13 @@ template <class CDim, std::size_t D>
 template <class DDim, class MemorySpace>
 KOKKOS_INLINE_FUNCTION void UniformBSplines<CDim, D>::Impl<DDim, MemorySpace>::get_icell_and_offset(
         int& icell,
-        double& offset,
+        Real& offset,
         ddc::Coordinate<CDim> const& x) const
 {
-    KOKKOS_ASSERT(x - rmin() >= -length() * 1e-14)
-    KOKKOS_ASSERT(rmax() - x >= -length() * 1e-14)
+    KOKKOS_ASSERT(x - rmin() >= -length() * 100 * std::numeric_limits<Real>::epsilon())
+    KOKKOS_ASSERT(rmax() - x >= -length() * 100 * std::numeric_limits<Real>::epsilon())
 
-    double const inv_dx = inv_step();
+    Real const inv_dx = inv_step();
     if (x <= rmin()) {
         icell = 0;
         offset = 0.0;

@@ -7,8 +7,10 @@
 #    include <cmath>
 #endif
 #include <cstddef>
+#include <limits>
 #include <stdexcept>
 #include <string>
+#include <type_traits>
 #include <utility>
 
 #include <Kokkos_Core.hpp>
@@ -40,7 +42,7 @@ template <class ExecSpace>
 SplinesLinearProblemPDSTridiag<ExecSpace>::~SplinesLinearProblemPDSTridiag() = default;
 
 template <class ExecSpace>
-double SplinesLinearProblemPDSTridiag<ExecSpace>::get_element(std::size_t i, std::size_t j) const
+Real SplinesLinearProblemPDSTridiag<ExecSpace>::get_element(std::size_t i, std::size_t j) const
 {
     assert(i < size());
     assert(j < size());
@@ -61,7 +63,7 @@ template <class ExecSpace>
 void SplinesLinearProblemPDSTridiag<ExecSpace>::set_element(
         std::size_t i,
         std::size_t j,
-        double const aij)
+        Real const aij)
 {
     assert(i < size());
     assert(j < size());
@@ -73,19 +75,27 @@ void SplinesLinearProblemPDSTridiag<ExecSpace>::set_element(
     if (j - i < 2) {
         m_q.view_host()(j - i, i) = aij;
     } else {
-        assert(std::fabs(aij) < 1e-15);
+        assert(std::fabs(aij) < 10 * std::numeric_limits<Real>::epsilon());
     }
 }
 
 template <class ExecSpace>
 void SplinesLinearProblemPDSTridiag<ExecSpace>::setup_solver()
 {
-    int const info = LAPACKE_dpttrf(
-            size(),
-            m_q.view_host().data(),
-            m_q.view_host().data() + m_q.view_host().stride(0));
+    int info;
+    if constexpr (std::is_same_v<Real, float>) {
+        info = LAPACKE_spttrf(
+                size(),
+                m_q.view_host().data(),
+                m_q.view_host().data() + m_q.view_host().stride(0));
+    } else {
+        info = LAPACKE_dpttrf(
+                size(),
+                m_q.view_host().data(),
+                m_q.view_host().data() + m_q.view_host().stride(0));
+    }
     if (info != 0) {
-        throw std::runtime_error("LAPACKE_dpttrf failed with error code " + std::to_string(info));
+        throw std::runtime_error("LAPACKE_pttrf failed with error code " + std::to_string(info));
     }
 
     // Push on device

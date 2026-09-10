@@ -119,7 +119,7 @@ KOKKOS_FUNCTION Coord<X> xn()
 
 // Templated function giving step of the mesh in given dimension.
 template <typename X>
-double dx(std::size_t ncells)
+ddc::Real dx(std::size_t ncells)
 {
     return (xn<X>() - x0<X>()) / ncells;
 }
@@ -198,14 +198,14 @@ void TestExtrapolationRuleSpline()
     auto const dom_spline = spline_builder.batched_spline_domain(dom_vals);
 
     // Allocate and fill a chunk containing values to be passed as input to spline_builder. Those are values of cosine along interest dimension duplicated along batch dimensions
-    ddc::Chunk vals_1d_host_alloc(dom_interpolation, ddc::HostAllocator<double>());
+    ddc::Chunk vals_1d_host_alloc(dom_interpolation, ddc::HostAllocator<ddc::Real>());
     ddc::ChunkSpan const vals_1d_host = vals_1d_host_alloc.span_view();
     evaluator_type<DDimI1, DDimI2> const evaluator(dom_interpolation);
     evaluator(vals_1d_host);
     auto vals_1d_alloc = ddc::create_mirror_view_and_copy(exec_space, vals_1d_host);
     ddc::ChunkSpan const vals_1d = vals_1d_alloc.span_view();
 
-    ddc::Chunk vals_alloc(dom_vals, ddc::KokkosAllocator<double, MemorySpace>());
+    ddc::Chunk vals_alloc(dom_vals, ddc::KokkosAllocator<ddc::Real, MemorySpace>());
     ddc::ChunkSpan const vals = vals_alloc.span_view();
     ddc::parallel_for_each(
             exec_space,
@@ -215,7 +215,7 @@ void TestExtrapolationRuleSpline()
             });
 
     // Instantiate chunk of spline coefs to receive output of spline_builder
-    ddc::Chunk coef_alloc(dom_spline, ddc::KokkosAllocator<double, MemorySpace>());
+    ddc::Chunk coef_alloc(dom_spline, ddc::KokkosAllocator<ddc::Real, MemorySpace>());
     ddc::ChunkSpan const coef = coef_alloc.span_view();
 
     // Finally compute the spline by filling `coef`
@@ -306,18 +306,18 @@ void TestExtrapolationRuleSpline()
 
 
     // Instantiate chunks to receive outputs of spline_evaluator
-    ddc::Chunk spline_eval_alloc(dom_vals, ddc::KokkosAllocator<double, MemorySpace>());
+    ddc::Chunk spline_eval_alloc(dom_vals, ddc::KokkosAllocator<ddc::Real, MemorySpace>());
     ddc::ChunkSpan const spline_eval = spline_eval_alloc.span_view();
 
     // Call spline_evaluator on the same mesh we started with
     spline_evaluator_batched(spline_eval, coords_eval.span_cview(), coef.span_cview());
 
     // Checking errors (we recover the initial values)
-    double const max_norm_error = ddc::parallel_transform_reduce(
+    ddc::Real const max_norm_error = ddc::parallel_transform_reduce(
             exec_space,
             spline_eval.domain(),
-            0.,
-            ddc::reducer::max<double>(),
+            static_cast<ddc::Real>(0.),
+            ddc::reducer::max<ddc::Real>(),
             KOKKOS_LAMBDA(DElem<DDims...> const e) {
 #if defined(ER_NULL)
                 return Kokkos::abs(spline_eval(e));
@@ -327,9 +327,10 @@ void TestExtrapolationRuleSpline()
                         vals.template domain<DDimI1>()))::discrete_element_type const
                         e_without_interest(e);
 #    if defined(BC_PERIODIC)
-                double const tmp = vals(vals.template domain<DDimI1>().back(), e_without_interest);
+                ddc::Real const tmp
+                        = vals(vals.template domain<DDimI1>().back(), e_without_interest);
 #    else
-                double tmp;
+                ddc::Real tmp;
                 if (Coord<I2>(coords_eval(e)) > xn<I2>()) {
                     typename decltype(ddc::remove_dims_of(
                             vals.domain(),
@@ -344,9 +345,9 @@ void TestExtrapolationRuleSpline()
 #endif
             });
 
-    double const max_norm = evaluator.max_norm();
+    ddc::Real const max_norm = evaluator.max_norm();
 
-    EXPECT_LE(max_norm_error, 1.0e-14 * max_norm);
+    EXPECT_LE(max_norm_error, static_cast<ddc::Real>(1.0e-14) * max_norm);
 }
 
 } // namespace anonymous_namespace_workaround_extrapolation_rule_cpp

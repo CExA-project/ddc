@@ -46,25 +46,25 @@ public:
      * @param[in] pos The coordinate where we want to evaluate the function on B-splines.
      * @param[in] spline_coef The coefficients of the function on B-splines.
      *
-     * @return A double with the value of the function on B-splines evaluated at the coordinate.
+     * @return A Real with the value of the function on B-splines evaluated at the coordinate.
      */
     template <class CoordType, class BSplines, class Layout, class MemorySpace>
-    KOKKOS_FUNCTION double operator()(
+    KOKKOS_FUNCTION Real operator()(
             [[maybe_unused]] CoordType pos,
-            ddc::ChunkSpan<double const, ddc::DiscreteDomain<BSplines>, Layout, MemorySpace> const
+            ddc::ChunkSpan<Real const, ddc::DiscreteDomain<BSplines>, Layout, MemorySpace> const
                     spline_coef) const
     {
         // `pos` is always unused, but needed for Doxygen
         static_assert(in_tags_v<DimI, to_type_seq_t<CoordType>>);
 
-        std::array<double, BSplines::degree() + 1> vals_ptr;
-        Kokkos::mdspan<double, Kokkos::extents<std::size_t, BSplines::degree() + 1>> const vals(
+        std::array<Real, BSplines::degree() + 1> vals_ptr;
+        Kokkos::mdspan<Real, Kokkos::extents<std::size_t, BSplines::degree() + 1>> const vals(
                 vals_ptr.data());
 
         ddc::DiscreteElement<BSplines> const idx
                 = ddc::discrete_space<BSplines>().eval_basis(vals, m_eval_pos);
 
-        double y = 0.0;
+        Real y = 0.0;
         for (std::size_t i = 0; i < BSplines::degree() + 1; ++i) {
             y += spline_coef(idx + i) * vals[i];
         }
@@ -141,13 +141,13 @@ public:
      * @param[in] coord_extrap The coordinates where we want to evaluate the function on B-splines
      * @param[in] spline_coef The coefficients of the function on B-splines.
      *
-     *@return A double with the value of the function on B-splines evaluated at the coordinate.
+     *@return A Real with the value of the function on B-splines evaluated at the coordinate.
      */
     template <class CoordType, class BSplines1, class BSplines2, class Layout, class MemorySpace>
-    KOKKOS_FUNCTION double operator()(
+    KOKKOS_FUNCTION Real operator()(
             CoordType coord_extrap,
             ddc::ChunkSpan<
-                    double const,
+                    Real const,
                     ddc::DiscreteDomain<BSplines1, BSplines2>,
                     Layout,
                     MemorySpace> const spline_coef) const
@@ -169,11 +169,11 @@ public:
                                   m_eval_pos_not_interest_max));
         }
 
-        std::array<double, BSplines1::degree() + 1> vals1_ptr;
-        Kokkos::mdspan<double, Kokkos::extents<std::size_t, BSplines1::degree() + 1>> const vals1(
+        std::array<Real, BSplines1::degree() + 1> vals1_ptr;
+        Kokkos::mdspan<Real, Kokkos::extents<std::size_t, BSplines1::degree() + 1>> const vals1(
                 vals1_ptr.data());
-        std::array<double, BSplines2::degree() + 1> vals2_ptr;
-        Kokkos::mdspan<double, Kokkos::extents<std::size_t, BSplines2::degree() + 1>> const vals2(
+        std::array<Real, BSplines2::degree() + 1> vals2_ptr;
+        Kokkos::mdspan<Real, Kokkos::extents<std::size_t, BSplines2::degree() + 1>> const vals2(
                 vals2_ptr.data());
 
         ddc::DiscreteElement<BSplines1> const idx1 = ddc::discrete_space<BSplines1>().eval_basis(
@@ -183,7 +183,7 @@ public:
                 vals2,
                 ddc::Coordinate<typename BSplines2::continuous_dimension_type>(eval_pos));
 
-        double y = 0.0;
+        Real y = 0.0;
         for (std::size_t i = 0; i < BSplines1::degree() + 1; ++i) {
             for (std::size_t j = 0; j < BSplines2::degree() + 1; ++j) {
                 y += spline_coef(idx1 + i, idx2 + j) * vals1[i] * vals2[j];

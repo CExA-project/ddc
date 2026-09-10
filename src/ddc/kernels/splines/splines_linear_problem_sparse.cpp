@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <cassert>
 #include <cstddef>
+#include <limits>
 #include <memory>
 #include <optional>
 #include <stdexcept>
@@ -135,13 +136,13 @@ public:
     using MultiRHS = SplinesLinearProblem<ExecSpace>::MultiRHS;
 
 private:
-    using matrix_sparse_type = gko::matrix::Csr<double, gko::int32>;
-    using solver_type = gko::solver::Bicgstab<double>;
+    using matrix_sparse_type = gko::matrix::Csr<Real, gko::int32>;
+    using solver_type = gko::solver::Bicgstab<Real>;
 
 private:
     std::size_t m_mat_size;
 
-    std::unique_ptr<gko::matrix::Dense<double>> m_matrix_dense;
+    std::unique_ptr<gko::matrix::Dense<Real>> m_matrix_dense;
 
     std::shared_ptr<matrix_sparse_type> m_matrix_sparse;
 
@@ -164,17 +165,17 @@ public:
     {
         std::shared_ptr const gko_exec = gko::ext::kokkos::create_executor(ExecSpace());
         m_matrix_dense = gko::matrix::Dense<
-                double>::create(gko_exec->get_master(), gko::dim<2>(mat_size, mat_size));
+                Real>::create(gko_exec->get_master(), gko::dim<2>(mat_size, mat_size));
         m_matrix_dense->fill(0);
         m_matrix_sparse = matrix_sparse_type::create(gko_exec, gko::dim<2>(mat_size, mat_size));
     }
 
-    double get_element(std::size_t const i, std::size_t const j) const
+    Real get_element(std::size_t const i, std::size_t const j) const
     {
         return m_matrix_dense->at(i, j);
     }
 
-    void set_element(std::size_t const i, std::size_t const j, double const aij)
+    void set_element(std::size_t const i, std::size_t const j, Real const aij)
     {
         m_matrix_dense->at(i, j) = aij;
     }
@@ -182,7 +183,7 @@ public:
     void setup_solver()
     {
         // Remove zeros
-        gko::matrix_data<double> matrix_data(gko::dim<2>(m_mat_size, m_mat_size));
+        gko::matrix_data<Real> matrix_data(gko::dim<2>(m_mat_size, m_mat_size));
         m_matrix_dense->write(matrix_data);
         m_matrix_dense.reset();
         matrix_data.remove_zeros();
@@ -191,14 +192,15 @@ public:
 
         // Create the solver factory
         std::shared_ptr const residual_criterion
-                = gko::stop::ResidualNorm<double>::build().with_reduction_factor(1e-15).on(
-                        gko_exec);
+                = gko::stop::ResidualNorm<Real>::build()
+                          .with_reduction_factor(10 * std::numeric_limits<Real>::epsilon())
+                          .on(gko_exec);
 
         std::shared_ptr const iterations_criterion
                 = gko::stop::Iteration::build().with_max_iters(1000U).on(gko_exec);
 
         std::shared_ptr const preconditioner
-                = gko::preconditioner::Jacobi<double>::build()
+                = gko::preconditioner::Jacobi<Real>::build()
                           .with_max_block_size(m_preconditioner_max_block_size)
                           .on(gko_exec);
 
@@ -228,7 +230,7 @@ public:
         assert(b.extent(0) == m_mat_size);
 
         std::shared_ptr const gko_exec = m_solver->get_executor();
-        std::shared_ptr const convergence_logger = gko::log::Convergence<double>::create();
+        std::shared_ptr const convergence_logger = gko::log::Convergence<Real>::create();
 
         std::size_t const main_chunk_size = std::min(m_cols_per_chunk, b.extent(1));
 
@@ -293,13 +295,13 @@ template <class ExecSpace>
 SplinesLinearProblemSparse<ExecSpace>::~SplinesLinearProblemSparse() = default;
 
 template <class ExecSpace>
-double SplinesLinearProblemSparse<ExecSpace>::get_element(std::size_t i, std::size_t j) const
+Real SplinesLinearProblemSparse<ExecSpace>::get_element(std::size_t i, std::size_t j) const
 {
     return m_impl->get_element(i, j);
 }
 
 template <class ExecSpace>
-void SplinesLinearProblemSparse<ExecSpace>::set_element(std::size_t i, std::size_t j, double aij)
+void SplinesLinearProblemSparse<ExecSpace>::set_element(std::size_t i, std::size_t j, Real aij)
 {
     m_impl->set_element(i, j, aij);
 }

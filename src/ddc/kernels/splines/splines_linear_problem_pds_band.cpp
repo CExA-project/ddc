@@ -7,8 +7,10 @@
 #    include <cmath>
 #endif
 #include <cstddef>
+#include <limits>
 #include <stdexcept>
 #include <string>
+#include <type_traits>
 #include <utility>
 
 #include <Kokkos_Core.hpp>
@@ -43,7 +45,7 @@ template <class ExecSpace>
 SplinesLinearProblemPDSBand<ExecSpace>::~SplinesLinearProblemPDSBand() = default;
 
 template <class ExecSpace>
-double SplinesLinearProblemPDSBand<ExecSpace>::get_element(std::size_t i, std::size_t j) const
+Real SplinesLinearProblemPDSBand<ExecSpace>::get_element(std::size_t i, std::size_t j) const
 {
     assert(i < size());
     assert(j < size());
@@ -64,7 +66,7 @@ template <class ExecSpace>
 void SplinesLinearProblemPDSBand<ExecSpace>::set_element(
         std::size_t i,
         std::size_t j,
-        double const aij)
+        Real const aij)
 {
     assert(i < size());
     assert(j < size());
@@ -76,24 +78,37 @@ void SplinesLinearProblemPDSBand<ExecSpace>::set_element(
     if (j - i < m_q.extent(0)) {
         m_q.view_host()(j - i, i) = aij;
     } else {
-        assert(std::fabs(aij) < 1e-15);
+        assert(std::fabs(aij) < 10 * std::numeric_limits<Real>::epsilon());
     }
 }
 
 template <class ExecSpace>
 void SplinesLinearProblemPDSBand<ExecSpace>::setup_solver()
 {
-    int const info = LAPACKE_dpbtrf(
-            LAPACK_ROW_MAJOR,
-            'L',
-            size(),
-            m_q.extent(0) - 1,
-            m_q.view_host().data(),
-            m_q.view_host().stride(
-                    0) // m_q.view_host().stride(0) if LAPACK_ROW_MAJOR, m_q.view_host().stride(1) if LAPACK_COL_MAJOR
-    );
+    int info;
+    if constexpr (std::is_same_v<Real, float>) {
+        info = LAPACKE_spbtrf(
+                LAPACK_ROW_MAJOR,
+                'L',
+                size(),
+                m_q.extent(0) - 1,
+                m_q.view_host().data(),
+                m_q.view_host().stride(
+                        0) // m_q.view_host().stride(0) if LAPACK_ROW_MAJOR, m_q.view_host().stride(1) if LAPACK_COL_MAJOR
+        );
+    } else {
+        info = LAPACKE_dpbtrf(
+                LAPACK_ROW_MAJOR,
+                'L',
+                size(),
+                m_q.extent(0) - 1,
+                m_q.view_host().data(),
+                m_q.view_host().stride(
+                        0) // m_q.view_host().stride(0) if LAPACK_ROW_MAJOR, m_q.view_host().stride(1) if LAPACK_COL_MAJOR
+        );
+    }
     if (info != 0) {
-        throw std::runtime_error("LAPACKE_dpbtrf failed with error code " + std::to_string(info));
+        throw std::runtime_error("LAPACKE_pbtrf failed with error code " + std::to_string(info));
     }
 
     // Push on device

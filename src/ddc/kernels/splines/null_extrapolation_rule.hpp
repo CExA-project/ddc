@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <ddc/real_type.hpp>
+
 #include <Kokkos_Macros.hpp>
 
 namespace ddc {
@@ -16,10 +18,10 @@ struct NullExtrapolationRule
     /**
      * @brief Evaluates the spline at a coordinate outside of the domain.
      *
-     * @return A double with the value of the function outside the domain (here, 0.).
+     * @return A Real with the value of the function outside the domain (here, 0.).
      */
     template <class CoordType, class ChunkSpan>
-    KOKKOS_FUNCTION double operator()(CoordType, ChunkSpan) const
+    KOKKOS_FUNCTION Real operator()(CoordType, ChunkSpan) const
     {
         return 0.0;
     }

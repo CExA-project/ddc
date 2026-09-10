@@ -246,12 +246,10 @@ void TestExtrapolationRuleSpline()
 #    else
     using extrapolation_rule_dim_1_type = ddc::ConstantExtrapolationRule<I1, I2>;
     using extrapolation_rule_dim_2_type = ddc::ConstantExtrapolationRule<I2, I1>;
-    extrapolation_rule_dim_1_type const extrapolation_rule_left_dim_1(x0<I1>(), x0<I2>(), xn<I2>());
-    extrapolation_rule_dim_1_type const
-            extrapolation_rule_right_dim_1(xn<I1>(), x0<I2>(), xn<I2>());
-    extrapolation_rule_dim_2_type const extrapolation_rule_left_dim_2(x0<I2>(), x0<I1>(), xn<I1>());
-    extrapolation_rule_dim_2_type const
-            extrapolation_rule_right_dim_2(xn<I2>(), x0<I1>(), xn<I1>());
+    extrapolation_rule_dim_1_type const extrapolation_rule_left_dim_1(x0<I1>());
+    extrapolation_rule_dim_1_type const extrapolation_rule_right_dim_1(xn<I1>());
+    extrapolation_rule_dim_2_type const extrapolation_rule_left_dim_2(x0<I2>());
+    extrapolation_rule_dim_2_type const extrapolation_rule_right_dim_2(xn<I2>());
 #    endif
 #endif
 

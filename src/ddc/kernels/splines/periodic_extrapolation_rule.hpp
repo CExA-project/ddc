@@ -34,7 +34,8 @@ struct PeriodicExtrapolationRule
      * @return A Real with the value of the function on B-splines evaluated at the coordinate.
      */
     template <class CoordType, class ChunkSpan>
-    KOKKOS_FUNCTION Real operator()(CoordType, ChunkSpan) const
+    KOKKOS_FUNCTION Real
+    operator()([[maybe_unused]] CoordType pos, [[maybe_unused]] ChunkSpan spline_coef) const
     {
         KOKKOS_ASSERT("PeriodicExtrapolationRule::operator() should never be called")
 

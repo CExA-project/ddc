@@ -24,7 +24,6 @@
 #include "spline_builder_closures.hpp"
 #include "splines_linear_problem.hpp"
 #include "splines_linear_problem_maker.hpp"
-#include "view.hpp"
 
 namespace ddc {
 
@@ -796,7 +795,7 @@ void SplineBuilder<
             || SBCLower == ddc::SplineBuilderClosure::HOMOGENEOUS_HERMITE) {
         std::array<double, (bsplines_type::degree() / 2 + 1) * (bsplines_type::degree() + 1)>
                 derivs_ptr;
-        ddc::DSpan2D const
+        Kokkos::mdspan<double, Kokkos::dextents<std::size_t, 2>> const
                 derivs(derivs_ptr.data(),
                        bsplines_type::degree() + 1,
                        bsplines_type::degree() / 2 + 1);

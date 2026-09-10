@@ -83,8 +83,6 @@ struct ConstantExtrapolationRule<DimI, DimNI>
 {
 private:
     ddc::Coordinate<DimI> m_eval_pos;
-    ddc::Coordinate<DimNI> m_eval_pos_not_interest_min;
-    ddc::Coordinate<DimNI> m_eval_pos_not_interest_max;
 
 public:
     /**
@@ -100,13 +98,11 @@ public:
      * @param[in] eval_pos_not_interest_min The minimum coordinate inside the domain on the complementary dimension of the boundary condition.
      * @param[in] eval_pos_not_interest_max The maximum coordinate inside the domain on the complementary dimension of the boundary condition.
      */
-    explicit ConstantExtrapolationRule(
+    [[deprecated("Please use the constructor with a single parameter, the boundaries are now retrieved from the BSplines boundaries")]] explicit ConstantExtrapolationRule(
             ddc::Coordinate<DimI> eval_pos,
-            ddc::Coordinate<DimNI> eval_pos_not_interest_min,
-            ddc::Coordinate<DimNI> eval_pos_not_interest_max)
+            ddc::Coordinate<DimNI> /*eval_pos_not_interest_min*/,
+            ddc::Coordinate<DimNI> /*eval_pos_not_interest_max*/)
         : m_eval_pos(eval_pos)
-        , m_eval_pos_not_interest_min(eval_pos_not_interest_min)
-        , m_eval_pos_not_interest_max(eval_pos_not_interest_max)
     {
     }
 
@@ -120,13 +116,7 @@ public:
      *
      * @param[in] eval_pos Coordinate in the dimension given inside the domain where we will evaluate each points outside the domain.
      */
-    explicit ConstantExtrapolationRule(ddc::Coordinate<DimI> eval_pos)
-        requires(DimNI::PERIODIC)
-        : m_eval_pos(eval_pos)
-        , m_eval_pos_not_interest_min(0.)
-        , m_eval_pos_not_interest_max(0.)
-    {
-    }
+    explicit ConstantExtrapolationRule(ddc::Coordinate<DimI> eval_pos) : m_eval_pos(eval_pos) {}
 
     /**
      * @brief Get the value of the function on B-splines at a coordinate outside the domain.
@@ -170,8 +160,8 @@ public:
                     m_eval_pos,
                     Kokkos::
                             clamp(ddc::Coordinate<DimNI>(coord_extrap),
-                                  m_eval_pos_not_interest_min,
-                                  m_eval_pos_not_interest_max));
+                                  ddc::discrete_space<bsplines_ni_type>().rmin(),
+                                  ddc::discrete_space<bsplines_ni_type>().rmax()));
         }
 
         std::array<double, BSplines1::degree() + 1> vals1_ptr;

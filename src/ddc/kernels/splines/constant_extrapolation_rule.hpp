@@ -100,8 +100,8 @@ public:
      */
     [[deprecated("Please use the constructor with a single parameter, the boundaries are now retrieved from the BSplines boundaries")]] explicit ConstantExtrapolationRule(
             ddc::Coordinate<DimI> eval_pos,
-            ddc::Coordinate<DimNI> /*eval_pos_not_interest_min*/,
-            ddc::Coordinate<DimNI> /*eval_pos_not_interest_max*/)
+            [[maybe_unused]] ddc::Coordinate<DimNI> eval_pos_not_interest_min,
+            [[maybe_unused]] ddc::Coordinate<DimNI> eval_pos_not_interest_max)
         : m_eval_pos(eval_pos)
     {
     }

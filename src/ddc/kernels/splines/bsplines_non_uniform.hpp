@@ -15,8 +15,6 @@
 
 #include <Kokkos_Core.hpp>
 
-#include "view.hpp"
-
 namespace ddc {
 
 namespace detail {
@@ -214,8 +212,9 @@ public:
          * @param[in] x The coordinate where B-splines are evaluated. It has to be in the range of break points coordinates.
          * @return The index of the first B-spline which is evaluated.
          */
-        KOKKOS_INLINE_FUNCTION discrete_element_type
-        eval_basis(DSpan1D values, ddc::Coordinate<CDim> const& x) const;
+        KOKKOS_INLINE_FUNCTION discrete_element_type eval_basis(
+                Kokkos::mdspan<double, Kokkos::dextents<std::size_t, 1>> values,
+                ddc::Coordinate<CDim> const& x) const;
 
         /** @brief Evaluates non-zero B-spline derivatives at a given coordinate
          *
@@ -229,8 +228,9 @@ public:
          * @param[in] x The coordinate where B-spline derivatives are evaluated. It has to be in the range of break points coordinates.
          * @return The index of the first B-spline which is differentiated.
          */
-        KOKKOS_INLINE_FUNCTION discrete_element_type
-        eval_deriv(DSpan1D derivs, ddc::Coordinate<CDim> const& x) const;
+        KOKKOS_INLINE_FUNCTION discrete_element_type eval_deriv(
+                Kokkos::mdspan<double, Kokkos::dextents<std::size_t, 1>> derivs,
+                ddc::Coordinate<CDim> const& x) const;
 
         /** @brief Evaluates non-zero B-spline values and \f$n\f$ derivatives at a given coordinate
          *
@@ -246,7 +246,7 @@ public:
          * @return The index of the first B-spline which is evaluated/derivated.
          */
         KOKKOS_INLINE_FUNCTION discrete_element_type eval_basis_and_n_derivs(
-                ddc::DSpan2D derivs,
+                Kokkos::mdspan<double, Kokkos::dextents<std::size_t, 2>> derivs,
                 ddc::Coordinate<CDim> const& x,
                 std::size_t n) const;
 
@@ -459,7 +459,9 @@ NonUniformBSplines<CDim, D>::Impl<DDim, MemorySpace>::Impl(
 template <class CDim, std::size_t D>
 template <class DDim, class MemorySpace>
 KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<CDim, D>::
-        Impl<DDim, MemorySpace>::eval_basis(DSpan1D values, ddc::Coordinate<CDim> const& x) const
+        Impl<DDim, MemorySpace>::eval_basis(
+                Kokkos::mdspan<double, Kokkos::dextents<std::size_t, 1>> values,
+                ddc::Coordinate<CDim> const& x) const
 {
     KOKKOS_ASSERT(values.size() == D + 1)
 
@@ -499,7 +501,9 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<CDim, D>::
 template <class CDim, std::size_t D>
 template <class DDim, class MemorySpace>
 KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<CDim, D>::
-        Impl<DDim, MemorySpace>::eval_deriv(DSpan1D derivs, ddc::Coordinate<CDim> const& x) const
+        Impl<DDim, MemorySpace>::eval_deriv(
+                Kokkos::mdspan<double, Kokkos::dextents<std::size_t, 1>> derivs,
+                ddc::Coordinate<CDim> const& x) const
 {
     std::array<double, degree()> left;
     std::array<double, degree()> right;
@@ -560,7 +564,7 @@ template <class CDim, std::size_t D>
 template <class DDim, class MemorySpace>
 KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> NonUniformBSplines<CDim, D>::
         Impl<DDim, MemorySpace>::eval_basis_and_n_derivs(
-                ddc::DSpan2D const derivs,
+                Kokkos::mdspan<double, Kokkos::dextents<std::size_t, 2>> const derivs,
                 ddc::Coordinate<CDim> const& x,
                 std::size_t const n) const
 {

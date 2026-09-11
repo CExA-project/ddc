@@ -34,33 +34,33 @@ struct ViewNDMaker<N, ElementType, false>
 namespace ddc {
 
 template <std::size_t N, class ElementType>
-using SpanND = Kokkos::mdspan<ElementType, Kokkos::dextents<std::size_t, N>>;
+using SpanND [[deprecated]] = Kokkos::mdspan<ElementType, Kokkos::dextents<std::size_t, N>>;
 
 template <std::size_t N, class ElementType>
-using ViewND = SpanND<N, ElementType const>;
+using ViewND [[deprecated]] = Kokkos::mdspan<ElementType const, Kokkos::dextents<std::size_t, N>>;
 
 template <class ElementType>
-using Span1D = SpanND<1, ElementType>;
+using Span1D [[deprecated]] = Kokkos::mdspan<ElementType, Kokkos::dextents<std::size_t, 1>>;
 
 template <class ElementType>
-using Span2D = SpanND<2, ElementType>;
+using Span2D [[deprecated]] = Kokkos::mdspan<ElementType, Kokkos::dextents<std::size_t, 2>>;
 
 template <class ElementType>
-using View1D = ViewND<1, ElementType>;
+using View1D [[deprecated]] = Kokkos::mdspan<ElementType const, Kokkos::dextents<std::size_t, 1>>;
 
 template <class ElementType>
-using View2D = ViewND<2, ElementType>;
+using View2D [[deprecated]] = Kokkos::mdspan<ElementType const, Kokkos::dextents<std::size_t, 2>>;
 
-using DSpan1D = ddc::Span1D<double>;
+using DSpan1D [[deprecated]] = Kokkos::mdspan<double, Kokkos::dextents<std::size_t, 1>>;
 
-using DSpan2D = ddc::Span2D<double>;
+using DSpan2D [[deprecated]] = Kokkos::mdspan<double, Kokkos::dextents<std::size_t, 2>>;
 
-using CDSpan1D = ddc::Span1D<double const>;
+using CDSpan1D [[deprecated]] = Kokkos::mdspan<double const, Kokkos::dextents<std::size_t, 1>>;
 
-using CDSpan2D = ddc::Span2D<double const>;
+using CDSpan2D [[deprecated]] = Kokkos::mdspan<double const, Kokkos::dextents<std::size_t, 2>>;
 
-using DView1D = View1D<double>;
+using DView1D [[deprecated]] = Kokkos::mdspan<double const, Kokkos::dextents<std::size_t, 1>>;
 
-using DView2D = View2D<double>;
+using DView2D [[deprecated]] = Kokkos::mdspan<double const, Kokkos::dextents<std::size_t, 2>>;
 
 } // namespace ddc

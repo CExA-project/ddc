@@ -15,7 +15,6 @@ add_executable(
     spline_boundary_conditions.cpp
     spline_builder.cpp
     spline_traits.cpp
-    view.cpp
 )
 target_compile_features(splines_tests PRIVATE cxx_std_20)
 target_link_libraries(splines_tests PRIVATE ddc_gtest_main DDC::core DDC::splines GTest::gtest)

@@ -10,7 +10,7 @@ SPDX-License-Identifier: MIT
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>DDC: ddc::NonUniformBSplines&lt; CDim, D &gt; Class Template Reference</title>
+<title>DDC: ddc::NonUniformBSplines&lt; CDim, D, Periodic &gt; Class Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -124,7 +124,7 @@ $(document).ready(function(){initNavTree('classddc_1_1NonUniformBSplines.html','
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="classddc_1_1NonUniformBSplines-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">ddc::NonUniformBSplines&lt; CDim, D &gt; Class Template Reference</div></div>
+  <div class="headertitle"><div class="title">ddc::NonUniformBSplines&lt; CDim, D, Periodic &gt; Class Template Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
@@ -133,20 +133,20 @@ $(document).ready(function(){initNavTree('classddc_1_1NonUniformBSplines.html','
 
 <p><code>#include &lt;<a class="el" href="bsplines__non__uniform_8hpp_source.html">bsplines_non_uniform.hpp</a>&gt;</code></p>
 <div class="dynheader">
-Inheritance diagram for ddc::NonUniformBSplines&lt; CDim, D &gt;:</div>
+Inheritance diagram for ddc::NonUniformBSplines&lt; CDim, D, Periodic &gt;:</div>
 <div class="dyncontent">
-<div class="center"><img src="classddc_1_1NonUniformBSplines__inherit__graph.png" border="0" usemap="#addc_1_1NonUniformBSplines_3_01CDim_00_01D_01_4_inherit__map" alt="Inheritance graph"/></div>
-<map name="addc_1_1NonUniformBSplines_3_01CDim_00_01D_01_4_inherit__map" id="addc_1_1NonUniformBSplines_3_01CDim_00_01D_01_4_inherit__map">
+<div class="center"><img src="classddc_1_1NonUniformBSplines__inherit__graph.png" border="0" usemap="#addc_1_1NonUniformBSplines_3_01CDim_00_01D_00_01Periodic_01_4_inherit__map" alt="Inheritance graph"/></div>
+<map name="addc_1_1NonUniformBSplines_3_01CDim_00_01D_00_01Periodic_01_4_inherit__map" id="addc_1_1NonUniformBSplines_3_01CDim_00_01D_00_01Periodic_01_4_inherit__map">
 <area shape="rect" title="The type of a non&#45;uniform 1D spline basis (B&#45;spline)." alt="" coords="44,119,224,239"/>
 <area shape="rect" title=" " alt="" coords="5,5,263,71"/>
 <area shape="poly" title=" " alt="" coords="137,85,137,118,131,118,131,85"/>
 </map>
 </div>
 <div class="dynheader">
-Collaboration diagram for ddc::NonUniformBSplines&lt; CDim, D &gt;:</div>
+Collaboration diagram for ddc::NonUniformBSplines&lt; CDim, D, Periodic &gt;:</div>
 <div class="dyncontent">
-<div class="center"><img src="classddc_1_1NonUniformBSplines__coll__graph.png" border="0" usemap="#addc_1_1NonUniformBSplines_3_01CDim_00_01D_01_4_coll__map" alt="Collaboration graph"/></div>
-<map name="addc_1_1NonUniformBSplines_3_01CDim_00_01D_01_4_coll__map" id="addc_1_1NonUniformBSplines_3_01CDim_00_01D_01_4_coll__map">
+<div class="center"><img src="classddc_1_1NonUniformBSplines__coll__graph.png" border="0" usemap="#addc_1_1NonUniformBSplines_3_01CDim_00_01D_00_01Periodic_01_4_coll__map" alt="Collaboration graph"/></div>
+<map name="addc_1_1NonUniformBSplines_3_01CDim_00_01D_00_01Periodic_01_4_coll__map" id="addc_1_1NonUniformBSplines_3_01CDim_00_01D_00_01Periodic_01_4_coll__map">
 <area shape="rect" title="The type of a non&#45;uniform 1D spline basis (B&#45;spline)." alt="" coords="44,119,224,239"/>
 <area shape="rect" title=" " alt="" coords="5,5,263,71"/>
 <area shape="poly" title=" " alt="" coords="137,85,137,118,131,118,131,85"/>
@@ -161,28 +161,28 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a228f5629c111ccbdfc480e13ea517cb2" id="r_a228f5629c111ccbdfc480e13ea517cb2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1NonUniformBSplines.html#a228f5629c111ccbdfc480e13ea517cb2">continuous_dimension_type</a> = <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a></td></tr>
-<tr class="memdesc:a228f5629c111ccbdfc480e13ea517cb2"><td class="mdescLeft">&#160;</td><td class="mdescRight">The tag identifying the continuous dimension on which the support of the B-splines are defined.  <br /></td></tr>
-<tr class="separator:a228f5629c111ccbdfc480e13ea517cb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6e873d754e6035f9b82d3d764631f18b" id="r_a6e873d754e6035f9b82d3d764631f18b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1NonUniformBSplines.html#a6e873d754e6035f9b82d3d764631f18b">discrete_dimension_type</a> = <a class="el" href="classddc_1_1NonUniformBSplines.html">NonUniformBSplines</a></td></tr>
-<tr class="memdesc:a6e873d754e6035f9b82d3d764631f18b"><td class="mdescLeft">&#160;</td><td class="mdescRight">The discrete dimension identifying B-splines.  <br /></td></tr>
-<tr class="separator:a6e873d754e6035f9b82d3d764631f18b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8454191ccc392b91d18b7c12e39d8194" id="r_a8454191ccc392b91d18b7c12e39d8194"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1NonUniformBSplines.html#a8454191ccc392b91d18b7c12e39d8194">continuous_dimension_type</a> = <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a></td></tr>
+<tr class="memdesc:a8454191ccc392b91d18b7c12e39d8194"><td class="mdescLeft">&#160;</td><td class="mdescRight">The tag identifying the continuous dimension on which the support of the B-splines are defined.  <br /></td></tr>
+<tr class="separator:a8454191ccc392b91d18b7c12e39d8194"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a077f64cb0ebf36259ff5f0a8ecfc5128" id="r_a077f64cb0ebf36259ff5f0a8ecfc5128"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1NonUniformBSplines.html#a077f64cb0ebf36259ff5f0a8ecfc5128">discrete_dimension_type</a> = <a class="el" href="classddc_1_1NonUniformBSplines.html">NonUniformBSplines</a></td></tr>
+<tr class="memdesc:a077f64cb0ebf36259ff5f0a8ecfc5128"><td class="mdescLeft">&#160;</td><td class="mdescRight">The discrete dimension identifying B-splines.  <br /></td></tr>
+<tr class="separator:a077f64cb0ebf36259ff5f0a8ecfc5128"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a24d2759dc3b6f5bc7891b5458e234f39" id="r_a24d2759dc3b6f5bc7891b5458e234f39"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">static</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1NonUniformBSplines.html#a24d2759dc3b6f5bc7891b5458e234f39">degree</a> () <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">noexcept</a></td></tr>
-<tr class="memdesc:a24d2759dc3b6f5bc7891b5458e234f39"><td class="mdescLeft">&#160;</td><td class="mdescRight">The degree of B-splines.  <br /></td></tr>
-<tr class="separator:a24d2759dc3b6f5bc7891b5458e234f39"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a57facc715106c73ac79a1291f0227576" id="r_a57facc715106c73ac79a1291f0227576"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">static</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1NonUniformBSplines.html#a57facc715106c73ac79a1291f0227576">is_periodic</a> () <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">noexcept</a></td></tr>
-<tr class="memdesc:a57facc715106c73ac79a1291f0227576"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicates if the B-splines are periodic or not.  <br /></td></tr>
-<tr class="separator:a57facc715106c73ac79a1291f0227576"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad720f6a26d86fba646822111dedd0721" id="r_ad720f6a26d86fba646822111dedd0721"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">static</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1NonUniformBSplines.html#ad720f6a26d86fba646822111dedd0721">is_uniform</a> () <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">noexcept</a></td></tr>
-<tr class="memdesc:ad720f6a26d86fba646822111dedd0721"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicates if the B-splines are uniform or not (this is not the case here).  <br /></td></tr>
-<tr class="separator:ad720f6a26d86fba646822111dedd0721"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a22ae54810fcf79883d617701fa5899ab" id="r_a22ae54810fcf79883d617701fa5899ab"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">static</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1NonUniformBSplines.html#a22ae54810fcf79883d617701fa5899ab">degree</a> () <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">noexcept</a></td></tr>
+<tr class="memdesc:a22ae54810fcf79883d617701fa5899ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">The degree of B-splines.  <br /></td></tr>
+<tr class="separator:a22ae54810fcf79883d617701fa5899ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a952b83e889c7e0ce56f0578fadbff3f4" id="r_a952b83e889c7e0ce56f0578fadbff3f4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">static</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1NonUniformBSplines.html#a952b83e889c7e0ce56f0578fadbff3f4">is_periodic</a> () <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">noexcept</a></td></tr>
+<tr class="memdesc:a952b83e889c7e0ce56f0578fadbff3f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicates if the B-splines are periodic or not.  <br /></td></tr>
+<tr class="separator:a952b83e889c7e0ce56f0578fadbff3f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acbd8b5e9c352e89214dfb022717e0447" id="r_acbd8b5e9c352e89214dfb022717e0447"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">static</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classddc_1_1NonUniformBSplines.html#acbd8b5e9c352e89214dfb022717e0447">is_uniform</a> () <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">noexcept</a></td></tr>
+<tr class="memdesc:acbd8b5e9c352e89214dfb022717e0447"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicates if the B-splines are uniform or not (this is not the case here).  <br /></td></tr>
+<tr class="separator:acbd8b5e9c352e89214dfb022717e0447"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><div class="compoundTemplParams">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a>, std::size_t D&gt;<br />
-class ddc::NonUniformBSplines&lt; CDim, D &gt;</div><p>The type of a non-uniform 1D spline basis (B-spline). </p>
+<div class="textblock"><div class="compoundTemplParams">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a>, std::size_t D, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">bool</a> Periodic = CDim::PERIODIC&gt;<br />
+class ddc::NonUniformBSplines&lt; CDim, D, Periodic &gt;</div><p>The type of a non-uniform 1D spline basis (B-spline). </p>
 <p>Knots for non-uniform B-splines are non-uniformly distributed (no assumption is made on the uniformity of their distribution, the associated discrete dimension is a <a class="el" href="classddc_1_1NonUniformPointSampling.html" title="NonUniformPointSampling models a non-uniform discretization of the CDim segment .">NonUniformPointSampling</a>).</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
@@ -194,16 +194,16 @@ class ddc::NonUniformBSplines&lt; CDim, D &gt;</div><p>The type of a non-uniform
 
 <p class="definition">Definition at line <a class="el" href="bsplines__non__uniform_8hpp_source.html#l00043">43</a> of file <a class="el" href="bsplines__non__uniform_8hpp_source.html">bsplines_non_uniform.hpp</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
-<a id="a228f5629c111ccbdfc480e13ea517cb2" name="a228f5629c111ccbdfc480e13ea517cb2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a228f5629c111ccbdfc480e13ea517cb2">&#9670;&#160;</a></span>continuous_dimension_type</h2>
+<a id="a8454191ccc392b91d18b7c12e39d8194" name="a8454191ccc392b91d18b7c12e39d8194"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8454191ccc392b91d18b7c12e39d8194">&#9670;&#160;</a></span>continuous_dimension_type</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a> , std::size_t D&gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a> , std::size_t D, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">bool</a> Periodic = CDim::PERIODIC&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a> <a class="el" href="classddc_1_1NonUniformBSplines.html">ddc::NonUniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">D</a> &gt;::continuous_dimension_type =  <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a></td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a> <a class="el" href="classddc_1_1NonUniformBSplines.html">ddc::NonUniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">D</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Periodic</a> &gt;::continuous_dimension_type =  <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -214,16 +214,16 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 
 </div>
 </div>
-<a id="a6e873d754e6035f9b82d3d764631f18b" name="a6e873d754e6035f9b82d3d764631f18b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6e873d754e6035f9b82d3d764631f18b">&#9670;&#160;</a></span>discrete_dimension_type</h2>
+<a id="a077f64cb0ebf36259ff5f0a8ecfc5128" name="a077f64cb0ebf36259ff5f0a8ecfc5128"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a077f64cb0ebf36259ff5f0a8ecfc5128">&#9670;&#160;</a></span>discrete_dimension_type</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a> , std::size_t D&gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a> , std::size_t D, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">bool</a> Periodic = CDim::PERIODIC&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a> <a class="el" href="classddc_1_1NonUniformBSplines.html">ddc::NonUniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">D</a> &gt;::discrete_dimension_type =  <a class="el" href="classddc_1_1NonUniformBSplines.html">NonUniformBSplines</a></td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a> <a class="el" href="classddc_1_1NonUniformBSplines.html">ddc::NonUniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">D</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Periodic</a> &gt;::discrete_dimension_type =  <a class="el" href="classddc_1_1NonUniformBSplines.html">NonUniformBSplines</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -235,19 +235,19 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a24d2759dc3b6f5bc7891b5458e234f39" name="a24d2759dc3b6f5bc7891b5458e234f39"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a24d2759dc3b6f5bc7891b5458e234f39">&#9670;&#160;</a></span>degree()</h2>
+<a id="a22ae54810fcf79883d617701fa5899ab" name="a22ae54810fcf79883d617701fa5899ab"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a22ae54810fcf79883d617701fa5899ab">&#9670;&#160;</a></span>degree()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a> , std::size_t D&gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a> , std::size_t D, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">bool</a> Periodic = CDim::PERIODIC&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">static</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> std::size_t <a class="el" href="classddc_1_1NonUniformBSplines.html">ddc::NonUniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">D</a> &gt;::degree </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">static</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> std::size_t <a class="el" href="classddc_1_1NonUniformBSplines.html">ddc::NonUniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">D</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Periodic</a> &gt;::degree </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -267,19 +267,19 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 
 </div>
 </div>
-<a id="a57facc715106c73ac79a1291f0227576" name="a57facc715106c73ac79a1291f0227576"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a57facc715106c73ac79a1291f0227576">&#9670;&#160;</a></span>is_periodic()</h2>
+<a id="a952b83e889c7e0ce56f0578fadbff3f4" name="a952b83e889c7e0ce56f0578fadbff3f4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a952b83e889c7e0ce56f0578fadbff3f4">&#9670;&#160;</a></span>is_periodic()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a> , std::size_t D&gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a> , std::size_t D, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">bool</a> Periodic = CDim::PERIODIC&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">static</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">bool</a> <a class="el" href="classddc_1_1NonUniformBSplines.html">ddc::NonUniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">D</a> &gt;::is_periodic </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">static</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">bool</a> <a class="el" href="classddc_1_1NonUniformBSplines.html">ddc::NonUniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">D</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Periodic</a> &gt;::is_periodic </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -299,19 +299,19 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 
 </div>
 </div>
-<a id="ad720f6a26d86fba646822111dedd0721" name="ad720f6a26d86fba646822111dedd0721"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad720f6a26d86fba646822111dedd0721">&#9670;&#160;</a></span>is_uniform()</h2>
+<a id="acbd8b5e9c352e89214dfb022717e0447" name="acbd8b5e9c352e89214dfb022717e0447"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acbd8b5e9c352e89214dfb022717e0447">&#9670;&#160;</a></span>is_uniform()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a> , std::size_t D&gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a> , std::size_t D, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">bool</a> Periodic = CDim::PERIODIC&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">static</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">bool</a> <a class="el" href="classddc_1_1NonUniformBSplines.html">ddc::NonUniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">D</a> &gt;::is_uniform </td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">static</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">bool</a> <a class="el" href="classddc_1_1NonUniformBSplines.html">ddc::NonUniformBSplines</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">CDim</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">D</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Periodic</a> &gt;::is_uniform </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>

@@ -89,18 +89,6 @@ var namespaceddc =
     [ "HostAllocator", "namespaceddc.html#a1eb87e589bae955cef6cd18cdc7826f3", null ],
     [ "Real", "namespaceddc.html#ab25c16a5ce1c3230941216a27acb684f", null ],
     [ "knot_discrete_dimension_t", "namespaceddc.html#aa7047c6422bfad579ddff16ec9f40f19", null ],
-    [ "SpanND", "namespaceddc.html#a3cb193243e09bb06d637109d835433ba", null ],
-    [ "ViewND", "namespaceddc.html#a5643f0d232b183f4d834ccf21b5b7ea9", null ],
-    [ "Span1D", "namespaceddc.html#acae6b51aed97227c6635d29ed82ff499", null ],
-    [ "Span2D", "namespaceddc.html#aca38715bb507d5f605fbd46b49ac4095", null ],
-    [ "View1D", "namespaceddc.html#abc5e0fa7e8111693c885a84e13e2a1aa", null ],
-    [ "View2D", "namespaceddc.html#a458bf7bac05d05ccb6920fd398791364", null ],
-    [ "DSpan1D", "namespaceddc.html#a5d904c9254467a2fbf225fa5230448e7", null ],
-    [ "DSpan2D", "namespaceddc.html#ae60ced068dc0c3b3a83905cda98376bc", null ],
-    [ "CDSpan1D", "namespaceddc.html#a7f8e98ef1a7b1564891e8bc26711a00d", null ],
-    [ "CDSpan2D", "namespaceddc.html#a07e157d28cbc6084ab70de02321bd835", null ],
-    [ "DView1D", "namespaceddc.html#ac521508fd20b0825805572f6112e188e", null ],
-    [ "DView2D", "namespaceddc.html#ad81c85064b7e0fef6a5987a6b510f5ac", null ],
     [ "FFT_Direction", "namespaceddc.html#ae672eb355c3d1fa7de604e8bf6164853", [
       [ "FORWARD", "namespaceddc.html#ae672eb355c3d1fa7de604e8bf6164853abfec72bb37910c61f36b6c29a1f7ec31", null ],
       [ "BACKWARD", "namespaceddc.html#ae672eb355c3d1fa7de604e8bf6164853a6377b4908ae38f9a57fe9120cf179eb1", null ]

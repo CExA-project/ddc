@@ -47,10 +47,10 @@ var hierarchy =
     ] ],
     [ "ddc::Fourier< Dim >", "namespaceddc.html#structddc_1_1Fourier", null ],
     [ "ddc::GrevilleInterpolationPoints< BSplines, SBCLower, SBCUpper >", "classddc_1_1GrevilleInterpolationPoints.html", null ],
-    [ "ddc::NonUniformBSplines< CDim, D >::Impl< DDim, MemorySpace >", "classddc_1_1NonUniformBSplines_1_1Impl.html", null ],
+    [ "ddc::NonUniformBSplines< CDim, D, Periodic >::Impl< DDim, MemorySpace >", "classddc_1_1NonUniformBSplines_1_1Impl.html", null ],
     [ "ddc::NonUniformPointSampling< CDim >::Impl< DDim, MemorySpace >", "classddc_1_1NonUniformPointSampling_1_1Impl.html", null ],
     [ "ddc::PeriodicSampling< CDim >::Impl< DDim, MemorySpace >", "classddc_1_1PeriodicSampling_1_1Impl.html", null ],
-    [ "ddc::UniformBSplines< CDim, D >::Impl< DDim, MemorySpace >", "classddc_1_1UniformBSplines_1_1Impl.html", null ],
+    [ "ddc::UniformBSplines< CDim, D, Periodic >::Impl< DDim, MemorySpace >", "classddc_1_1UniformBSplines_1_1Impl.html", null ],
     [ "ddc::UniformPointSampling< CDim >::Impl< DDim, MemorySpace >", "classddc_1_1UniformPointSampling_1_1Impl.html", null ],
     [ "ddc::KnotDiscreteDimension< DDim >", "namespaceddc.html#structddc_1_1KnotDiscreteDimension", null ],
     [ "ddc::KnotsAsInterpolationPoints< BSplines, SBCLower, SBCUpper >", "classddc_1_1KnotsAsInterpolationPoints.html", null ],
@@ -62,7 +62,7 @@ var hierarchy =
     [ "ddc::reducer::min< T >", "structddc_1_1reducer_1_1min.html", null ],
     [ "ddc::reducer::minmax< T >", "structddc_1_1reducer_1_1minmax.html", null ],
     [ "ddc::detail::NonUniformBSplinesBase", null, [
-      [ "ddc::NonUniformBSplines< CDim, D >", "classddc_1_1NonUniformBSplines.html", null ]
+      [ "ddc::NonUniformBSplines< CDim, D, Periodic >", "classddc_1_1NonUniformBSplines.html", null ]
     ] ],
     [ "ddc::detail::NonUniformPointSamplingBase", null, [
       [ "ddc::NonUniformPointSampling< Sampling::continuous_dimension_type >", "classddc_1_1NonUniformPointSampling.html", null ],
@@ -130,7 +130,7 @@ var hierarchy =
       [ "ddc::is_uniform_point_sampling< DDim >", "structddc_1_1is__uniform__point__sampling.html", null ]
     ] ],
     [ "ddc::detail::UniformBSplinesBase", null, [
-      [ "ddc::UniformBSplines< CDim, D >", "classddc_1_1UniformBSplines.html", null ]
+      [ "ddc::UniformBSplines< CDim, D, Periodic >", "classddc_1_1UniformBSplines.html", null ]
     ] ],
     [ "ddc::detail::UniformPointSamplingBase", null, [
       [ "ddc::UniformPointSampling< Sampling::continuous_dimension_type >", "classddc_1_1UniformPointSampling.html", null ],

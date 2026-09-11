@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['cdspan1d_0',['CDSpan1D',['../namespaceddc.html#a469cf66eab1419498e8bf75da55fbba4',1,'ddc']]],
-  ['cdspan2d_1',['CDSpan2D',['../namespaceddc.html#a527ffc7bfc33850ef64720205544a21d',1,'ddc']]],
+  ['cdspan1d_0',['CDSpan1D',['../namespaceddc.html#a7f8e98ef1a7b1564891e8bc26711a00d',1,'ddc']]],
+  ['cdspan2d_1',['CDSpan2D',['../namespaceddc.html#a07e157d28cbc6084ab70de02321bd835',1,'ddc']]],
   ['chunk_5fpointer_5ft_2',['chunk_pointer_t',['../namespaceddc.html#aa558e76870ff628dccfa422bfdf8e1b8',1,'ddc']]],
   ['chunk_5freference_5ft_3',['chunk_reference_t',['../namespaceddc.html#a763241f678118a7a7ba78f7f2d98e40b',1,'ddc']]],
   ['chunk_5fvalue_5ft_4',['chunk_value_t',['../namespaceddc.html#a1e4d169816a033ff35083680e2be1355',1,'ddc']]],

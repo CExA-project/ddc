@@ -97,8 +97,10 @@ public:
      * @param[in] eval_pos Coordinate in the dimension given inside the domain where we will evaluate each points outside the domain.
      * @param[in] eval_pos_not_interest_min The minimum coordinate inside the domain on the complementary dimension of the boundary condition.
      * @param[in] eval_pos_not_interest_max The maximum coordinate inside the domain on the complementary dimension of the boundary condition.
+     *
+     * @deprecated Use the single parameter constructor instead, the boundaries are now retrieved from the BSplines boundaries
      */
-    [[deprecated("Please use the constructor with a single parameter, the boundaries are now retrieved from the BSplines boundaries")]] explicit ConstantExtrapolationRule(
+    [[deprecated("Use the single parameter constructor instead, the boundaries are now retrieved from the BSplines boundaries")]] explicit ConstantExtrapolationRule(
             ddc::Coordinate<DimI> eval_pos,
             [[maybe_unused]] ddc::Coordinate<DimNI> eval_pos_not_interest_min,
             [[maybe_unused]] ddc::Coordinate<DimNI> eval_pos_not_interest_max)

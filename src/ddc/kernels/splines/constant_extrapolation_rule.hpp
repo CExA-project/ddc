@@ -85,6 +85,7 @@ private:
     ddc::Coordinate<DimI> m_eval_pos;
 
 public:
+#if DDC_BUILD_DEPRECATED_CODE()
     /**
      * @brief Instantiate a ConstantExtrapolationRule.
      *
@@ -107,6 +108,7 @@ public:
         : m_eval_pos(eval_pos)
     {
     }
+#endif
 
     /**
      * @brief Instantiate a ConstantExtrapolationRule.

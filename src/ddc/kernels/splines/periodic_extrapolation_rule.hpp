@@ -9,11 +9,20 @@
 
 namespace ddc {
 
+/**
+ * @brief A functor to represent periodic extrapolation in a 1D spline evaluator.
+ *
+ * This rule is handled by the spline evaluator itself and therefore this
+ * functor should never be invoked.
+ */
 template <class DimI>
 struct PeriodicExtrapolationRule
 {
-    static_assert(DimI::PERIODIC, "PeriodicExtrapolationRule requires periodic dimension");
-
+    /**
+     * @brief This function should never be called.
+     *
+     * @return Undefined.
+     */
     template <class CoordType, class ChunkSpan>
     KOKKOS_FUNCTION double operator()(CoordType, ChunkSpan) const
     {

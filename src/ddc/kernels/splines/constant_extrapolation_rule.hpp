@@ -83,10 +83,9 @@ struct ConstantExtrapolationRule<DimI, DimNI>
 {
 private:
     ddc::Coordinate<DimI> m_eval_pos;
-    ddc::Coordinate<DimNI> m_eval_pos_not_interest_min;
-    ddc::Coordinate<DimNI> m_eval_pos_not_interest_max;
 
 public:
+#if DDC_BUILD_DEPRECATED_CODE()
     /**
      * @brief Instantiate a ConstantExtrapolationRule.
      *
@@ -99,16 +98,17 @@ public:
      * @param[in] eval_pos Coordinate in the dimension given inside the domain where we will evaluate each points outside the domain.
      * @param[in] eval_pos_not_interest_min The minimum coordinate inside the domain on the complementary dimension of the boundary condition.
      * @param[in] eval_pos_not_interest_max The maximum coordinate inside the domain on the complementary dimension of the boundary condition.
+     *
+     * @deprecated Use the single parameter constructor instead, the boundaries are now retrieved from the BSplines boundaries
      */
-    explicit ConstantExtrapolationRule(
+    [[deprecated("Use the single parameter constructor instead, the boundaries are now retrieved from the BSplines boundaries")]] explicit ConstantExtrapolationRule(
             ddc::Coordinate<DimI> eval_pos,
-            ddc::Coordinate<DimNI> eval_pos_not_interest_min,
-            ddc::Coordinate<DimNI> eval_pos_not_interest_max)
+            [[maybe_unused]] ddc::Coordinate<DimNI> eval_pos_not_interest_min,
+            [[maybe_unused]] ddc::Coordinate<DimNI> eval_pos_not_interest_max)
         : m_eval_pos(eval_pos)
-        , m_eval_pos_not_interest_min(eval_pos_not_interest_min)
-        , m_eval_pos_not_interest_max(eval_pos_not_interest_max)
     {
     }
+#endif
 
     /**
      * @brief Instantiate a ConstantExtrapolationRule.
@@ -120,13 +120,7 @@ public:
      *
      * @param[in] eval_pos Coordinate in the dimension given inside the domain where we will evaluate each points outside the domain.
      */
-    explicit ConstantExtrapolationRule(ddc::Coordinate<DimI> eval_pos)
-        requires(DimNI::PERIODIC)
-        : m_eval_pos(eval_pos)
-        , m_eval_pos_not_interest_min(0.)
-        , m_eval_pos_not_interest_max(0.)
-    {
-    }
+    explicit ConstantExtrapolationRule(ddc::Coordinate<DimI> eval_pos) : m_eval_pos(eval_pos) {}
 
     /**
      * @brief Get the value of the function on B-splines at a coordinate outside the domain.
@@ -155,9 +149,14 @@ public:
         static_assert(
                 in_tags_v<DimI, to_type_seq_t<CoordType>>
                 && in_tags_v<DimNI, to_type_seq_t<CoordType>>);
+        using bsplines_ni_type = std::conditional_t<
+                std::is_same_v<typename BSplines1::continuous_dimension_type, DimNI>,
+                BSplines1,
+                BSplines2>;
+        static_assert(std::is_same_v<typename bsplines_ni_type::continuous_dimension_type, DimNI>);
 
         ddc::Coordinate<DimI, DimNI> eval_pos;
-        if constexpr (DimNI::PERIODIC) {
+        if constexpr (bsplines_ni_type::is_periodic()) {
             eval_pos = ddc::
                     Coordinate<DimI, DimNI>(m_eval_pos, ddc::Coordinate<DimNI>(coord_extrap));
         } else {
@@ -165,8 +164,8 @@ public:
                     m_eval_pos,
                     Kokkos::
                             clamp(ddc::Coordinate<DimNI>(coord_extrap),
-                                  m_eval_pos_not_interest_min,
-                                  m_eval_pos_not_interest_max));
+                                  ddc::discrete_space<bsplines_ni_type>().rmin(),
+                                  ddc::discrete_space<bsplines_ni_type>().rmax()));
         }
 
         std::array<double, BSplines1::degree() + 1> vals1_ptr;

@@ -6,6 +6,8 @@
 
 #include <cstddef>
 
+#include <ddc/ddc.hpp>
+
 #include <Kokkos_Core.hpp>
 
 namespace ddc::detail {
@@ -33,6 +35,7 @@ struct ViewNDMaker<N, ElementType, false>
 
 namespace ddc {
 
+#if DDC_BUILD_DEPRECATED_CODE()
 template <std::size_t N, class ElementType>
 using SpanND [[deprecated]] = Kokkos::mdspan<ElementType, Kokkos::dextents<std::size_t, N>>;
 
@@ -62,5 +65,6 @@ using CDSpan2D [[deprecated]] = Kokkos::mdspan<double const, Kokkos::dextents<st
 using DView1D [[deprecated]] = Kokkos::mdspan<double const, Kokkos::dextents<std::size_t, 1>>;
 
 using DView2D [[deprecated]] = Kokkos::mdspan<double const, Kokkos::dextents<std::size_t, 2>>;
+#endif
 
 } // namespace ddc

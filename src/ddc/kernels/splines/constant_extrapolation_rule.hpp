@@ -89,7 +89,7 @@ public:
                     MemorySpace> const spline_coef) const
     {
         static_assert(in_tags_v<DimI, to_type_seq_t<CoordType>>);
-        static_assert(((in_tags_v<DimNI, to_type_seq_t<CoordType>>) && ...));
+        static_assert((in_tags_v<DimNI, to_type_seq_t<CoordType>> && ...));
         using TypeSeqBSplines = ddc::detail::TypeSeq<BSplines...>;
 
         ddc::Coordinate<DimI, DimNI...>

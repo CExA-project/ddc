@@ -15,8 +15,6 @@
 
 #include <Kokkos_Core.hpp>
 
-#include "view.hpp"
-
 namespace ddc {
 
 namespace detail {
@@ -46,7 +44,7 @@ struct UniformBsplinesKnots : UniformPointSampling<typename T::continuous_dimens
  * @tparam CDim The tag identifying the continuous dimension on which the support of the B-spline functions are defined.
  * @tparam D The degree of the B-splines.
  */
-template <class CDim, std::size_t D>
+template <class CDim, std::size_t D, bool Periodic = CDim::PERIODIC>
 class UniformBSplines : detail::UniformBSplinesBase
 {
     static_assert(D > 0, "Parameter `D` must be positive");
@@ -73,7 +71,7 @@ public:
      */
     static constexpr bool is_periodic() noexcept
     {
-        return CDim::PERIODIC;
+        return Periodic;
     }
 
     /** @brief Indicates if the B-splines are uniform or not (this is the case here).
@@ -201,8 +199,9 @@ public:
          * @param[in] x The coordinate where B-splines are evaluated. It has to be in the range of break points coordinates.
          * @return The index of the first B-spline which is evaluated.
          */
-        KOKKOS_INLINE_FUNCTION discrete_element_type
-        eval_basis(DSpan1D values, ddc::Coordinate<CDim> const& x) const
+        KOKKOS_INLINE_FUNCTION discrete_element_type eval_basis(
+                Kokkos::mdspan<double, Kokkos::dextents<std::size_t, 1>> values,
+                ddc::Coordinate<CDim> const& x) const
         {
             KOKKOS_ASSERT(values.size() == degree() + 1)
             return eval_basis(values, x, degree());
@@ -220,8 +219,9 @@ public:
          * @param[in] x The coordinate where B-spline derivatives are evaluated. It has to be in the range of break points coordinates.
          * @return The index of the first B-spline which is evaluated.
          */
-        KOKKOS_INLINE_FUNCTION discrete_element_type
-        eval_deriv(DSpan1D derivs, ddc::Coordinate<CDim> const& x) const;
+        KOKKOS_INLINE_FUNCTION discrete_element_type eval_deriv(
+                Kokkos::mdspan<double, Kokkos::dextents<std::size_t, 1>> derivs,
+                ddc::Coordinate<CDim> const& x) const;
 
         /** @brief Evaluates non-zero B-spline values and \f$n\f$ derivatives at a given coordinate
          *
@@ -237,7 +237,7 @@ public:
          * @return The index of the first B-spline which is evaluated.
          */
         KOKKOS_INLINE_FUNCTION discrete_element_type eval_basis_and_n_derivs(
-                ddc::DSpan2D derivs,
+                Kokkos::mdspan<double, Kokkos::dextents<std::size_t, 2>> derivs,
                 ddc::Coordinate<CDim> const& x,
                 std::size_t n) const;
 
@@ -360,8 +360,10 @@ public:
             return 1.0 / ddc::step<knot_discrete_dimension_type>();
         }
 
-        KOKKOS_INLINE_FUNCTION discrete_element_type
-        eval_basis(DSpan1D values, ddc::Coordinate<CDim> const& x, std::size_t degree) const;
+        KOKKOS_INLINE_FUNCTION discrete_element_type eval_basis(
+                Kokkos::mdspan<double, Kokkos::dextents<std::size_t, 1>> values,
+                ddc::Coordinate<CDim> const& x,
+                std::size_t degree) const;
 
         KOKKOS_INLINE_FUNCTION void get_icell_and_offset(
                 int& icell,
@@ -390,11 +392,11 @@ concept uniform_bsplines = is_uniform_bsplines_v<DDim>;
 
 }
 
-template <class CDim, std::size_t D>
+template <class CDim, std::size_t D, bool Periodic>
 template <class DDim, class MemorySpace>
-KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<CDim, D>::
+KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<CDim, D, Periodic>::
         Impl<DDim, MemorySpace>::eval_basis(
-                DSpan1D values,
+                Kokkos::mdspan<double, Kokkos::dextents<std::size_t, 1>> values,
                 ddc::Coordinate<CDim> const& x,
                 [[maybe_unused]] std::size_t const degree) const
 {
@@ -426,10 +428,12 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<CDim, D>::
     return m_reference + jmin;
 }
 
-template <class CDim, std::size_t D>
+template <class CDim, std::size_t D, bool Periodic>
 template <class DDim, class MemorySpace>
-KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<CDim, D>::
-        Impl<DDim, MemorySpace>::eval_deriv(DSpan1D derivs, ddc::Coordinate<CDim> const& x) const
+KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<CDim, D, Periodic>::
+        Impl<DDim, MemorySpace>::eval_deriv(
+                Kokkos::mdspan<double, Kokkos::dextents<std::size_t, 1>> derivs,
+                ddc::Coordinate<CDim> const& x) const
 {
     KOKKOS_ASSERT(derivs.size() == degree() + 1)
 
@@ -471,11 +475,11 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<CDim, D>::
     return m_reference + jmin;
 }
 
-template <class CDim, std::size_t D>
+template <class CDim, std::size_t D, bool Periodic>
 template <class DDim, class MemorySpace>
-KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<CDim, D>::
+KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<CDim, D, Periodic>::
         Impl<DDim, MemorySpace>::eval_basis_and_n_derivs(
-                ddc::DSpan2D const derivs,
+                Kokkos::mdspan<double, Kokkos::dextents<std::size_t, 2>> const derivs,
                 ddc::Coordinate<CDim> const& x,
                 std::size_t const n) const
 {
@@ -564,12 +568,10 @@ KOKKOS_INLINE_FUNCTION ddc::DiscreteElement<DDim> UniformBSplines<CDim, D>::
     return m_reference + jmin;
 }
 
-template <class CDim, std::size_t D>
+template <class CDim, std::size_t D, bool Periodic>
 template <class DDim, class MemorySpace>
-KOKKOS_INLINE_FUNCTION void UniformBSplines<CDim, D>::Impl<DDim, MemorySpace>::get_icell_and_offset(
-        int& icell,
-        Real& offset,
-        ddc::Coordinate<CDim> const& x) const
+KOKKOS_INLINE_FUNCTION void UniformBSplines<CDim, D, Periodic>::Impl<DDim, MemorySpace>::
+        get_icell_and_offset(int& icell, Real& offset, ddc::Coordinate<CDim> const& x) const
 {
     KOKKOS_ASSERT(x - rmin() >= -length() * 100 * std::numeric_limits<Real>::epsilon())
     KOKKOS_ASSERT(rmax() - x >= -length() * 100 * std::numeric_limits<Real>::epsilon())

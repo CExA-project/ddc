@@ -12,26 +12,18 @@
 namespace ddc {
 
 /**
- * @brief A functor for describing a spline boundary value by a periodic extrapolation for 1D evaluator.
+ * @brief A functor to represent periodic extrapolation in a 1D spline evaluator.
  *
- * For a periodic domain, any position outside the domain should be equivalent to a point inside the
- * domain. As a result boundary conditions should never be called.
+ * This rule is handled by the spline evaluator itself and therefore this
+ * functor should never be invoked.
  */
 template <class DimI>
 struct PeriodicExtrapolationRule
 {
-    static_assert(DimI::PERIODIC, "PeriodicExtrapolationRule requires periodic dimension");
-
     /**
-     * @brief Get the value of the function on B-splines at a coordinate outside the domain.
+     * @brief This function should never be called.
      *
-     * As all coordinates outside the domain are equivalent to coordinates inside the domain,
-     * this function raises an assertion error if it is ever called.
-     *
-     * @param[in] pos The coordinate where we want to evaluate the function on B-splines.
-     * @param[in] spline_coef The coefficients of the function on B-splines.
-     *
-     * @return A Real with the value of the function on B-splines evaluated at the coordinate.
+     * @return Undefined.
      */
     template <class CoordType, class ChunkSpan>
     KOKKOS_FUNCTION Real

@@ -58,7 +58,7 @@ sum(Kokkos::mdspan<
 template <typename T>
 KOKKOS_INLINE_FUNCTION T modulo(T x, T y)
 {
-    return x - y * Kokkos::floor(double(x) / y);
+    return x - y * Kokkos::floor(Real(x) / y);
 }
 
 KOKKOS_INLINE_FUNCTION Real ipow(Real a, std::size_t i)

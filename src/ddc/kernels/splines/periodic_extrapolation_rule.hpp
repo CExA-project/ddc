@@ -26,8 +26,7 @@ struct PeriodicExtrapolationRule
      * @return Undefined.
      */
     template <class CoordType, class ChunkSpan>
-    KOKKOS_FUNCTION Real
-    operator()([[maybe_unused]] CoordType pos, [[maybe_unused]] ChunkSpan spline_coef) const
+    KOKKOS_FUNCTION Real operator()(CoordType, ChunkSpan) const
     {
         KOKKOS_ASSERT("PeriodicExtrapolationRule::operator() should never be called")
 

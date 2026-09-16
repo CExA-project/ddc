@@ -6,7 +6,7 @@
 
 #include <cstddef>
 
-#include <ddc/real_type.hpp>
+#include <ddc/ddc.hpp>
 
 #include <Kokkos_Core.hpp>
 

@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <ddc/real_type.hpp>
+#include <ddc/ddc.hpp>
 
 #include <Kokkos_Assert.hpp>
 #include <Kokkos_Macros.hpp>

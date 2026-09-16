@@ -22,7 +22,7 @@ var classddc_1_1NonUniformBSplines_1_1Impl =
     [ "get_last_support_knot", "classddc_1_1NonUniformBSplines_1_1Impl.html#a2150b37fd47f4a663ca1b3aac72b89cb", null ],
     [ "rmin", "classddc_1_1NonUniformBSplines_1_1Impl.html#ae2d5bb7f72c643494c3cab9e2a59e239", null ],
     [ "rmax", "classddc_1_1NonUniformBSplines_1_1Impl.html#af27a29ef58a204366f969d396056ad20", null ],
-    [ "length", "classddc_1_1NonUniformBSplines_1_1Impl.html#a7ec750abb55391e15db0bc3b7df2c2fc", null ],
+    [ "length", "classddc_1_1NonUniformBSplines_1_1Impl.html#a78a0d530666d59ec80b6a11e21fe1066", null ],
     [ "size", "classddc_1_1NonUniformBSplines_1_1Impl.html#ad1a3fa2a5f7a645d0bb0b2706d83bed4", null ],
     [ "full_domain", "classddc_1_1NonUniformBSplines_1_1Impl.html#aaed3722878b6255d1f4e0364595e6af8", null ],
     [ "break_point_domain", "classddc_1_1NonUniformBSplines_1_1Impl.html#a4dd77ea836fd2d7aa8e910a3c417a5ec", null ],

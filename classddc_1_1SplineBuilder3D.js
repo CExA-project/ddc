@@ -44,5 +44,5 @@ var classddc_1_1SplineBuilder3D =
     [ "batch_domain", "classddc_1_1SplineBuilder3D.html#a40c95f98060205a0041538e09ebaea24", null ],
     [ "spline_domain", "classddc_1_1SplineBuilder3D.html#a2d3d66303b7ce61e65b320565367535a", null ],
     [ "batched_spline_domain", "classddc_1_1SplineBuilder3D.html#a29d83ed609244de8249d9e096a3ce346", null ],
-    [ "operator()", "classddc_1_1SplineBuilder3D.html#a0268c01752e9991cb418d092056f8e09", null ]
+    [ "operator()", "classddc_1_1SplineBuilder3D.html#ab0745b31cc1235955183bcc5133494de", null ]
 ];

@@ -20,11 +20,11 @@ var classddc_1_1SplineEvaluator =
     [ "operator=", "classddc_1_1SplineEvaluator.html#a453dda6fcb889b28d6c34da99c036d12", null ],
     [ "lower_extrapolation_rule", "classddc_1_1SplineEvaluator.html#a6a63e3c1a768b045ebc41aaa5e82f883", null ],
     [ "upper_extrapolation_rule", "classddc_1_1SplineEvaluator.html#a2955c7bfc010d401f09e2078a5a79544", null ],
-    [ "operator()", "classddc_1_1SplineEvaluator.html#a7b46135fa35ae58103c38010607a1416", null ],
-    [ "operator()", "classddc_1_1SplineEvaluator.html#a10dcebce0a7b29f3d627532dc2ee6b5a", null ],
-    [ "operator()", "classddc_1_1SplineEvaluator.html#ab8294846eebc88fa83cc4fc1145b37c8", null ],
-    [ "deriv", "classddc_1_1SplineEvaluator.html#a7fd7c70e9563f4648db453c549ef7658", null ],
-    [ "deriv", "classddc_1_1SplineEvaluator.html#a89ed6b49575f4dd9fe3e43718ae31155", null ],
-    [ "deriv", "classddc_1_1SplineEvaluator.html#a764577bfacd105c3d7053d93cf3a7b9e", null ],
-    [ "integrate", "classddc_1_1SplineEvaluator.html#a94a817eddedb1cd423ed684c34c28b0d", null ]
+    [ "operator()", "classddc_1_1SplineEvaluator.html#a5d4a8b5aa324f4946190caa8b1083b07", null ],
+    [ "operator()", "classddc_1_1SplineEvaluator.html#a47bfcddb4c3f301847ad9235cce2027d", null ],
+    [ "operator()", "classddc_1_1SplineEvaluator.html#a09beeb18bd2ecd79ece0ec0c42174d05", null ],
+    [ "deriv", "classddc_1_1SplineEvaluator.html#a8a50c01fca67cdf9280f7a277a35b068", null ],
+    [ "deriv", "classddc_1_1SplineEvaluator.html#a01f024684331960bf190fcae3fdc566c", null ],
+    [ "deriv", "classddc_1_1SplineEvaluator.html#a3d7faab6528b9cbc510ecd5d016c130b", null ],
+    [ "integrate", "classddc_1_1SplineEvaluator.html#acd999edc30b6d560d7479c8848a89666", null ]
 ];

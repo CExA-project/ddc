@@ -40,11 +40,11 @@ var classddc_1_1SplineEvaluator3D =
     [ "upper_extrapolation_rule_dim_2", "classddc_1_1SplineEvaluator3D.html#a65382d71efa995645ff6c9838869038e", null ],
     [ "lower_extrapolation_rule_dim_3", "classddc_1_1SplineEvaluator3D.html#a98d0240fdea027277ddba6695ab602c2", null ],
     [ "upper_extrapolation_rule_dim_3", "classddc_1_1SplineEvaluator3D.html#a34acac0c85a62f94564e20bcd503c5a9", null ],
-    [ "operator()", "classddc_1_1SplineEvaluator3D.html#a9334ec161052a229346255c0745e6375", null ],
-    [ "operator()", "classddc_1_1SplineEvaluator3D.html#a12acd706bf809d56a733628681c311e6", null ],
-    [ "operator()", "classddc_1_1SplineEvaluator3D.html#aec19be3bd581aac8091e5fe1d5c00e8c", null ],
-    [ "deriv", "classddc_1_1SplineEvaluator3D.html#a82ea3e7f6860382e58830622195eb984", null ],
-    [ "deriv", "classddc_1_1SplineEvaluator3D.html#a7aa751ca6f76d7bd9e482c23a5b0deab", null ],
-    [ "deriv", "classddc_1_1SplineEvaluator3D.html#a0b9c798e1447d5222c95f210b0dc0720", null ],
-    [ "integrate", "classddc_1_1SplineEvaluator3D.html#ad01dab2dd7b67097fd34b73bf9a949cd", null ]
+    [ "operator()", "classddc_1_1SplineEvaluator3D.html#a19b9e9fcc98478c9b874e237409c3ed8", null ],
+    [ "operator()", "classddc_1_1SplineEvaluator3D.html#a31b6dc9b0d639cd7e19911993de2d5b9", null ],
+    [ "operator()", "classddc_1_1SplineEvaluator3D.html#a03f0e7e7dadd4dff6e041e7d0412775b", null ],
+    [ "deriv", "classddc_1_1SplineEvaluator3D.html#a07e2be16ddd84081d351ea5c72a89474", null ],
+    [ "deriv", "classddc_1_1SplineEvaluator3D.html#a2249e5b27491b6e146e5b056a0b4709a", null ],
+    [ "deriv", "classddc_1_1SplineEvaluator3D.html#a135b6201faf3aa75ac3bf4885a72d666", null ],
+    [ "integrate", "classddc_1_1SplineEvaluator3D.html#af6fb009cd765f57f79be9a1434c5f10f", null ]
 ];

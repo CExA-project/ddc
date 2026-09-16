@@ -248,7 +248,7 @@ var namespaceddc =
     [ "ifft", "namespaceddc.html#a17507ff514a63591f7e9e4822e1ebacc", null ],
     [ "expose_to_pdi", "namespaceddc.html#a23d4abcde702238b33c5185cd6457658", null ],
     [ "expose_to_pdi", "namespaceddc.html#ad1758d8bf1e3c6a363d0ee5ec254d517", null ],
-    [ "integrals", "namespaceddc.html#a2e0f4e58eeec721f51500277e9f814fa", null ],
+    [ "integrals", "namespaceddc.html#ab53953f6fec2132a53afc48b694563f8", null ],
     [ "operator<<", "namespaceddc.html#a4507b6273035310c6613b823850cc854", null ],
     [ "n_boundary_equations", "namespaceddc.html#a8ae5f0e5a8f43f7c54e9d13159bb96dc", null ],
     [ "enable_chunk< Chunk< ElementType, SupportType, Allocator > >", "namespaceddc.html#a0408c8fc71367c112c298719ad6b9885", null ],

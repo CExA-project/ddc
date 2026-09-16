@@ -20,7 +20,7 @@ var classddc_1_1UniformBSplines_1_1Impl =
     [ "get_last_support_knot", "classddc_1_1UniformBSplines_1_1Impl.html#a7744da1daf58a89b19f98c4c6f5558c8", null ],
     [ "rmin", "classddc_1_1UniformBSplines_1_1Impl.html#a22a8e756602e25d746d2fc64375fb16a", null ],
     [ "rmax", "classddc_1_1UniformBSplines_1_1Impl.html#a63d0b9051430b70b5d7ded7b64ec13ca", null ],
-    [ "length", "classddc_1_1UniformBSplines_1_1Impl.html#a34403fc425e3208630cd3b3a619b0b25", null ],
+    [ "length", "classddc_1_1UniformBSplines_1_1Impl.html#a1c48c1bf0141519e19b9ffa538a5a8c6", null ],
     [ "size", "classddc_1_1UniformBSplines_1_1Impl.html#af3e8500c8b21e03010aea7de8757685c", null ],
     [ "full_domain", "classddc_1_1UniformBSplines_1_1Impl.html#a3a2e880b35078b54caa67d328fb733f1", null ],
     [ "break_point_domain", "classddc_1_1UniformBSplines_1_1Impl.html#a87edb3f9cb13f635092c7b534480270b", null ],

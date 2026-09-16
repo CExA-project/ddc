@@ -176,7 +176,7 @@ $(document).ready(function(){initNavTree('splines__linear__problem__3x3__blocks_
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>}</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> ExecSpace&gt;</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span><span class="keywordtype">double</span> SplinesLinearProblem3x3Blocks&lt;ExecSpace&gt;::get_element(std::size_t i, std::size_t j) <span class="keyword">const</span></div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>Real SplinesLinearProblem3x3Blocks&lt;ExecSpace&gt;::get_element(std::size_t i, std::size_t j) <span class="keyword">const</span></div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>{</div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    adjust_indices(i, j);</div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <span class="keywordflow">return</span> SplinesLinearProblem2x2Blocks&lt;ExecSpace&gt;::get_element(i, j);</div>
@@ -186,7 +186,7 @@ $(document).ready(function(){initNavTree('splines__linear__problem__3x3__blocks_
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span><span class="keywordtype">void</span> SplinesLinearProblem3x3Blocks&lt;ExecSpace&gt;::set_element(</div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        std::size_t i,</div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        std::size_t j,</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>        <span class="keywordtype">double</span> <span class="keyword">const</span> aij)</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>        Real <span class="keyword">const</span> aij)</div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>{</div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    adjust_indices(i, j);</div>
 <div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    SplinesLinearProblem2x2Blocks&lt;ExecSpace&gt;::set_element(i, j, aij);</div>

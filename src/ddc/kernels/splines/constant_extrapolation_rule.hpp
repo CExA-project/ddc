@@ -42,15 +42,11 @@ public:
      *
      * @deprecated Use the single parameter constructor instead, the boundaries are now retrieved from the BSplines boundaries
      */
-    template <
-            class DimNI1,
-            class = std::enable_if_t<
-                    ddc::in_tags_v<DimNI1, ddc::detail::TypeSeq<DimNI...>>
-                    && sizeof...(DimNI) == 1>>
     [[deprecated("Use the single parameter constructor instead, the boundaries are now retrieved from the BSplines boundaries")]] explicit ConstantExtrapolationRule(
             ddc::Coordinate<DimI> eval_pos,
-            [[maybe_unused]] ddc::Coordinate<DimNI1> eval_pos_not_interest_min,
-            [[maybe_unused]] ddc::Coordinate<DimNI1> eval_pos_not_interest_max)
+            [[maybe_unused]] ddc::Coordinate<DimNI...> eval_pos_not_interest_min,
+            [[maybe_unused]] ddc::Coordinate<DimNI...> eval_pos_not_interest_max)
+        requires(sizeof...(DimNI) == 1)
         : m_eval_pos(eval_pos)
     {
     }
@@ -118,10 +114,12 @@ public:
                 std::array<std::size_t, dimension> {(BSplines::degree() + 1)...},
                 [&](std::array<std::size_t, dimension> idx) {
                     y += spline_coef(
-                                 ddc::DiscreteElement<BSplines...>(
-                                         (cexa::get<ddc::type_seq_rank_v<BSplines, TypeSeqBSplines>>(
-                                                  jmin)
-                                          + idx[ddc::type_seq_rank_v<BSplines, TypeSeqBSplines>])...))
+                                 ddc::DiscreteElement<BSplines...>((
+                                         cexa::get<ddc::type_seq_rank_v<BSplines, TypeSeqBSplines>>(
+                                                 jmin)
+                                         + idx[ddc::type_seq_rank_v<
+                                                 BSplines,
+                                                 TypeSeqBSplines>])...))
                          * (cexa::get<ddc::type_seq_rank_v<BSplines, TypeSeqBSplines>>(
                                     vals)[idx[ddc::type_seq_rank_v<BSplines, TypeSeqBSplines>]]
                             * ...);

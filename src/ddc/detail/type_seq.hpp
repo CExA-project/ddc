@@ -199,7 +199,9 @@ struct Rebind
 
 /// Locate the element of the type seq associated with the specified continuous dimension
 template <class CDim, class SearchedTypeSeq>
-struct TypeSeqFindCDim;
+struct TypeSeqFindCDim
+{
+};
 
 template <class CDim, class HeadTag, class... Tags>
 struct TypeSeqFindCDim<CDim, TypeSeq<HeadTag, Tags...>>

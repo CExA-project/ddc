@@ -38,7 +38,7 @@ public:
 protected:
     std::size_t m_kl; // no. of subdiagonals
     std::size_t m_ku; // no. of superdiagonals
-    Kokkos::DualView<double**, Kokkos::LayoutRight, memory_space> m_q; // band matrix representation
+    Kokkos::DualView<Real**, Kokkos::LayoutRight, memory_space> m_q; // band matrix representation
     Kokkos::DualView<int*, memory_space> m_ipiv; // pivot indices
 
 public:
@@ -65,9 +65,9 @@ private:
     std::size_t band_storage_row_index(std::size_t i, std::size_t j) const;
 
 public:
-    double get_element(std::size_t i, std::size_t j) const override;
+    Real get_element(std::size_t i, std::size_t j) const override;
 
-    void set_element(std::size_t i, std::size_t j, double aij) override;
+    void set_element(std::size_t i, std::size_t j, Real aij) override;
 
     /**
      * @brief Perform a pre-process operation on the solver. Must be called after filling the matrix.

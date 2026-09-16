@@ -23,19 +23,19 @@ struct Evaluator2D
         {
         }
 
-        KOKKOS_FUNCTION double operator()(double const x, double const y) const noexcept
+        KOKKOS_FUNCTION ddc::Real operator()(ddc::Real const x, ddc::Real const y) const noexcept
         {
             return m_eval_func1(x) * m_eval_func2(y);
         }
 
         template <class DDim1, class DDim2>
-        KOKKOS_FUNCTION double operator()(ddc::Coordinate<DDim1, DDim2> const x) const noexcept
+        KOKKOS_FUNCTION ddc::Real operator()(ddc::Coordinate<DDim1, DDim2> const x) const noexcept
         {
             return m_eval_func1(ddc::get<DDim1>(x)) * m_eval_func2(ddc::get<DDim2>(x));
         }
 
         template <class DDim1, class DDim2>
-        void operator()(ddc::ChunkSpan<double, ddc::DiscreteDomain<DDim1, DDim2>> chunk) const
+        void operator()(ddc::ChunkSpan<ddc::Real, ddc::DiscreteDomain<DDim1, DDim2>> chunk) const
         {
             ddc::DiscreteDomain<DDim1, DDim2> const domain = chunk.domain();
 
@@ -47,9 +47,9 @@ struct Evaluator2D
             }
         }
 
-        KOKKOS_FUNCTION double deriv(
-                double const x,
-                double const y,
+        KOKKOS_FUNCTION ddc::Real deriv(
+                ddc::Real const x,
+                ddc::Real const y,
                 int const derivative_x,
                 int const derivative_y) const noexcept
         {
@@ -57,7 +57,7 @@ struct Evaluator2D
         }
 
         template <class DDim1, class DDim2>
-        KOKKOS_FUNCTION double deriv(
+        KOKKOS_FUNCTION ddc::Real deriv(
                 ddc::Coordinate<DDim1, DDim2> const x,
                 int const derivative_x,
                 int const derivative_y) const noexcept
@@ -68,7 +68,7 @@ struct Evaluator2D
 
         template <class DDim1, class DDim2>
         void deriv(
-                ddc::ChunkSpan<double, ddc::DiscreteDomain<DDim1, DDim2>> chunk,
+                ddc::ChunkSpan<ddc::Real, ddc::DiscreteDomain<DDim1, DDim2>> chunk,
                 int const derivative_x,
                 int const derivative_y) const
         {
@@ -82,7 +82,7 @@ struct Evaluator2D
             }
         }
 
-        KOKKOS_FUNCTION double max_norm(int diff1 = 0, int diff2 = 0) const
+        KOKKOS_FUNCTION ddc::Real max_norm(int diff1 = 0, int diff2 = 0) const
         {
             return m_eval_func1.max_norm(diff1) * m_eval_func2.max_norm(diff2);
         }

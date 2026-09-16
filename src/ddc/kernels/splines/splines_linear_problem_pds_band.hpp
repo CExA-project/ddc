@@ -35,7 +35,7 @@ public:
     using SplinesLinearProblem<ExecSpace>::size;
 
 protected:
-    Kokkos::DualView<double**, Kokkos::LayoutRight, memory_space>
+    Kokkos::DualView<Real**, Kokkos::LayoutRight, memory_space>
             m_q; // pds band matrix representation
 
 public:
@@ -57,9 +57,9 @@ public:
 
     SplinesLinearProblemPDSBand& operator=(SplinesLinearProblemPDSBand&& rhs) = delete;
 
-    double get_element(std::size_t i, std::size_t j) const override;
+    Real get_element(std::size_t i, std::size_t j) const override;
 
-    void set_element(std::size_t i, std::size_t j, double aij) override;
+    void set_element(std::size_t i, std::size_t j, Real aij) override;
 
     /**
      * @brief Perform a pre-process operation on the solver. Must be called after filling the matrix.

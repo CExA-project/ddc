@@ -54,17 +54,17 @@ using View1D [[deprecated]] = Kokkos::mdspan<ElementType const, Kokkos::dextents
 template <class ElementType>
 using View2D [[deprecated]] = Kokkos::mdspan<ElementType const, Kokkos::dextents<std::size_t, 2>>;
 
-using DSpan1D [[deprecated]] = Kokkos::mdspan<double, Kokkos::dextents<std::size_t, 1>>;
+using DSpan1D [[deprecated]] = Kokkos::mdspan<Real, Kokkos::dextents<std::size_t, 1>>;
 
-using DSpan2D [[deprecated]] = Kokkos::mdspan<double, Kokkos::dextents<std::size_t, 2>>;
+using DSpan2D [[deprecated]] = Kokkos::mdspan<Real, Kokkos::dextents<std::size_t, 2>>;
 
-using CDSpan1D [[deprecated]] = Kokkos::mdspan<double const, Kokkos::dextents<std::size_t, 1>>;
+using CDSpan1D [[deprecated]] = Kokkos::mdspan<Real const, Kokkos::dextents<std::size_t, 1>>;
 
-using CDSpan2D [[deprecated]] = Kokkos::mdspan<double const, Kokkos::dextents<std::size_t, 2>>;
+using CDSpan2D [[deprecated]] = Kokkos::mdspan<Real const, Kokkos::dextents<std::size_t, 2>>;
 
-using DView1D [[deprecated]] = Kokkos::mdspan<double const, Kokkos::dextents<std::size_t, 1>>;
+using DView1D [[deprecated]] = Kokkos::mdspan<Real const, Kokkos::dextents<std::size_t, 1>>;
 
-using DView2D [[deprecated]] = Kokkos::mdspan<double const, Kokkos::dextents<std::size_t, 2>>;
+using DView2D [[deprecated]] = Kokkos::mdspan<Real const, Kokkos::dextents<std::size_t, 2>>;
 #endif
 
 } // namespace ddc

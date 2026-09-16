@@ -92,7 +92,7 @@ public:
         static_assert((in_tags_v<DimNI, to_type_seq_t<CoordType>> && ...));
         using TypeSeqBSplines = ddc::detail::TypeSeq<BSplines...>;
 
-        ddc::Coordinate<DimI, DimNI...>
+        ddc::Coordinate<DimI, DimNI...> const
         coord_eval(m_eval_pos, get_eval_pos<TypeSeqBSplines>(ddc::select<DimNI>(coord_extrap))...);
 
         auto vals_ptr = cexa::make_tuple(std::array<double, BSplines::degree() + 1> {}...);

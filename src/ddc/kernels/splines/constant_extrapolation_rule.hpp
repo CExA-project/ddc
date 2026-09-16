@@ -94,20 +94,20 @@ public:
     {
         static_assert(in_tags_v<DimI, to_type_seq_t<CoordType>>);
         static_assert(((in_tags_v<DimNI, to_type_seq_t<CoordType>>) && ...));
-        using bsplines_ts = ddc::detail::TypeSeq<BSplines...>;
+        using TypeSeqBSplines = ddc::detail::TypeSeq<BSplines...>;
 
         ddc::Coordinate<DimI, DimNI...>
-        coord_eval(m_eval_pos, get_eval_pos<bsplines_ts>(ddc::select<DimNI>(coord_extrap))...);
+        coord_eval(m_eval_pos, get_eval_pos<TypeSeqBSplines>(ddc::select<DimNI>(coord_extrap))...);
 
         auto vals_ptr = cexa::make_tuple(std::array<double, BSplines::degree() + 1> {}...);
         auto const vals = cexa::make_tuple(
                 Kokkos::mdspan<double, Kokkos::extents<std::size_t, BSplines::degree() + 1>>(
-                        cexa::get<ddc::type_seq_rank_v<BSplines, bsplines_ts>>(vals_ptr)
+                        cexa::get<ddc::type_seq_rank_v<BSplines, TypeSeqBSplines>>(vals_ptr)
                                 .data())...);
 
         auto const jmin = cexa::make_tuple(
                 ddc::discrete_space<BSplines>().eval_basis(
-                        cexa::get<ddc::type_seq_rank_v<BSplines, bsplines_ts>>(vals),
+                        cexa::get<ddc::type_seq_rank_v<BSplines, TypeSeqBSplines>>(vals),
                         ddc::Coordinate<typename BSplines::continuous_dimension_type>(
                                 coord_eval))...);
 
@@ -119,11 +119,11 @@ public:
                 [&](std::array<std::size_t, dimension> idx) {
                     y += spline_coef(
                                  ddc::DiscreteElement<BSplines...>(
-                                         (cexa::get<ddc::type_seq_rank_v<BSplines, bsplines_ts>>(
+                                         (cexa::get<ddc::type_seq_rank_v<BSplines, TypeSeqBSplines>>(
                                                   jmin)
-                                          + idx[ddc::type_seq_rank_v<BSplines, bsplines_ts>])...))
-                         * (cexa::get<ddc::type_seq_rank_v<BSplines, bsplines_ts>>(
-                                    vals)[idx[ddc::type_seq_rank_v<BSplines, bsplines_ts>]]
+                                          + idx[ddc::type_seq_rank_v<BSplines, TypeSeqBSplines>])...))
+                         * (cexa::get<ddc::type_seq_rank_v<BSplines, TypeSeqBSplines>>(
+                                    vals)[idx[ddc::type_seq_rank_v<BSplines, TypeSeqBSplines>]]
                             * ...);
                 });
 
@@ -131,19 +131,19 @@ public:
     }
 
 private:
-    template <class bsplines_ts, class QDim>
+    template <class TypeSeqBSplines, class QDim>
     KOKKOS_INLINE_FUNCTION ddc::Coordinate<QDim> get_eval_pos(
             ddc::Coordinate<QDim> coord_extrap) const
     {
         static_assert(ddc::in_tags_v<QDim, ddc::detail::TypeSeq<DimNI...>>);
-        using bsplines_ni_type = ddc::type_seq_find_cdim_t<QDim, bsplines_ts>;
-        if constexpr (bsplines_ni_type::is_periodic()) {
+        using BSplinesNI = ddc::type_seq_find_cdim_t<QDim, TypeSeqBSplines>;
+        if constexpr (BSplinesNI::is_periodic()) {
             return ddc::Coordinate<QDim>(coord_extrap);
         } else {
             return Kokkos::
                     clamp(ddc::Coordinate<QDim>(coord_extrap),
-                          ddc::discrete_space<bsplines_ni_type>().rmin(),
-                          ddc::discrete_space<bsplines_ni_type>().rmax());
+                          ddc::discrete_space<BSplinesNI>().rmin(),
+                          ddc::discrete_space<BSplinesNI>().rmax());
         }
     }
 

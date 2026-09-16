@@ -201,11 +201,16 @@ struct Rebind
 template <class CDim, class SearchedTypeSeq>
 struct TypeSeqFindCDim
 {
+    static constexpr bool present = false;
+    using type = void;
 };
 
 template <class CDim, class HeadTag, class... Tags>
 struct TypeSeqFindCDim<CDim, TypeSeq<HeadTag, Tags...>>
 {
+    static constexpr bool present
+            = (std::is_same_v<typename HeadTag::continuous_dimension_type, CDim>)
+              || (TypeSeqFindCDim<CDim, ddc::detail::TypeSeq<Tags...>>::present);
     using type = std::conditional_t<
             std::is_same_v<typename HeadTag::continuous_dimension_type, CDim>,
             HeadTag,

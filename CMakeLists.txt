@@ -119,6 +119,7 @@ target_sources(
                 src/ddc/scope_guard.hpp
                 src/ddc/sparse_discrete_domain.hpp
                 src/ddc/strided_discrete_domain.hpp
+                src/ddc/tagged_type_traits.hpp
                 src/ddc/transform_reduce.hpp
                 src/ddc/trivial_space.hpp
                 src/ddc/uniform_point_sampling.hpp

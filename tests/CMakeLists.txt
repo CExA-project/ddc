@@ -49,6 +49,7 @@ add_executable(
     save_npy.cpp
     sparse_discrete_domain.cpp
     strided_discrete_domain.cpp
+    tagged_type_traits.cpp
     tagged_vector.cpp
     transform_reduce.cpp
     trivial_space.cpp

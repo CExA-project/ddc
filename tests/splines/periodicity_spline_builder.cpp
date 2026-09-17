@@ -81,7 +81,7 @@ Coord<X> xn()
 
 // Templated function giving step of the mesh in given dimension.
 template <typename X>
-double dx(std::size_t ncells)
+ddc::Real dx(std::size_t ncells)
 {
     return (xn<X>() - x0<X>()) / ncells;
 }
@@ -139,7 +139,7 @@ void TestPeriodicitySplineBuilder()
     ddc::DiscreteDomain<BSplines<X>> const dom_bsplines = spline_builder.spline_domain();
 
     // Allocate and fill a chunk containing values to be passed as input to spline_builder. Those are values of cosine along interest dimension duplicated along batch dimensions
-    ddc::Chunk vals_host_alloc(dom_vals, ddc::HostAllocator<double>());
+    ddc::Chunk vals_host_alloc(dom_vals, ddc::HostAllocator<ddc::Real>());
     ddc::ChunkSpan const vals_host = vals_host_alloc.span_view();
     evaluator_type<DDim<X>> const evaluator(dom_vals);
     evaluator(vals_host);
@@ -147,7 +147,7 @@ void TestPeriodicitySplineBuilder()
     ddc::ChunkSpan const vals = vals_alloc.span_view();
 
     // Instantiate chunk of spline coefs to receive output of spline_builder
-    ddc::Chunk coef_alloc(dom_bsplines, ddc::KokkosAllocator<double, MemorySpace>());
+    ddc::Chunk coef_alloc(dom_bsplines, ddc::KokkosAllocator<ddc::Real, MemorySpace>());
     ddc::ChunkSpan const coef = coef_alloc.span_view();
 
     // Finally compute the spline by filling `coef`
@@ -176,30 +176,32 @@ void TestPeriodicitySplineBuilder()
 
 
     // Instantiate chunks to receive outputs of spline_evaluator
-    ddc::Chunk spline_eval_alloc(dom_vals, ddc::KokkosAllocator<double, MemorySpace>());
+    ddc::Chunk spline_eval_alloc(dom_vals, ddc::KokkosAllocator<ddc::Real, MemorySpace>());
     ddc::ChunkSpan const spline_eval = spline_eval_alloc.span_view();
 
     // Call spline_evaluator on the same mesh we started with
     spline_evaluator(spline_eval, coords_eval.span_cview(), coef.span_cview());
 
     // Checking errors (we recover the initial values)
-    double const max_norm_error = ddc::parallel_transform_reduce(
+    ddc::Real const max_norm_error = ddc::parallel_transform_reduce(
             exec_space,
             spline_eval.domain(),
-            0.,
-            ddc::reducer::max<double>(),
+            static_cast<ddc::Real>(0.),
+            ddc::reducer::max<ddc::Real>(),
             KOKKOS_LAMBDA(DElem<DDim<X>> const e) {
                 return Kokkos::abs(
                         spline_eval(e)
                         - (-vals(e))); // Because function is even, we get f_eval = -f
             });
 
-    double const max_norm = evaluator.max_norm();
+    ddc::Real const max_norm = evaluator.max_norm();
 
     SplineErrorBounds<evaluator_type<DDim<X>>> const error_bounds(evaluator);
     EXPECT_LE(
             max_norm_error,
-            std::max(error_bounds.error_bound(dx<X>(ncells), s_degree), 1.0e-14 * max_norm));
+            std::
+                    max(error_bounds.error_bound(dx<X>(ncells), s_degree),
+                        static_cast<ddc::Real>(1.0e-14) * max_norm));
 }
 
 } // namespace anonymous_namespace_workaround_periodicity_spline_builder_cpp

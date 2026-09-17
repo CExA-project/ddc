@@ -7,6 +7,8 @@
 #include <array>
 #include <cstddef>
 
+#include <ddc/ddc.hpp>
+
 #include <Kokkos_Core.hpp>
 
 namespace ddc::detail {
@@ -56,21 +58,21 @@ sum(Kokkos::mdspan<
 template <typename T>
 KOKKOS_INLINE_FUNCTION T modulo(T x, T y)
 {
-    return x - y * Kokkos::floor(double(x) / y);
+    return x - y * Kokkos::floor(Real(x) / y);
 }
 
-KOKKOS_INLINE_FUNCTION double ipow(double a, std::size_t i)
+KOKKOS_INLINE_FUNCTION Real ipow(Real a, std::size_t i)
 {
-    double r(1.0);
+    Real r(1.0);
     for (std::size_t j(0); j < i; ++j) {
         r *= a;
     }
     return r;
 }
 
-KOKKOS_INLINE_FUNCTION double ipow(double a, int i)
+KOKKOS_INLINE_FUNCTION Real ipow(Real a, int i)
 {
-    double r(1.0);
+    Real r(1.0);
     if (i > 0) {
         for (int j(0); j < i; ++j) {
             r *= a;

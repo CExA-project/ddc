@@ -596,163 +596,163 @@ public:
     template <class Layout, class BatchedInterpolationDDom>
     void operator()(
             ddc::ChunkSpan<
-                    double,
+                    Real,
                     batched_spline_domain_type<BatchedInterpolationDDom>,
                     Layout,
                     memory_space> spline,
-            ddc::ChunkSpan<double const, BatchedInterpolationDDom, Layout, memory_space> vals,
+            ddc::ChunkSpan<Real const, BatchedInterpolationDDom, Layout, memory_space> vals,
             std::optional<ddc::ChunkSpan<
-                    double const,
+                    Real const,
                     batched_derivs_domain_type1<BatchedInterpolationDDom>,
                     Layout,
                     memory_space>> derivs_min1
             = std::nullopt,
             std::optional<ddc::ChunkSpan<
-                    double const,
+                    Real const,
                     batched_derivs_domain_type1<BatchedInterpolationDDom>,
                     Layout,
                     memory_space>> derivs_max1
             = std::nullopt,
             std::optional<ddc::ChunkSpan<
-                    double const,
+                    Real const,
                     batched_derivs_domain_type2<BatchedInterpolationDDom>,
                     Layout,
                     memory_space>> derivs_min2
             = std::nullopt,
             std::optional<ddc::ChunkSpan<
-                    double const,
+                    Real const,
                     batched_derivs_domain_type2<BatchedInterpolationDDom>,
                     Layout,
                     memory_space>> derivs_max2
             = std::nullopt,
             std::optional<ddc::ChunkSpan<
-                    double const,
+                    Real const,
                     batched_derivs_domain_type3<BatchedInterpolationDDom>,
                     Layout,
                     memory_space>> derivs_min3
             = std::nullopt,
             std::optional<ddc::ChunkSpan<
-                    double const,
+                    Real const,
                     batched_derivs_domain_type3<BatchedInterpolationDDom>,
                     Layout,
                     memory_space>> derivs_max3
             = std::nullopt,
             std::optional<ddc::ChunkSpan<
-                    double const,
+                    Real const,
                     batched_derivs_domain_type1_2<BatchedInterpolationDDom>,
                     Layout,
                     memory_space>> mixed_derivs_min1_min2
             = std::nullopt,
             std::optional<ddc::ChunkSpan<
-                    double const,
+                    Real const,
                     batched_derivs_domain_type1_2<BatchedInterpolationDDom>,
                     Layout,
                     memory_space>> mixed_derivs_max1_min2
             = std::nullopt,
             std::optional<ddc::ChunkSpan<
-                    double const,
+                    Real const,
                     batched_derivs_domain_type1_2<BatchedInterpolationDDom>,
                     Layout,
                     memory_space>> mixed_derivs_min1_max2
             = std::nullopt,
             std::optional<ddc::ChunkSpan<
-                    double const,
+                    Real const,
                     batched_derivs_domain_type1_2<BatchedInterpolationDDom>,
                     Layout,
                     memory_space>> mixed_derivs_max1_max2
             = std::nullopt,
             std::optional<ddc::ChunkSpan<
-                    double const,
+                    Real const,
                     batched_derivs_domain_type2_3<BatchedInterpolationDDom>,
                     Layout,
                     memory_space>> mixed_derivs_min2_min3
             = std::nullopt,
             std::optional<ddc::ChunkSpan<
-                    double const,
+                    Real const,
                     batched_derivs_domain_type2_3<BatchedInterpolationDDom>,
                     Layout,
                     memory_space>> mixed_derivs_max2_min3
             = std::nullopt,
             std::optional<ddc::ChunkSpan<
-                    double const,
+                    Real const,
                     batched_derivs_domain_type2_3<BatchedInterpolationDDom>,
                     Layout,
                     memory_space>> mixed_derivs_min2_max3
             = std::nullopt,
             std::optional<ddc::ChunkSpan<
-                    double const,
+                    Real const,
                     batched_derivs_domain_type2_3<BatchedInterpolationDDom>,
                     Layout,
                     memory_space>> mixed_derivs_max2_max3
             = std::nullopt,
             std::optional<ddc::ChunkSpan<
-                    double const,
+                    Real const,
                     batched_derivs_domain_type1_3<BatchedInterpolationDDom>,
                     Layout,
                     memory_space>> mixed_derivs_min1_min3
             = std::nullopt,
             std::optional<ddc::ChunkSpan<
-                    double const,
+                    Real const,
                     batched_derivs_domain_type1_3<BatchedInterpolationDDom>,
                     Layout,
                     memory_space>> mixed_derivs_max1_min3
             = std::nullopt,
             std::optional<ddc::ChunkSpan<
-                    double const,
+                    Real const,
                     batched_derivs_domain_type1_3<BatchedInterpolationDDom>,
                     Layout,
                     memory_space>> mixed_derivs_min1_max3
             = std::nullopt,
             std::optional<ddc::ChunkSpan<
-                    double const,
+                    Real const,
                     batched_derivs_domain_type1_3<BatchedInterpolationDDom>,
                     Layout,
                     memory_space>> mixed_derivs_max1_max3
             = std::nullopt,
             std::optional<ddc::ChunkSpan<
-                    double const,
+                    Real const,
                     batched_derivs_domain_type<BatchedInterpolationDDom>,
                     Layout,
                     memory_space>> mixed_derivs_min1_min2_min3
             = std::nullopt,
             std::optional<ddc::ChunkSpan<
-                    double const,
+                    Real const,
                     batched_derivs_domain_type<BatchedInterpolationDDom>,
                     Layout,
                     memory_space>> mixed_derivs_max1_min2_min3
             = std::nullopt,
             std::optional<ddc::ChunkSpan<
-                    double const,
+                    Real const,
                     batched_derivs_domain_type<BatchedInterpolationDDom>,
                     Layout,
                     memory_space>> mixed_derivs_min1_max2_min3
             = std::nullopt,
             std::optional<ddc::ChunkSpan<
-                    double const,
+                    Real const,
                     batched_derivs_domain_type<BatchedInterpolationDDom>,
                     Layout,
                     memory_space>> mixed_derivs_max1_max2_min3
             = std::nullopt,
             std::optional<ddc::ChunkSpan<
-                    double const,
+                    Real const,
                     batched_derivs_domain_type<BatchedInterpolationDDom>,
                     Layout,
                     memory_space>> mixed_derivs_min1_min2_max3
             = std::nullopt,
             std::optional<ddc::ChunkSpan<
-                    double const,
+                    Real const,
                     batched_derivs_domain_type<BatchedInterpolationDDom>,
                     Layout,
                     memory_space>> mixed_derivs_max1_min2_max3
             = std::nullopt,
             std::optional<ddc::ChunkSpan<
-                    double const,
+                    Real const,
                     batched_derivs_domain_type<BatchedInterpolationDDom>,
                     Layout,
                     memory_space>> mixed_derivs_min1_max2_max3
             = std::nullopt,
             std::optional<ddc::ChunkSpan<
-                    double const,
+                    Real const,
                     batched_derivs_domain_type<BatchedInterpolationDDom>,
                     Layout,
                     memory_space>> mixed_derivs_max1_max2_max3
@@ -795,138 +795,138 @@ void SplineBuilder3D<
         Solver>::
 operator()(
         ddc::ChunkSpan<
-                double,
+                Real,
                 batched_spline_domain_type<BatchedInterpolationDDom>,
                 Layout,
                 memory_space> spline,
-        ddc::ChunkSpan<double const, BatchedInterpolationDDom, Layout, memory_space> vals,
+        ddc::ChunkSpan<Real const, BatchedInterpolationDDom, Layout, memory_space> vals,
         std::optional<ddc::ChunkSpan<
-                double const,
+                Real const,
                 batched_derivs_domain_type1<BatchedInterpolationDDom>,
                 Layout,
                 memory_space>> derivs_min1,
         std::optional<ddc::ChunkSpan<
-                double const,
+                Real const,
                 batched_derivs_domain_type1<BatchedInterpolationDDom>,
                 Layout,
                 memory_space>> derivs_max1,
         std::optional<ddc::ChunkSpan<
-                double const,
+                Real const,
                 batched_derivs_domain_type2<BatchedInterpolationDDom>,
                 Layout,
                 memory_space>> derivs_min2,
         std::optional<ddc::ChunkSpan<
-                double const,
+                Real const,
                 batched_derivs_domain_type2<BatchedInterpolationDDom>,
                 Layout,
                 memory_space>> derivs_max2,
         std::optional<ddc::ChunkSpan<
-                double const,
+                Real const,
                 batched_derivs_domain_type3<BatchedInterpolationDDom>,
                 Layout,
                 memory_space>> derivs_min3,
         std::optional<ddc::ChunkSpan<
-                double const,
+                Real const,
                 batched_derivs_domain_type3<BatchedInterpolationDDom>,
                 Layout,
                 memory_space>> derivs_max3,
         std::optional<ddc::ChunkSpan<
-                double const,
+                Real const,
                 batched_derivs_domain_type1_2<BatchedInterpolationDDom>,
                 Layout,
                 memory_space>> mixed_derivs_min1_min2,
         std::optional<ddc::ChunkSpan<
-                double const,
+                Real const,
                 batched_derivs_domain_type1_2<BatchedInterpolationDDom>,
                 Layout,
                 memory_space>> mixed_derivs_max1_min2,
         std::optional<ddc::ChunkSpan<
-                double const,
+                Real const,
                 batched_derivs_domain_type1_2<BatchedInterpolationDDom>,
                 Layout,
                 memory_space>> mixed_derivs_min1_max2,
         std::optional<ddc::ChunkSpan<
-                double const,
+                Real const,
                 batched_derivs_domain_type1_2<BatchedInterpolationDDom>,
                 Layout,
                 memory_space>> mixed_derivs_max1_max2,
         std::optional<ddc::ChunkSpan<
-                double const,
+                Real const,
                 batched_derivs_domain_type2_3<BatchedInterpolationDDom>,
                 Layout,
                 memory_space>> mixed_derivs_min2_min3,
         std::optional<ddc::ChunkSpan<
-                double const,
+                Real const,
                 batched_derivs_domain_type2_3<BatchedInterpolationDDom>,
                 Layout,
                 memory_space>> mixed_derivs_max2_min3,
         std::optional<ddc::ChunkSpan<
-                double const,
+                Real const,
                 batched_derivs_domain_type2_3<BatchedInterpolationDDom>,
                 Layout,
                 memory_space>> mixed_derivs_min2_max3,
         std::optional<ddc::ChunkSpan<
-                double const,
+                Real const,
                 batched_derivs_domain_type2_3<BatchedInterpolationDDom>,
                 Layout,
                 memory_space>> mixed_derivs_max2_max3,
         std::optional<ddc::ChunkSpan<
-                double const,
+                Real const,
                 batched_derivs_domain_type1_3<BatchedInterpolationDDom>,
                 Layout,
                 memory_space>> mixed_derivs_min1_min3,
         std::optional<ddc::ChunkSpan<
-                double const,
+                Real const,
                 batched_derivs_domain_type1_3<BatchedInterpolationDDom>,
                 Layout,
                 memory_space>> mixed_derivs_max1_min3,
         std::optional<ddc::ChunkSpan<
-                double const,
+                Real const,
                 batched_derivs_domain_type1_3<BatchedInterpolationDDom>,
                 Layout,
                 memory_space>> mixed_derivs_min1_max3,
         std::optional<ddc::ChunkSpan<
-                double const,
+                Real const,
                 batched_derivs_domain_type1_3<BatchedInterpolationDDom>,
                 Layout,
                 memory_space>> mixed_derivs_max1_max3,
         std::optional<ddc::ChunkSpan<
-                double const,
+                Real const,
                 batched_derivs_domain_type<BatchedInterpolationDDom>,
                 Layout,
                 memory_space>> mixed_derivs_min1_min2_min3,
         std::optional<ddc::ChunkSpan<
-                double const,
+                Real const,
                 batched_derivs_domain_type<BatchedInterpolationDDom>,
                 Layout,
                 memory_space>> mixed_derivs_max1_min2_min3,
         std::optional<ddc::ChunkSpan<
-                double const,
+                Real const,
                 batched_derivs_domain_type<BatchedInterpolationDDom>,
                 Layout,
                 memory_space>> mixed_derivs_min1_max2_min3,
         std::optional<ddc::ChunkSpan<
-                double const,
+                Real const,
                 batched_derivs_domain_type<BatchedInterpolationDDom>,
                 Layout,
                 memory_space>> mixed_derivs_max1_max2_min3,
         std::optional<ddc::ChunkSpan<
-                double const,
+                Real const,
                 batched_derivs_domain_type<BatchedInterpolationDDom>,
                 Layout,
                 memory_space>> mixed_derivs_min1_min2_max3,
         std::optional<ddc::ChunkSpan<
-                double const,
+                Real const,
                 batched_derivs_domain_type<BatchedInterpolationDDom>,
                 Layout,
                 memory_space>> mixed_derivs_max1_min2_max3,
         std::optional<ddc::ChunkSpan<
-                double const,
+                Real const,
                 batched_derivs_domain_type<BatchedInterpolationDDom>,
                 Layout,
                 memory_space>> mixed_derivs_min1_max2_max3,
         std::optional<ddc::ChunkSpan<
-                double const,
+                Real const,
                 batched_derivs_domain_type<BatchedInterpolationDDom>,
                 Layout,
                 memory_space>> mixed_derivs_max1_max2_max3) const
@@ -952,7 +952,7 @@ operator()(
     ddc::Chunk spline_derivs_min2_alloc(
             m_label + " > spline_derivs_min2 (ddc::SplineBuilder3D::operator())",
             m_spline_builder1.batched_spline_domain(batched_interpolation_deriv_domain2),
-            ddc::KokkosAllocator<double, MemorySpace>());
+            ddc::KokkosAllocator<Real, MemorySpace>());
     auto spline_derivs_min2 = spline_derivs_min2_alloc.span_view();
     auto spline_derivs_min2_opt = std::optional(spline_derivs_min2.span_cview());
     if constexpr (SBCLower2 == ddc::SplineBuilderClosure::HERMITE) {
@@ -968,7 +968,7 @@ operator()(
     ddc::Chunk spline_derivs_max2_alloc(
             m_label + " > spline_derivs_max2 (ddc::SplineBuilder3D::operator())",
             m_spline_builder1.batched_spline_domain(batched_interpolation_deriv_domain2),
-            ddc::KokkosAllocator<double, MemorySpace>());
+            ddc::KokkosAllocator<Real, MemorySpace>());
     auto spline_derivs_max2 = spline_derivs_max2_alloc.span_view();
     auto spline_derivs_max2_opt = std::optional(spline_derivs_max2.span_cview());
     if constexpr (SBCUpper2 == ddc::SplineBuilderClosure::HERMITE) {
@@ -992,7 +992,7 @@ operator()(
     ddc::Chunk spline_derivs_min3_alloc(
             m_label + " > spline_derivs_min3 (ddc::SplineBuilder3D::operator())",
             m_spline_builder1.batched_spline_domain(batched_interpolation_deriv_domain3),
-            ddc::KokkosAllocator<double, MemorySpace>());
+            ddc::KokkosAllocator<Real, MemorySpace>());
     auto spline_derivs_min3 = spline_derivs_min3_alloc.span_view();
     auto spline_derivs_min3_opt = std::optional(spline_derivs_min3.span_cview());
     if constexpr (SBCLower3 == ddc::SplineBuilderClosure::HERMITE) {
@@ -1008,7 +1008,7 @@ operator()(
     ddc::Chunk spline_derivs_max3_alloc(
             m_label + " > spline_derivs_max3 (ddc::SplineBuilder3D::operator())",
             m_spline_builder1.batched_spline_domain(batched_interpolation_deriv_domain3),
-            ddc::KokkosAllocator<double, MemorySpace>());
+            ddc::KokkosAllocator<Real, MemorySpace>());
     auto spline_derivs_max3 = spline_derivs_max3_alloc.span_view();
     auto spline_derivs_max3_opt = std::optional(spline_derivs_max3.span_cview());
     if constexpr (SBCUpper3 == ddc::SplineBuilderClosure::HERMITE) {
@@ -1032,7 +1032,7 @@ operator()(
     ddc::Chunk spline_derivs_min2_min3_alloc(
             m_label + " > spline_derivs_min2_min3 (ddc::SplineBuilder3D::operator())",
             m_spline_builder1.batched_spline_domain(batched_interpolation_deriv_domain2_3),
-            ddc::KokkosAllocator<double, MemorySpace>());
+            ddc::KokkosAllocator<Real, MemorySpace>());
     auto spline_derivs_min2_min3 = spline_derivs_min2_min3_alloc.span_view();
     auto spline_derivs_min2_min3_opt = std::optional(spline_derivs_min2_min3.span_cview());
     if constexpr (
@@ -1050,7 +1050,7 @@ operator()(
     ddc::Chunk spline_derivs_min2_max3_alloc(
             m_label + " > spline_derivs_min2_max3 (ddc::SplineBuilder3D::operator())",
             m_spline_builder1.batched_spline_domain(batched_interpolation_deriv_domain2_3),
-            ddc::KokkosAllocator<double, MemorySpace>());
+            ddc::KokkosAllocator<Real, MemorySpace>());
     auto spline_derivs_min2_max3 = spline_derivs_min2_max3_alloc.span_view();
     auto spline_derivs_min2_max3_opt = std::optional(spline_derivs_min2_max3.span_cview());
     if constexpr (
@@ -1068,7 +1068,7 @@ operator()(
     ddc::Chunk spline_derivs_max2_min3_alloc(
             m_label + " > spline_derivs_max2_min3 (ddc::SplineBuilder3D::operator())",
             m_spline_builder1.batched_spline_domain(batched_interpolation_deriv_domain2_3),
-            ddc::KokkosAllocator<double, MemorySpace>());
+            ddc::KokkosAllocator<Real, MemorySpace>());
     auto spline_derivs_max2_min3 = spline_derivs_max2_min3_alloc.span_view();
     auto spline_derivs_max2_min3_opt = std::optional(spline_derivs_max2_min3.span_cview());
     if constexpr (
@@ -1086,7 +1086,7 @@ operator()(
     ddc::Chunk spline_derivs_max2_max3_alloc(
             m_label + " > spline_derivs_max2_max3 (ddc::SplineBuilder3D::operator())",
             m_spline_builder1.batched_spline_domain(batched_interpolation_deriv_domain2_3),
-            ddc::KokkosAllocator<double, MemorySpace>());
+            ddc::KokkosAllocator<Real, MemorySpace>());
     auto spline_derivs_max2_max3 = spline_derivs_max2_max3_alloc.span_view();
     auto spline_derivs_max2_max3_opt = std::optional(spline_derivs_max2_max3.span_cview());
     if constexpr (
@@ -1105,7 +1105,7 @@ operator()(
     ddc::Chunk spline1_alloc(
             m_label + " > spline1 (ddc::SplineBuilder3D::operator())",
             m_spline_builder1.batched_spline_domain(batched_interpolation_domain),
-            ddc::KokkosAllocator<double, MemorySpace>());
+            ddc::KokkosAllocator<Real, MemorySpace>());
     ddc::ChunkSpan const spline1 = spline1_alloc.span_view();
 
     m_spline_builder1(spline1, vals, derivs_min1, derivs_max1);

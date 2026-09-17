@@ -8,8 +8,10 @@
 #    include <cmath>
 #endif
 #include <cstddef>
+#include <limits>
 #include <stdexcept>
 #include <string>
+#include <type_traits>
 
 #include <Kokkos_Core.hpp>
 
@@ -60,7 +62,7 @@ std::size_t SplinesLinearProblemBand<ExecSpace>::band_storage_row_index(
 }
 
 template <class ExecSpace>
-double SplinesLinearProblemBand<ExecSpace>::get_element(std::size_t const i, std::size_t const j)
+Real SplinesLinearProblemBand<ExecSpace>::get_element(std::size_t const i, std::size_t const j)
         const
 {
     assert(i < size());
@@ -85,7 +87,7 @@ template <class ExecSpace>
 void SplinesLinearProblemBand<ExecSpace>::set_element(
         std::size_t const i,
         std::size_t const j,
-        double const aij)
+        Real const aij)
 {
     assert(i < size());
     assert(j < size());
@@ -101,25 +103,39 @@ void SplinesLinearProblemBand<ExecSpace>::set_element(
         && i < std::min(size(), j + m_kl + 1)) {
         m_q.view_host()(band_storage_row_index(i, j), j) = aij;
     } else {
-        assert(std::fabs(aij) < 1e-15);
+        assert(std::fabs(aij) < 10 * std::numeric_limits<Real>::epsilon());
     }
 }
 
 template <class ExecSpace>
 void SplinesLinearProblemBand<ExecSpace>::setup_solver()
 {
-    int const info = LAPACKE_dgbtrf(
-            LAPACK_ROW_MAJOR,
-            size(),
-            size(),
-            m_kl,
-            m_ku,
-            m_q.view_host().data(),
-            m_q.view_host().stride(
-                    0), // m_q.view_host().stride(0) if LAPACK_ROW_MAJOR, m_q.view_host().stride(1) if LAPACK_COL_MAJOR
-            m_ipiv.view_host().data());
+    int info;
+    if constexpr (std::is_same_v<Real, float>) {
+        info = LAPACKE_sgbtrf(
+                LAPACK_ROW_MAJOR,
+                size(),
+                size(),
+                m_kl,
+                m_ku,
+                m_q.view_host().data(),
+                m_q.view_host().stride(
+                        0), // m_q.view_host().stride(0) if LAPACK_ROW_MAJOR, m_q.view_host().stride(1) if LAPACK_COL_MAJOR
+                m_ipiv.view_host().data());
+    } else {
+        info = LAPACKE_dgbtrf(
+                LAPACK_ROW_MAJOR,
+                size(),
+                size(),
+                m_kl,
+                m_ku,
+                m_q.view_host().data(),
+                m_q.view_host().stride(
+                        0), // m_q.view_host().stride(0) if LAPACK_ROW_MAJOR, m_q.view_host().stride(1) if LAPACK_COL_MAJOR
+                m_ipiv.view_host().data());
+    }
     if (info != 0) {
-        throw std::runtime_error("LAPACKE_dgbtrf failed with error code " + std::to_string(info));
+        throw std::runtime_error("LAPACKE_gbtrf failed with error code " + std::to_string(info));
     }
 
     // Convert 1-based index to 0-based index

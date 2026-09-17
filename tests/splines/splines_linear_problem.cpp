@@ -51,16 +51,16 @@ void check_inverse(
                 matrix,
         ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS const& inv)
 {
-    double const TOL = 1e-10;
+    ddc::Real const TOL = 1e-10;
     std::size_t const N = matrix.extent(0);
 
     for (std::size_t i(0); i < N; ++i) {
         for (std::size_t j(0); j < N; ++j) {
-            double id_val = 0.0;
+            ddc::Real id_val = 0.0;
             for (std::size_t k(0); k < N; ++k) {
                 id_val += matrix(i, k) * inv(k, j);
             }
-            EXPECT_NEAR(id_val, static_cast<double>(i == j), TOL);
+            EXPECT_NEAR(id_val, static_cast<ddc::Real>(i == j), TOL);
         }
     }
 }
@@ -70,16 +70,16 @@ void check_inverse_transpose(
                 matrix,
         ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS const& inv)
 {
-    double const TOL = 1e-10;
+    ddc::Real const TOL = 1e-10;
     std::size_t const N = matrix.extent(0);
 
     for (std::size_t i(0); i < N; ++i) {
         for (std::size_t j(0); j < N; ++j) {
-            double id_val = 0.0;
+            ddc::Real id_val = 0.0;
             for (std::size_t k(0); k < N; ++k) {
                 id_val += matrix(i, k) * inv(j, k);
             }
-            EXPECT_NEAR(id_val, static_cast<double>(i == j), TOL);
+            EXPECT_NEAR(id_val, static_cast<ddc::Real>(i == j), TOL);
         }
     }
 }
@@ -89,7 +89,7 @@ void solve_and_validate(
 {
     std::size_t const N = splines_linear_problem.size();
 
-    std::vector<double> val_ptr(N * N);
+    std::vector<ddc::Real> val_ptr(N * N);
     ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS const
             val(val_ptr.data(), N, N);
 
@@ -97,7 +97,7 @@ void solve_and_validate(
 
     splines_linear_problem.setup_solver();
 
-    Kokkos::DualView<double*>
+    Kokkos::DualView<ddc::Real*>
             inv_ptr("inv_ptr", splines_linear_problem.required_number_of_rhs_rows() * N);
     ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS const
             inv(inv_ptr.view_host().data(),
@@ -115,7 +115,7 @@ void solve_and_validate(
     inv_ptr.modify_device();
     inv_ptr.sync_host();
 
-    Kokkos::DualView<double*>
+    Kokkos::DualView<ddc::Real*>
             inv_tr_ptr("inv_tr_ptr", splines_linear_problem.required_number_of_rhs_rows() * N);
     ddc::detail::SplinesLinearProblem<Kokkos::DefaultHostExecutionSpace>::MultiRHS const
             inv_tr(inv_tr_ptr.view_host().data(),

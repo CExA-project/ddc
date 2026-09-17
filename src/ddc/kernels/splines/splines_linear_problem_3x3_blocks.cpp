@@ -47,7 +47,7 @@ void SplinesLinearProblem3x3Blocks<ExecSpace>::adjust_indices(std::size_t& i, st
 }
 
 template <class ExecSpace>
-double SplinesLinearProblem3x3Blocks<ExecSpace>::get_element(std::size_t i, std::size_t j) const
+Real SplinesLinearProblem3x3Blocks<ExecSpace>::get_element(std::size_t i, std::size_t j) const
 {
     adjust_indices(i, j);
     return SplinesLinearProblem2x2Blocks<ExecSpace>::get_element(i, j);
@@ -57,7 +57,7 @@ template <class ExecSpace>
 void SplinesLinearProblem3x3Blocks<ExecSpace>::set_element(
         std::size_t i,
         std::size_t j,
-        double const aij)
+        Real const aij)
 {
     adjust_indices(i, j);
     SplinesLinearProblem2x2Blocks<ExecSpace>::set_element(i, j, aij);

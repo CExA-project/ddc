@@ -77,16 +77,13 @@ public:
      * @param[in] coord_extrap The coordinates where we want to evaluate the function on B-splines
      * @param[in] spline_coef The coefficients of the function on B-splines.
      *
-     *@return A double with the value of the function on B-splines evaluated at the coordinate.
+     *@return A Real with the value of the function on B-splines evaluated at the coordinate.
      */
     template <class CoordType, class... BSplines, class Layout, class MemorySpace>
-    KOKKOS_FUNCTION double operator()(
+    KOKKOS_FUNCTION Real operator()(
             CoordType coord_extrap,
-            ddc::ChunkSpan<
-                    double const,
-                    ddc::DiscreteDomain<BSplines...>,
-                    Layout,
-                    MemorySpace> const spline_coef) const
+            ddc::ChunkSpan<Real const, ddc::DiscreteDomain<BSplines...>, Layout, MemorySpace> const
+                    spline_coef) const
     {
         static_assert(in_tags_v<DimI, to_type_seq_t<CoordType>>);
         static_assert((in_tags_v<DimNI, to_type_seq_t<CoordType>> && ...));
@@ -95,9 +92,9 @@ public:
         ddc::Coordinate<DimI, DimNI...> const
         coord_eval(m_eval_pos, get_eval_pos<TypeSeqBSplines>(ddc::select<DimNI>(coord_extrap))...);
 
-        auto vals_ptr = cexa::make_tuple(std::array<double, BSplines::degree() + 1> {}...);
+        auto vals_ptr = cexa::make_tuple(std::array<Real, BSplines::degree() + 1> {}...);
         auto const vals = cexa::make_tuple(
-                Kokkos::mdspan<double, Kokkos::extents<std::size_t, BSplines::degree() + 1>>(
+                Kokkos::mdspan<Real, Kokkos::extents<std::size_t, BSplines::degree() + 1>>(
                         cexa::get<ddc::type_seq_rank_v<BSplines, TypeSeqBSplines>>(vals_ptr)
                                 .data())...);
 
@@ -109,7 +106,7 @@ public:
 
         static constexpr std::size_t dimension = sizeof...(BSplines);
 
-        double y = 0.0;
+        Real y = 0.0;
         for_each(
                 std::array<std::size_t, dimension> {(BSplines::degree() + 1)...},
                 [&](std::array<std::size_t, dimension> idx) {

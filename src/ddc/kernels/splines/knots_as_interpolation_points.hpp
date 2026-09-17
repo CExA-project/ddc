@@ -60,7 +60,7 @@ public:
             using SamplingImpl = Sampling::template Impl<Sampling, Kokkos::HostSpace>;
             ddc::DiscreteDomain<knot_discrete_dimension_t<BSplines>> break_point_domain
                     = ddc::discrete_space<BSplines>().break_point_domain();
-            std::vector<double> break_points(break_point_domain.size());
+            std::vector<Real> break_points(break_point_domain.size());
             ddc::host_for_each(
                     break_point_domain,
                     [&](ddc::DiscreteElement<knot_discrete_dimension_t<BSplines>> ik) {

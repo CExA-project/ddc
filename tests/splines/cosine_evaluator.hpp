@@ -18,14 +18,14 @@ struct CosineEvaluator
         using Dim = DDim;
 
     private:
-        static constexpr double s_2_pi = 2 * Kokkos::numbers::pi;
+        static constexpr ddc::Real s_2_pi = 2 * Kokkos::numbers::pi;
 
-        static constexpr double s_pi_2 = Kokkos::numbers::pi / 2;
+        static constexpr ddc::Real s_pi_2 = Kokkos::numbers::pi / 2;
 
     private:
-        double m_coef0;
+        ddc::Real m_coef0;
 
-        double m_coef1;
+        ddc::Real m_coef1;
 
     public:
         template <class Domain>
@@ -34,15 +34,15 @@ struct CosineEvaluator
         {
         }
 
-        Evaluator(double coef0, double coef1) : m_coef0(coef0), m_coef1(coef1) {}
+        Evaluator(ddc::Real coef0, ddc::Real coef1) : m_coef0(coef0), m_coef1(coef1) {}
 
-        KOKKOS_FUNCTION double operator()(double const x) const noexcept
+        KOKKOS_FUNCTION ddc::Real operator()(ddc::Real const x) const noexcept
         {
             return eval(x, 0);
         }
 
         KOKKOS_FUNCTION void operator()(
-                ddc::ChunkSpan<double, ddc::DiscreteDomain<DDim>> chunk) const
+                ddc::ChunkSpan<ddc::Real, ddc::DiscreteDomain<DDim>> chunk) const
         {
             ddc::DiscreteDomain<DDim> const domain = chunk.domain();
 
@@ -51,13 +51,13 @@ struct CosineEvaluator
             }
         }
 
-        KOKKOS_FUNCTION double deriv(double const x, int const derivative) const noexcept
+        KOKKOS_FUNCTION ddc::Real deriv(ddc::Real const x, int const derivative) const noexcept
         {
             return eval(x, derivative);
         }
 
         KOKKOS_FUNCTION void deriv(
-                ddc::ChunkSpan<double, ddc::DiscreteDomain<DDim>> chunk,
+                ddc::ChunkSpan<ddc::Real, ddc::DiscreteDomain<DDim>> chunk,
                 int const derivative) const
         {
             ddc::DiscreteDomain<DDim> const domain = chunk.domain();
@@ -67,13 +67,13 @@ struct CosineEvaluator
             }
         }
 
-        KOKKOS_FUNCTION double max_norm(int diff = 0) const
+        KOKKOS_FUNCTION ddc::Real max_norm(int diff = 0) const
         {
             return ddc::detail::ipow(s_2_pi * m_coef0, diff);
         }
 
     private:
-        KOKKOS_FUNCTION double eval(double const x, int const derivative) const noexcept
+        KOKKOS_FUNCTION ddc::Real eval(ddc::Real const x, int const derivative) const noexcept
         {
             return ddc::detail::ipow(s_2_pi * m_coef0, derivative)
                    * Kokkos::cos(s_pi_2 * derivative + s_2_pi * (m_coef0 * x + m_coef1));

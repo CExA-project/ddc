@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <ddc/ddc.hpp>
+
 #include <Kokkos_Assert.hpp>
 #include <Kokkos_Macros.hpp>
 
@@ -24,7 +26,7 @@ struct PeriodicExtrapolationRule
      * @return Undefined.
      */
     template <class CoordType, class ChunkSpan>
-    KOKKOS_FUNCTION double operator()(CoordType, ChunkSpan) const
+    KOKKOS_FUNCTION Real operator()(CoordType, ChunkSpan) const
     {
         KOKKOS_ASSERT("PeriodicExtrapolationRule::operator() should never be called")
 

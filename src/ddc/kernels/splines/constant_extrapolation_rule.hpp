@@ -131,7 +131,7 @@ public:
 
 private:
     template <class BSplinesNI>
-    KOKKOS_INLINE_FUNCTION ddc::Coordinate<typename BSplinesNI::continuous_dimension_type>
+    KOKKOS_FUNCTION ddc::Coordinate<typename BSplinesNI::continuous_dimension_type>
     get_eval_pos(ddc::Coordinate<typename BSplinesNI::continuous_dimension_type> coord_extrap) const
     {
         if constexpr (std::is_same_v<typename BSplinesNI::continuous_dimension_type, DimI>) {
@@ -151,7 +151,7 @@ private:
     }
 
     template <std::size_t N, class Functor, class... Is>
-    KOKKOS_INLINE_FUNCTION static void for_each(
+    KOKKOS_FUNCTION static void for_each(
             std::array<std::size_t, N> const& bounds,
             Functor const& f,
             Is... is)

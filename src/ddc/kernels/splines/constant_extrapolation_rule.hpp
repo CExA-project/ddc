@@ -20,7 +20,7 @@ namespace ddc {
  * extrapolation on the edge.
  */
 #if DDC_BUILD_DEPRECATED_CODE()
-template <class DimI, class... DimNI>
+template <class DimI, [[deprecated]] class... DimNI>
 #else
 template <class DimI>
 #endif

@@ -19,7 +19,11 @@ namespace ddc {
  * To define the value of a function on B-splines out of the domain, we here use a constant
  * extrapolation on the edge.
  */
+#if DDC_BUILD_DEPRECATED_CODE()
 template <class DimI, class... DimNI>
+#else
+template <class DimI>
+#endif
 struct ConstantExtrapolationRule
 {
 private:
@@ -89,7 +93,6 @@ public:
         using TypeSeqBSplines = ddc::detail::TypeSeq<BSplines...>;
 
         ddc::Coordinate<DimI, typename BSplines::continuous_dimension_type...> const coord_eval(
-                m_eval_pos,
                 get_eval_pos<BSplines>(ddc::select<typename BSplines::continuous_dimension_type>(
                         coord_extrap))...);
 
@@ -131,14 +134,19 @@ private:
     KOKKOS_INLINE_FUNCTION ddc::Coordinate<typename BSplinesNI::continuous_dimension_type>
     get_eval_pos(ddc::Coordinate<typename BSplinesNI::continuous_dimension_type> coord_extrap) const
     {
-        if constexpr (BSplinesNI::is_periodic()) {
-            return ddc::Coordinate<typename BSplinesNI::continuous_dimension_type>(coord_extrap);
+        if constexpr (std::is_same_v<typename BSplinesNI::continuous_dimension_type, DimI>) {
+            return m_eval_pos;
         } else {
-            return Kokkos::
-                    clamp(ddc::Coordinate<typename BSplinesNI::continuous_dimension_type>(
-                                  coord_extrap),
-                          ddc::discrete_space<BSplinesNI>().rmin(),
-                          ddc::discrete_space<BSplinesNI>().rmax());
+            if constexpr (BSplinesNI::is_periodic()) {
+                return ddc::Coordinate<typename BSplinesNI::continuous_dimension_type>(
+                        coord_extrap);
+            } else {
+                return Kokkos::
+                        clamp(ddc::Coordinate<typename BSplinesNI::continuous_dimension_type>(
+                                      coord_extrap),
+                              ddc::discrete_space<BSplinesNI>().rmin(),
+                              ddc::discrete_space<BSplinesNI>().rmax());
+            }
         }
     }
 

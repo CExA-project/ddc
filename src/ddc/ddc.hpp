@@ -47,6 +47,7 @@ namespace ddc {
 #include "ddc_to_kokkos_execution_policy.hpp"
 #include "real_type.hpp"
 #include "scope_guard.hpp"
+#include "tagged_type_traits.hpp"
 
 // Containers
 #include "aligned_allocator.hpp"

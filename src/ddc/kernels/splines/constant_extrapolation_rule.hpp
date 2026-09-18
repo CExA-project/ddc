@@ -86,11 +86,12 @@ public:
                     spline_coef) const
     {
         static_assert(in_tags_v<DimI, to_type_seq_t<CoordType>>);
-        static_assert((in_tags_v<DimNI, to_type_seq_t<CoordType>> && ...));
         using TypeSeqBSplines = ddc::detail::TypeSeq<BSplines...>;
 
-        ddc::Coordinate<DimI, DimNI...> const
-        coord_eval(m_eval_pos, get_eval_pos<TypeSeqBSplines>(ddc::select<DimNI>(coord_extrap))...);
+        ddc::Coordinate<DimI, typename BSplines::continuous_dimension_type...> const coord_eval(
+                m_eval_pos,
+                get_eval_pos<BSplines>(ddc::select<typename BSplines::continuous_dimension_type>(
+                        coord_extrap))...);
 
         auto vals_ptr = cexa::make_tuple(std::array<Real, BSplines::degree() + 1> {}...);
         auto const vals = cexa::make_tuple(
@@ -126,17 +127,16 @@ public:
     }
 
 private:
-    template <class TypeSeqBSplines, class QDim>
-    KOKKOS_INLINE_FUNCTION ddc::Coordinate<QDim> get_eval_pos(
-            ddc::Coordinate<QDim> coord_extrap) const
+    template <class BSplinesNI>
+    KOKKOS_INLINE_FUNCTION ddc::Coordinate<typename BSplinesNI::continuous_dimension_type>
+    get_eval_pos(ddc::Coordinate<typename BSplinesNI::continuous_dimension_type> coord_extrap) const
     {
-        static_assert(ddc::in_tags_v<QDim, ddc::detail::TypeSeq<DimNI...>>);
-        using BSplinesNI = ddc::type_seq_find_cdim_t<QDim, TypeSeqBSplines>;
         if constexpr (BSplinesNI::is_periodic()) {
-            return ddc::Coordinate<QDim>(coord_extrap);
+            return ddc::Coordinate<typename BSplinesNI::continuous_dimension_type>(coord_extrap);
         } else {
             return Kokkos::
-                    clamp(ddc::Coordinate<QDim>(coord_extrap),
+                    clamp(ddc::Coordinate<typename BSplinesNI::continuous_dimension_type>(
+                                  coord_extrap),
                           ddc::discrete_space<BSplinesNI>().rmin(),
                           ddc::discrete_space<BSplinesNI>().rmax());
         }

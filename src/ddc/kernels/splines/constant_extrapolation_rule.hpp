@@ -131,8 +131,8 @@ public:
 
 private:
     template <class BSplinesNI>
-    KOKKOS_FUNCTION ddc::Coordinate<typename BSplinesNI::continuous_dimension_type>
-    get_eval_pos(ddc::Coordinate<typename BSplinesNI::continuous_dimension_type> coord_extrap) const
+    KOKKOS_FUNCTION ddc::Coordinate<typename BSplinesNI::continuous_dimension_type> get_eval_pos(
+            ddc::Coordinate<typename BSplinesNI::continuous_dimension_type> coord_extrap) const
     {
         if constexpr (std::is_same_v<typename BSplinesNI::continuous_dimension_type, DimI>) {
             return m_eval_pos;

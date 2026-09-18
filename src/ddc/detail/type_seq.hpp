@@ -197,26 +197,6 @@ struct Rebind
 {
 };
 
-/// Locate the element of the type seq associated with the specified continuous dimension
-template <class CDim, class SearchedTypeSeq>
-struct TypeSeqFindCDim
-{
-    static constexpr bool present = false;
-    using type = void;
-};
-
-template <class CDim, class HeadTag, class... Tags>
-struct TypeSeqFindCDim<CDim, TypeSeq<HeadTag, Tags...>>
-{
-    static constexpr bool present
-            = (std::is_same_v<typename HeadTag::continuous_dimension_type, CDim>)
-              || (TypeSeqFindCDim<CDim, ddc::detail::TypeSeq<Tags...>>::present);
-    using type = std::conditional_t<
-            std::is_same_v<typename HeadTag::continuous_dimension_type, CDim>,
-            HeadTag,
-            typename TypeSeqFindCDim<CDim, ddc::detail::TypeSeq<Tags...>>::type>;
-};
-
 } // namespace detail
 
 template <class TypeSeq>
@@ -277,8 +257,5 @@ constexpr bool type_seq_is_unique_v<detail::TypeSeq<Tags...>>
 
 template <class T>
 using to_type_seq_t = detail::ToTypeSeq<T>::type;
-
-template <class CDim, class TypeSeq>
-using type_seq_find_cdim_t = detail::TypeSeqFindCDim<CDim, TypeSeq>::type;
 
 } // namespace ddc

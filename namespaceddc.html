@@ -358,6 +358,10 @@ Typedefs</h2></td></tr>
 <tr class="separator:a1eb87e589bae955cef6cd18cdc7826f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab25c16a5ce1c3230941216a27acb684f" id="r_ab25c16a5ce1c3230941216a27acb684f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceddc.html#ab25c16a5ce1c3230941216a27acb684f">Real</a> = <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">float</a></td></tr>
 <tr class="separator:ab25c16a5ce1c3230941216a27acb684f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6e034c20a0f989ef686b42053d2413f0" id="r_a6e034c20a0f989ef686b42053d2413f0"><td class="memTemplParams" colspan="2">template&lt;class... TaggedTypes&gt; </td></tr>
+<tr class="memitem:a6e034c20a0f989ef686b42053d2413f0"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a6e034c20a0f989ef686b42053d2413f0">combine_t</a> = detail::Combine&lt; TaggedTypes... &gt;::type</td></tr>
+<tr class="memdesc:a6e034c20a0f989ef686b42053d2413f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">A helper structure to determine the type when combining tags across containers.  <br /></td></tr>
+<tr class="separator:a6e034c20a0f989ef686b42053d2413f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa7047c6422bfad579ddff16ec9f40f19" id="r_aa7047c6422bfad579ddff16ec9f40f19"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt; </td></tr>
 <tr class="memitem:aa7047c6422bfad579ddff16ec9f40f19"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#aa7047c6422bfad579ddff16ec9f40f19">knot_discrete_dimension_t</a> = <a class="el" href="namespaceddc.html#structddc_1_1KnotDiscreteDimension">KnotDiscreteDimension</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim</a> &gt;::type</td></tr>
 <tr class="memdesc:aa7047c6422bfad579ddff16ec9f40f19"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper type to easily access <code><a class="el" href="namespaceddc.html#structddc_1_1KnotDiscreteDimension" title="If the type DDim is a B-spline, defines type to the discrete dimension of the associated knots.">KnotDiscreteDimension</a>&lt;DDim&gt;::type</code>  <br /></td></tr>
@@ -1507,6 +1511,33 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="real__type_8hpp_source.html#l00017">17</a> of file <a class="el" href="real__type_8hpp_source.html">real_type.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a6e034c20a0f989ef686b42053d2413f0" name="a6e034c20a0f989ef686b42053d2413f0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6e034c20a0f989ef686b42053d2413f0">&#9670;&#160;</a></span>combine_t</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class... TaggedTypes&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a> <a class="el" href="namespaceddc.html#a6e034c20a0f989ef686b42053d2413f0">ddc::combine_t</a> = <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typedef</a> detail::Combine&lt;TaggedTypes...&gt;::type</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>A helper structure to determine the type when combining tags across containers. </p>
+<p>E.g. combine_t&lt;DiscreteElement&lt;Tag1&gt;, DiscreteElement&lt;Tag2&gt;&gt; == DiscreteElement&lt;Tag1, Tag2&gt;</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">Containers</td><td>The Types that should be combined. They should differ only in the tags. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="tagged__type__traits_8hpp_source.html#l00040">40</a> of file <a class="el" href="tagged__type__traits_8hpp_source.html">tagged_type_traits.hpp</a>.</p>
 
 </div>
 </div>

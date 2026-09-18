@@ -88,6 +88,7 @@ var namespaceddc =
     [ "DeviceAllocator", "namespaceddc.html#a7e1a2cf32bc6b8aae8f98163fc2a2843", null ],
     [ "HostAllocator", "namespaceddc.html#a1eb87e589bae955cef6cd18cdc7826f3", null ],
     [ "Real", "namespaceddc.html#ab25c16a5ce1c3230941216a27acb684f", null ],
+    [ "combine_t", "namespaceddc.html#a6e034c20a0f989ef686b42053d2413f0", null ],
     [ "knot_discrete_dimension_t", "namespaceddc.html#aa7047c6422bfad579ddff16ec9f40f19", null ],
     [ "FFT_Direction", "namespaceddc.html#ae672eb355c3d1fa7de604e8bf6164853", [
       [ "FORWARD", "namespaceddc.html#ae672eb355c3d1fa7de604e8bf6164853abfec72bb37910c61f36b6c29a1f7ec31", null ],

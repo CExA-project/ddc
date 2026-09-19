@@ -237,15 +237,15 @@ void TestExtrapolationRuleSpline()
 #    endif
 #elif defined(ER_CONSTANT)
 #    if defined(BC_PERIODIC)
-    using extrapolation_rule_dim_1_type = ddc::ConstantExtrapolationRule<I1, I2>;
+    using extrapolation_rule_dim_1_type = ddc::ConstantExtrapolationRule<I1>;
     using extrapolation_rule_dim_2_type = ddc::PeriodicExtrapolationRule<I2>;
     extrapolation_rule_dim_1_type const extrapolation_rule_left_dim_1(x0<I1>());
     extrapolation_rule_dim_1_type const extrapolation_rule_right_dim_1(xn<I1>());
     extrapolation_rule_dim_2_type const extrapolation_rule_left_dim_2;
     extrapolation_rule_dim_2_type const extrapolation_rule_right_dim_2;
 #    else
-    using extrapolation_rule_dim_1_type = ddc::ConstantExtrapolationRule<I1, I2>;
-    using extrapolation_rule_dim_2_type = ddc::ConstantExtrapolationRule<I2, I1>;
+    using extrapolation_rule_dim_1_type = ddc::ConstantExtrapolationRule<I1>;
+    using extrapolation_rule_dim_2_type = ddc::ConstantExtrapolationRule<I2>;
     extrapolation_rule_dim_1_type const extrapolation_rule_left_dim_1(x0<I1>());
     extrapolation_rule_dim_1_type const extrapolation_rule_right_dim_1(xn<I1>());
     extrapolation_rule_dim_2_type const extrapolation_rule_left_dim_2(x0<I2>());

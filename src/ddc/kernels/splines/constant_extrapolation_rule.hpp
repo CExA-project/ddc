@@ -13,73 +13,18 @@
 
 namespace ddc {
 
-template <class DimI, class... Dim>
-struct ConstantExtrapolationRule
-{
-};
-
-/**
- * @brief A functor for describing a spline boundary value by a constant extrapolation for 1D evaluator.
- *
- * To define the value of a function on B-splines out of the domain, we here use a constant
- * extrapolation on the edge.
- */
-template <class DimI>
-struct ConstantExtrapolationRule<DimI>
-{
-private:
-    ddc::Coordinate<DimI> m_eval_pos;
-
-public:
-    /**
-     * @brief Instantiate a ConstantExtrapolationRule.
-     *
-     * The boundary value will be the same as at the coordinate eval_pos given.
-     *
-     * @param[in] eval_pos Coordinate inside the domain where we will evaluate each points outside the domain.
-     */
-    explicit ConstantExtrapolationRule(ddc::Coordinate<DimI> eval_pos) : m_eval_pos(eval_pos) {}
-
-    /**
-     * @brief Get the value of the function on B-splines at a coordinate outside the domain.
-     *
-     * @param[in] pos The coordinate where we want to evaluate the function on B-splines.
-     * @param[in] spline_coef The coefficients of the function on B-splines.
-     *
-     * @return A Real with the value of the function on B-splines evaluated at the coordinate.
-     */
-    template <class CoordType, class BSplines, class Layout, class MemorySpace>
-    KOKKOS_FUNCTION Real operator()(
-            [[maybe_unused]] CoordType pos,
-            ddc::ChunkSpan<Real const, ddc::DiscreteDomain<BSplines>, Layout, MemorySpace> const
-                    spline_coef) const
-    {
-        // `pos` is always unused, but needed for Doxygen
-        static_assert(in_tags_v<DimI, to_type_seq_t<CoordType>>);
-
-        std::array<Real, BSplines::degree() + 1> vals_ptr;
-        Kokkos::mdspan<Real, Kokkos::extents<std::size_t, BSplines::degree() + 1>> const vals(
-                vals_ptr.data());
-
-        ddc::DiscreteElement<BSplines> const idx
-                = ddc::discrete_space<BSplines>().eval_basis(vals, m_eval_pos);
-
-        Real y = 0.0;
-        for (std::size_t i = 0; i < BSplines::degree() + 1; ++i) {
-            y += spline_coef(idx + i) * vals[i];
-        }
-        return y;
-    }
-};
-
 /**
  * @brief A functor for describing a spline boundary value by a constant extrapolation for 2D evaluator.
  *
  * To define the value of a function on B-splines out of the domain, we here use a constant
  * extrapolation on the edge.
  */
-template <class DimI, class DimNI>
-struct ConstantExtrapolationRule<DimI, DimNI>
+#if DDC_BUILD_DEPRECATED_CODE()
+template <class DimI, class... DimNI>
+#else
+template <class DimI>
+#endif
+struct ConstantExtrapolationRule
 {
 private:
     ddc::Coordinate<DimI> m_eval_pos;
@@ -103,8 +48,9 @@ public:
      */
     [[deprecated("Use the single parameter constructor instead, the boundaries are now retrieved from the BSplines boundaries")]] explicit ConstantExtrapolationRule(
             ddc::Coordinate<DimI> eval_pos,
-            [[maybe_unused]] ddc::Coordinate<DimNI> eval_pos_not_interest_min,
-            [[maybe_unused]] ddc::Coordinate<DimNI> eval_pos_not_interest_max)
+            [[maybe_unused]] ddc::Coordinate<DimNI...> eval_pos_not_interest_min,
+            [[maybe_unused]] ddc::Coordinate<DimNI...> eval_pos_not_interest_max)
+        requires(sizeof...(DimNI) == 1)
         : m_eval_pos(eval_pos)
     {
     }
@@ -137,59 +83,87 @@ public:
      *
      *@return A Real with the value of the function on B-splines evaluated at the coordinate.
      */
-    template <class CoordType, class BSplines1, class BSplines2, class Layout, class MemorySpace>
+    template <class CoordType, class... BSplines, class Layout, class MemorySpace>
     KOKKOS_FUNCTION Real operator()(
             CoordType coord_extrap,
-            ddc::ChunkSpan<
-                    Real const,
-                    ddc::DiscreteDomain<BSplines1, BSplines2>,
-                    Layout,
-                    MemorySpace> const spline_coef) const
+            ddc::ChunkSpan<Real const, ddc::DiscreteDomain<BSplines...>, Layout, MemorySpace> const
+                    spline_coef) const
     {
-        static_assert(
-                in_tags_v<DimI, to_type_seq_t<CoordType>>
-                && in_tags_v<DimNI, to_type_seq_t<CoordType>>);
-        using bsplines_ni_type = std::conditional_t<
-                std::is_same_v<typename BSplines1::continuous_dimension_type, DimNI>,
-                BSplines1,
-                BSplines2>;
-        static_assert(std::is_same_v<typename bsplines_ni_type::continuous_dimension_type, DimNI>);
+        static_assert(in_tags_v<DimI, to_type_seq_t<CoordType>>);
+        using TypeSeqBSplines = ddc::detail::TypeSeq<BSplines...>;
 
-        ddc::Coordinate<DimI, DimNI> eval_pos;
-        if constexpr (bsplines_ni_type::is_periodic()) {
-            eval_pos = ddc::
-                    Coordinate<DimI, DimNI>(m_eval_pos, ddc::Coordinate<DimNI>(coord_extrap));
-        } else {
-            eval_pos = ddc::Coordinate<DimI, DimNI>(
-                    m_eval_pos,
-                    Kokkos::
-                            clamp(ddc::Coordinate<DimNI>(coord_extrap),
-                                  ddc::discrete_space<bsplines_ni_type>().rmin(),
-                                  ddc::discrete_space<bsplines_ni_type>().rmax()));
-        }
+        ddc::Coordinate<DimI, typename BSplines::continuous_dimension_type...> const coord_eval(
+                get_eval_pos<BSplines>(ddc::select<typename BSplines::continuous_dimension_type>(
+                        coord_extrap))...);
 
-        std::array<Real, BSplines1::degree() + 1> vals1_ptr;
-        Kokkos::mdspan<Real, Kokkos::extents<std::size_t, BSplines1::degree() + 1>> const vals1(
-                vals1_ptr.data());
-        std::array<Real, BSplines2::degree() + 1> vals2_ptr;
-        Kokkos::mdspan<Real, Kokkos::extents<std::size_t, BSplines2::degree() + 1>> const vals2(
-                vals2_ptr.data());
+        auto vals_ptr = cexa::make_tuple(std::array<Real, BSplines::degree() + 1> {}...);
+        auto const vals = cexa::make_tuple(
+                Kokkos::mdspan<Real, Kokkos::extents<std::size_t, BSplines::degree() + 1>>(
+                        cexa::get<ddc::type_seq_rank_v<BSplines, TypeSeqBSplines>>(vals_ptr)
+                                .data())...);
 
-        ddc::DiscreteElement<BSplines1> const idx1 = ddc::discrete_space<BSplines1>().eval_basis(
-                vals1,
-                ddc::Coordinate<typename BSplines1::continuous_dimension_type>(eval_pos));
-        ddc::DiscreteElement<BSplines2> const idx2 = ddc::discrete_space<BSplines2>().eval_basis(
-                vals2,
-                ddc::Coordinate<typename BSplines2::continuous_dimension_type>(eval_pos));
+        auto const jmin = cexa::make_tuple(
+                ddc::discrete_space<BSplines>().eval_basis(
+                        cexa::get<ddc::type_seq_rank_v<BSplines, TypeSeqBSplines>>(vals),
+                        ddc::Coordinate<typename BSplines::continuous_dimension_type>(
+                                coord_eval))...);
+
+        static constexpr std::size_t dimension = sizeof...(BSplines);
 
         Real y = 0.0;
-        for (std::size_t i = 0; i < BSplines1::degree() + 1; ++i) {
-            for (std::size_t j = 0; j < BSplines2::degree() + 1; ++j) {
-                y += spline_coef(idx1 + i, idx2 + j) * vals1[i] * vals2[j];
-            }
-        }
+        for_each(
+                std::array<std::size_t, dimension> {(BSplines::degree() + 1)...},
+                [&](std::array<std::size_t, dimension> idx) {
+                    y += spline_coef(
+                                 ddc::DiscreteElement<BSplines...>((
+                                         cexa::get<ddc::type_seq_rank_v<BSplines, TypeSeqBSplines>>(
+                                                 jmin)
+                                         + idx[ddc::type_seq_rank_v<
+                                                 BSplines,
+                                                 TypeSeqBSplines>])...))
+                         * (cexa::get<ddc::type_seq_rank_v<BSplines, TypeSeqBSplines>>(
+                                    vals)[idx[ddc::type_seq_rank_v<BSplines, TypeSeqBSplines>]]
+                            * ...);
+                });
 
         return y;
+    }
+
+private:
+    template <class BSplinesNI>
+    KOKKOS_FUNCTION ddc::Coordinate<typename BSplinesNI::continuous_dimension_type> get_eval_pos(
+            ddc::Coordinate<typename BSplinesNI::continuous_dimension_type> coord_extrap) const
+    {
+        if constexpr (std::is_same_v<typename BSplinesNI::continuous_dimension_type, DimI>) {
+            return m_eval_pos;
+        } else {
+            if constexpr (BSplinesNI::is_periodic()) {
+                return ddc::Coordinate<typename BSplinesNI::continuous_dimension_type>(
+                        coord_extrap);
+            } else {
+                return Kokkos::
+                        clamp(ddc::Coordinate<typename BSplinesNI::continuous_dimension_type>(
+                                      coord_extrap),
+                              ddc::discrete_space<BSplinesNI>().rmin(),
+                              ddc::discrete_space<BSplinesNI>().rmax());
+            }
+        }
+    }
+
+    template <std::size_t N, class Functor, class... Is>
+    KOKKOS_FUNCTION static void for_each(
+            std::array<std::size_t, N> const& bounds,
+            Functor const& f,
+            Is... is)
+    {
+        static constexpr std::size_t I = sizeof...(Is);
+        if constexpr (I == N) {
+            f(std::array<std::size_t, N> {is...});
+        } else {
+            for (std::size_t i = 0; i < bounds[I]; ++i) {
+                for_each(bounds, f, is..., i);
+            }
+        }
     }
 };
 

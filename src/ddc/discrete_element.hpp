@@ -8,6 +8,7 @@
 #include <concepts>
 #include <cstddef>
 #include <iosfwd>
+#include <span>
 #include <type_traits>
 #include <utility>
 

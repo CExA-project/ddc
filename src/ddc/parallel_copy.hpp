@@ -5,6 +5,7 @@
 #pragma once
 
 #include <cassert>
+#include <cstddef>
 #include <type_traits>
 #include <utility>
 
@@ -12,6 +13,7 @@
 
 #include "chunk_traits.hpp"
 #include "ddc_to_kokkos_execution_policy.hpp"
+#include "discrete_vector.hpp"
 
 namespace ddc {
 

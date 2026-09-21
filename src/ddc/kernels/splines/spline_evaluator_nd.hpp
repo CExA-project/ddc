@@ -6,9 +6,7 @@
 
 #include <array>
 #include <cstddef>
-#include <tuple>
 #include <type_traits>
-#include <utility>
 
 #include <ddc/ddc.hpp>
 

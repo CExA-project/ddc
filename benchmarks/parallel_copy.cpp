@@ -2,8 +2,8 @@
 //
 // SPDX-License-Identifier: MIT
 
+#include <cstddef>
 #include <cstdint>
-#include <cstring>
 
 #include <ddc/ddc.hpp>
 

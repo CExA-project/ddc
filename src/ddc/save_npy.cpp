@@ -2,11 +2,13 @@
 //
 // SPDX-License-Identifier: MIT
 
+#include <array>
 #include <bit>
 #include <cstddef>
 #include <cstdint>
 #include <filesystem>
 #include <fstream>
+#include <functional>
 #include <numeric>
 #include <stdexcept>
 #include <string>

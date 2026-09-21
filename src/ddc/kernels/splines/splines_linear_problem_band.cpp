@@ -6,12 +6,14 @@
 #include <cassert>
 #if !defined(NDEBUG)
 #    include <cmath>
+#    include <limits>
 #endif
 #include <cstddef>
-#include <limits>
 #include <stdexcept>
 #include <string>
 #include <type_traits>
+
+#include <ddc/ddc.hpp>
 
 #include <Kokkos_Core.hpp>
 

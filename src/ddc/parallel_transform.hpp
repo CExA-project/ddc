@@ -4,9 +4,10 @@
 
 #pragma once
 
+#include <string>
 #include <utility>
 
-#include <Kokkos_Macros.hpp>
+#include <Kokkos_Core.hpp>
 
 #include "chunk_span.hpp"
 #include "chunk_traits.hpp"

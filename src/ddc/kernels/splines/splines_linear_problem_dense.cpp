@@ -8,6 +8,8 @@
 #include <string>
 #include <type_traits>
 
+#include <ddc/ddc.hpp>
+
 #include <Kokkos_Core.hpp>
 
 #if __has_include(<mkl_lapacke.h>)

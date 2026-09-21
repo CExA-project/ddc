@@ -8,7 +8,9 @@
 #include <cassert>
 #include <cstddef>
 #include <initializer_list>
-#include <limits>
+#if !defined(NDEBUG)
+#    include <limits>
+#endif
 #include <type_traits>
 #include <vector>
 

@@ -7,7 +7,9 @@
 #include <array>
 #include <cassert>
 #include <cstddef>
-#include <limits>
+#if !defined(NDEBUG)
+#    include <limits>
+#endif
 #include <tuple>
 #include <type_traits>
 

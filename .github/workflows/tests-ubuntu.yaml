@@ -77,8 +77,10 @@ jobs:
       packages: write  # Required to push to registry
     steps:
       - name: Free Disk Space (Ubuntu)
-        uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be  # v1.3.1
-        with: {tool-cache: true, large-packages: false}
+        uses: jlumbroso/free-disk-space@ceedf095f4ec1a097402bc6bd80831f2e1a6fde6  # v2.0.0
+        with:
+          preinstalled-runtimes: true
+          large-packages: false
       - name: Checkout built branch
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
       - name: Login to GitHub Container Registry
@@ -131,8 +133,10 @@ jobs:
     needs: [docker-build, id_repo]
     steps:
       - name: Free Disk Space (Ubuntu)
-        uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be  # v1.3.1
-        with: {tool-cache: true, large-packages: false}
+        uses: jlumbroso/free-disk-space@ceedf095f4ec1a097402bc6bd80831f2e1a6fde6  # v2.0.0
+        with:
+          preinstalled-runtimes: true
+          large-packages: false
       - name: Checkout built branch
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
       - name: Collect image artifact
@@ -235,7 +239,7 @@ jobs:
     needs: [docker-build, id_repo]
     steps:
       - name: Free Disk Space (Ubuntu)
-        uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be  # v1.3.1
+        uses: jlumbroso/free-disk-space@ceedf095f4ec1a097402bc6bd80831f2e1a6fde6  # v2.0.0
         with:
           tool-cache: true
       - name: Checkout built branch
@@ -344,8 +348,10 @@ jobs:
     needs: [docker-build, id_repo]
     steps:
       - name: Free Disk Space (Ubuntu)
-        uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be  # v1.3.1
-        with: {tool-cache: true, large-packages: false}
+        uses: jlumbroso/free-disk-space@ceedf095f4ec1a097402bc6bd80831f2e1a6fde6  # v2.0.0
+        with:
+          preinstalled-runtimes: true
+          large-packages: false
       - name: Checkout built branch
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
       - name: Collect image artifact
@@ -434,8 +440,10 @@ jobs:
     needs: [docker-build, id_repo]
     steps:
       - name: Free Disk Space (Ubuntu)
-        uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be  # v1.3.1
-        with: {tool-cache: true, large-packages: false}
+        uses: jlumbroso/free-disk-space@ceedf095f4ec1a097402bc6bd80831f2e1a6fde6  # v2.0.0
+        with:
+          preinstalled-runtimes: true
+          large-packages: false
       - name: Checkout built branch
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
       - name: Collect image artifact

@@ -7,6 +7,8 @@
 #include <memory>
 #include <utility>
 
+#include <ddc/ddc.hpp>
+
 #include <Kokkos_Core.hpp>
 
 #include "splines_linear_problem.hpp"

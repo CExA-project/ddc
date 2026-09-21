@@ -10,6 +10,8 @@
 
 #include <Kokkos_Core.hpp>
 
+#include "detail/type_seq.hpp"
+
 #include "chunk_traits.hpp"
 #include "ddc_to_kokkos_execution_policy.hpp"
 #include "discrete_element.hpp"

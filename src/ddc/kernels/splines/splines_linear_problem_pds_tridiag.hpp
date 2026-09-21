@@ -6,6 +6,8 @@
 
 #include <cstddef>
 
+#include <ddc/ddc.hpp>
+
 #include <Kokkos_Core.hpp>
 #include <Kokkos_DualView.hpp>
 

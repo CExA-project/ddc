@@ -3,14 +3,13 @@
 // SPDX-License-Identifier: MIT
 
 #include <cstddef>
+#include <filesystem>
 #include <stdexcept>
 #include <vector>
 
 #include <ddc/ddc.hpp>
 
 #include <gtest/gtest.h>
-
-#include <Kokkos_Core.hpp>
 
 TEST(SaveNpy, LargeHeader)
 {

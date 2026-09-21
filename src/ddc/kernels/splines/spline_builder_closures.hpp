@@ -8,8 +8,6 @@
 #include <iosfwd>
 #include <stdexcept>
 
-#include <ddc/ddc.hpp>
-
 namespace ddc {
 
 /** @brief An enum representing a spline closure relation. Please refer to

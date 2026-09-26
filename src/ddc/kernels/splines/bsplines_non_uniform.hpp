@@ -43,7 +43,9 @@ struct NonUniformBsplinesKnots : NonUniformPointSampling<typename T::continuous_
  * @tparam D The degree of the B-splines.
  */
 template <class CDim, std::size_t D, bool Periodic>
-class NonUniformBSplines : detail::NonUniformBSplinesBase
+class NonUniformBSplines
+    : detail::NonUniformBSplinesBase
+    , DiscreteDimension
 {
     static_assert(D > 0, "Parameter `D` must be positive");
 
@@ -394,8 +396,8 @@ public:
     };
 };
 
-template <class DDim>
-struct is_non_uniform_bsplines : public std::is_base_of<detail::NonUniformBSplinesBase, DDim>::type
+template <class T>
+struct is_non_uniform_bsplines : public std::is_base_of<detail::NonUniformBSplinesBase, T>::type
 {
 };
 
@@ -404,13 +406,13 @@ struct is_non_uniform_bsplines : public std::is_base_of<detail::NonUniformBSplin
  *
  * @tparam The presumed non-uniform B-splines.
  */
-template <class DDim>
-constexpr bool is_non_uniform_bsplines_v = is_non_uniform_bsplines<DDim>::value;
+template <class T>
+constexpr bool is_non_uniform_bsplines_v = is_non_uniform_bsplines<T>::value;
 
 namespace concepts {
 
-template <class DDim>
-concept non_uniform_bsplines = is_non_uniform_bsplines_v<DDim>;
+template <class T>
+concept non_uniform_bsplines = is_non_uniform_bsplines_v<T>;
 
 }
 

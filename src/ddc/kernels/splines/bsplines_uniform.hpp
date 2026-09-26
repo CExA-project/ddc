@@ -47,7 +47,9 @@ struct UniformBsplinesKnots : UniformPointSampling<typename T::continuous_dimens
  * @tparam D The degree of the B-splines.
  */
 template <class CDim, std::size_t D, bool Periodic>
-class UniformBSplines : detail::UniformBSplinesBase
+class UniformBSplines
+    : detail::UniformBSplinesBase
+    , DiscreteDimension
 {
     static_assert(D > 0, "Parameter `D` must be positive");
 
@@ -374,8 +376,8 @@ public:
     };
 };
 
-template <class DDim>
-struct is_uniform_bsplines : public std::is_base_of<detail::UniformBSplinesBase, DDim>::type
+template <class T>
+struct is_uniform_bsplines : public std::is_base_of<detail::UniformBSplinesBase, T>::type
 {
 };
 
@@ -384,13 +386,13 @@ struct is_uniform_bsplines : public std::is_base_of<detail::UniformBSplinesBase,
  *
  * @tparam The presumed uniform B-splines.
  */
-template <class DDim>
-constexpr bool is_uniform_bsplines_v = is_uniform_bsplines<DDim>::value;
+template <class T>
+constexpr bool is_uniform_bsplines_v = is_uniform_bsplines<T>::value;
 
 namespace concepts {
 
-template <class DDim>
-concept uniform_bsplines = is_uniform_bsplines_v<DDim>;
+template <class T>
+concept uniform_bsplines = is_uniform_bsplines_v<T>;
 
 }
 

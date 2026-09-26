@@ -22,6 +22,8 @@
 #include "detail/dual_discretization.hpp"
 #include "detail/macros.hpp"
 
+#include "discrete_dimension.hpp"
+
 #if defined(KOKKOS_ENABLE_CUDA)
 #    include <cuda.h>
 #elif defined(KOKKOS_ENABLE_HIP)
@@ -51,7 +53,7 @@ void device_throw_on_error(
         int const line);
 #endif
 
-template <class DDim, class MemorySpace>
+template <ddc::concepts::discrete_dimension DDim, class MemorySpace>
 using ddim_impl_t = DDim::template Impl<DDim, MemorySpace>;
 
 template <class T>
@@ -94,21 +96,21 @@ public:
 extern std::optional<std::map<std::string, std::function<void()>>> g_discretization_store;
 
 // Global CPU variable owning discrete spaces data for CPU and GPU
-template <class DDim>
+template <ddc::concepts::discrete_dimension DDim>
 inline std::optional<DualDiscretization<DDim>> g_discrete_space_dual;
 
 #if defined(KOKKOS_ENABLE_CUDA)
 // Global GPU variable viewing data owned by the CPU
-template <class DDim>
+template <ddc::concepts::discrete_dimension DDim>
 __constant__ GpuProxy<ddim_impl_t<DDim, GlobalVariableDeviceSpace>> g_discrete_space_device;
 #elif defined(KOKKOS_ENABLE_HIP)
 // Global GPU variable viewing data owned by the CPU
 // WARNING: do not put the `inline` keyword, seems to fail on MI100 rocm/4.5.0
-template <class DDim>
+template <ddc::concepts::discrete_dimension DDim>
 __constant__ GpuProxy<ddim_impl_t<DDim, GlobalVariableDeviceSpace>> g_discrete_space_device;
 #elif defined(KOKKOS_ENABLE_SYCL)
 // Global GPU variable viewing data owned by the CPU
-template <class DDim>
+template <ddc::concepts::discrete_dimension DDim>
 SYCL_EXTERNAL inline sycl::ext::oneapi::experimental::device_global<
         GpuProxy<ddim_impl_t<DDim, GlobalVariableDeviceSpace>>>
         g_discrete_space_device;
@@ -128,7 +130,7 @@ auto extract_after(Tuple&& t, std::index_sequence<Ids...>)
  *
  * @param args the constructor arguments
  */
-template <class DDim, class... Args>
+template <concepts::discrete_dimension DDim, class... Args>
 void init_discrete_space(Args&&... args)
 {
     static_assert(
@@ -165,7 +167,7 @@ void init_discrete_space(Args&&... args)
  * @param a - the discrete space to move at index 0
  *          - the arguments to pass through at index 1
  */
-template <class DDim, class DDimImpl, class Arg0>
+template <concepts::discrete_dimension DDim, class DDimImpl, class Arg0>
 Arg0 init_discrete_space(std::tuple<DDimImpl, Arg0>&& a)
 {
     init_discrete_space<DDim>(std::move(std::get<0>(a)));
@@ -177,7 +179,7 @@ Arg0 init_discrete_space(std::tuple<DDimImpl, Arg0>&& a)
  * @param a - the discrete space to move at index 0
  *          - the (2+) arguments to pass through in other indices
  */
-template <class DDim, class DDimImpl, class Arg0, class Arg1, class... Args>
+template <concepts::discrete_dimension DDim, class DDimImpl, class Arg0, class Arg1, class... Args>
 std::tuple<Arg0, Arg1, Args...> init_discrete_space(std::tuple<DDimImpl, Arg0, Arg1, Args...>&& a)
 {
     init_discrete_space<DDim>(std::move(std::get<0>(a)));
@@ -189,7 +191,7 @@ std::tuple<Arg0, Arg1, Args...> init_discrete_space(std::tuple<DDimImpl, Arg0, A
  * @return a boolean indicating whether DDim is initialized.
  * This function indicates whether a dimension is initialized.
  */
-template <class DDim>
+template <concepts::discrete_dimension DDim>
 bool is_discrete_space_initialized() noexcept
 {
     return detail::g_discrete_space_dual<DDim>.has_value();
@@ -201,7 +203,7 @@ bool is_discrete_space_initialized() noexcept
  * This function must be called from a `KOKKOS_FUNCTION`.
  * Call `ddc::host_discrete_space` for a host-only function instead.
  */
-template <class DDim, class MemorySpace = DDC_CURRENT_KOKKOS_SPACE>
+template <concepts::discrete_dimension DDim, class MemorySpace = DDC_CURRENT_KOKKOS_SPACE>
 KOKKOS_FUNCTION detail::ddim_impl_t<DDim, MemorySpace> const& discrete_space()
 {
     // This function requires that `ddc::init_discrete_space<DDim>(...);` be called first
@@ -223,7 +225,7 @@ KOKKOS_FUNCTION detail::ddim_impl_t<DDim, MemorySpace> const& discrete_space()
     }
 }
 
-template <class DDim>
+template <concepts::discrete_dimension DDim>
 detail::ddim_impl_t<DDim, Kokkos::HostSpace> const& host_discrete_space()
 {
     // This function requires that `ddc::init_discrete_space<DDim>(...);` be called first

@@ -11,21 +11,21 @@
 
 inline namespace anonymous_namespace_workaround_discrete_element_cpp {
 
-struct DDimX
+struct DDimX : ddc::DiscreteDimension
 {
 };
 using DElemX = ddc::DiscreteElement<DDimX>;
 using DVectX = ddc::DiscreteVector<DDimX>;
 
 
-struct DDimY
+struct DDimY : ddc::DiscreteDimension
 {
 };
 using DElemY = ddc::DiscreteElement<DDimY>;
 using DVectY = ddc::DiscreteVector<DDimY>;
 
 
-struct DDimZ
+struct DDimZ : ddc::DiscreteDimension
 {
 };
 using DElemZ = ddc::DiscreteElement<DDimZ>;

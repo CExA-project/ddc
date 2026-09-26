@@ -11,6 +11,7 @@
 #include <Kokkos_Core.hpp>
 
 #include "chunk_traits.hpp"
+#include "discrete_dimension.hpp"
 #include "discrete_domain.hpp"
 #include "discrete_vector.hpp"
 #include "type_seq.hpp"
@@ -21,7 +22,7 @@ namespace ddc {
  * @param[in]  chunk the view whose domain to access
  * @return the domain of view in the queried dimensions
  */
-template <class... QueryDDims, class ChunkType>
+template <concepts::discrete_dimension... QueryDDims, class ChunkType>
 KOKKOS_FUNCTION auto get_domain(ChunkType const& chunk) noexcept
 {
     static_assert(is_chunk_v<ChunkType>, "Not a chunk span type");
@@ -137,7 +138,7 @@ public:
         return m_domain.extents();
     }
 
-    template <class QueryDDim>
+    template <concepts::discrete_dimension QueryDDim>
     KOKKOS_FUNCTION constexpr size_type extent() const noexcept
     {
         return m_domain.template extent<QueryDDim>();
@@ -168,7 +169,7 @@ public:
         return allocation_mdspan().is_strided();
     }
 
-    template <class QueryDDim>
+    template <concepts::discrete_dimension QueryDDim>
     KOKKOS_FUNCTION constexpr size_type stride() const
     {
         return m_allocation_mdspan.stride(type_seq_rank_v<QueryDDim, to_type_seq_t<SupportType>>);
@@ -185,7 +186,7 @@ public:
     /** Provide access to the domain on which this chunk is defined
      * @return the domain on which this chunk is defined
      */
-    template <class... QueryDDims>
+    template <concepts::discrete_dimension... QueryDDims>
     KOKKOS_FUNCTION constexpr DiscreteDomain<QueryDDims...> domain() const noexcept
     {
         return DiscreteDomain<QueryDDims...>(domain());

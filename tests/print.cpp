@@ -18,22 +18,13 @@
 
 inline namespace anonymous_namespace_workaround_print_cpp {
 
-struct Dim0
+struct Dim0 : ddc::DiscreteDimension
 {
 };
-struct Dim1
+struct Dim1 : ddc::DiscreteDimension
 {
 };
-struct Dim2
-{
-};
-struct Dim3
-{
-};
-struct Dim4
-{
-};
-struct Dim5
+struct Dim2 : ddc::DiscreteDimension
 {
 };
 

@@ -122,14 +122,14 @@ public:
     }
 };
 
-template <class DDim>
+template <ddc::concepts::discrete_dimension DDim>
 Real forward_full_norm_coef(DiscreteDomain<DDim> const& ddom) noexcept
 {
     return rlength(ddom) / Kokkos::sqrt(2 * Kokkos::numbers::pi_v<Real>)
            / (ddom.extents() - 1).value();
 }
 
-template <class DDim>
+template <ddc::concepts::discrete_dimension DDim>
 Real backward_full_norm_coef(DiscreteDomain<DDim> const& ddom) noexcept
 {
     return 1 / (forward_full_norm_coef(ddom) * ddom.extents().value());

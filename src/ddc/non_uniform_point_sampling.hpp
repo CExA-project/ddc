@@ -19,6 +19,7 @@
 #include <Kokkos_Core.hpp>
 
 #include "coordinate.hpp"
+#include "discrete_dimension.hpp"
 #include "discrete_domain.hpp"
 #include "discrete_element.hpp"
 #include "discrete_space.hpp"
@@ -38,7 +39,9 @@ void print_non_uniform_point_samplig(std::ostream& os, std::size_t size);
 
 /// `NonUniformPointSampling` models a non-uniform discretization of the `CDim` segment \f$[a, b]\f$.
 template <class CDim>
-class NonUniformPointSampling : detail::NonUniformPointSamplingBase
+class NonUniformPointSampling
+    : detail::NonUniformPointSamplingBase
+    , DiscreteDimension
 {
 public:
     using continuous_dimension_type = CDim;
@@ -135,7 +138,7 @@ public:
      *
      * @param non_uniform_points a range (std::vector, std::array, ...) containing the coordinates of the points of the domain.
      */
-    template <class DDim, class InputRange>
+    template <concepts::discrete_dimension DDim, class InputRange>
     static std::tuple<typename DDim::template Impl<DDim, Kokkos::HostSpace>, DiscreteDomain<DDim>>
     init(InputRange const& non_uniform_points)
     {
@@ -152,7 +155,7 @@ public:
      * @param pre_ghost_r a range containing the positions of the ghost points before the main domain the DDim position
      * @param post_ghost_r a range containing the positions of the ghost points after the main domain the DDim position
      */
-    template <class DDim, class InputRange>
+    template <concepts::discrete_dimension DDim, class InputRange>
     static std::tuple<
             typename DDim::template Impl<DDim, Kokkos::HostSpace>,
             DiscreteDomain<DDim>,
@@ -191,19 +194,19 @@ public:
     }
 };
 
-template <class DDim>
+template <class T>
 struct is_non_uniform_point_sampling
-    : public std::is_base_of<detail::NonUniformPointSamplingBase, DDim>::type
+    : public std::is_base_of<detail::NonUniformPointSamplingBase, T>::type
 {
 };
 
-template <class DDim>
-constexpr bool is_non_uniform_point_sampling_v = is_non_uniform_point_sampling<DDim>::value;
+template <class T>
+constexpr bool is_non_uniform_point_sampling_v = is_non_uniform_point_sampling<T>::value;
 
 namespace concepts {
 
-template <class DDim>
-concept non_uniform_point_sampling = is_non_uniform_point_sampling_v<DDim>;
+template <class T>
+concept non_uniform_point_sampling = is_non_uniform_point_sampling_v<T>;
 
 }
 

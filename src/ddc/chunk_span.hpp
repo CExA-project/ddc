@@ -16,6 +16,7 @@
 
 #include "chunk_common.hpp"
 #include "chunk_traits.hpp"
+#include "discrete_dimension.hpp"
 #include "discrete_domain.hpp"
 #include "discrete_element.hpp"
 #include "discrete_vector.hpp"
@@ -100,7 +101,7 @@ public:
     friend class ChunkSpan;
 
 protected:
-    template <class QueryDDim, class... ODDims>
+    template <concepts::discrete_dimension QueryDDim, concepts::discrete_dimension... ODDims>
     KOKKOS_FUNCTION static constexpr auto get_slicer_for(DiscreteVector<ODDims...> const& c)
     {
         DDC_IF_NVCC_THEN_PUSH_AND_SUPPRESS(implicit_return_from_non_void_function)
@@ -112,7 +113,10 @@ protected:
         DDC_IF_NVCC_THEN_POP
     }
 
-    template <class QueryDDim, class... ODDims, class... OODDims>
+    template <
+            concepts::discrete_dimension QueryDDim,
+            concepts::discrete_dimension... ODDims,
+            concepts::discrete_dimension... OODDims>
     KOKKOS_FUNCTION static constexpr auto get_slicer_for(
             DiscreteDomain<ODDims...> const& c,
             DiscreteDomain<OODDims...> const& origin)
@@ -135,10 +139,10 @@ protected:
     {
     };
 
-    template <class... DDims>
+    template <concepts::discrete_dimension... DDims>
     struct Slicer<TypeSeq<DDims...>>
     {
-        template <class... ODDims>
+        template <concepts::discrete_dimension... ODDims>
         KOKKOS_FUNCTION constexpr auto operator()(
                 allocation_mdspan_type const& span,
                 DiscreteVector<ODDims...> const& c) const
@@ -146,7 +150,7 @@ protected:
             return Kokkos::submdspan(span, get_slicer_for<DDims>(c)...);
         }
 
-        template <class... ODDims, class... OODDims>
+        template <concepts::discrete_dimension... ODDims, concepts::discrete_dimension... OODDims>
         KOKKOS_FUNCTION constexpr auto operator()(
                 allocation_mdspan_type const& span,
                 DiscreteDomain<ODDims...> const& c,
@@ -272,7 +276,7 @@ public:
 
     /** Slice out some dimensions
      */
-    template <class... QueryDDims>
+    template <concepts::discrete_dimension... QueryDDims>
     KOKKOS_FUNCTION constexpr auto operator[](DiscreteVector<QueryDDims...> const& slice_spec) const
     {
         KOKKOS_ASSERT(
@@ -311,7 +315,7 @@ public:
 
     /** Slice out some dimensions
      */
-    template <class... QueryDDims>
+    template <concepts::discrete_dimension... QueryDDims>
     KOKKOS_FUNCTION constexpr auto operator[](
             DiscreteElement<QueryDDims...> const& slice_spec) const
     {
@@ -322,7 +326,7 @@ public:
 
     /** Restrict to a subdomain, only valid when SupportType is a DiscreteDomain
      */
-    template <class... QueryDDims>
+    template <concepts::discrete_dimension... QueryDDims>
     KOKKOS_FUNCTION constexpr auto operator[](DiscreteDomain<QueryDDims...> const& odomain) const
         requires(is_discrete_domain_v<SupportType>)
     {

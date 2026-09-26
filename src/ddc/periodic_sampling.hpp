@@ -14,6 +14,7 @@
 #include <Kokkos_Core.hpp>
 
 #include "coordinate.hpp"
+#include "discrete_dimension.hpp"
 #include "discrete_domain.hpp"
 #include "discrete_element.hpp"
 #include "discrete_space.hpp"
@@ -35,7 +36,9 @@ void print_periodic_sampling(std::ostream& os, CoordinateElement origin, Real st
 /** PeriodicSampling models a periodic discretization of the provided continuous dimension
  */
 template <class CDim>
-class PeriodicSampling : detail::PeriodicSamplingBase
+class PeriodicSampling
+    : detail::PeriodicSamplingBase
+    , ddc::DiscreteDimension
 {
 public:
     using continuous_dimension_type = CDim;
@@ -156,7 +159,7 @@ public:
      * @param n number of points to map on the segment \f$[a, b]\f$ including a & b
      * @param n_period   the number of steps in a period
      */
-    template <class DDim>
+    template <concepts::discrete_dimension DDim>
     static std::tuple<typename DDim::template Impl<DDim, Kokkos::HostSpace>, DiscreteDomain<DDim>>
     init(Coordinate<CDim> a,
          Coordinate<CDim> b,
@@ -184,7 +187,7 @@ public:
      * @param n_ghosts_before number of additional "ghost" points before the segment
      * @param n_ghosts_after number of additional "ghost" points after the segment
      */
-    template <class DDim>
+    template <concepts::discrete_dimension DDim>
     std::tuple<
             Impl<DDim, Kokkos::HostSpace>,
             DiscreteDomain<DDim>,
@@ -230,7 +233,7 @@ public:
      * @param n_period   the number of steps in a period
      * @param n_ghosts number of additional "ghost" points before and after the segment
      */
-    template <class DDim>
+    template <concepts::discrete_dimension DDim>
     std::tuple<
             Impl<DDim, Kokkos::HostSpace>,
             DiscreteDomain<DDim>,
@@ -248,18 +251,18 @@ public:
     }
 };
 
-template <class DDim>
-struct is_periodic_sampling : public std::is_base_of<detail::PeriodicSamplingBase, DDim>::type
+template <class T>
+struct is_periodic_sampling : public std::is_base_of<detail::PeriodicSamplingBase, T>::type
 {
 };
 
-template <class DDim>
-constexpr bool is_periodic_sampling_v = is_periodic_sampling<DDim>::value;
+template <class T>
+constexpr bool is_periodic_sampling_v = is_periodic_sampling<T>::value;
 
 namespace concepts {
 
-template <class DDim>
-concept periodic_sampling = is_periodic_sampling_v<DDim>;
+template <class T>
+concept periodic_sampling = is_periodic_sampling_v<T>;
 
 }
 

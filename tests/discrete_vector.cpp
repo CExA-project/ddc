@@ -11,19 +11,19 @@
 
 inline namespace anonymous_namespace_workaround_discrete_vector_cpp {
 
-struct DDimX
+struct DDimX : ddc::DiscreteDimension
 {
 };
 using DVectX = ddc::DiscreteVector<DDimX>;
 
 
-struct DDimY
+struct DDimY : ddc::DiscreteDimension
 {
 };
 using DVectY = ddc::DiscreteVector<DDimY>;
 
 
-struct DDimZ
+struct DDimZ : ddc::DiscreteDimension
 {
 };
 using DVectZ = ddc::DiscreteVector<DDimZ>;

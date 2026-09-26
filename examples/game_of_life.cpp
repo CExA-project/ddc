@@ -13,10 +13,10 @@
 using cell = bool;
 
 // Name of the axis
-struct DDimX
+struct DDimX : ddc::DiscreteDimension
 {
 };
-struct DDimY
+struct DDimY : ddc::DiscreteDimension
 {
 };
 

@@ -38,7 +38,9 @@ void print_non_uniform_point_samplig(std::ostream& os, std::size_t size);
 
 /// `NonUniformPointSampling` models a non-uniform discretization of the `CDim` segment \f$[a, b]\f$.
 template <class CDim>
-class NonUniformPointSampling : detail::NonUniformPointSamplingBase
+class NonUniformPointSampling
+    : detail::NonUniformPointSamplingBase
+    , DiscreteDimension
 {
 public:
     using continuous_dimension_type = CDim;

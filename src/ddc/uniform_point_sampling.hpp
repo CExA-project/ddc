@@ -34,7 +34,9 @@ void print_uniform_point_sampling(std::ostream& os, CoordinateElement origin, Re
 /** UniformPointSampling models a uniform discretization of the provided continuous dimension
  */
 template <class CDim>
-class UniformPointSampling : detail::UniformPointSamplingBase
+class UniformPointSampling
+    : detail::UniformPointSamplingBase
+    , DiscreteDimension
 {
 public:
     using continuous_dimension_type = CDim;

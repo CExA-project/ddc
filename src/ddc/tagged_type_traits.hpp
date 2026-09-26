@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include "discrete_dimension.hpp"
+
 namespace ddc {
 
 namespace detail {
@@ -18,9 +20,9 @@ struct Combine<TaggedType>
 };
 
 template <
-        template <typename...> class TaggedType,
-        class... Tags,
-        class... OTags,
+        template <class...> class TaggedType,
+        ddc::concepts::discrete_dimension... Tags,
+        ddc::concepts::discrete_dimension... OTags,
         class... TaggedTypes>
 struct Combine<TaggedType<Tags...>, TaggedType<OTags...>, TaggedTypes...>
 {

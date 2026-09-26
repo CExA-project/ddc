@@ -15,15 +15,16 @@
 
 #include "detail/type_seq.hpp"
 
+#include "discrete_dimension.hpp"
 #include "discrete_element.hpp"
 #include "discrete_vector.hpp"
 
 namespace ddc {
 
-template <class DDim>
+template <concepts::discrete_dimension DDim>
 struct DiscreteDomainIterator;
 
-template <class... DDims>
+template <concepts::discrete_dimension... DDims>
 class DiscreteDomain;
 
 template <class T>
@@ -62,10 +63,10 @@ struct Rebind<DiscreteDomain<DDims...>, detail::TypeSeq<ODDims...>>
 
 } // namespace detail
 
-template <class... DDims>
+template <concepts::discrete_dimension... DDims>
 class DiscreteDomain
 {
-    template <class...>
+    template <concepts::discrete_dimension...>
     friend class DiscreteDomain;
 
     static_assert(
@@ -120,8 +121,8 @@ public:
 
     KOKKOS_DEFAULTED_FUNCTION DiscreteDomain& operator=(DiscreteDomain&& x) = default;
 
-    template <class... ODims>
-    KOKKOS_FUNCTION constexpr bool operator==(DiscreteDomain<ODims...> const& other) const
+    template <concepts::discrete_dimension... ODDims>
+    KOKKOS_FUNCTION constexpr bool operator==(DiscreteDomain<ODDims...> const& other) const
     {
         if (empty() && other.empty()) {
             return true;
@@ -131,8 +132,8 @@ public:
 
 #if !defined(__cpp_impl_three_way_comparison) || __cpp_impl_three_way_comparison < 201902L
     // In C++20, `a!=b` shall be automatically translated by the compiler to `!(a==b)`
-    template <class... ODims>
-    KOKKOS_FUNCTION constexpr bool operator!=(DiscreteDomain<ODims...> const& other) const
+    template <concepts::discrete_dimension... ODDims>
+    KOKKOS_FUNCTION constexpr bool operator!=(DiscreteDomain<ODDims...> const& other) const
     {
         return !(*this == other);
     }
@@ -148,7 +149,7 @@ public:
         return m_element_end - m_element_begin;
     }
 
-    template <class QueryDDim>
+    template <concepts::discrete_dimension QueryDDim>
     KOKKOS_FUNCTION constexpr DiscreteVector<QueryDDim> extent() const noexcept
     {
         return DiscreteElement<QueryDDim>(m_element_end)
@@ -198,7 +199,7 @@ public:
         return m_element_begin + dvect;
     }
 
-    template <class... ODDims>
+    template <concepts::discrete_dimension... ODDims>
     KOKKOS_FUNCTION constexpr auto restrict_with(DiscreteDomain<ODDims...> const& odomain) const
     {
         KOKKOS_ASSERT(
@@ -299,7 +300,7 @@ public:
 template <>
 class DiscreteDomain<>
 {
-    template <class...>
+    template <concepts::discrete_dimension...>
     friend class DiscreteDomain;
 
 public:
@@ -408,9 +409,9 @@ public:
         return {};
     }
 
-    template <class... ODims>
+    template <concepts::discrete_dimension... ODDims>
     KOKKOS_FUNCTION constexpr DiscreteDomain restrict_with(
-            DiscreteDomain<ODims...> const& /*odomain*/) const
+            DiscreteDomain<ODDims...> const& /*odomain*/) const
     {
         return *this;
     }
@@ -446,7 +447,7 @@ public:
     }
 };
 
-template <class... QueryDDims, class... DDims>
+template <concepts::discrete_dimension... QueryDDims, concepts::discrete_dimension... DDims>
 KOKKOS_FUNCTION constexpr DiscreteDomain<QueryDDims...> select(
         DiscreteDomain<DDims...> const& domain)
 {
@@ -460,7 +461,7 @@ struct ConvertTypeSeqToDiscreteDomain
 {
 };
 
-template <class... DDims>
+template <ddc::concepts::discrete_dimension... DDims>
 struct ConvertTypeSeqToDiscreteDomain<detail::TypeSeq<DDims...>>
 {
     using type = DiscreteDomain<DDims...>;
@@ -472,7 +473,7 @@ using convert_type_seq_to_discrete_domain_t = ConvertTypeSeqToDiscreteDomain<T>:
 } // namespace detail
 
 // Computes the subtraction DDom_a - DDom_b in the sense of linear spaces(retained dimensions are those in DDom_a which are not in DDom_b)
-template <class... DDimsA, class... DDimsB>
+template <concepts::discrete_dimension... DDimsA, concepts::discrete_dimension... DDimsB>
 KOKKOS_FUNCTION constexpr auto remove_dims_of(
         DiscreteDomain<DDimsA...> const& DDom_a,
         DiscreteDomain<DDimsB...> const& /*DDom_b*/) noexcept
@@ -487,7 +488,7 @@ KOKKOS_FUNCTION constexpr auto remove_dims_of(
 //! Remove the dimensions DDimsB from DDom_a
 //! @param[in] DDom_a The discrete domain on which to remove dimensions
 //! @return The discrete domain without DDimsB dimensions
-template <class... DDimsB, class... DDimsA>
+template <concepts::discrete_dimension... DDimsB, concepts::discrete_dimension... DDimsA>
 KOKKOS_FUNCTION constexpr auto remove_dims_of(DiscreteDomain<DDimsA...> const& DDom_a) noexcept
 {
     using TagSeqA = detail::TypeSeq<DDimsA...>;
@@ -498,13 +499,17 @@ KOKKOS_FUNCTION constexpr auto remove_dims_of(DiscreteDomain<DDimsA...> const& D
 }
 
 // Remove dimensions from a domain type
-template <typename DDom, typename... DDims>
+template <typename DDom, concepts::discrete_dimension... DDims>
 using remove_dims_of_t = decltype(remove_dims_of<DDims...>(std::declval<DDom>()));
 
 namespace detail {
 
 // Checks if dimension of DDom_a is DDim1. If not, returns restriction to DDim2 of DDom_b. May not be useful in its own, it helps for replace_dim_of
-template <typename DDim1, typename DDim2, typename DDimA, typename... DDimsB>
+template <
+        ddc::concepts::discrete_dimension DDim1,
+        ddc::concepts::discrete_dimension DDim2,
+        ddc::concepts::discrete_dimension DDimA,
+        ddc::concepts::discrete_dimension... DDimsB>
 KOKKOS_FUNCTION constexpr std::conditional_t<
         std::is_same_v<DDimA, DDim1>,
         ddc::DiscreteDomain<DDim2>,
@@ -523,7 +528,11 @@ replace_dim_of_1d(
 } // namespace detail
 
 // Replace in DDom_a the dimension Dim1 by the dimension Dim2 of DDom_b
-template <typename DDim1, typename DDim2, typename... DDimsA, typename... DDimsB>
+template <
+        concepts::discrete_dimension DDim1,
+        concepts::discrete_dimension DDim2,
+        concepts::discrete_dimension... DDimsA,
+        concepts::discrete_dimension... DDimsB>
 KOKKOS_FUNCTION constexpr auto replace_dim_of(
         DiscreteDomain<DDimsA...> const& DDom_a,
         [[maybe_unused]] DiscreteDomain<DDimsB...> const& DDom_b) noexcept
@@ -543,34 +552,34 @@ KOKKOS_FUNCTION constexpr auto replace_dim_of(
 }
 
 // Replace dimensions from a domain type
-template <typename DDom, typename DDim1, typename DDim2>
+template <typename DDom, concepts::discrete_dimension DDim1, concepts::discrete_dimension DDim2>
 using replace_dim_of_t = decltype(replace_dim_of<DDim1, DDim2>(
         std::declval<DDom>(),
         std::declval<typename detail::Rebind<DDom, detail::TypeSeq<DDim2>>::type>()));
 
 
-template <class... QueryDDims, class... DDims>
+template <concepts::discrete_dimension... QueryDDims, concepts::discrete_dimension... DDims>
 KOKKOS_FUNCTION constexpr DiscreteVector<QueryDDims...> extents(
         DiscreteDomain<DDims...> const& domain) noexcept
 {
     return DiscreteVector<QueryDDims...>(DiscreteDomain<QueryDDims>(domain).size()...);
 }
 
-template <class... QueryDDims, class... DDims>
+template <concepts::discrete_dimension... QueryDDims, concepts::discrete_dimension... DDims>
 KOKKOS_FUNCTION constexpr DiscreteElement<QueryDDims...> front(
         DiscreteDomain<DDims...> const& domain) noexcept
 {
     return DiscreteElement<QueryDDims...>(DiscreteDomain<QueryDDims>(domain).front()...);
 }
 
-template <class... QueryDDims, class... DDims>
+template <concepts::discrete_dimension... QueryDDims, concepts::discrete_dimension... DDims>
 KOKKOS_FUNCTION constexpr DiscreteElement<QueryDDims...> back(
         DiscreteDomain<DDims...> const& domain) noexcept
 {
     return DiscreteElement<QueryDDims...>(DiscreteDomain<QueryDDims>(domain).back()...);
 }
 
-template <class DDim>
+template <concepts::discrete_dimension DDim>
 struct DiscreteDomainIterator
 {
 private:

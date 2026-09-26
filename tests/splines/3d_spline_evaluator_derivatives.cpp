@@ -35,7 +35,7 @@ struct DimZ
     static constexpr bool PERIODIC = true;
 };
 
-struct DDimBatch
+struct DDimBatch : ddc::DiscreteDimension
 {
 };
 

@@ -8,7 +8,7 @@
 
 inline namespace anonymous_namespace_workaround_trivial_dimension_cpp {
 
-struct DDimX
+struct DDimX : ddc::DiscreteDimension
 {
 };
 

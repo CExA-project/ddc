@@ -14,6 +14,7 @@
 #include <Kokkos_Core.hpp>
 
 #include "coordinate.hpp"
+#include "discrete_dimension.hpp"
 #include "discrete_domain.hpp"
 #include "discrete_element.hpp"
 #include "discrete_space.hpp"
@@ -35,7 +36,9 @@ void print_periodic_sampling(std::ostream& os, CoordinateElement origin, Real st
 /** PeriodicSampling models a periodic discretization of the provided continuous dimension
  */
 template <class CDim>
-class PeriodicSampling : detail::PeriodicSamplingBase
+class PeriodicSampling
+    : detail::PeriodicSamplingBase
+    , ddc::DiscreteDimension
 {
 public:
     using continuous_dimension_type = CDim;

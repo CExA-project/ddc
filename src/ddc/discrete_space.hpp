@@ -22,6 +22,8 @@
 #include "detail/dual_discretization.hpp"
 #include "detail/macros.hpp"
 
+#include "discrete_dimension.hpp"
+
 #if defined(KOKKOS_ENABLE_CUDA)
 #    include <cuda.h>
 #elif defined(KOKKOS_ENABLE_HIP)
@@ -128,7 +130,7 @@ auto extract_after(Tuple&& t, std::index_sequence<Ids...>)
  *
  * @param args the constructor arguments
  */
-template <class DDim, class... Args>
+template <concepts::discrete_dimension DDim, class... Args>
 void init_discrete_space(Args&&... args)
 {
     static_assert(

@@ -11,11 +11,11 @@
 #include <paraconf.h>
 #include <pdi.h>
 
-struct DDimX
+struct DDimX : ddc::DiscreteDimension
 {
 };
 
-struct DDimY
+struct DDimY : ddc::DiscreteDimension
 {
 };
 

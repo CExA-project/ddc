@@ -16,7 +16,7 @@ using DElem0D = ddc::DiscreteElement<>;
 using DVect0D = ddc::DiscreteVector<>;
 using DDom0D = ddc::DiscreteDomain<>;
 
-struct DDimX
+struct DDimX : ddc::DiscreteDimension
 {
 };
 using DElemX = ddc::DiscreteElement<DDimX>;
@@ -24,7 +24,7 @@ using DVectX = ddc::DiscreteVector<DDimX>;
 using DDomX = ddc::SparseDiscreteDomain<DDimX>;
 
 
-struct DDimY
+struct DDimY : ddc::DiscreteDimension
 {
 };
 using DElemY = ddc::DiscreteElement<DDimY>;

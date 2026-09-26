@@ -18,11 +18,12 @@
 #include "detail/type_seq.hpp"
 #include "detail/utils.hpp"
 
+#include "discrete_dimension.hpp"
 #include "discrete_vector.hpp"
 
 namespace ddc {
 
-template <class...>
+template <concepts::discrete_dimension...>
 class DiscreteElement;
 
 template <class T>
@@ -30,7 +31,7 @@ struct is_discrete_element : std::false_type
 {
 };
 
-template <class... Tags>
+template <concepts::discrete_dimension... Tags>
 struct is_discrete_element<DiscreteElement<Tags...>> : std::true_type
 {
 };
@@ -47,7 +48,7 @@ concept discrete_element = is_discrete_element_v<T>;
 
 namespace detail {
 
-template <class... Tags>
+template <ddc::concepts::discrete_dimension... Tags>
 struct ToTypeSeq<DiscreteElement<Tags...>>
 {
     using type = TypeSeq<Tags...>;
@@ -59,32 +60,32 @@ struct ToTypeSeq<DiscreteElement<Tags...>>
  */
 using DiscreteElementType = std::size_t;
 
-template <class Tag>
+template <concepts::discrete_dimension Tag>
 KOKKOS_FUNCTION constexpr DiscreteElementType const& uid(DiscreteElement<Tag> const& tuple) noexcept
 {
     return tuple.uid();
 }
 
-template <class Tag>
+template <concepts::discrete_dimension Tag>
 KOKKOS_FUNCTION constexpr DiscreteElementType& uid(DiscreteElement<Tag>& tuple) noexcept
 {
     return tuple.uid();
 }
 
-template <class QueryTag, class... Tags>
+template <concepts::discrete_dimension QueryTag, concepts::discrete_dimension... Tags>
 KOKKOS_FUNCTION constexpr DiscreteElementType const& uid(
         DiscreteElement<Tags...> const& tuple) noexcept
 {
     return tuple.template uid<QueryTag>();
 }
 
-template <class QueryTag, class... Tags>
+template <concepts::discrete_dimension QueryTag, concepts::discrete_dimension... Tags>
 KOKKOS_FUNCTION constexpr DiscreteElementType& uid(DiscreteElement<Tags...>& tuple) noexcept
 {
     return tuple.template uid<QueryTag>();
 }
 
-template <class QueryTag, class... Tags>
+template <concepts::discrete_dimension QueryTag, concepts::discrete_dimension... Tags>
 KOKKOS_FUNCTION constexpr DiscreteElement<QueryTag> select_or(
         DiscreteElement<Tags...> const& arr,
         DiscreteElement<QueryTag> const& default_value) noexcept
@@ -96,14 +97,14 @@ KOKKOS_FUNCTION constexpr DiscreteElement<QueryTag> select_or(
     }
 }
 
-template <class... QueryTags, class... Tags>
+template <concepts::discrete_dimension... QueryTags, concepts::discrete_dimension... Tags>
 KOKKOS_FUNCTION constexpr DiscreteElement<QueryTags...> select(
         DiscreteElement<Tags...> const& arr) noexcept
 {
     return DiscreteElement<QueryTags...>(arr);
 }
 
-template <class... QueryTags, class... Tags>
+template <concepts::discrete_dimension... QueryTags, concepts::discrete_dimension... Tags>
 KOKKOS_FUNCTION constexpr DiscreteElement<QueryTags...> select(
         DiscreteElement<Tags...>&& arr) noexcept
 {
@@ -112,7 +113,7 @@ KOKKOS_FUNCTION constexpr DiscreteElement<QueryTags...> select(
 
 /// Returns a reference towards the DiscreteElement that contains the QueryTag
 template <
-        class QueryTag,
+        concepts::discrete_dimension QueryTag,
         concepts::discrete_element HeadDElem,
         concepts::discrete_element... TailDElems>
 KOKKOS_FUNCTION constexpr auto const& take(HeadDElem const& head, TailDElems const&... tail)
@@ -133,7 +134,7 @@ KOKKOS_FUNCTION constexpr auto const& take(HeadDElem const& head, TailDElems con
 namespace detail {
 
 /// Returns a reference to the underlying `std::array`
-template <class... Tags>
+template <ddc::concepts::discrete_dimension... Tags>
 KOKKOS_FUNCTION constexpr std::array<DiscreteElementType, sizeof...(Tags)>& array(
         DiscreteElement<Tags...>& v) noexcept
 {
@@ -141,7 +142,7 @@ KOKKOS_FUNCTION constexpr std::array<DiscreteElementType, sizeof...(Tags)>& arra
 }
 
 /// Returns a reference to the underlying `std::array`
-template <class... Tags>
+template <ddc::concepts::discrete_dimension... Tags>
 KOKKOS_FUNCTION constexpr std::array<DiscreteElementType, sizeof...(Tags)> const& array(
         DiscreteElement<Tags...> const& v) noexcept
 {
@@ -150,7 +151,7 @@ KOKKOS_FUNCTION constexpr std::array<DiscreteElementType, sizeof...(Tags)> const
 
 } // namespace detail
 
-template <class DDim>
+template <concepts::discrete_dimension DDim>
 constexpr DiscreteElement<DDim> create_reference_discrete_element() noexcept
 {
     return DiscreteElement<DDim>(0);
@@ -160,7 +161,7 @@ constexpr DiscreteElement<DDim> create_reference_discrete_element() noexcept
  *
  * Each one is tagged by its associated dimensions.
  */
-template <class... Tags>
+template <concepts::discrete_dimension... Tags>
 class DiscreteElement
 {
     using tags_seq = detail::TypeSeq<Tags...>;
@@ -221,14 +222,14 @@ public:
 
     KOKKOS_DEFAULTED_FUNCTION DiscreteElement& operator=(DiscreteElement&& other) = default;
 
-    template <class QueryTag>
+    template <concepts::discrete_dimension QueryTag>
     KOKKOS_FUNCTION constexpr value_type& uid() noexcept
     {
         static_assert(in_tags_v<QueryTag, tags_seq>, "requested Tag absent from DiscreteElement");
         return m_values[type_seq_rank_v<QueryTag, tags_seq>];
     }
 
-    template <class QueryTag>
+    template <concepts::discrete_dimension QueryTag>
     KOKKOS_FUNCTION constexpr value_type const& uid() const noexcept
     {
         static_assert(in_tags_v<QueryTag, tags_seq>, "requested Tag absent from DiscreteElement");
@@ -277,7 +278,7 @@ public:
         return tmp;
     }
 
-    template <class... OTags>
+    template <concepts::discrete_dimension... OTags>
     KOKKOS_FUNCTION constexpr DiscreteElement& operator+=(DiscreteVector<OTags...> const& rhs)
     {
         static_assert((type_seq_contains_v<detail::TypeSeq<OTags>, tags_seq> && ...));
@@ -293,7 +294,7 @@ public:
         return *this;
     }
 
-    template <class... OTags>
+    template <concepts::discrete_dimension... OTags>
     KOKKOS_FUNCTION constexpr DiscreteElement& operator-=(DiscreteVector<OTags...> const& rhs)
     {
         static_assert((type_seq_contains_v<detail::TypeSeq<OTags>, tags_seq> && ...));
@@ -316,7 +317,7 @@ void print_discrete_element(std::ostream& os, std::span<DiscreteElementType cons
 
 } // namespace detail
 
-template <class... Tags>
+template <concepts::discrete_dimension... Tags>
 std::ostream& operator<<(std::ostream& os, DiscreteElement<Tags...> const& arr)
 {
     detail::print_discrete_element(os, detail::array(arr));
@@ -324,7 +325,7 @@ std::ostream& operator<<(std::ostream& os, DiscreteElement<Tags...> const& arr)
 }
 
 
-template <class... Tags, class... OTags>
+template <concepts::discrete_dimension... Tags, concepts::discrete_dimension... OTags>
 KOKKOS_FUNCTION constexpr bool operator==(
         DiscreteElement<Tags...> const& lhs,
         DiscreteElement<OTags...> const& rhs) noexcept
@@ -334,7 +335,7 @@ KOKKOS_FUNCTION constexpr bool operator==(
 
 #if !defined(__cpp_impl_three_way_comparison) || __cpp_impl_three_way_comparison < 201902L
 // In C++20, `a!=b` shall be automatically translated by the compiler to `!(a==b)`
-template <class... Tags, class... OTags>
+template <concepts::discrete_dimension... Tags, concepts::discrete_dimension... OTags>
 KOKKOS_FUNCTION constexpr bool operator!=(
         DiscreteElement<Tags...> const& lhs,
         DiscreteElement<OTags...> const& rhs) noexcept
@@ -343,7 +344,7 @@ KOKKOS_FUNCTION constexpr bool operator!=(
 }
 #endif
 
-template <class Tag>
+template <concepts::discrete_dimension Tag>
 KOKKOS_FUNCTION constexpr bool operator<(
         DiscreteElement<Tag> const& lhs,
         DiscreteElement<Tag> const& rhs)
@@ -351,7 +352,7 @@ KOKKOS_FUNCTION constexpr bool operator<(
     return lhs.uid() < rhs.uid();
 }
 
-template <class Tag>
+template <concepts::discrete_dimension Tag>
 KOKKOS_FUNCTION constexpr bool operator<=(
         DiscreteElement<Tag> const& lhs,
         DiscreteElement<Tag> const& rhs)
@@ -359,7 +360,7 @@ KOKKOS_FUNCTION constexpr bool operator<=(
     return lhs.uid() <= rhs.uid();
 }
 
-template <class Tag>
+template <concepts::discrete_dimension Tag>
 KOKKOS_FUNCTION constexpr bool operator>(
         DiscreteElement<Tag> const& lhs,
         DiscreteElement<Tag> const& rhs)
@@ -367,7 +368,7 @@ KOKKOS_FUNCTION constexpr bool operator>(
     return lhs.uid() > rhs.uid();
 }
 
-template <class Tag>
+template <concepts::discrete_dimension Tag>
 KOKKOS_FUNCTION constexpr bool operator>=(
         DiscreteElement<Tag> const& lhs,
         DiscreteElement<Tag> const& rhs)
@@ -377,7 +378,7 @@ KOKKOS_FUNCTION constexpr bool operator>=(
 
 /// right external binary operators: +, -
 
-template <class... Tags, class... OTags>
+template <concepts::discrete_dimension... Tags, concepts::discrete_dimension... OTags>
 KOKKOS_FUNCTION constexpr DiscreteElement<Tags...> operator+(
         DiscreteElement<Tags...> const& lhs,
         DiscreteVector<OTags...> const& rhs)
@@ -389,7 +390,7 @@ KOKKOS_FUNCTION constexpr DiscreteElement<Tags...> operator+(
     return result;
 }
 
-template <class Tag, std::integral IntegralType>
+template <concepts::discrete_dimension Tag, std::integral IntegralType>
 KOKKOS_FUNCTION constexpr DiscreteElement<Tag> operator+(
         DiscreteElement<Tag> const& lhs,
         IntegralType const& rhs)
@@ -400,7 +401,7 @@ KOKKOS_FUNCTION constexpr DiscreteElement<Tag> operator+(
     return result;
 }
 
-template <class... Tags, class... OTags>
+template <concepts::discrete_dimension... Tags, concepts::discrete_dimension... OTags>
 KOKKOS_FUNCTION constexpr DiscreteElement<Tags...> operator-(
         DiscreteElement<Tags...> const& lhs,
         DiscreteVector<OTags...> const& rhs)
@@ -412,7 +413,7 @@ KOKKOS_FUNCTION constexpr DiscreteElement<Tags...> operator-(
     return result;
 }
 
-template <class Tag, std::integral IntegralType>
+template <concepts::discrete_dimension Tag, std::integral IntegralType>
 KOKKOS_FUNCTION constexpr DiscreteElement<Tag> operator-(
         DiscreteElement<Tag> const& lhs,
         IntegralType const& rhs)
@@ -425,7 +426,7 @@ KOKKOS_FUNCTION constexpr DiscreteElement<Tag> operator-(
 
 /// binary operator: -
 
-template <class... Tags, class... OTags>
+template <concepts::discrete_dimension... Tags, concepts::discrete_dimension... OTags>
 KOKKOS_FUNCTION constexpr DiscreteVector<Tags...> operator-(
         DiscreteElement<Tags...> const& lhs,
         DiscreteElement<OTags...> const& rhs)

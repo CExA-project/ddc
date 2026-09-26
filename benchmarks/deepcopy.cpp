@@ -14,7 +14,7 @@
 
 inline namespace anonymous_namespace_workaround_deepcopy_cpp {
 
-struct DDimX
+struct DDimX : ddc::DiscreteDimension
 {
 };
 using DElemX = ddc::DiscreteElement<DDimX>;
@@ -25,7 +25,7 @@ template <class Datatype>
 using ChunkSpanX = ddc::ChunkSpan<Datatype, DDomX>;
 
 
-struct DDimY
+struct DDimY : ddc::DiscreteDimension
 {
 };
 

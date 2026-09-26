@@ -12,14 +12,14 @@
 
 inline namespace anonymous_namespace_workaround_parallel_fill_cpp {
 
-struct DDimX
+struct DDimX : ddc::DiscreteDimension
 {
 };
 using DElemX = ddc::DiscreteElement<DDimX>;
 using DVectX = ddc::DiscreteVector<DDimX>;
 using DDomX = ddc::DiscreteDomain<DDimX>;
 
-struct DDimY
+struct DDimY : ddc::DiscreteDimension
 {
 };
 using DElemY = ddc::DiscreteElement<DDimY>;

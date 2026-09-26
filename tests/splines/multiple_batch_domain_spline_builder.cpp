@@ -35,11 +35,11 @@ struct DimX
 };
 #endif
 
-struct DDimBatch
+struct DDimBatch : ddc::DiscreteDimension
 {
 };
 
-struct DDimBatchExtra
+struct DDimBatchExtra : ddc::DiscreteDimension
 {
 };
 

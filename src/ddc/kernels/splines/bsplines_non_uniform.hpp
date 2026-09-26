@@ -43,7 +43,9 @@ struct NonUniformBsplinesKnots : NonUniformPointSampling<typename T::continuous_
  * @tparam D The degree of the B-splines.
  */
 template <class CDim, std::size_t D, bool Periodic = CDim::PERIODIC>
-class NonUniformBSplines : detail::NonUniformBSplinesBase
+class NonUniformBSplines
+    : detail::NonUniformBSplinesBase
+    , DiscreteDimension
 {
     static_assert(D > 0, "Parameter `D` must be positive");
 

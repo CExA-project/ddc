@@ -22,7 +22,7 @@ template <class Datatype>
 using ChunkSpan0D = ddc::ChunkSpan<Datatype, DDom0D>;
 
 
-struct DDimX
+struct DDimX : ddc::DiscreteDimension
 {
 };
 using DElemX = ddc::DiscreteElement<DDimX>;
@@ -33,7 +33,7 @@ template <class Datatype>
 using ChunkX = ddc::Chunk<Datatype, DDomX>;
 
 
-struct DDimY
+struct DDimY : ddc::DiscreteDimension
 {
 };
 using DElemY = ddc::DiscreteElement<DDimY>;
@@ -44,7 +44,7 @@ template <class Datatype>
 using ChunkY = ddc::Chunk<Datatype, DDomY>;
 
 
-struct DDimZ
+struct DDimZ : ddc::DiscreteDimension
 {
 };
 using DElemZ = ddc::DiscreteElement<DDimZ>;

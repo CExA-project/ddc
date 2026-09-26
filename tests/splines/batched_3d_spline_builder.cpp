@@ -59,7 +59,7 @@ struct DimZ
 };
 #endif
 
-struct DDimBatch
+struct DDimBatch : ddc::DiscreteDimension
 {
 };
 

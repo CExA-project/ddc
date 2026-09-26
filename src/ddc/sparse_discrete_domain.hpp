@@ -16,12 +16,13 @@
 #include "detail/tagged_vector.hpp"
 #include "detail/type_seq.hpp"
 
+#include "discrete_dimension.hpp"
 #include "discrete_element.hpp"
 #include "discrete_vector.hpp"
 
 namespace ddc {
 
-template <class... DDims>
+template <concepts::discrete_dimension... DDims>
 class SparseDiscreteDomain;
 
 template <class T>
@@ -52,7 +53,7 @@ struct ToTypeSeq<SparseDiscreteDomain<Tags...>>
     using type = TypeSeq<Tags...>;
 };
 
-template <class... DDims, class... ODDims>
+template <ddc::concepts::discrete_dimension... DDims, ddc::concepts::discrete_dimension... ODDims>
 struct Rebind<SparseDiscreteDomain<DDims...>, detail::TypeSeq<ODDims...>>
 {
     using type = SparseDiscreteDomain<ODDims...>;
@@ -115,10 +116,10 @@ Kokkos::View<DiscreteElementType*, Kokkos::SharedSpace> extract_uid(
 
 } // namespace detail
 
-template <class... DDims>
+template <concepts::discrete_dimension... DDims>
 class SparseDiscreteDomain
 {
-    template <class...>
+    template <concepts::discrete_dimension...>
     friend class SparseDiscreteDomain;
 
     static_assert(
@@ -172,10 +173,10 @@ public:
 
     KOKKOS_DEFAULTED_FUNCTION SparseDiscreteDomain& operator=(SparseDiscreteDomain&& x) = default;
 
-    template <class... ODims>
-    KOKKOS_FUNCTION constexpr bool operator==(SparseDiscreteDomain<ODims...> const& other) const
+    template <concepts::discrete_dimension... ODDims>
+    KOKKOS_FUNCTION constexpr bool operator==(SparseDiscreteDomain<ODDims...> const& other) const
     {
-        if constexpr ((std::is_same_v<DDims, ODims> && ...)) {
+        if constexpr ((std::is_same_v<DDims, ODDims> && ...)) {
             if (empty() && other.empty()) {
                 return true;
             }
@@ -198,8 +199,8 @@ public:
 
 #if !defined(__cpp_impl_three_way_comparison) || __cpp_impl_three_way_comparison < 201902L
     // In C++20, `a!=b` shall be automatically translated by the compiler to `!(a==b)`
-    template <class... ODims>
-    KOKKOS_FUNCTION constexpr bool operator!=(SparseDiscreteDomain<ODims...> const& other) const
+    template <concepts::discrete_dimension... ODDims>
+    KOKKOS_FUNCTION constexpr bool operator!=(SparseDiscreteDomain<ODDims...> const& other) const
     {
         return !(*this == other);
     }
@@ -220,7 +221,7 @@ public:
         return m_views;
     }
 
-    template <class QueryDDim>
+    template <concepts::discrete_dimension QueryDDim>
     KOKKOS_FUNCTION constexpr DiscreteVector<QueryDDim> extent() const noexcept
     {
         return DiscreteVector<QueryDDim>(get<QueryDDim>(m_views).size());
@@ -361,7 +362,7 @@ public:
 template <>
 class SparseDiscreteDomain<>
 {
-    template <class...>
+    template <concepts::discrete_dimension...>
     friend class SparseDiscreteDomain;
 
 public:
@@ -377,7 +378,7 @@ public:
     KOKKOS_DEFAULTED_FUNCTION constexpr SparseDiscreteDomain() = default;
 
     // Construct a SparseDiscreteDomain from a reordered copy of `domain`
-    template <class... ODDims>
+    template <concepts::discrete_dimension... ODDims>
     KOKKOS_FUNCTION constexpr explicit SparseDiscreteDomain(
             SparseDiscreteDomain<ODDims...> const& /*domain*/)
     {
@@ -491,7 +492,7 @@ public:
     }
 };
 
-template <class... QueryDDims, class... DDims>
+template <concepts::discrete_dimension... QueryDDims, concepts::discrete_dimension... DDims>
 KOKKOS_FUNCTION constexpr SparseDiscreteDomain<QueryDDims...> select(
         SparseDiscreteDomain<DDims...> const& domain)
 {
@@ -505,7 +506,7 @@ struct ConvertTypeSeqToSparseDiscreteDomain
 {
 };
 
-template <class... DDims>
+template <ddc::concepts::discrete_dimension... DDims>
 struct ConvertTypeSeqToSparseDiscreteDomain<detail::TypeSeq<DDims...>>
 {
     using type = SparseDiscreteDomain<DDims...>;
@@ -517,7 +518,7 @@ using convert_type_seq_to_sparse_discrete_domain_t = ConvertTypeSeqToSparseDiscr
 } // namespace detail
 
 // Computes the subtraction DDom_a - DDom_b in the sense of linear spaces(retained dimensions are those in DDom_a which are not in DDom_b)
-template <class... DDimsA, class... DDimsB>
+template <concepts::discrete_dimension... DDimsA, concepts::discrete_dimension... DDimsB>
 KOKKOS_FUNCTION constexpr auto remove_dims_of(
         SparseDiscreteDomain<DDimsA...> const& DDom_a,
         SparseDiscreteDomain<DDimsB...> const& /*DDom_b*/) noexcept
@@ -532,7 +533,7 @@ KOKKOS_FUNCTION constexpr auto remove_dims_of(
 //! Remove the dimensions DDimsB from DDom_a
 //! @param[in] DDom_a The discrete domain on which to remove dimensions
 //! @return The discrete domain without DDimsB dimensions
-template <class... DDimsB, class... DDimsA>
+template <concepts::discrete_dimension... DDimsB, concepts::discrete_dimension... DDimsA>
 KOKKOS_FUNCTION constexpr auto remove_dims_of(
         SparseDiscreteDomain<DDimsA...> const& DDom_a) noexcept
 {
@@ -546,7 +547,11 @@ KOKKOS_FUNCTION constexpr auto remove_dims_of(
 namespace detail {
 
 // Checks if dimension of DDom_a is DDim1. If not, returns restriction to DDim2 of DDom_b. May not be useful in its own, it helps for replace_dim_of
-template <typename DDim1, typename DDim2, typename DDimA, typename... DDimsB>
+template <
+        ddc::concepts::discrete_dimension DDim1,
+        ddc::concepts::discrete_dimension DDim2,
+        ddc::concepts::discrete_dimension DDimA,
+        ddc::concepts::discrete_dimension... DDimsB>
 KOKKOS_FUNCTION constexpr std::conditional_t<
         std::is_same_v<DDimA, DDim1>,
         ddc::SparseDiscreteDomain<DDim2>,
@@ -565,7 +570,11 @@ replace_dim_of_1d(
 } // namespace detail
 
 // Replace in DDom_a the dimension Dim1 by the dimension Dim2 of DDom_b
-template <typename DDim1, typename DDim2, typename... DDimsA, typename... DDimsB>
+template <
+        concepts::discrete_dimension DDim1,
+        concepts::discrete_dimension DDim2,
+        concepts::discrete_dimension... DDimsA,
+        concepts::discrete_dimension... DDimsB>
 KOKKOS_FUNCTION constexpr auto replace_dim_of(
         SparseDiscreteDomain<DDimsA...> const& DDom_a,
         [[maybe_unused]] SparseDiscreteDomain<DDimsB...> const& DDom_b) noexcept
@@ -584,21 +593,21 @@ KOKKOS_FUNCTION constexpr auto replace_dim_of(
                     DDimsB...>(ddc::SparseDiscreteDomain<DDimsA>(DDom_a), DDom_b)...);
 }
 
-template <class... QueryDDims, class... DDims>
+template <concepts::discrete_dimension... QueryDDims, concepts::discrete_dimension... DDims>
 KOKKOS_FUNCTION constexpr DiscreteVector<QueryDDims...> extents(
         SparseDiscreteDomain<DDims...> const& domain) noexcept
 {
     return DiscreteVector<QueryDDims...>(SparseDiscreteDomain<QueryDDims>(domain).size()...);
 }
 
-template <class... QueryDDims, class... DDims>
+template <concepts::discrete_dimension... QueryDDims, concepts::discrete_dimension... DDims>
 KOKKOS_FUNCTION constexpr DiscreteElement<QueryDDims...> front(
         SparseDiscreteDomain<DDims...> const& domain) noexcept
 {
     return DiscreteElement<QueryDDims...>(SparseDiscreteDomain<QueryDDims>(domain).front()...);
 }
 
-template <class... QueryDDims, class... DDims>
+template <concepts::discrete_dimension... QueryDDims, concepts::discrete_dimension... DDims>
 KOKKOS_FUNCTION constexpr DiscreteElement<QueryDDims...> back(
         SparseDiscreteDomain<DDims...> const& domain) noexcept
 {

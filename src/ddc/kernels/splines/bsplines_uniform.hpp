@@ -47,7 +47,9 @@ struct UniformBsplinesKnots : UniformPointSampling<typename T::continuous_dimens
  * @tparam D The degree of the B-splines.
  */
 template <class CDim, std::size_t D, bool Periodic = CDim::PERIODIC>
-class UniformBSplines : detail::UniformBSplinesBase
+class UniformBSplines
+    : detail::UniformBSplinesBase
+    , DiscreteDimension
 {
     static_assert(D > 0, "Parameter `D` must be positive");
 

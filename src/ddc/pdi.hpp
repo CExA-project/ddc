@@ -20,13 +20,13 @@
 namespace ddc {
 
 template <class T>
-static constexpr PDI_inout_t default_access_v
+inline constexpr PDI_inout_t default_access_v
         = (std::is_lvalue_reference_v<T> && !std::is_const_v<std::remove_reference_t<T>>)
                   ? PDI_INOUT
                   : PDI_OUT;
 
 template <class T>
-static constexpr PDI_inout_t chunk_default_access_v = is_writable_chunk_v<T> ? PDI_INOUT : PDI_OUT;
+inline constexpr PDI_inout_t chunk_default_access_v = is_writable_chunk_v<T> ? PDI_INOUT : PDI_OUT;
 
 class PdiEvent
 {

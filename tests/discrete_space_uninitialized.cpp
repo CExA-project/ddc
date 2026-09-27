@@ -4,9 +4,10 @@
 
 #include <sstream>
 
-#include <ddc/ddc.hpp>
-
 #include <gtest/gtest.h>
+
+import ddc.core;
+import ddc.core.detail;
 
 TEST(DiscreteSpace, UninitializedDisplayDiscretizationStore)
 {

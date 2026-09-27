@@ -2,11 +2,12 @@
 //
 // SPDX-License-Identifier: MIT
 
-#include <ddc/ddc.hpp>
-
 #include <gtest/gtest.h>
 
 #include <Kokkos_Core.hpp>
+
+import ddc.core;
+import ddc.core.experimental;
 
 inline namespace anonymous_namespace_workaround_parallel_transform_scan_cpp {
 

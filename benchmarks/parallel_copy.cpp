@@ -5,11 +5,11 @@
 #include <cstddef>
 #include <cstdint>
 
-#include <ddc/ddc.hpp>
-
 #include <benchmark/benchmark.h>
 
 #include <Kokkos_Core.hpp>
+
+import ddc.core;
 
 inline namespace anonymous_namespace_workaround_parallel_copy_cpp {
 

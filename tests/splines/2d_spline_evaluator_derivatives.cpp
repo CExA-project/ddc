@@ -7,9 +7,6 @@
 #include <cstddef>
 #include <vector>
 
-#include <ddc/ddc.hpp>
-#include <ddc/kernels/splines.hpp>
-
 #include <gtest/gtest.h>
 
 #include <Kokkos_Core.hpp>
@@ -17,6 +14,9 @@
 #include "cosine_evaluator.hpp"
 #include "evaluator_2d.hpp"
 #include "spline_error_bounds.hpp"
+
+import ddc.core;
+import ddc.splines;
 
 inline namespace anonymous_namespace_workaround_2d_spline_evaluator_derivatives_cpp {
 

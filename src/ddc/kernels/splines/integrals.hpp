@@ -169,9 +169,9 @@ ddc::ChunkSpan<Real, ddc::DiscreteDomain<DDim>, Layout, MemorySpace> integrals(
         ddc::ChunkSpan<Real, ddc::DiscreteDomain<DDim>, Layout, MemorySpace> int_vals)
 {
     if constexpr (is_uniform_bsplines_v<DDim>) {
-        uniform_bsplines_integrals(execution_space, int_vals);
+        detail::uniform_bsplines_integrals(execution_space, int_vals);
     } else if constexpr (is_non_uniform_bsplines_v<DDim>) {
-        non_uniform_bsplines_integrals(execution_space, int_vals);
+        detail::non_uniform_bsplines_integrals(execution_space, int_vals);
     }
     return int_vals;
 }

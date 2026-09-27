@@ -11,12 +11,12 @@
 #include <utility>
 #include <vector>
 
-#include <ddc/ddc.hpp>
-#include <ddc/kernels/splines.hpp>
-
 #include <gtest/gtest.h>
 
 #include "test_utils.hpp"
+
+import ddc.core;
+import ddc.splines;
 
 inline namespace anonymous_namespace_workaround_knots_as_interpolation_points_cpp {
 

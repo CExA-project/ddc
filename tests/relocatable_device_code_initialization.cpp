@@ -2,9 +2,9 @@
 //
 // SPDX-License-Identifier: MIT
 
-#include <ddc/ddc.hpp>
-
 #include "relocatable_device_code_initialization.hpp"
+
+import ddc.core;
 
 namespace rdc {
 

@@ -9,11 +9,11 @@
 #include <utility>
 #include <vector>
 
-#include <ddc/ddc.hpp>
-
 #include <gtest/gtest.h>
 
 #include <Kokkos_Core.hpp>
+
+import ddc.core;
 
 #define VALUES_X                                                                                   \
     {ddc::Coordinate<DimX>(0.1),                                                                   \

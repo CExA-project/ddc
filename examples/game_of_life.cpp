@@ -6,9 +6,9 @@
 #include <iostream>
 #include <string>
 
-#include <ddc/ddc.hpp>
-
 #include <Kokkos_Core.hpp>
+
+import ddc.core;
 
 using cell = bool;
 

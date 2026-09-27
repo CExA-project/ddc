@@ -8,9 +8,10 @@
 #include <filesystem>
 #include <type_traits>
 
-#include <ddc/ddc.hpp>
-
 #include <Kokkos_Core.hpp>
+
+import ddc.core;
+import ddc.core.experimental;
 
 struct DDimX : ddc::DiscreteDimension
 {

@@ -4,9 +4,9 @@
 
 #include <utility>
 
-#include <ddc/ddc.hpp>
-
 #include <gtest/gtest.h>
+
+import ddc.core;
 
 TEST(Reducer, Sum)
 {

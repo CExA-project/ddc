@@ -4,13 +4,13 @@
 
 #include <utility>
 
-#include <ddc/ddc.hpp>
-
 #include <gtest/gtest.h>
 
 #include <Kokkos_Core.hpp>
 
 #include "helper_count.hpp"
+
+import ddc.core;
 
 inline namespace anonymous_namespace_workaround_parallel_for_each_cpp {
 

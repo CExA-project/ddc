@@ -6,11 +6,11 @@
 #include <cstring>
 #include <vector>
 
-#include <ddc/ddc.hpp>
-
 #include <benchmark/benchmark.h>
 
 #include <Kokkos_Core.hpp>
+
+import ddc.core;
 
 inline namespace anonymous_namespace_workaround_deepcopy_cpp {
 

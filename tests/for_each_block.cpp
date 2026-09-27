@@ -5,11 +5,12 @@
 #include <array>
 #include <stdexcept>
 
-#include <ddc/ddc.hpp>
-
 #include <gtest/gtest.h>
 
 #include <Kokkos_Core.hpp>
+
+import ddc.core;
+import ddc.core.detail;
 
 inline namespace anonymous_namespace_workaround_for_each_block_cpp {
 

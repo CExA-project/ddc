@@ -7,9 +7,10 @@
 #include <stdexcept>
 #include <vector>
 
-#include <ddc/ddc.hpp>
-
 #include <gtest/gtest.h>
+
+import ddc.core;
+import ddc.core.detail;
 
 TEST(SaveNpy, LargeHeader)
 {

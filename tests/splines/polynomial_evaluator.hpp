@@ -10,8 +10,8 @@
 #include <cstddef>
 #include <random>
 
-#include <ddc/ddc.hpp>
-#include <ddc/kernels/splines.hpp>
+import ddc.core;
+import ddc.splines;
 
 struct PolynomialEvaluator
 {

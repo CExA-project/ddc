@@ -6,12 +6,12 @@
 #include <stdexcept>
 #include <vector>
 
-#include <ddc/ddc.hpp>
-#include <ddc/kernels/splines.hpp>
-
 #include <gtest/gtest.h>
 
 #include <Kokkos_Core.hpp>
+
+import ddc.core;
+import ddc.splines;
 
 struct DimX
 {

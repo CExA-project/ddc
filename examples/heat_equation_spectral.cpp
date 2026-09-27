@@ -9,10 +9,10 @@
 #include <string>
 #include <utility>
 
-#include <ddc/ddc.hpp>
-#include <ddc/kernels/fft.hpp>
-
 #include <Kokkos_Core.hpp>
+
+import ddc.core;
+import ddc.fft;
 
 /// Our first continuous dimension
 struct X

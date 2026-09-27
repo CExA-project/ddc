@@ -5,9 +5,6 @@
 #include <cstddef>
 #include <vector>
 
-#include <ddc/ddc.hpp>
-#include <ddc/kernels/splines.hpp>
-
 #include <gtest/gtest.h>
 
 #include <Kokkos_Core.hpp>
@@ -17,6 +14,9 @@
 #if !defined(BC_PERIODIC)
 #    include "polynomial_evaluator.hpp"
 #endif
+
+import ddc.core;
+import ddc.splines;
 
 inline namespace anonymous_namespace_workaround_extrapolation_rule_cpp {
 

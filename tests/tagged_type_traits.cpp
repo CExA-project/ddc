@@ -4,11 +4,11 @@
 
 #include <type_traits>
 
-#include <ddc/ddc.hpp>
-
 #include <gtest/gtest.h>
 
 #include <Kokkos_Core.hpp>
+
+import ddc.core;
 
 inline namespace anonymous_namespace_workaround_tagged_type_traits_cpp {
 

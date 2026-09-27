@@ -2,11 +2,11 @@
 //
 // SPDX-License-Identifier: MIT
 
-#include <ddc/ddc.hpp>
-
 #include <gtest/gtest.h>
 
 #include <Kokkos_Core.hpp>
+
+import ddc.core;
 
 int main(int argc, char** argv)
 {

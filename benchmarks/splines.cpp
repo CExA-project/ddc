@@ -18,12 +18,12 @@
 #include <utility>
 #include <vector>
 
-#include <ddc/ddc.hpp>
-#include <ddc/kernels/splines.hpp>
-
 #include <benchmark/benchmark.h>
 
 #include <Kokkos_Core.hpp>
+
+import ddc.core;
+import ddc.splines;
 
 inline namespace anonymous_namespace_workaround_splines_cpp {
 

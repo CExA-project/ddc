@@ -4,11 +4,12 @@
 
 #include <array>
 
-#include <ddc/ddc.hpp>
-
 #include <gtest/gtest.h>
 
 #include <Kokkos_Core.hpp>
+
+import ddc.core;
+import ddc.core.detail;
 
 TEST(DdcToKokkosExecutionPolicy, Dim0)
 {

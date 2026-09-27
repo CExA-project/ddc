@@ -2,11 +2,11 @@
 //
 // SPDX-License-Identifier: MIT
 
-#include <ddc/ddc.hpp>
-
 #include <gtest/gtest.h>
 
 #include <Kokkos_Macros.hpp>
+
+import ddc.core;
 
 inline namespace anonymous_namespace_workaround_multiple_discrete_dimensions_cpp {
 

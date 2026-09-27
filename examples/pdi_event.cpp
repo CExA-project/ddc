@@ -4,12 +4,12 @@
 
 #include <string>
 
-#include <ddc/ddc.hpp>
-#include <ddc/pdi.hpp>
-
 #include <Kokkos_Core.hpp>
 #include <paraconf.h>
 #include <pdi.h>
+
+import ddc.core;
+import ddc.pdi;
 
 struct DDimX : ddc::DiscreteDimension
 {

@@ -9,14 +9,14 @@
 #include <type_traits>
 #include <utility>
 
-#include <ddc/ddc.hpp>
-#include <ddc/kernels/splines.hpp>
-
 #include <gtest/gtest.h>
 
 #include <Kokkos_Core.hpp>
 
 #include "test_utils.hpp"
+
+import ddc.core;
+import ddc.splines;
 
 inline namespace anonymous_namespace_workaround_spline_traits_cpp {
 

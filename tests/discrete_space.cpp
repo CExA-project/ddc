@@ -5,11 +5,12 @@
 #include <sstream>
 #include <stdexcept>
 
-#include <ddc/ddc.hpp>
-
 #include <gtest/gtest.h>
 
 #include <Kokkos_Macros.hpp>
+
+import ddc.core;
+import ddc.core.detail;
 
 inline namespace anonymous_namespace_workaround_discrete_space_cpp {
 

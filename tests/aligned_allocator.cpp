@@ -7,9 +7,9 @@
 #include <type_traits>
 #include <utility>
 
-#include <ddc/ddc.hpp>
-
 #include <gtest/gtest.h>
+
+import ddc.core;
 
 using T = double;
 using A = ddc::AlignedAllocator<T, 64>;

@@ -6,13 +6,14 @@
 #include <string>
 #include <string_view>
 
-#include <ddc/ddc.hpp>
-#include <ddc/pdi.hpp>
-
 #include <gtest/gtest.h>
 
+#include <Kokkos_Core.hpp>
 #include <paraconf.h>
 #include <pdi.h>
+
+import ddc.core;
+import ddc.pdi;
 
 namespace {
 

@@ -11,9 +11,9 @@
 #include <tuple>
 #include <utility>
 
-#include <ddc/ddc.hpp>
-
 #include <Kokkos_Core.hpp>
+
+import ddc.core;
 //! [includes]
 
 //! [X-dimension]

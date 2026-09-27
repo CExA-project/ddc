@@ -5,9 +5,9 @@
 #include <array>
 #include <sstream>
 
-#include <ddc/ddc.hpp>
-
 #include <gtest/gtest.h>
+
+import ddc.core;
 
 inline namespace anonymous_namespace_workaround_discrete_element_cpp {
 

@@ -5,9 +5,9 @@
 #include <sstream>
 #include <stdexcept>
 
-#include <ddc/kernels/splines.hpp>
-
 #include <gtest/gtest.h>
+
+import ddc.splines;
 
 TEST(SplineBoundaryConditions, StreamOperator)
 {

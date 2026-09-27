@@ -67,7 +67,12 @@ target_sources(
             TYPE HEADERS
             BASE_DIRS ${CMAKE_CURRENT_BINARY_DIR}/generated
             FILES ${CMAKE_CURRENT_BINARY_DIR}/generated/ddc/config.hpp
-    INTERFACE
+        FILE_SET CXX_MODULES
+            BASE_DIRS src/ddc
+            FILES
+                src/ddc/ddc.core.cppm
+                src/ddc/ddc.core.detail.cppm
+                src/ddc/ddc.core.experimental.cppm
         FILE_SET core_interface
             TYPE HEADERS
             BASE_DIRS src
@@ -133,6 +138,7 @@ install(
     ARCHIVE COMPONENT Development
     FILE_SET core_interface COMPONENT Development
     FILE_SET core_public COMPONENT Development
+    FILE_SET CXX_MODULES COMPONENT Development DESTINATION lib
     LIBRARY COMPONENT Runtime
 )
 install(
@@ -156,7 +162,9 @@ if("${DDC_BUILD_KERNELS_FFT}")
     target_link_libraries(ddc_fft PUBLIC DDC::core Kokkos::kokkos KokkosFFT::fft)
     target_sources(
         ddc_fft
-        INTERFACE FILE_SET HEADERS BASE_DIRS src FILES src/ddc/kernels/fft.hpp
+        PUBLIC
+            FILE_SET HEADERS BASE_DIRS src FILES src/ddc/kernels/fft.hpp
+            FILE_SET CXX_MODULES BASE_DIRS src/ddc FILES src/ddc/kernels/ddc.fft.cppm
         PRIVATE src/ddc/kernels/fft.cpp
     )
 
@@ -171,6 +179,7 @@ if("${DDC_BUILD_KERNELS_FFT}")
         EXPORT DDCFftTargets
         ARCHIVE COMPONENT Development
         FILE_SET HEADERS COMPONENT Development
+        FILE_SET CXX_MODULES COMPONENT Development DESTINATION lib
         LIBRARY COMPONENT Runtime
     )
     install(
@@ -206,7 +215,8 @@ if("${DDC_BUILD_KERNELS_SPLINES}")
             src/ddc/kernels/splines/splines_linear_problem_pds_band.cpp
             src/ddc/kernels/splines/splines_linear_problem_pds_tridiag.cpp
             src/ddc/kernels/splines/splines_linear_problem_sparse.cpp
-        INTERFACE
+        PUBLIC
+            FILE_SET CXX_MODULES BASE_DIRS src/ddc FILES src/ddc/kernels/ddc.splines.cppm
             FILE_SET HEADERS
                 BASE_DIRS src
                 FILES
@@ -255,6 +265,7 @@ if("${DDC_BUILD_KERNELS_SPLINES}")
         EXPORT DDCSplinesTargets
         ARCHIVE COMPONENT Development
         FILE_SET HEADERS COMPONENT Development
+        FILE_SET CXX_MODULES COMPONENT Development DESTINATION lib
         LIBRARY COMPONENT Runtime
     )
     install(
@@ -276,7 +287,9 @@ if("${DDC_BUILD_PDI_WRAPPER}")
     target_link_libraries(ddc_pdi PUBLIC DDC::core PDI::PDI_C)
     target_sources(
         ddc_pdi
-        INTERFACE FILE_SET HEADERS BASE_DIRS src FILES src/ddc/pdi.hpp
+        PUBLIC
+            FILE_SET HEADERS BASE_DIRS src FILES src/ddc/pdi.hpp
+            FILE_SET CXX_MODULES BASE_DIRS src/ddc FILES src/ddc/ddc.pdi.cppm
         PRIVATE src/ddc/pdi.cpp
     )
 
@@ -291,6 +304,7 @@ if("${DDC_BUILD_PDI_WRAPPER}")
         EXPORT DDCPdiTargets
         ARCHIVE COMPONENT Development
         FILE_SET HEADERS COMPONENT Development
+        FILE_SET CXX_MODULES COMPONENT Development DESTINATION lib
         LIBRARY COMPONENT Runtime
     )
     install(

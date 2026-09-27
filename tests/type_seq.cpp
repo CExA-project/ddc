@@ -6,9 +6,9 @@
 #include <limits>
 #include <type_traits>
 
-#include <ddc/ddc.hpp>
-
 #include <gtest/gtest.h>
+
+import ddc.core;
 
 inline namespace anonymous_namespace_workaround_type_seq_cpp {
 

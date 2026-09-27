@@ -5,11 +5,12 @@
 #include <sstream>
 #include <string>
 
-#include <ddc/ddc.hpp>
-
 #include <gtest/gtest.h>
 
 #include <Kokkos_Core.hpp>
+
+import ddc.core;
+import ddc.core.detail;
 
 inline namespace anonymous_namespace_workaround_uniform_point_sampling_cpp {
 

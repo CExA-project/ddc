@@ -9,10 +9,10 @@
 #include <iostream>
 #include <utility>
 
-#include <ddc/ddc.hpp>
-#include <ddc/kernels/splines.hpp>
-
 #include <Kokkos_Core.hpp>
+
+import ddc.core;
+import ddc.splines;
 
 #define PERIODIC_DOMAIN // Comment this to run non-periodic simulation
 

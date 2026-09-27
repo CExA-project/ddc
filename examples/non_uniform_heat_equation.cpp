@@ -16,9 +16,9 @@
 #include <utility>
 #include <vector>
 
-#include <ddc/ddc.hpp>
-
 #include <Kokkos_Core.hpp>
+
+import ddc.core;
 //! [includes]
 
 //! [vector_generator]

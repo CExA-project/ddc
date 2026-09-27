@@ -8,7 +8,7 @@
 #include <array>
 #include <utility>
 
-#include <ddc/kernels/splines.hpp>
+import ddc.splines;
 
 template <class Evaluator>
 class SplineErrorBounds

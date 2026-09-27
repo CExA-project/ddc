@@ -6,13 +6,13 @@
 #include <stdexcept>
 #include <type_traits>
 
-#include <ddc/ddc.hpp>
-#include <ddc/kernels/fft.hpp>
-
 #include <gtest/gtest.h>
 
 #include <KokkosFFT.hpp>
 #include <Kokkos_Core.hpp>
+
+import ddc.core;
+import ddc.fft;
 
 #if !defined(KOKKOSFFT_ENABLE_SERIAL)
 #    if defined(KOKKOS_ENABLE_SERIAL) && defined(KOKKOSFFT_ENABLE_TPL_FFTW)

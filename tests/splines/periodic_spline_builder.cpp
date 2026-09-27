@@ -10,15 +10,15 @@
 #    include <vector>
 #endif
 
-#include <ddc/ddc.hpp>
-#include <ddc/kernels/splines.hpp>
-
 #include <gtest/gtest.h>
 
 #include <Kokkos_Core.hpp>
 
 #include "cosine_evaluator.hpp"
 #include "spline_error_bounds.hpp"
+
+import ddc.core;
+import ddc.splines;
 
 struct DimX
 {

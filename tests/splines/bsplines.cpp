@@ -14,14 +14,14 @@
 #include <utility>
 #include <vector>
 
-#include <ddc/ddc.hpp>
-#include <ddc/kernels/splines.hpp>
-
 #include <gtest/gtest.h>
 
 #include <Kokkos_Core.hpp>
 
 #include "test_utils.hpp"
+
+import ddc.core;
+import ddc.splines;
 
 template <class T>
 struct BSplinesFixture
@@ -94,7 +94,7 @@ TYPED_TEST(BSplinesFixture, PartitionOfUnityUniform)
         ddc::discrete_space<BSplinesX>().eval_basis(values, test_point);
         ddc::Real sum = 0.0;
         for (std::size_t j(0); j < degree + 1; ++j) {
-            sum += DDC_MDSPAN_ACCESS_OP(values, j);
+            sum += values[j];
         }
         EXPECT_LE(fabs(sum - 1.0), 1.0e-15);
     }
@@ -129,7 +129,7 @@ TYPED_TEST(BSplinesFixture, PartitionOfUnityNonUniform)
         ddc::discrete_space<BSplinesX>().eval_basis(values, test_point);
         ddc::Real sum = 0.0;
         for (std::size_t j(0); j < degree + 1; ++j) {
-            sum += DDC_MDSPAN_ACCESS_OP(values, j);
+            sum += values[j];
         }
         EXPECT_LE(fabs(sum - 1.0), 1.0e-15);
     }

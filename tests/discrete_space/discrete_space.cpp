@@ -2,11 +2,11 @@
 //
 // SPDX-License-Identifier: MIT
 
-#include <ddc/ddc.hpp>
-
 #include <gtest/gtest.h>
 
 #include "discrete_space.hpp"
+
+import ddc.core;
 
 struct DimX
 {

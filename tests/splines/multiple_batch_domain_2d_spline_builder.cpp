@@ -10,9 +10,6 @@
 #endif
 #include <vector>
 
-#include <ddc/ddc.hpp>
-#include <ddc/kernels/splines.hpp>
-
 #include <gtest/gtest.h>
 
 #include <Kokkos_Core.hpp>
@@ -24,6 +21,9 @@
 #    include "polynomial_evaluator.hpp"
 #endif
 #include "spline_error_bounds.hpp"
+
+import ddc.core;
+import ddc.splines;
 
 inline namespace anonymous_namespace_workaround_batched_2d_spline_builder_cpp {
 

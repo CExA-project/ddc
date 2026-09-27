@@ -9,12 +9,13 @@
 #include <type_traits>
 #include <typeinfo>
 
-#include <ddc/ddc.hpp>
-
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 #include <Kokkos_Core.hpp>
+
+import ddc.core;
+import ddc.core.detail;
 
 inline namespace anonymous_namespace_workaround_print_cpp {
 

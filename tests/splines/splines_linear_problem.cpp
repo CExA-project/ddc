@@ -13,13 +13,13 @@
 #include <utility>
 #include <vector>
 
-#include <ddc/ddc.hpp>
-#include <ddc/kernels/splines.hpp>
-
 #include <gtest/gtest.h>
 
 #include <Kokkos_Core.hpp>
 #include <Kokkos_DualView.hpp>
+
+import ddc.core;
+import ddc.splines;
 
 inline namespace anonymous_namespace_workaround_matrix_cpp {
 

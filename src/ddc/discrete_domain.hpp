@@ -497,7 +497,10 @@ KOKKOS_FUNCTION constexpr auto remove_dims_of(DiscreteDomain<DDimsA...> const& D
     return detail::convert_type_seq_to_discrete_domain_t<type_seq_r>(DDom_a);
 }
 
-// Remove dimensions from a domain type
+//! Type alias for the discrete domain obtained by removing dimensions DDims from DDom.
+//! @tparam DDom The discrete domain type from which to remove dimensions.
+//! @tparam DDims The discrete dimensions to remove.
+//! @return The discrete domain type without the DDims dimensions.
 template <typename DDom, concepts::discrete_dimension... DDims>
 using remove_dims_of_t = decltype(remove_dims_of<DDims...>(std::declval<DDom>()));
 

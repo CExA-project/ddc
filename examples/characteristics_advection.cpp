@@ -17,9 +17,9 @@
 #define PERIODIC_DOMAIN // Comment this to run non-periodic simulation
 
 #if defined(PERIODIC_DOMAIN)
-static constexpr bool g_periodic_splines = true;
+static constexpr bool splines_periodic = true;
 #else
-static constexpr bool g_periodic_splines = false;
+static constexpr bool splines_periodic = false;
 #endif
 
 //! [includes]
@@ -44,7 +44,7 @@ using ExtrapolationRule = ddc::NullExtrapolationRule;
 
 //! [X-discretization]
 /// A uniform discretization of X
-struct BSplinesX : ddc::UniformBSplines<X, s_degree, g_periodic_splines>
+struct BSplinesX : ddc::UniformBSplines<X, s_degree, splines_periodic>
 {
 };
 using GrevillePoints = ddc::GrevilleInterpolationPoints<BSplinesX, s_sbc, s_sbc>;

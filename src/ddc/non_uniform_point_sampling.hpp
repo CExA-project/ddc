@@ -49,8 +49,7 @@ public:
     template <class DDim, class MemorySpace>
     class Impl
     {
-        template <class ODDim, class OMemorySpace>
-        friend class Impl;
+        friend class Impl<DDim, Kokkos::HostSpace>;
 
         Kokkos::View<Coordinate<CDim>*, MemorySpace> m_points;
 
@@ -94,8 +93,8 @@ public:
             Kokkos::deep_copy(m_points, view_type(host_points.data(), host_points.size()));
         }
 
-        template <class OriginMemorySpace>
-        explicit Impl(Impl<DDim, OriginMemorySpace> const& impl)
+        explicit Impl(Impl<DDim, Kokkos::HostSpace> const& impl)
+            requires(!std::is_same_v<MemorySpace, Kokkos::HostSpace>)
             : m_points(Kokkos::create_mirror_view_and_copy(MemorySpace(), impl.m_points))
             , m_reference(impl.m_reference)
         {

@@ -18,3 +18,10 @@ target_link_libraries(discrete_space_tests_lib PUBLIC GTest::gtest DDC::core)
 add_executable(discrete_space_tests main.cpp)
 target_link_libraries(discrete_space_tests PUBLIC discrete_space_tests_lib GTest::gtest DDC::core)
 gtest_discover_tests(discrete_space_tests DISCOVERY_MODE PRE_TEST)
+
+if(Kokkos_COMPILE_LANGUAGE STREQUAL CUDA)
+    set_property(
+        TARGET discrete_space_tests_lib discrete_space_tests
+        PROPERTY CUDA_SEPARABLE_COMPILATION ON
+    )
+endif()

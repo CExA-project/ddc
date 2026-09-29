@@ -12,6 +12,10 @@ endif()
 add_executable(generate_npy_fixtures generate_npy_fixtures.cpp)
 target_link_libraries(generate_npy_fixtures PRIVATE DDC::core Kokkos::kokkos)
 
+if(Kokkos_COMPILE_LANGUAGE STREQUAL CUDA)
+    set_property(TARGET generate_npy_fixtures PROPERTY CUDA_SEPARABLE_COMPILATION ON)
+endif()
+
 find_package(Python3 REQUIRED COMPONENTS Interpreter)
 
 execute_process(

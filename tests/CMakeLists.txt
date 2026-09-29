@@ -102,6 +102,13 @@ target_compile_features(ddc_tests PRIVATE cxx_std_20)
 target_link_libraries(ddc_tests PRIVATE ddc_gtest_main DDC::core GTest::gmock GTest::gtest)
 gtest_discover_tests(ddc_tests DISCOVERY_MODE PRE_TEST)
 
+if(Kokkos_COMPILE_LANGUAGE STREQUAL CUDA)
+    set_property(
+        TARGET ddc_gtest_main ddc_tests_uninitialized ddc_tests
+        PROPERTY CUDA_SEPARABLE_COMPILATION ON
+    )
+endif()
+
 if("${DDC_BUILD_KERNELS_FFT}")
     add_subdirectory(fft)
 endif()

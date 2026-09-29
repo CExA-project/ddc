@@ -28,6 +28,13 @@ add_executable(non_uniform_heat_equation non_uniform_heat_equation.cpp)
 target_link_libraries(non_uniform_heat_equation PUBLIC DDC::core)
 add_test(NAME Examples.NonUniformHeatEquation COMMAND non_uniform_heat_equation)
 
+if(Kokkos_COMPILE_LANGUAGE STREQUAL CUDA)
+    set_property(
+        TARGET game_of_life heat_equation uniform_heat_equation non_uniform_heat_equation
+        PROPERTY CUDA_SEPARABLE_COMPILATION ON
+    )
+endif()
+
 if("${DDC_BUILD_PDI_WRAPPER}")
     add_executable(pdi_event pdi_event.cpp)
     target_link_libraries(pdi_event PUBLIC DDC::core DDC::pdi)

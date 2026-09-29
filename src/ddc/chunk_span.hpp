@@ -13,13 +13,13 @@
 
 #include "detail/kokkos.hpp"
 #include "detail/macros.hpp"
-#include "detail/type_seq.hpp"
 
 #include "chunk_common.hpp"
 #include "chunk_traits.hpp"
 #include "discrete_domain.hpp"
 #include "discrete_element.hpp"
 #include "discrete_vector.hpp"
+#include "type_seq.hpp"
 
 namespace ddc {
 
@@ -104,7 +104,7 @@ protected:
     KOKKOS_FUNCTION static constexpr auto get_slicer_for(DiscreteVector<ODDims...> const& c)
     {
         DDC_IF_NVCC_THEN_PUSH_AND_SUPPRESS(implicit_return_from_non_void_function)
-        if constexpr (in_tags_v<QueryDDim, detail::TypeSeq<ODDims...>>) {
+        if constexpr (in_tags_v<QueryDDim, TypeSeq<ODDims...>>) {
             return c.template get<QueryDDim>();
         } else {
             return Kokkos::full_extent;
@@ -118,7 +118,7 @@ protected:
             DiscreteDomain<OODDims...> const& origin)
     {
         DDC_IF_NVCC_THEN_PUSH_AND_SUPPRESS(implicit_return_from_non_void_function)
-        if constexpr (in_tags_v<QueryDDim, detail::TypeSeq<ODDims...>>) {
+        if constexpr (in_tags_v<QueryDDim, TypeSeq<ODDims...>>) {
             DiscreteDomain<QueryDDim> const c_slice(c);
             DiscreteDomain<QueryDDim> const origin_slice(origin);
             return std::pair<std::size_t, std::size_t>(
@@ -136,7 +136,7 @@ protected:
     };
 
     template <class... DDims>
-    struct Slicer<detail::TypeSeq<DDims...>>
+    struct Slicer<TypeSeq<DDims...>>
     {
         template <class... ODDims>
         KOKKOS_FUNCTION constexpr auto operator()(
@@ -275,7 +275,6 @@ public:
     template <class... QueryDDims>
     KOKKOS_FUNCTION constexpr auto operator[](DiscreteVector<QueryDDims...> const& slice_spec) const
     {
-        using detail::TypeSeq;
         KOKKOS_ASSERT(
                 ((DiscreteVector<QueryDDims>(slice_spec)
                   < DiscreteVector<QueryDDims>(this->m_domain.extents()))
@@ -316,7 +315,7 @@ public:
     KOKKOS_FUNCTION constexpr auto operator[](
             DiscreteElement<QueryDDims...> const& slice_spec) const
     {
-        using QueryDDom = detail::Rebind<SupportType, detail::TypeSeq<QueryDDims...>>::type;
+        using QueryDDom = detail::Rebind<SupportType, TypeSeq<QueryDDims...>>::type;
         KOKKOS_ASSERT(QueryDDom(this->m_domain).contains(slice_spec))
         return (*this)[QueryDDom(this->m_domain).distance_from_front(slice_spec)];
     }

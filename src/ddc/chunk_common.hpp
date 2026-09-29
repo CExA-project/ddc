@@ -10,11 +10,10 @@
 
 #include <Kokkos_Core.hpp>
 
-#include "detail/type_seq.hpp"
-
 #include "chunk_traits.hpp"
 #include "discrete_domain.hpp"
 #include "discrete_vector.hpp"
+#include "type_seq.hpp"
 
 namespace ddc {
 

@@ -40,15 +40,15 @@ namespace detail {
 #if defined(KOKKOS_ENABLE_CUDA)
 void device_throw_on_error(
         cudaError_t const err,
-        const char* const func,
-        const char* const file,
-        const int line);
+        char const* const func,
+        char const* const file,
+        int const line);
 #elif defined(KOKKOS_ENABLE_HIP)
 void device_throw_on_error(
         hipError_t const err,
-        const char* const func,
-        const char* const file,
-        const int line);
+        char const* const func,
+        char const* const file,
+        int const line);
 #endif
 
 template <class DDim, class MemorySpace>

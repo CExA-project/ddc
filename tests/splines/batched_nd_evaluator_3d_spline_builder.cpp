@@ -963,9 +963,9 @@ void TestBatchedNd3dSpline()
     ddc::SplineEvaluatorND<
             ExecSpace,
             MemorySpace,
-            ddc::detail::TypeSeq<BSplines<I1>, BSplines<I2>, BSplines<I3>>,
-            ddc::detail::TypeSeq<DDimI1, DDimI2, DDimI3>,
-            ddc::detail::TypeSeq<
+            ddc::TypeSeq<BSplines<I1>, BSplines<I2>, BSplines<I3>>,
+            ddc::TypeSeq<DDimI1, DDimI2, DDimI3>,
+            ddc::TypeSeq<
                     extrapolation_rule_1_type,
                     extrapolation_rule_1_type,
                     extrapolation_rule_2_type,

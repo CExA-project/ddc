@@ -47,24 +47,23 @@ template <
 class SplineEvaluatorND<
         ExecSpace,
         MemorySpace,
-        detail::TypeSeq<BSplines...>,
-        detail::TypeSeq<EvaluationDDim...>,
-        detail::TypeSeq<ExtrapolationRule...>>
+        TypeSeq<BSplines...>,
+        TypeSeq<EvaluationDDim...>,
+        TypeSeq<ExtrapolationRule...>>
 {
 private:
     static constexpr std::size_t dimension = sizeof...(BSplines);
 
-    using bsplines_ts = detail::TypeSeq<BSplines...>;
+    using bsplines_ts = TypeSeq<BSplines...>;
     // A value that can be used to do a pack expansion over (0, 1, ..., Dimension)
     template <class BSpline>
     static constexpr std::size_t s_idx = ddc::type_seq_rank_v<BSpline, bsplines_ts>;
 
-    using evaluation_ddim_ts = detail::TypeSeq<EvaluationDDim...>;
-    using lower_extrap_rule_ts = detail::TypeSeq<
-            ddc::type_seq_element_t<2 * s_idx<BSplines>, detail::TypeSeq<ExtrapolationRule...>>...>;
-    using upper_extrap_rule_ts = detail::TypeSeq<ddc::type_seq_element_t<
-            2 * s_idx<BSplines> + 1,
-            detail::TypeSeq<ExtrapolationRule...>>...>;
+    using evaluation_ddim_ts = TypeSeq<EvaluationDDim...>;
+    using lower_extrap_rule_ts = TypeSeq<
+            ddc::type_seq_element_t<2 * s_idx<BSplines>, TypeSeq<ExtrapolationRule...>>...>;
+    using upper_extrap_rule_ts = TypeSeq<
+            ddc::type_seq_element_t<2 * s_idx<BSplines> + 1, TypeSeq<ExtrapolationRule...>>...>;
 
 public:
     /// @brief The type of the Ith evaluation continuous dimension used by this class.
@@ -709,7 +708,7 @@ private:
             ddc::Coordinate<CoordDim> const& coord_eval)
     {
         using deriv_dim = Deriv<typename BSplinesType::continuous_dimension_type>;
-        using deriv_dims = detail::TypeSeq<DerivDims...>;
+        using deriv_dims = TypeSeq<DerivDims...>;
         if constexpr (!in_tags_v<deriv_dim, deriv_dims>) {
             return ddc::discrete_space<BSplinesType>().eval_basis(vals, coord_eval);
         } else {
@@ -771,7 +770,7 @@ private:
         static_assert(
                 (in_tags_v<
                          DerivDims,
-                         ddc::detail::TypeSeq<Deriv<continuous_dimension_type<s_idx<BSplines>>>...>>
+                         ddc::TypeSeq<Deriv<continuous_dimension_type<s_idx<BSplines>>>...>>
                  && ...),
                 "The only valid dimensions for deriv_order are Deriv<Dim1>, Deriv<Dim2>, ..., "
                 "Deriv<DimN>");

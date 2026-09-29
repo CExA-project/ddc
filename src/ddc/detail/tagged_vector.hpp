@@ -14,8 +14,9 @@
 
 #include <Kokkos_Macros.hpp>
 
+#include "../type_seq.hpp"
+
 #include "macros.hpp"
-#include "type_seq.hpp"
 
 namespace ddc {
 
@@ -47,7 +48,7 @@ concept tagged_vector = is_tagged_vector_v<T>;
 template <class ElementType, class... Tags>
 struct ToTypeSeq<TaggedVector<ElementType, Tags...>>
 {
-    using type = TypeSeq<Tags...>;
+    using type = ddc::TypeSeq<Tags...>;
 };
 
 } // namespace detail
@@ -100,7 +101,7 @@ KOKKOS_FUNCTION constexpr auto operator+(
         detail::TaggedVector<ElementType, Tags...> const& lhs,
         detail::TaggedVector<OElementType, OTags...> const& rhs)
 {
-    static_assert(type_seq_same_v<detail::TypeSeq<Tags...>, detail::TypeSeq<OTags...>>);
+    static_assert(type_seq_same_v<ddc::TypeSeq<Tags...>, ddc::TypeSeq<OTags...>>);
     using RElementType = decltype(std::declval<ElementType>() + std::declval<OElementType>());
     return detail::TaggedVector<RElementType, Tags...>((get<Tags>(lhs) + get<Tags>(rhs))...);
 }
@@ -130,7 +131,7 @@ KOKKOS_FUNCTION constexpr auto operator-(
         detail::TaggedVector<ElementType, Tags...> const& lhs,
         detail::TaggedVector<OElementType, OTags...> const& rhs)
 {
-    static_assert(type_seq_same_v<detail::TypeSeq<Tags...>, detail::TypeSeq<OTags...>>);
+    static_assert(type_seq_same_v<ddc::TypeSeq<Tags...>, ddc::TypeSeq<OTags...>>);
     using RElementType = decltype(std::declval<ElementType>() - std::declval<OElementType>());
     return detail::TaggedVector<RElementType, Tags...>((get<Tags>(lhs) - get<Tags>(rhs))...);
 }
@@ -195,9 +196,9 @@ KOKKOS_FUNCTION constexpr auto const& take(
         TailTaggedVectors const&... tail)
 {
     DDC_IF_NVCC_THEN_PUSH_AND_SUPPRESS(implicit_return_from_non_void_function)
-    if constexpr (type_seq_contains_v<detail::TypeSeq<QueryTag>, to_type_seq_t<HeadTaggedVector>>) {
+    if constexpr (type_seq_contains_v<ddc::TypeSeq<QueryTag>, to_type_seq_t<HeadTaggedVector>>) {
         static_assert(
-                (!type_seq_contains_v<detail::TypeSeq<QueryTag>, to_type_seq_t<TailTaggedVectors>>
+                (!type_seq_contains_v<ddc::TypeSeq<QueryTag>, to_type_seq_t<TailTaggedVectors>>
                  && ...),
                 "ERROR: tag redundant");
         return head;
@@ -236,7 +237,7 @@ class TaggedVector : public TaggedVectorConversionOperators<TaggedVector<Element
 {
     friend class TaggedVectorConversionOperators<TaggedVector<ElementType, Tags...>>;
 
-    using tags_seq = detail::TypeSeq<Tags...>;
+    using tags_seq = ddc::TypeSeq<Tags...>;
 
 private:
     std::array<ElementType, sizeof...(Tags)> m_values;
@@ -350,7 +351,7 @@ public:
     KOKKOS_FUNCTION constexpr TaggedVector& operator+=(
             TaggedVector<OElementType, OTags...> const& rhs)
     {
-        static_assert(type_seq_same_v<tags_seq, detail::TypeSeq<OTags...>>);
+        static_assert(type_seq_same_v<tags_seq, ddc::TypeSeq<OTags...>>);
         ((m_values[type_seq_rank_v<Tags, tags_seq>] += rhs.template get<Tags>()), ...);
         return *this;
     }
@@ -366,7 +367,7 @@ public:
     KOKKOS_FUNCTION constexpr TaggedVector& operator-=(
             TaggedVector<OElementType, OTags...> const& rhs)
     {
-        static_assert(type_seq_same_v<tags_seq, detail::TypeSeq<OTags...>>);
+        static_assert(type_seq_same_v<tags_seq, ddc::TypeSeq<OTags...>>);
         ((m_values[type_seq_rank_v<Tags, tags_seq>] -= rhs.template get<Tags>()), ...);
         return *this;
     }
@@ -382,7 +383,7 @@ public:
     KOKKOS_FUNCTION constexpr TaggedVector& operator*=(
             TaggedVector<OElementType, OTags...> const& rhs)
     {
-        static_assert(type_seq_same_v<tags_seq, detail::TypeSeq<OTags...>>);
+        static_assert(type_seq_same_v<tags_seq, ddc::TypeSeq<OTags...>>);
         ((m_values[type_seq_rank_v<Tags, tags_seq>] *= rhs.template get<Tags>()), ...);
         return *this;
     }

@@ -101,7 +101,7 @@ template <typename... DDimX>
 KokkosFFT::axis_type<sizeof...(DDimX)> axes()
 {
     return KokkosFFT::axis_type<sizeof...(DDimX)> {
-            static_cast<int>(ddc::type_seq_rank_v<DDimX, ddc::detail::TypeSeq<DDimX...>>)...};
+            static_cast<int>(ddc::type_seq_rank_v<DDimX, ddc::TypeSeq<DDimX...>>)...};
 }
 
 KokkosFFT::Normalization ddc_fft_normalization_to_kokkos_fft(

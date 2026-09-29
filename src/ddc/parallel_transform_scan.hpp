@@ -10,13 +10,12 @@
 
 #include <Kokkos_Core.hpp>
 
-#include "detail/type_seq.hpp"
-
 #include "chunk_traits.hpp"
 #include "ddc_to_kokkos_execution_policy.hpp"
 #include "discrete_element.hpp"
 #include "discrete_vector.hpp"
 #include "parallel_transform_reduce.hpp"
+#include "type_seq.hpp"
 
 namespace ddc::experimental {
 
@@ -122,7 +121,7 @@ void parallel_transform_scan(
         UnaryTransformOp const& transform) noexcept
 {
     using DDomOut = std::remove_cvref_t<ChunkDst>::discrete_domain_type;
-    using DDomScan = ::ddc::detail::Rebind<DDomOut, ::ddc::detail::TypeSeq<DDim>>::type;
+    using DDomScan = ::ddc::detail::Rebind<DDomOut, ::ddc::TypeSeq<DDim>>::type;
 
     DDomOut const ddom_out = out.domain();
     DDomScan const ddom_scan(ddom_out);

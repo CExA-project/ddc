@@ -126,10 +126,10 @@ public:
     using batched_spline_domain_type
             = ddc::detail::convert_type_seq_to_discrete_domain_t<ddc::type_seq_replace_t<
                     ddc::to_type_seq_t<BatchedInterpolationDDom>,
-                    ddc::detail::TypeSeq<
+                    ddc::TypeSeq<
                             interpolation_discrete_dimension_type1,
                             interpolation_discrete_dimension_type2>,
-                    ddc::detail::TypeSeq<bsplines_type1, bsplines_type2>>>;
+                    ddc::TypeSeq<bsplines_type1, bsplines_type2>>>;
 
     /**
      * @brief The type of the whole Derivs domain (cartesian product of the 1D Deriv domain
@@ -172,10 +172,10 @@ public:
     using batched_derivs_domain_type
             = ddc::detail::convert_type_seq_to_discrete_domain_t<ddc::type_seq_replace_t<
                     ddc::to_type_seq_t<BatchedInterpolationDDom>,
-                    ddc::detail::TypeSeq<
+                    ddc::TypeSeq<
                             interpolation_discrete_dimension_type1,
                             interpolation_discrete_dimension_type2>,
-                    ddc::detail::TypeSeq<deriv_type1, deriv_type2>>>;
+                    ddc::TypeSeq<deriv_type1, deriv_type2>>>;
 
 private:
     builder_type1 m_spline_builder1;

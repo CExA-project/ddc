@@ -274,9 +274,9 @@ void TestExtrapolationRuleSpline()
     ddc::SplineEvaluatorND<
             ExecSpace,
             MemorySpace,
-            ddc::detail::TypeSeq<BSplines<I1>, BSplines<I2>>,
-            ddc::detail::TypeSeq<DDimI1, DDimI2>,
-            ddc::detail::TypeSeq<
+            ddc::TypeSeq<BSplines<I1>, BSplines<I2>>,
+            ddc::TypeSeq<DDimI1, DDimI2>,
+            ddc::TypeSeq<
                     extrapolation_rule_dim_1_type,
                     extrapolation_rule_dim_1_type,
                     extrapolation_rule_dim_2_type,

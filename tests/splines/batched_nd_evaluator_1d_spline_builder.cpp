@@ -257,9 +257,9 @@ void TestBatchedNd1dSpline()
     ddc::SplineEvaluatorND<
             ExecSpace,
             MemorySpace,
-            ddc::detail::TypeSeq<BSplines<I>>,
-            ddc::detail::TypeSeq<DDimI>,
-            ddc::detail::TypeSeq<extrapolation_rule_type, extrapolation_rule_type>> const
+            ddc::TypeSeq<BSplines<I>>,
+            ddc::TypeSeq<DDimI>,
+            ddc::TypeSeq<extrapolation_rule_type, extrapolation_rule_type>> const
             spline_evaluator_batched(extrapolation_rule, extrapolation_rule);
 
     // Instantiate chunk of coordinates of dom_interpolation

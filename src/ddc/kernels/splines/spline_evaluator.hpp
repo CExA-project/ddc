@@ -559,9 +559,7 @@ private:
         using deriv_dim = ddc::Deriv<continuous_dimension_type>;
         static_assert(
                 sizeof...(DerivDims) == 0
-                        || type_seq_same_v<
-                                detail::TypeSeq<DerivDims...>,
-                                detail::TypeSeq<deriv_dim>>,
+                        || type_seq_same_v<TypeSeq<DerivDims...>, TypeSeq<deriv_dim>>,
                 "The only valid dimension for deriv_order is Deriv<Dim>");
 
         ddc::DiscreteElement<bsplines_type> jmin;

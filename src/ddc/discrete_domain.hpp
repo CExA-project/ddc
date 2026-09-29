@@ -13,10 +13,9 @@
 #include <Kokkos_Assert.hpp>
 #include <Kokkos_Macros.hpp>
 
-#include "detail/type_seq.hpp"
-
 #include "discrete_element.hpp"
 #include "discrete_vector.hpp"
+#include "type_seq.hpp"
 
 namespace ddc {
 
@@ -51,11 +50,11 @@ namespace detail {
 template <class... Tags>
 struct ToTypeSeq<DiscreteDomain<Tags...>>
 {
-    using type = TypeSeq<Tags...>;
+    using type = ddc::TypeSeq<Tags...>;
 };
 
 template <class... DDims, class... ODDims>
-struct Rebind<DiscreteDomain<DDims...>, detail::TypeSeq<ODDims...>>
+struct Rebind<DiscreteDomain<DDims...>, ddc::TypeSeq<ODDims...>>
 {
     using type = DiscreteDomain<ODDims...>;
 };
@@ -69,7 +68,7 @@ class DiscreteDomain
     friend class DiscreteDomain;
 
     static_assert(
-            type_seq_is_unique_v<detail::TypeSeq<DDims...>>,
+            type_seq_is_unique_v<TypeSeq<DDims...>>,
             "The dimensions of a DiscreteDomain must be unique");
 
 public:
@@ -461,7 +460,7 @@ struct ConvertTypeSeqToDiscreteDomain
 };
 
 template <class... DDims>
-struct ConvertTypeSeqToDiscreteDomain<detail::TypeSeq<DDims...>>
+struct ConvertTypeSeqToDiscreteDomain<ddc::TypeSeq<DDims...>>
 {
     using type = DiscreteDomain<DDims...>;
 };
@@ -477,8 +476,8 @@ KOKKOS_FUNCTION constexpr auto remove_dims_of(
         DiscreteDomain<DDimsA...> const& DDom_a,
         DiscreteDomain<DDimsB...> const& /*DDom_b*/) noexcept
 {
-    using TagSeqA = detail::TypeSeq<DDimsA...>;
-    using TagSeqB = detail::TypeSeq<DDimsB...>;
+    using TagSeqA = TypeSeq<DDimsA...>;
+    using TagSeqB = TypeSeq<DDimsB...>;
 
     using type_seq_r = type_seq_remove_t<TagSeqA, TagSeqB>;
     return detail::convert_type_seq_to_discrete_domain_t<type_seq_r>(DDom_a);
@@ -490,8 +489,8 @@ KOKKOS_FUNCTION constexpr auto remove_dims_of(
 template <class... DDimsB, class... DDimsA>
 KOKKOS_FUNCTION constexpr auto remove_dims_of(DiscreteDomain<DDimsA...> const& DDom_a) noexcept
 {
-    using TagSeqA = detail::TypeSeq<DDimsA...>;
-    using TagSeqB = detail::TypeSeq<DDimsB...>;
+    using TagSeqA = TypeSeq<DDimsA...>;
+    using TagSeqB = TypeSeq<DDimsB...>;
 
     using type_seq_r = type_seq_remove_t<TagSeqA, TagSeqB>;
     return detail::convert_type_seq_to_discrete_domain_t<type_seq_r>(DDom_a);
@@ -529,9 +528,9 @@ KOKKOS_FUNCTION constexpr auto replace_dim_of(
         [[maybe_unused]] DiscreteDomain<DDimsB...> const& DDom_b) noexcept
 {
     // TODO : static_asserts
-    using TagSeqA = detail::TypeSeq<DDimsA...>;
-    using TagSeqB = detail::TypeSeq<DDim1>;
-    using TagSeqC = detail::TypeSeq<DDim2>;
+    using TagSeqA = TypeSeq<DDimsA...>;
+    using TagSeqB = TypeSeq<DDim1>;
+    using TagSeqC = TypeSeq<DDim2>;
 
     using type_seq_r = ddc::type_seq_replace_t<TagSeqA, TagSeqB, TagSeqC>;
     return ddc::detail::convert_type_seq_to_discrete_domain_t<type_seq_r>(
@@ -546,7 +545,7 @@ KOKKOS_FUNCTION constexpr auto replace_dim_of(
 template <typename DDom, typename DDim1, typename DDim2>
 using replace_dim_of_t = decltype(replace_dim_of<DDim1, DDim2>(
         std::declval<DDom>(),
-        std::declval<typename detail::Rebind<DDom, detail::TypeSeq<DDim2>>::type>()));
+        std::declval<typename detail::Rebind<DDom, TypeSeq<DDim2>>::type>()));
 
 
 template <class... QueryDDims, class... DDims>

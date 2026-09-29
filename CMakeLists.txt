@@ -85,7 +85,6 @@ target_sources(
                 src/ddc/detail/tuple/impl/tuple.hpp
                 src/ddc/detail/tuple/impl/tuple_fwd.hpp
                 src/ddc/detail/tuple/tuple.hpp
-                src/ddc/detail/type_seq.hpp
                 src/ddc/detail/utils.hpp
                 src/ddc/aligned_allocator.hpp
                 src/ddc/chunk.hpp
@@ -122,6 +121,7 @@ target_sources(
                 src/ddc/tagged_type_traits.hpp
                 src/ddc/transform_reduce.hpp
                 src/ddc/trivial_space.hpp
+                src/ddc/type_seq.hpp
                 src/ddc/uniform_point_sampling.hpp
 )
 

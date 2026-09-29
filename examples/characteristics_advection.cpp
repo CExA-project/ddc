@@ -16,6 +16,12 @@
 
 #define PERIODIC_DOMAIN // Comment this to run non-periodic simulation
 
+#if defined(PERIODIC_DOMAIN)
+static constexpr bool g_periodic_splines = true;
+#else
+static constexpr bool g_periodic_splines = false;
+#endif
+
 //! [includes]
 static constexpr std::size_t s_degree = 3;
 
@@ -23,11 +29,6 @@ static constexpr std::size_t s_degree = 3;
 /// Our first continuous dimension
 struct X
 {
-#if defined(PERIODIC_DOMAIN)
-    static constexpr bool PERIODIC = true;
-#else
-    static constexpr bool PERIODIC = false;
-#endif
 };
 //! [X-dimension]
 
@@ -43,7 +44,7 @@ using ExtrapolationRule = ddc::NullExtrapolationRule;
 
 //! [X-discretization]
 /// A uniform discretization of X
-struct BSplinesX : ddc::UniformBSplines<X, s_degree>
+struct BSplinesX : ddc::UniformBSplines<X, s_degree, g_periodic_splines>
 {
 };
 using GrevillePoints = ddc::GrevilleInterpolationPoints<BSplinesX, s_sbc, s_sbc>;

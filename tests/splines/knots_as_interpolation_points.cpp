@@ -32,7 +32,6 @@ struct UniformBSplinesFixture<std::tuple<
 {
     struct DimX
     {
-        static constexpr bool PERIODIC = IsPeriodic;
     };
 
     struct DDimX
@@ -46,7 +45,7 @@ struct UniformBSplinesFixture<std::tuple<
     static constexpr ddc::SplineBuilderClosure s_sbc
             = IsPeriodic ? ddc::SplineBuilderClosure::PERIODIC : ddc::SplineBuilderClosure::HERMITE;
 
-    struct BSplinesX : ddc::UniformBSplines<DimX, 2>
+    struct BSplinesX : ddc::UniformBSplines<DimX, 2, IsPeriodic>
     {
     };
 };
@@ -62,7 +61,6 @@ struct NonUniformBSplinesFixture<std::tuple<std::integral_constant<bool, IsPerio
 {
     struct DimX
     {
-        static constexpr bool PERIODIC = IsPeriodic;
     };
 
     struct DDimX : ddc::NonUniformPointSampling<DimX>
@@ -72,7 +70,7 @@ struct NonUniformBSplinesFixture<std::tuple<std::integral_constant<bool, IsPerio
     static constexpr ddc::SplineBuilderClosure s_sbc
             = IsPeriodic ? ddc::SplineBuilderClosure::PERIODIC : ddc::SplineBuilderClosure::HERMITE;
 
-    struct BSplinesX : ddc::NonUniformBSplines<DimX, 2>
+    struct BSplinesX : ddc::NonUniformBSplines<DimX, 2, IsPeriodic>
     {
     };
 };

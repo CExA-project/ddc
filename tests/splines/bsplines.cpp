@@ -36,12 +36,11 @@ struct BSplinesFixture<std::tuple<
 {
     struct DimX
     {
-        static constexpr bool PERIODIC = Periodic;
     };
-    struct UBSplinesX : ddc::UniformBSplines<DimX, D>
+    struct UBSplinesX : ddc::UniformBSplines<DimX, D, Periodic>
     {
     };
-    struct NUBSplinesX : ddc::NonUniformBSplines<DimX, D>
+    struct NUBSplinesX : ddc::NonUniformBSplines<DimX, D, Periodic>
     {
     };
     static constexpr std::size_t spline_degree = D;
@@ -136,21 +135,19 @@ TYPED_TEST(BSplinesFixture, PartitionOfUnityNonUniform)
     }
 }
 
-struct KnotDiscreteDimensionX
-{
-    static constexpr bool PERIODIC = false;
-};
-
 TEST(KnotDiscreteDimension, Type)
 {
-    struct DDim1 : ddc::UniformBSplines<KnotDiscreteDimensionX, 1>
+    struct KnotDiscreteDimensionX
+    {
+    };
+    struct DDim1 : ddc::UniformBSplines<KnotDiscreteDimensionX, 1, false>
     {
     };
     EXPECT_TRUE((std::is_same_v<
                  ddc::knot_discrete_dimension_t<DDim1>,
                  ddc::UniformBsplinesKnots<DDim1>>));
 
-    struct DDim2 : ddc::NonUniformBSplines<KnotDiscreteDimensionX, 1>
+    struct DDim2 : ddc::NonUniformBSplines<KnotDiscreteDimensionX, 1, false>
     {
     };
     EXPECT_TRUE((std::is_same_v<

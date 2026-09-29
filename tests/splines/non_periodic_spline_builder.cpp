@@ -27,7 +27,6 @@
 
 struct DimX
 {
-    static constexpr bool PERIODIC = false;
 };
 
 static constexpr std::size_t s_degree = DEGREE;
@@ -45,11 +44,11 @@ static constexpr ddc::SplineBuilderClosure s_sbcr = ddc::SplineBuilderClosure::H
 #endif
 
 #if defined(BSPLINES_TYPE_UNIFORM)
-struct BSplinesX : ddc::UniformBSplines<DimX, s_degree>
+struct BSplinesX : ddc::UniformBSplines<DimX, s_degree, false>
 {
 };
 #elif defined(BSPLINES_TYPE_NON_UNIFORM)
-struct BSplinesX : ddc::NonUniformBSplines<DimX, s_degree>
+struct BSplinesX : ddc::NonUniformBSplines<DimX, s_degree, false>
 {
 };
 #endif

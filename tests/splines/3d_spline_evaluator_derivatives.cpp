@@ -22,17 +22,14 @@ inline namespace anonymous_namespace_workaround_3d_spline_evaluator_derivatives_
 
 struct DimX
 {
-    static constexpr bool PERIODIC = true;
 };
 
 struct DimY
 {
-    static constexpr bool PERIODIC = true;
 };
 
 struct DimZ
 {
-    static constexpr bool PERIODIC = true;
 };
 
 struct DDimBatch
@@ -49,12 +46,12 @@ using GrevillePoints = ddc::GrevilleInterpolationPoints<BSpX, s_sbcl, s_sbcr>;
 
 #if defined(BSPLINES_TYPE_UNIFORM)
 template <typename X>
-struct BSplines : ddc::UniformBSplines<X, s_degree>
+struct BSplines : ddc::UniformBSplines<X, s_degree, true>
 {
 };
 #elif defined(BSPLINES_TYPE_NON_UNIFORM)
 template <typename X>
-struct BSplines : ddc::NonUniformBSplines<X, s_degree>
+struct BSplines : ddc::NonUniformBSplines<X, s_degree, true>
 {
 };
 #endif

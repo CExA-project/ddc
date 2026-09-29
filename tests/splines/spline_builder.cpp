@@ -15,14 +15,13 @@
 
 struct DimX
 {
-    static constexpr bool PERIODIC = true;
 };
 
 using CoordX = ddc::Coordinate<DimX>;
 
 static constexpr std::size_t s_degree = 2;
 
-struct BSplinesX : ddc::UniformBSplines<DimX, s_degree>
+struct BSplinesX : ddc::UniformBSplines<DimX, s_degree, true>
 {
 };
 

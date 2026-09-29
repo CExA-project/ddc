@@ -2,6 +2,13 @@
 #
 # SPDX-License-Identifier: MIT
 
+if(Kokkos_COMPILE_LANGUAGE)
+    set_source_files_properties(
+        generate_npy_fixtures.cpp
+        PROPERTIES LANGUAGE ${Kokkos_COMPILE_LANGUAGE}
+    )
+endif()
+
 add_executable(generate_npy_fixtures generate_npy_fixtures.cpp)
 target_link_libraries(generate_npy_fixtures PRIVATE DDC::core Kokkos::kokkos)
 

@@ -8,6 +8,48 @@ add_subdirectory(discrete_space)
 
 add_subdirectory(save_npy)
 
+if(Kokkos_COMPILE_LANGUAGE)
+    set_source_files_properties(
+        main.cpp
+        discrete_space_uninitialized.cpp
+        aligned_allocator.cpp
+        chunk.cpp
+        chunk_span.cpp
+        create_mirror.cpp
+        details.cpp
+        discrete_domain.cpp
+        discrete_element.cpp
+        discrete_space.cpp
+        discrete_vector.cpp
+        for_each.cpp
+        for_each_block.cpp
+        multiple_discrete_dimensions.cpp
+        non_uniform_point_sampling.cpp
+        parallel_copy.cpp
+        parallel_deepcopy.cpp
+        parallel_fill.cpp
+        parallel_for_each.cpp
+        parallel_transform.cpp
+        parallel_transform_reduce.cpp
+        parallel_transform_scan.cpp
+        periodic_sampling.cpp
+        print.cpp
+        reducer.cpp
+        relocatable_device_code.cpp
+        relocatable_device_code_initialization.cpp
+        save_npy.cpp
+        sparse_discrete_domain.cpp
+        strided_discrete_domain.cpp
+        tagged_type_traits.cpp
+        tagged_vector.cpp
+        transform_reduce.cpp
+        trivial_space.cpp
+        type_seq.cpp
+        uniform_point_sampling.cpp
+        PROPERTIES LANGUAGE ${Kokkos_COMPILE_LANGUAGE}
+    )
+endif()
+
 add_library(ddc_gtest_main)
 target_compile_features(ddc_gtest_main PRIVATE cxx_std_20)
 target_link_libraries(ddc_gtest_main PRIVATE DDC::core GTest::gtest)

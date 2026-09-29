@@ -2,6 +2,16 @@
 #
 # SPDX-License-Identifier: MIT
 
+if(Kokkos_COMPILE_LANGUAGE)
+    set_source_files_properties(
+        game_of_life.cpp
+        heat_equation.cpp
+        uniform_heat_equation.cpp
+        non_uniform_heat_equation.cpp
+        PROPERTIES LANGUAGE ${Kokkos_COMPILE_LANGUAGE}
+    )
+endif()
+
 add_executable(game_of_life game_of_life.cpp)
 target_link_libraries(game_of_life PUBLIC DDC::core)
 add_test(NAME Examples.GameOfLife COMMAND game_of_life)

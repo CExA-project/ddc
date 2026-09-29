@@ -39,7 +39,9 @@ include(DDCCheckRequiredKokkosOptions)
 
 find_package(Kokkos 4.4...<6 REQUIRED)
 ddc_check_required_kokkos_options()
-
+if(Kokkos_COMPILE_LANGUAGE)
+    enable_language(${Kokkos_COMPILE_LANGUAGE})
+endif()
 # Our project
 
 ## The library itself
@@ -47,8 +49,37 @@ ddc_check_required_kokkos_options()
 add_library(ddc_core)
 add_library(DDC::core ALIAS ddc_core)
 configure_file(cmake/config.hpp.in generated/ddc/config.hpp NO_SOURCE_PERMISSIONS @ONLY)
-target_compile_features(ddc_core PUBLIC cxx_std_20)
+if(Kokkos_COMPILE_LANGUAGE)
+    set_property(
+        TARGET ddc_core
+        PROPERTY
+            ${Kokkos_COMPILE_LANGUAGE}_ARCHITECTURES
+                ${Kokkos_${Kokkos_COMPILE_LANGUAGE}_ARCHITECTURES}
+    )
+endif()
+if(Kokkos_COMPILE_LANGUAGE STREQUAL CUDA)
+    target_compile_features(ddc_core PUBLIC cuda_std_20)
+elseif(Kokkos_COMPILE_LANGUAGE STREQUAL HIP)
+    target_compile_features(ddc_core PUBLIC hip_std_20)
+else()
+    target_compile_features(ddc_core PUBLIC cxx_std_20)
+endif()
 target_link_libraries(ddc_core PUBLIC Kokkos::kokkos)
+if(Kokkos_COMPILE_LANGUAGE)
+    set_source_files_properties(
+        src/ddc/discrete_element.cpp
+        src/ddc/discrete_space.cpp
+        src/ddc/discrete_vector.cpp
+        src/ddc/for_each_block.cpp
+        src/ddc/non_uniform_point_sampling.cpp
+        src/ddc/periodic_sampling.cpp
+        src/ddc/print.cpp
+        src/ddc/save_npy.cpp
+        src/ddc/scope_guard.cpp
+        src/ddc/uniform_point_sampling.cpp
+        PROPERTIES LANGUAGE ${Kokkos_COMPILE_LANGUAGE}
+    )
+endif()
 target_sources(
     ddc_core
     PRIVATE

@@ -41,13 +41,13 @@ namespace ddc {
 #include "detail/macros.hpp"
 #include "detail/tagged_vector.hpp"
 #include "detail/tuple/tuple.hpp"
-#include "detail/type_seq.hpp"
 #include "detail/utils.hpp"
 
 #include "ddc_to_kokkos_execution_policy.hpp"
 #include "real_type.hpp"
 #include "scope_guard.hpp"
 #include "tagged_type_traits.hpp"
+#include "type_seq.hpp"
 
 // Containers
 #include "aligned_allocator.hpp"

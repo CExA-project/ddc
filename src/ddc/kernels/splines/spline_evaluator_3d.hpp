@@ -147,11 +147,11 @@ public:
     using batched_spline_domain_type
             = ddc::detail::convert_type_seq_to_discrete_domain_t<ddc::type_seq_replace_t<
                     ddc::to_type_seq_t<BatchedInterpolationDDom>,
-                    ddc::detail::TypeSeq<
+                    ddc::TypeSeq<
                             evaluation_discrete_dimension_type1,
                             evaluation_discrete_dimension_type2,
                             evaluation_discrete_dimension_type3>,
-                    ddc::detail::TypeSeq<bsplines_type1, bsplines_type2, bsplines_type3>>>;
+                    ddc::TypeSeq<bsplines_type1, bsplines_type2, bsplines_type3>>>;
 
     /// @brief The type of the extrapolation rule at the lower boundary along the first dimension.
     using lower_extrapolation_rule_1_type = LowerExtrapolationRule1;
@@ -742,7 +742,7 @@ public:
     {
         static_assert(
                 ddc::type_seq_contains_v<
-                        ddc::detail::TypeSeq<bsplines_type1, bsplines_type2, bsplines_type3>,
+                        ddc::TypeSeq<bsplines_type1, bsplines_type2, bsplines_type3>,
                         to_type_seq_t<BatchedSplineDDom>>,
                 "The spline coefficients domain must contain the bsplines dimensions");
         using batch_domain_type = ddc::
@@ -903,12 +903,11 @@ private:
         using deriv_dim1 = Deriv<continuous_dimension_type1>;
         using deriv_dim2 = Deriv<continuous_dimension_type2>;
         using deriv_dim3 = Deriv<continuous_dimension_type3>;
-        using deriv_dims = detail::TypeSeq<DerivDims...>;
+        using deriv_dims = TypeSeq<DerivDims...>;
 
         // Check that the tags are valid
         static_assert(
-                (in_tags_v<DerivDims, ddc::detail::TypeSeq<deriv_dim1, deriv_dim2, deriv_dim3>>
-                 && ...),
+                (in_tags_v<DerivDims, ddc::TypeSeq<deriv_dim1, deriv_dim2, deriv_dim3>> && ...),
                 "The only valid dimensions for deriv_order are Deriv<Dim1>, Deriv<Dim2> and "
                 "Deriv<Dim3>");
 

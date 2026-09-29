@@ -91,7 +91,7 @@ public:
                     spline_coef) const
     {
         static_assert(in_tags_v<DimI, to_type_seq_t<CoordType>>);
-        using TypeSeqBSplines = ddc::detail::TypeSeq<BSplines...>;
+        using TypeSeqBSplines = ddc::TypeSeq<BSplines...>;
 
         ddc::Coordinate<DimI, typename BSplines::continuous_dimension_type...> const coord_eval(
                 get_eval_pos<BSplines>(ddc::select<typename BSplines::continuous_dimension_type>(

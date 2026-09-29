@@ -8,10 +8,9 @@
 #include <cstddef>
 #include <span>
 
-#include "detail/type_seq.hpp"
-
 #include "discrete_element.hpp"
 #include "discrete_vector.hpp"
+#include "type_seq.hpp"
 
 namespace ddc {
 
@@ -47,7 +46,7 @@ void host_for_each_block(
     } else {
         using DDim = ddc::type_seq_element_t<I, ddc::to_type_seq_t<Support>>;
         ComputeBlockFn const compute_block(domain.template extent<DDim>(), nb_blocks_per_dim[I]);
-        typename Rebind<Support, TypeSeq<DDim>>::type dom1d(domain);
+        typename Rebind<Support, ddc::TypeSeq<DDim>>::type dom1d(domain);
         for (DiscreteVectorElement ib = 0; ib < nb_blocks_per_dim[I]; ++ib) {
             DiscreteVector<DDim> const block(compute_block(ib));
             host_for_each_block(domain, nb_blocks_per_dim, f, doms1d..., dom1d.take_first(block));

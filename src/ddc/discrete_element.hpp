@@ -15,10 +15,10 @@
 #include <Kokkos_Macros.hpp>
 
 #include "detail/macros.hpp"
-#include "detail/type_seq.hpp"
 #include "detail/utils.hpp"
 
 #include "discrete_vector.hpp"
+#include "type_seq.hpp"
 
 namespace ddc {
 
@@ -50,7 +50,7 @@ namespace detail {
 template <class... Tags>
 struct ToTypeSeq<DiscreteElement<Tags...>>
 {
-    using type = TypeSeq<Tags...>;
+    using type = ddc::TypeSeq<Tags...>;
 };
 
 } // namespace detail
@@ -89,7 +89,7 @@ KOKKOS_FUNCTION constexpr DiscreteElement<QueryTag> select_or(
         DiscreteElement<Tags...> const& arr,
         DiscreteElement<QueryTag> const& default_value) noexcept
 {
-    if constexpr (in_tags_v<QueryTag, detail::TypeSeq<Tags...>>) {
+    if constexpr (in_tags_v<QueryTag, TypeSeq<Tags...>>) {
         return DiscreteElement<QueryTag>(arr);
     } else {
         return default_value;
@@ -118,9 +118,9 @@ template <
 KOKKOS_FUNCTION constexpr auto const& take(HeadDElem const& head, TailDElems const&... tail)
 {
     DDC_IF_NVCC_THEN_PUSH_AND_SUPPRESS(implicit_return_from_non_void_function)
-    if constexpr (type_seq_contains_v<detail::TypeSeq<QueryTag>, to_type_seq_t<HeadDElem>>) {
+    if constexpr (type_seq_contains_v<TypeSeq<QueryTag>, to_type_seq_t<HeadDElem>>) {
         static_assert(
-                (!type_seq_contains_v<detail::TypeSeq<QueryTag>, to_type_seq_t<TailDElems>> && ...),
+                (!type_seq_contains_v<TypeSeq<QueryTag>, to_type_seq_t<TailDElems>> && ...),
                 "ERROR: tag redundant");
         return head;
     } else {
@@ -163,7 +163,7 @@ constexpr DiscreteElement<DDim> create_reference_discrete_element() noexcept
 template <class... Tags>
 class DiscreteElement
 {
-    using tags_seq = detail::TypeSeq<Tags...>;
+    using tags_seq = TypeSeq<Tags...>;
 
     static_assert(
             type_seq_is_unique_v<tags_seq>,
@@ -280,7 +280,7 @@ public:
     template <class... OTags>
     KOKKOS_FUNCTION constexpr DiscreteElement& operator+=(DiscreteVector<OTags...> const& rhs)
     {
-        static_assert((type_seq_contains_v<detail::TypeSeq<OTags>, tags_seq> && ...));
+        static_assert((type_seq_contains_v<TypeSeq<OTags>, tags_seq> && ...));
         ((m_values[type_seq_rank_v<OTags, tags_seq>] += rhs.template get<OTags>()), ...);
         return *this;
     }
@@ -296,7 +296,7 @@ public:
     template <class... OTags>
     KOKKOS_FUNCTION constexpr DiscreteElement& operator-=(DiscreteVector<OTags...> const& rhs)
     {
-        static_assert((type_seq_contains_v<detail::TypeSeq<OTags>, tags_seq> && ...));
+        static_assert((type_seq_contains_v<TypeSeq<OTags>, tags_seq> && ...));
         ((m_values[type_seq_rank_v<OTags, tags_seq>] -= rhs.template get<OTags>()), ...);
         return *this;
     }
@@ -382,7 +382,6 @@ KOKKOS_FUNCTION constexpr DiscreteElement<Tags...> operator+(
         DiscreteElement<Tags...> const& lhs,
         DiscreteVector<OTags...> const& rhs)
 {
-    using detail::TypeSeq;
     static_assert((type_seq_contains_v<TypeSeq<OTags>, TypeSeq<Tags...>> && ...));
     DiscreteElement<Tags...> result(lhs);
     result += rhs;
@@ -405,7 +404,6 @@ KOKKOS_FUNCTION constexpr DiscreteElement<Tags...> operator-(
         DiscreteElement<Tags...> const& lhs,
         DiscreteVector<OTags...> const& rhs)
 {
-    using detail::TypeSeq;
     static_assert((type_seq_contains_v<TypeSeq<OTags>, TypeSeq<Tags...>> && ...));
     DiscreteElement<Tags...> result(lhs);
     result -= rhs;
@@ -430,7 +428,7 @@ KOKKOS_FUNCTION constexpr DiscreteVector<Tags...> operator-(
         DiscreteElement<Tags...> const& lhs,
         DiscreteElement<OTags...> const& rhs)
 {
-    static_assert(type_seq_same_v<detail::TypeSeq<Tags...>, detail::TypeSeq<OTags...>>);
+    static_assert(type_seq_same_v<TypeSeq<Tags...>, TypeSeq<OTags...>>);
     return DiscreteVector<Tags...>((uid<Tags>(lhs) - uid<Tags>(rhs))...);
 }
 

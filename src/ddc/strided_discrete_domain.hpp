@@ -12,10 +12,9 @@
 #include <Kokkos_Assert.hpp>
 #include <Kokkos_Macros.hpp>
 
-#include "detail/type_seq.hpp"
-
 #include "discrete_element.hpp"
 #include "discrete_vector.hpp"
+#include "type_seq.hpp"
 
 namespace ddc {
 
@@ -50,11 +49,11 @@ namespace detail {
 template <class... Tags>
 struct ToTypeSeq<StridedDiscreteDomain<Tags...>>
 {
-    using type = TypeSeq<Tags...>;
+    using type = ddc::TypeSeq<Tags...>;
 };
 
 template <class... DDims, class... ODDims>
-struct Rebind<StridedDiscreteDomain<DDims...>, detail::TypeSeq<ODDims...>>
+struct Rebind<StridedDiscreteDomain<DDims...>, ddc::TypeSeq<ODDims...>>
 {
     using type = StridedDiscreteDomain<ODDims...>;
 };
@@ -76,7 +75,7 @@ class StridedDiscreteDomain
     friend class StridedDiscreteDomain;
 
     static_assert(
-            type_seq_is_unique_v<detail::TypeSeq<DDims...>>,
+            type_seq_is_unique_v<TypeSeq<DDims...>>,
             "The dimensions of a StridedDiscreteDomain must be unique");
 
 public:
@@ -474,7 +473,7 @@ struct ConvertTypeSeqToStridedDiscreteDomain
 };
 
 template <class... DDims>
-struct ConvertTypeSeqToStridedDiscreteDomain<detail::TypeSeq<DDims...>>
+struct ConvertTypeSeqToStridedDiscreteDomain<ddc::TypeSeq<DDims...>>
 {
     using type = StridedDiscreteDomain<DDims...>;
 };
@@ -491,8 +490,8 @@ KOKKOS_FUNCTION constexpr auto remove_dims_of(
         StridedDiscreteDomain<DDimsA...> const& DDom_a,
         StridedDiscreteDomain<DDimsB...> const& /*DDom_b*/) noexcept
 {
-    using TagSeqA = detail::TypeSeq<DDimsA...>;
-    using TagSeqB = detail::TypeSeq<DDimsB...>;
+    using TagSeqA = TypeSeq<DDimsA...>;
+    using TagSeqB = TypeSeq<DDimsB...>;
 
     using type_seq_r = type_seq_remove_t<TagSeqA, TagSeqB>;
     return detail::convert_type_seq_to_strided_discrete_domain_t<type_seq_r>(DDom_a);
@@ -505,8 +504,8 @@ template <class... DDimsB, class... DDimsA>
 KOKKOS_FUNCTION constexpr auto remove_dims_of(
         StridedDiscreteDomain<DDimsA...> const& DDom_a) noexcept
 {
-    using TagSeqA = detail::TypeSeq<DDimsA...>;
-    using TagSeqB = detail::TypeSeq<DDimsB...>;
+    using TagSeqA = TypeSeq<DDimsA...>;
+    using TagSeqB = TypeSeq<DDimsB...>;
 
     using type_seq_r = type_seq_remove_t<TagSeqA, TagSeqB>;
     return detail::convert_type_seq_to_strided_discrete_domain_t<type_seq_r>(DDom_a);
@@ -540,9 +539,9 @@ KOKKOS_FUNCTION constexpr auto replace_dim_of(
         [[maybe_unused]] StridedDiscreteDomain<DDimsB...> const& DDom_b) noexcept
 {
     // TODO : static_asserts
-    using TagSeqA = detail::TypeSeq<DDimsA...>;
-    using TagSeqB = detail::TypeSeq<DDim1>;
-    using TagSeqC = detail::TypeSeq<DDim2>;
+    using TagSeqA = TypeSeq<DDimsA...>;
+    using TagSeqB = TypeSeq<DDim1>;
+    using TagSeqC = TypeSeq<DDim2>;
 
     using type_seq_r = ddc::type_seq_replace_t<TagSeqA, TagSeqB, TagSeqC>;
     return ddc::detail::convert_type_seq_to_strided_discrete_domain_t<type_seq_r>(

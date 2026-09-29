@@ -140,10 +140,10 @@ private:
     template <concepts::discrete_domain BatchedInterpolationDDom>
     using batched_spline_tr_domain_type
             = ddc::detail::convert_type_seq_to_discrete_domain_t<ddc::type_seq_merge_t<
-                    ddc::detail::TypeSeq<bsplines_type>,
+                    ddc::TypeSeq<bsplines_type>,
                     ddc::type_seq_remove_t<
                             ddc::to_type_seq_t<BatchedInterpolationDDom>,
-                            ddc::detail::TypeSeq<interpolation_discrete_dimension_type>>>>;
+                            ddc::TypeSeq<interpolation_discrete_dimension_type>>>>;
 
 public:
     /**

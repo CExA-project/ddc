@@ -10,14 +10,34 @@
 #include <type_traits>
 #include <utility>
 
+#include <ddc/config.hpp>
+
 namespace ddc {
 
-namespace detail {
-
+/// @brief A compile-time sequence of types.
+///
+/// `TypeSeq` is used to represent an ordered collection of types at compile time.
+/// It is primarily intended for manipulating lists of tags or types in generic
+/// programming code.
+///
+/// The order of the types is significant for operations such as
+/// @ref type_seq_rank_v, @ref type_seq_element_t, and the sequence manipulation
+/// utilities.
+///
+/// @tparam Tags The types contained in the sequence.
 template <class... Tags>
 struct TypeSeq
 {
 };
+
+namespace detail {
+
+#if DDC_BUILD_DEPRECATED_CODE()
+template <class... Tags>
+struct [[deprecated("Use `ddc::TypeSeq' instead")]] TypeSeq
+{
+};
+#endif
 
 template <class Tag>
 struct SingleType
@@ -30,33 +50,33 @@ struct TypeSeqRank
 };
 
 template <class QueryTag>
-struct TypeSeqRank<SingleType<QueryTag>, TypeSeq<>>
+struct TypeSeqRank<SingleType<QueryTag>, ddc::TypeSeq<>>
 {
     static constexpr bool present = false;
     static constexpr std::size_t val = std::numeric_limits<std::size_t>::max();
 };
 
 template <class QueryTag, class... TagsTail>
-struct TypeSeqRank<SingleType<QueryTag>, TypeSeq<QueryTag, TagsTail...>>
+struct TypeSeqRank<SingleType<QueryTag>, ddc::TypeSeq<QueryTag, TagsTail...>>
 {
     static constexpr bool present = true;
     static constexpr std::size_t val = 0;
 };
 
 template <class QueryTag, class TagsHead, class... TagsTail>
-struct TypeSeqRank<SingleType<QueryTag>, TypeSeq<TagsHead, TagsTail...>>
+struct TypeSeqRank<SingleType<QueryTag>, ddc::TypeSeq<TagsHead, TagsTail...>>
 {
     static constexpr bool present
-            = TypeSeqRank<SingleType<QueryTag>, TypeSeq<TagsTail...>>::present;
+            = TypeSeqRank<SingleType<QueryTag>, ddc::TypeSeq<TagsTail...>>::present;
     static constexpr std::size_t val
-            = present ? 1 + TypeSeqRank<SingleType<QueryTag>, TypeSeq<TagsTail...>>::val
+            = present ? 1 + TypeSeqRank<SingleType<QueryTag>, ddc::TypeSeq<TagsTail...>>::val
                       : std::numeric_limits<std::size_t>::max();
 };
 
 template <class... QueryTags, class... Tags>
-struct TypeSeqRank<TypeSeq<QueryTags...>, TypeSeq<Tags...>>
+struct TypeSeqRank<ddc::TypeSeq<QueryTags...>, ddc::TypeSeq<Tags...>>
 {
-    using ValSeq = std::index_sequence<TypeSeqRank<QueryTags, TypeSeq<Tags...>>::val...>;
+    using ValSeq = std::index_sequence<TypeSeqRank<QueryTags, ddc::TypeSeq<Tags...>>::val...>;
 };
 
 template <std::size_t I, class TagSeq>
@@ -65,7 +85,7 @@ struct TypeSeqElement
 };
 
 template <std::size_t I, class... Tags>
-struct TypeSeqElement<I, TypeSeq<Tags...>>
+struct TypeSeqElement<I, ddc::TypeSeq<Tags...>>
 {
     using type = std::tuple_element_t<I, std::tuple<Tags...>>;
 };
@@ -80,17 +100,26 @@ struct TypeSeqRemove
 };
 
 template <class... TagsB, class... TagsR>
-struct TypeSeqRemove<TypeSeq<>, TypeSeq<TagsB...>, TypeSeq<TagsR...>>
+struct TypeSeqRemove<ddc::TypeSeq<>, ddc::TypeSeq<TagsB...>, ddc::TypeSeq<TagsR...>>
 {
-    using type = TypeSeq<TagsR...>;
+    using type = ddc::TypeSeq<TagsR...>;
 };
 
 template <class HeadTagsA, class... TailTagsA, class... TagsB, class... TagsR>
-struct TypeSeqRemove<TypeSeq<HeadTagsA, TailTagsA...>, TypeSeq<TagsB...>, TypeSeq<TagsR...>>
+struct TypeSeqRemove<
+        ddc::TypeSeq<HeadTagsA, TailTagsA...>,
+        ddc::TypeSeq<TagsB...>,
+        ddc::TypeSeq<TagsR...>>
     : std::conditional_t<
-              TypeSeqRank<detail::SingleType<HeadTagsA>, TypeSeq<TagsB...>>::present,
-              TypeSeqRemove<TypeSeq<TailTagsA...>, TypeSeq<TagsB...>, TypeSeq<TagsR...>>,
-              TypeSeqRemove<TypeSeq<TailTagsA...>, TypeSeq<TagsB...>, TypeSeq<TagsR..., HeadTagsA>>>
+              TypeSeqRank<detail::SingleType<HeadTagsA>, ddc::TypeSeq<TagsB...>>::present,
+              TypeSeqRemove<
+                      ddc::TypeSeq<TailTagsA...>,
+                      ddc::TypeSeq<TagsB...>,
+                      ddc::TypeSeq<TagsR...>>,
+              TypeSeqRemove<
+                      ddc::TypeSeq<TailTagsA...>,
+                      ddc::TypeSeq<TagsB...>,
+                      ddc::TypeSeq<TagsR..., HeadTagsA>>>
 {
 };
 
@@ -104,17 +133,26 @@ struct TypeSeqMerge
 };
 
 template <class... TagsA, class... TagsR>
-struct TypeSeqMerge<TypeSeq<TagsA...>, TypeSeq<>, TypeSeq<TagsR...>>
+struct TypeSeqMerge<ddc::TypeSeq<TagsA...>, ddc::TypeSeq<>, ddc::TypeSeq<TagsR...>>
 {
-    using type = TypeSeq<TagsR...>;
+    using type = ddc::TypeSeq<TagsR...>;
 };
 
 template <class... TagsA, class HeadTagsB, class... TailTagsB, class... TagsR>
-struct TypeSeqMerge<TypeSeq<TagsA...>, TypeSeq<HeadTagsB, TailTagsB...>, TypeSeq<TagsR...>>
+struct TypeSeqMerge<
+        ddc::TypeSeq<TagsA...>,
+        ddc::TypeSeq<HeadTagsB, TailTagsB...>,
+        ddc::TypeSeq<TagsR...>>
     : std::conditional_t<
-              TypeSeqRank<detail::SingleType<HeadTagsB>, TypeSeq<TagsA...>>::present,
-              TypeSeqMerge<TypeSeq<TagsA...>, TypeSeq<TailTagsB...>, TypeSeq<TagsR...>>,
-              TypeSeqMerge<TypeSeq<TagsA...>, TypeSeq<TailTagsB...>, TypeSeq<TagsR..., HeadTagsB>>>
+              TypeSeqRank<detail::SingleType<HeadTagsB>, ddc::TypeSeq<TagsA...>>::present,
+              TypeSeqMerge<
+                      ddc::TypeSeq<TagsA...>,
+                      ddc::TypeSeq<TailTagsB...>,
+                      ddc::TypeSeq<TagsR...>>,
+              TypeSeqMerge<
+                      ddc::TypeSeq<TagsA...>,
+                      ddc::TypeSeq<TailTagsB...>,
+                      ddc::TypeSeq<TagsR..., HeadTagsB>>>
 {
 };
 
@@ -126,9 +164,9 @@ struct TypeSeqCat
 };
 
 template <class... TagsA, class... TagsB>
-struct TypeSeqCat<TypeSeq<TagsA...>, TypeSeq<TagsB...>>
+struct TypeSeqCat<ddc::TypeSeq<TagsA...>, ddc::TypeSeq<TagsB...>>
 {
-    using type = TypeSeq<TagsA..., TagsB...>;
+    using type = ddc::TypeSeq<TagsA..., TagsB...>;
 };
 
 /// A is replaced by element of C at same position than the first element of B equal to A.
@@ -139,7 +177,7 @@ struct TypeSeqReplaceSingle
 };
 
 template <class TagA>
-struct TypeSeqReplaceSingle<TagA, TypeSeq<>, TypeSeq<>>
+struct TypeSeqReplaceSingle<TagA, ddc::TypeSeq<>, ddc::TypeSeq<>>
 {
     using type = TagA;
 };
@@ -147,12 +185,12 @@ struct TypeSeqReplaceSingle<TagA, TypeSeq<>, TypeSeq<>>
 template <class TagA, class HeadTagsB, class... TailTagsB, class HeadTagsC, class... TailTagsC>
 struct TypeSeqReplaceSingle<
         TagA,
-        TypeSeq<HeadTagsB, TailTagsB...>,
-        TypeSeq<HeadTagsC, TailTagsC...>>
+        ddc::TypeSeq<HeadTagsB, TailTagsB...>,
+        ddc::TypeSeq<HeadTagsC, TailTagsC...>>
     : std::conditional_t<
               std::is_same_v<TagA, HeadTagsB>,
-              TypeSeqReplaceSingle<HeadTagsC, TypeSeq<>, TypeSeq<>>,
-              TypeSeqReplaceSingle<TagA, TypeSeq<TailTagsB...>, TypeSeq<TailTagsC...>>>
+              TypeSeqReplaceSingle<HeadTagsC, ddc::TypeSeq<>, ddc::TypeSeq<>>,
+              TypeSeqReplaceSingle<TagA, ddc::TypeSeq<TailTagsB...>, ddc::TypeSeq<TailTagsC...>>>
 {
 };
 
@@ -164,26 +202,31 @@ struct TypeSeqReplace
 };
 
 template <class... TagsB, class... TagsC, class... TagsR>
-struct TypeSeqReplace<TypeSeq<>, TypeSeq<TagsB...>, TypeSeq<TagsC...>, TypeSeq<TagsR...>>
+struct TypeSeqReplace<
+        ddc::TypeSeq<>,
+        ddc::TypeSeq<TagsB...>,
+        ddc::TypeSeq<TagsC...>,
+        ddc::TypeSeq<TagsR...>>
 {
-    using type = TypeSeq<TagsR...>;
+    using type = ddc::TypeSeq<TagsR...>;
 };
 
 template <class HeadTagsA, class... TailTagsA, class... TagsB, class... TagsC, class... TagsR>
 struct TypeSeqReplace<
-        TypeSeq<HeadTagsA, TailTagsA...>,
-        TypeSeq<TagsB...>,
-        TypeSeq<TagsC...>,
-        TypeSeq<TagsR...>>
+        ddc::TypeSeq<HeadTagsA, TailTagsA...>,
+        ddc::TypeSeq<TagsB...>,
+        ddc::TypeSeq<TagsC...>,
+        ddc::TypeSeq<TagsR...>>
     : TypeSeqReplace<
-              TypeSeq<TailTagsA...>,
-              TypeSeq<TagsB...>,
-              TypeSeq<TagsC...>,
-              TypeSeq<TagsR...,
+              ddc::TypeSeq<TailTagsA...>,
+              ddc::TypeSeq<TagsB...>,
+              ddc::TypeSeq<TagsC...>,
+              ddc::TypeSeq<
+                      TagsR...,
                       typename TypeSeqReplaceSingle<
                               HeadTagsA,
-                              TypeSeq<TagsB...>,
-                              TypeSeq<TagsC...>>::type>>
+                              ddc::TypeSeq<TagsB...>,
+                              ddc::TypeSeq<TagsC...>>::type>>
 {
 };
 
@@ -202,9 +245,9 @@ struct Rebind
 template <class TypeSeq>
 constexpr std::size_t type_seq_size_v = std::numeric_limits<std::size_t>::max();
 
-/// Returns the number of types in a @ref detail::TypeSeq.
+/// Returns the number of types in a @ref TypeSeq.
 template <class... Tags>
-constexpr std::size_t type_seq_size_v<detail::TypeSeq<Tags...>> = sizeof...(Tags);
+constexpr std::size_t type_seq_size_v<TypeSeq<Tags...>> = sizeof...(Tags);
 
 template <class QueryTag, class TypeSeq>
 constexpr std::size_t type_seq_rank_v = std::numeric_limits<std::size_t>::max();
@@ -222,22 +265,22 @@ template <class TypeSeq, class B>
 constexpr bool type_seq_same_v = type_seq_contains_v<TypeSeq, B> && type_seq_contains_v<B, TypeSeq>;
 
 template <class QueryTag, class... Tags>
-constexpr bool in_tags_v<QueryTag, detail::TypeSeq<Tags...>>
-        = detail::TypeSeqRank<detail::SingleType<QueryTag>, detail::TypeSeq<Tags...>>::present;
+constexpr bool in_tags_v<QueryTag, TypeSeq<Tags...>>
+        = detail::TypeSeqRank<detail::SingleType<QueryTag>, TypeSeq<Tags...>>::present;
 
 template <class... Tags, class OTypeSeq>
-constexpr bool type_seq_contains_v<detail::TypeSeq<Tags...>, OTypeSeq>
+constexpr bool type_seq_contains_v<TypeSeq<Tags...>, OTypeSeq>
         = (detail::TypeSeqRank<detail::SingleType<Tags>, OTypeSeq>::present && ...);
 
 template <class QueryTag, class... Tags>
-constexpr std::size_t type_seq_rank_v<QueryTag, detail::TypeSeq<Tags...>>
-        = detail::TypeSeqRank<detail::SingleType<QueryTag>, detail::TypeSeq<Tags...>>::val;
+constexpr std::size_t type_seq_rank_v<QueryTag, TypeSeq<Tags...>>
+        = detail::TypeSeqRank<detail::SingleType<QueryTag>, TypeSeq<Tags...>>::val;
 
 template <std::size_t I, class TagSeq>
 using type_seq_element_t = detail::TypeSeqElement<I, TagSeq>::type;
 
 template <class TagSeqA, class TagSeqB>
-using type_seq_remove_t = detail::TypeSeqRemove<TagSeqA, TagSeqB, detail::TypeSeq<>>::type;
+using type_seq_remove_t = detail::TypeSeqRemove<TagSeqA, TagSeqB, TypeSeq<>>::type;
 
 template <class TagSeqA, class TagSeqB>
 using type_seq_merge_t = detail::TypeSeqMerge<TagSeqA, TagSeqB, TagSeqA>::type;
@@ -246,12 +289,11 @@ template <class TagSeqA, class TagSeqB>
 using type_seq_cat_t = detail::TypeSeqCat<TagSeqA, TagSeqB>::type;
 
 template <class TagSeqA, class TagSeqB, class TagSeqC>
-using type_seq_replace_t
-        = detail::TypeSeqReplace<TagSeqA, TagSeqB, TagSeqC, detail::TypeSeq<>>::type;
+using type_seq_replace_t = detail::TypeSeqReplace<TagSeqA, TagSeqB, TagSeqC, TypeSeq<>>::type;
 
 template <class... Tags>
-constexpr bool type_seq_is_unique_v<detail::TypeSeq<Tags...>>
-        = ((type_seq_size_v<type_seq_remove_t<detail::TypeSeq<Tags...>, detail::TypeSeq<Tags>>>
+constexpr bool type_seq_is_unique_v<TypeSeq<Tags...>>
+        = ((type_seq_size_v<type_seq_remove_t<TypeSeq<Tags...>, TypeSeq<Tags>>>
             == sizeof...(Tags) - 1)
            && ...);
 

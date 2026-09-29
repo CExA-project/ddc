@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['take_0',['take',['../namespaceddc.html#a6d5c456ec24ce19e1fef731322d831b4',1,'ddc::take(HeadDVect const &amp;head, TailDVects const &amp;... tail)'],['../namespaceddc.html#a235b9fe4170f01e9ad8bfc30b3367e17',1,'ddc::take(HeadDElem const &amp;head, TailDElems const &amp;... tail)']]],
-  ['take_5ffirst_1',['take_first',['../classddc_1_1DiscreteDomain_3_4.html#acfad69f3d9775d7be58da78c9242afb8',1,'ddc::DiscreteDomain&lt;&gt;::take_first()'],['../classddc_1_1DiscreteDomain.html#aa02c83656e96ccefb9b41ae57599e0f0',1,'ddc::DiscreteDomain::take_first()'],['../classddc_1_1StridedDiscreteDomain_3_4.html#a126f21dfa8a90b8705e5491be5c480cb',1,'ddc::StridedDiscreteDomain&lt;&gt;::take_first()'],['../classddc_1_1StridedDiscreteDomain.html#a1dc5587e3012975c47ed4b650a8dc4af',1,'ddc::StridedDiscreteDomain::take_first()'],['../classddc_1_1SparseDiscreteDomain_3_4.html#a112b694907e7794816ad88b4a504d3f6',1,'ddc::SparseDiscreteDomain&lt;&gt;::take_first()'],['../classddc_1_1SparseDiscreteDomain.html#aa44c0620742d2b186b07202695ad6882',1,'ddc::SparseDiscreteDomain::take_first()']]],
+  ['take_0',['take',['../namespaceddc.html#a235b9fe4170f01e9ad8bfc30b3367e17',1,'ddc::take(HeadDElem const &amp;head, TailDElems const &amp;... tail)'],['../namespaceddc.html#a6d5c456ec24ce19e1fef731322d831b4',1,'ddc::take(HeadDVect const &amp;head, TailDVects const &amp;... tail)']]],
+  ['take_5ffirst_1',['take_first',['../classddc_1_1DiscreteDomain.html#aa02c83656e96ccefb9b41ae57599e0f0',1,'ddc::DiscreteDomain::take_first()'],['../classddc_1_1StridedDiscreteDomain_3_4.html#a126f21dfa8a90b8705e5491be5c480cb',1,'ddc::StridedDiscreteDomain&lt;&gt;::take_first()'],['../classddc_1_1StridedDiscreteDomain.html#a1dc5587e3012975c47ed4b650a8dc4af',1,'ddc::StridedDiscreteDomain::take_first()'],['../classddc_1_1SparseDiscreteDomain_3_4.html#a112b694907e7794816ad88b4a504d3f6',1,'ddc::SparseDiscreteDomain&lt;&gt;::take_first()'],['../classddc_1_1SparseDiscreteDomain.html#aa44c0620742d2b186b07202695ad6882',1,'ddc::SparseDiscreteDomain::take_first()'],['../classddc_1_1DiscreteDomain_3_4.html#acfad69f3d9775d7be58da78c9242afb8',1,'ddc::DiscreteDomain&lt;&gt;::take_first()']]],
   ['take_5flast_2',['take_last',['../classddc_1_1DiscreteDomain.html#a14051a5ee597ab1407a1b35811477e7a',1,'ddc::DiscreteDomain::take_last()'],['../classddc_1_1DiscreteDomain_3_4.html#a38a6c7e8bcbb832068e80a11448b3bde',1,'ddc::DiscreteDomain&lt;&gt;::take_last()'],['../classddc_1_1SparseDiscreteDomain.html#a20f0cff53d1c5f29d52e96a7b86272bb',1,'ddc::SparseDiscreteDomain::take_last()'],['../classddc_1_1SparseDiscreteDomain_3_4.html#aa7e33ad839d4093fb9cb516eb8d58fab',1,'ddc::SparseDiscreteDomain&lt;&gt;::take_last()'],['../classddc_1_1StridedDiscreteDomain.html#aa6f29a111d9275a87193278c4ada57d0',1,'ddc::StridedDiscreteDomain::take_last()'],['../classddc_1_1StridedDiscreteDomain_3_4.html#a44bb2b5a29133c87b6a619d6f67fe6d4',1,'ddc::StridedDiscreteDomain&lt;&gt;::take_last()']]],
   ['targets_20and_20headers_3',['Public targets and headers',['../cmake_integration.html#autotoc_md29',1,'']]],
   ['the_20discretization_4',['Definition of the discretization',['../first_steps.html#autotoc_md3',1,'']]],
@@ -10,7 +10,23 @@ var searchData=
   ['the_20uniform_20heat_20equation_7',['The uniform heat equation',['../first_steps.html',1,'md_examples']]],
   ['the_20uniform_20problem_20resolution_8',['Differences with the uniform problem resolution',['../going_further.html#autotoc_md14',1,'']]],
   ['threshold_9',['threshold',['../structddc_1_1PrinterOptions.html#a54bc04463251bd547b4fde32e65cf72b',1,'ddc::PrinterOptions']]],
-  ['time_20dimension_10',['time dimension',['../first_steps.html#autotoc_md8',1,'Time dimension'],['../going_further.html#autotoc_md19',1,'Time dimension']]],
+  ['time_20dimension_10',['time dimension',['../going_further.html#autotoc_md19',1,'Time dimension'],['../first_steps.html#autotoc_md8',1,'Time dimension']]],
   ['time_20loop_11',['time loop',['../first_steps.html#autotoc_md11',1,'Time loop'],['../going_further.html#autotoc_md20',1,'Time loop']]],
-  ['type_12',['type',['../namespaceddc.html#aa4e7e9a6c69afc54243d97fce5629abc',1,'ddc::KnotDiscreteDimension::type'],['../namespaceddc.html#ab01ee23e93d0d4ad07d7c20596efe998',1,'ddc::coordinate_of::type']]]
+  ['to_5ftype_5fseq_5ft_12',['to_type_seq_t',['../namespaceddc.html#a19d7cba53243dc1ced419a15a7da6ccc',1,'ddc']]],
+  ['type_13',['type',['../namespaceddc.html#aa4e7e9a6c69afc54243d97fce5629abc',1,'ddc::KnotDiscreteDimension::type'],['../namespaceddc.html#ab01ee23e93d0d4ad07d7c20596efe998',1,'ddc::coordinate_of::type']]],
+  ['type_5fseq_5fcat_5ft_14',['type_seq_cat_t',['../namespaceddc.html#a0d55e6f247b8d54423ac9a7acccdf7d4',1,'ddc']]],
+  ['type_5fseq_5fcontains_5fv_15',['type_seq_contains_v',['../namespaceddc.html#a01ce9c84e558f4ceb6405b30561ef63c',1,'ddc']]],
+  ['type_5fseq_5fcontains_5fv_3c_20typeseq_3c_20tags_2e_2e_2e_20_3e_2c_20otypeseq_20_3e_16',['type_seq_contains_v&lt; TypeSeq&lt; Tags... &gt;, OTypeSeq &gt;',['../namespaceddc.html#a04988d9ade24837b8bab95620615e20f',1,'ddc']]],
+  ['type_5fseq_5felement_5ft_17',['type_seq_element_t',['../namespaceddc.html#aac872925bbf84b8fb31ee552b8c644e2',1,'ddc']]],
+  ['type_5fseq_5fis_5funique_5fv_18',['type_seq_is_unique_v',['../namespaceddc.html#a06050f268b7171c8381560e34bdff98f',1,'ddc']]],
+  ['type_5fseq_5fis_5funique_5fv_3c_20typeseq_3c_20tags_2e_2e_2e_20_3e_20_3e_19',['type_seq_is_unique_v&lt; TypeSeq&lt; Tags... &gt; &gt;',['../namespaceddc.html#a438bad425d5c3d5f1c0a3b16acde7ca1',1,'ddc']]],
+  ['type_5fseq_5fmerge_5ft_20',['type_seq_merge_t',['../namespaceddc.html#a968f4044c92e81863e7465b4bb8ea199',1,'ddc']]],
+  ['type_5fseq_5frank_5fv_21',['type_seq_rank_v',['../namespaceddc.html#aeca301c39c686c866ba941fa0fc18087',1,'ddc']]],
+  ['type_5fseq_5frank_5fv_3c_20querytag_2c_20typeseq_3c_20tags_2e_2e_2e_20_3e_20_3e_22',['type_seq_rank_v&lt; QueryTag, TypeSeq&lt; Tags... &gt; &gt;',['../namespaceddc.html#a7d50f58ec441fb1ef49bf838ebca73f4',1,'ddc']]],
+  ['type_5fseq_5fremove_5ft_23',['type_seq_remove_t',['../namespaceddc.html#aca728c9bd94b0bcce557f7536672f4d6',1,'ddc']]],
+  ['type_5fseq_5freplace_5ft_24',['type_seq_replace_t',['../namespaceddc.html#ab9f619a4c2f9b3553be8287bcaab4266',1,'ddc']]],
+  ['type_5fseq_5fsame_5fv_25',['type_seq_same_v',['../namespaceddc.html#aeaf49959e4d14d94551a7bafcb3b67a8',1,'ddc']]],
+  ['type_5fseq_5fsize_5fv_26',['type_seq_size_v',['../namespaceddc.html#a07225ddfc8c2b9f43e44512dd870c11a',1,'ddc']]],
+  ['type_5fseq_5fsize_5fv_3c_20typeseq_3c_20tags_2e_2e_2e_20_3e_20_3e_27',['type_seq_size_v&lt; TypeSeq&lt; Tags... &gt; &gt;',['../namespaceddc.html#a03c02270c38788aac1e33ccbcceb7045',1,'ddc']]],
+  ['typeseq_28',['TypeSeq',['../namespaceddc.html#structddc_1_1TypeSeq',1,'ddc']]]
 ];

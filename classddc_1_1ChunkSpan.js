@@ -1,6 +1,7 @@
 var classddc_1_1ChunkSpan =
 [
     [ "Slicer", "classddc_1_1ChunkSpan.html#structddc_1_1ChunkSpan_1_1Slicer", null ],
+    [ "Slicer< TypeSeq< DDims... > >", "structddc_1_1ChunkSpan_1_1Slicer_3_01TypeSeq_3_01DDims_8_8_8_01_4_01_4.html", "structddc_1_1ChunkSpan_1_1Slicer_3_01TypeSeq_3_01DDims_8_8_8_01_4_01_4" ],
     [ "base_type", "classddc_1_1ChunkSpan.html#a512a4a96b88725cc22801fa58ca44843", null ],
     [ "span_type", "classddc_1_1ChunkSpan.html#a505ad43f1499fe845d1361985e02322c", null ],
     [ "view_type", "classddc_1_1ChunkSpan.html#a355677948ca423a16157195e7e5059d0", null ],

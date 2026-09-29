@@ -18,5 +18,6 @@ var searchData=
   ['_7esplineevaluator_15',['~SplineEvaluator',['../classddc_1_1SplineEvaluator.html#aeff7d4749adf2afc3dc8bd20ad641d1a',1,'ddc::SplineEvaluator']]],
   ['_7esplineevaluator2d_16',['~SplineEvaluator2D',['../classddc_1_1SplineEvaluator2D.html#a5a8b1cfcc584f6ab50ee30145f029ebf',1,'ddc::SplineEvaluator2D']]],
   ['_7esplineevaluator3d_17',['~SplineEvaluator3D',['../classddc_1_1SplineEvaluator3D.html#a5a146b96c03b456cc58d5210270257c7',1,'ddc::SplineEvaluator3D']]],
-  ['_7estrideddiscretedomain_18',['~strideddiscretedomain',['../classddc_1_1StridedDiscreteDomain.html#aaaad3bf019594b5d812b38e83b9327ec',1,'ddc::StridedDiscreteDomain::~StridedDiscreteDomain()'],['../classddc_1_1StridedDiscreteDomain_3_4.html#ad59184147539a90ef37b9e8c02e0e1dc',1,'ddc::StridedDiscreteDomain&lt;&gt;::~StridedDiscreteDomain()']]]
+  ['_7esplineevaluatornd_18',['~SplineEvaluatorND',['../classddc_1_1SplineEvaluatorND_3_01ExecSpace_00_01MemorySpace_00_01TypeSeq_3_01BSplines_8_8_8_01_f833e29ba3ac0ee5ee9bb80710900f22.html#a14de6e4664687e25bf5460492aa15db5',1,'ddc::SplineEvaluatorND&lt; ExecSpace, MemorySpace, TypeSeq&lt; BSplines... &gt;, TypeSeq&lt; EvaluationDDim... &gt;, TypeSeq&lt; ExtrapolationRule... &gt; &gt;']]],
+  ['_7estrideddiscretedomain_19',['~strideddiscretedomain',['../classddc_1_1StridedDiscreteDomain.html#aaaad3bf019594b5d812b38e83b9327ec',1,'ddc::StridedDiscreteDomain::~StridedDiscreteDomain()'],['../classddc_1_1StridedDiscreteDomain_3_4.html#ad59184147539a90ef37b9e8c02e0e1dc',1,'ddc::StridedDiscreteDomain&lt;&gt;::~StridedDiscreteDomain()']]]
 ];

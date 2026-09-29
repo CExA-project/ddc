@@ -81,6 +81,7 @@ var hierarchy =
     [ "ddc::KokkosAllocator< T, MemorySpace >::rebind< U >", "classddc_1_1KokkosAllocator.html#structddc_1_1KokkosAllocator_1_1rebind", null ],
     [ "ddc::ScopeGuard", "classddc_1_1ScopeGuard.html", null ],
     [ "ddc::ChunkSpan< ElementType, SupportType, LayoutStridedPolicy, MemorySpace >::Slicer< TypeSeq >", "classddc_1_1ChunkSpan.html#structddc_1_1ChunkSpan_1_1Slicer", null ],
+    [ "ddc::ChunkSpan< ElementType, SupportType, LayoutStridedPolicy, MemorySpace >::Slicer< TypeSeq< DDims... > >", "structddc_1_1ChunkSpan_1_1Slicer_3_01TypeSeq_3_01DDims_8_8_8_01_4_01_4.html", null ],
     [ "ddc::SparseDiscreteDomain< DDims >", "classddc_1_1SparseDiscreteDomain.html", null ],
     [ "ddc::SparseDiscreteDomain<>", "classddc_1_1SparseDiscreteDomain_3_4.html", null ],
     [ "ddc::SplineBuilder< ExecSpace, MemorySpace, BSplines, InterpolationDDim, SBCLower, SBCUpper, Solver >", "classddc_1_1SplineBuilder.html", null ],
@@ -95,6 +96,7 @@ var hierarchy =
     [ "ddc::SplineEvaluator2D< ExecSpace, MemorySpace, BSplines1, BSplines2, EvaluationDDim1, EvaluationDDim2, LowerExtrapolationRule1, UpperExtrapolationRule1, LowerExtrapolationRule2, UpperExtrapolationRule2 >", "classddc_1_1SplineEvaluator2D.html", null ],
     [ "ddc::SplineEvaluator3D< ExecSpace, MemorySpace, BSplines1, BSplines2, BSplines3, EvaluationDDim1, EvaluationDDim2, EvaluationDDim3, LowerExtrapolationRule1, UpperExtrapolationRule1, LowerExtrapolationRule2, UpperExtrapolationRule2, LowerExtrapolationRule3, UpperExtrapolationRule3 >", "classddc_1_1SplineEvaluator3D.html", null ],
     [ "ddc::SplineEvaluatorND< ExecSpace, MemorySpace, BSplines, EvaluationDDim, ExtrapolationRule >", "namespaceddc.html#classddc_1_1SplineEvaluatorND", null ],
+    [ "ddc::SplineEvaluatorND< ExecSpace, MemorySpace, TypeSeq< BSplines... >, TypeSeq< EvaluationDDim... >, TypeSeq< ExtrapolationRule... > >", "classddc_1_1SplineEvaluatorND_3_01ExecSpace_00_01MemorySpace_00_01TypeSeq_3_01BSplines_8_8_8_01_f833e29ba3ac0ee5ee9bb80710900f22.html", null ],
     [ "ddc::StridedDiscreteDomain< DDims >", "classddc_1_1StridedDiscreteDomain.html", null ],
     [ "ddc::StridedDiscreteDomain<>", "classddc_1_1StridedDiscreteDomain_3_4.html", null ],
     [ "ddc::StridedDiscreteDomainIterator< DDim >", "structddc_1_1StridedDiscreteDomainIterator.html", null ],
@@ -127,6 +129,7 @@ var hierarchy =
     [ "std::is_base_of::type", null, [
       [ "ddc::is_uniform_point_sampling< DDim >", "structddc_1_1is__uniform__point__sampling.html", null ]
     ] ],
+    [ "ddc::TypeSeq< Tags >", "namespaceddc.html#structddc_1_1TypeSeq", null ],
     [ "ddc::detail::UniformBSplinesBase", null, [
       [ "ddc::UniformBSplines< CDim, D, Periodic >", "classddc_1_1UniformBSplines.html", null ]
     ] ],

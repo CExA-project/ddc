@@ -79,9 +79,11 @@ var annotated_dup =
       [ "SplineEvaluator2D", "classddc_1_1SplineEvaluator2D.html", "classddc_1_1SplineEvaluator2D" ],
       [ "SplineEvaluator3D", "classddc_1_1SplineEvaluator3D.html", "classddc_1_1SplineEvaluator3D" ],
       [ "SplineEvaluatorND", "namespaceddc.html#classddc_1_1SplineEvaluatorND", null ],
+      [ "SplineEvaluatorND< ExecSpace, MemorySpace, TypeSeq< BSplines... >, TypeSeq< EvaluationDDim... >, TypeSeq< ExtrapolationRule... > >", "classddc_1_1SplineEvaluatorND_3_01ExecSpace_00_01MemorySpace_00_01TypeSeq_3_01BSplines_8_8_8_01_f833e29ba3ac0ee5ee9bb80710900f22.html", "classddc_1_1SplineEvaluatorND_3_01ExecSpace_00_01MemorySpace_00_01TypeSeq_3_01BSplines_8_8_8_01_f833e29ba3ac0ee5ee9bb80710900f22" ],
       [ "StridedDiscreteDomain", "classddc_1_1StridedDiscreteDomain.html", "classddc_1_1StridedDiscreteDomain" ],
       [ "StridedDiscreteDomain<>", "classddc_1_1StridedDiscreteDomain_3_4.html", "classddc_1_1StridedDiscreteDomain_3_4" ],
       [ "StridedDiscreteDomainIterator", "structddc_1_1StridedDiscreteDomainIterator.html", "structddc_1_1StridedDiscreteDomainIterator" ],
+      [ "TypeSeq", "namespaceddc.html#structddc_1_1TypeSeq", null ],
       [ "UniformBSplines", "classddc_1_1UniformBSplines.html", "classddc_1_1UniformBSplines" ],
       [ "UniformBsplinesKnots", "structddc_1_1UniformBsplinesKnots.html", null ],
       [ "UniformPointSampling", "classddc_1_1UniformPointSampling.html", "classddc_1_1UniformPointSampling" ]

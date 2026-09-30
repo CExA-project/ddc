@@ -239,7 +239,6 @@ if("${DDC_BUILD_KERNELS_SPLINES}")
                     src/ddc/kernels/splines/splines_linear_problem_pds_band.hpp
                     src/ddc/kernels/splines/splines_linear_problem_pds_tridiag.hpp
                     src/ddc/kernels/splines/splines_linear_problem_sparse.hpp
-                    src/ddc/kernels/splines/view.hpp
     )
 
     install(FILES cmake/FindLAPACKE.cmake DESTINATION ${DDC_INSTALL_CMAKEDIR} COMPONENT Development)

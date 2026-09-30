@@ -392,7 +392,7 @@ constexpr bool is_uniform_bsplines_v = is_uniform_bsplines<T>::value;
 namespace concepts {
 
 template <class T>
-concept uniform_bsplines = is_uniform_bsplines_v<T>;
+concept uniform_bsplines = discrete_dimension<T> && is_uniform_bsplines_v<T>;
 
 }
 

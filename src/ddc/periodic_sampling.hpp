@@ -262,7 +262,7 @@ constexpr bool is_periodic_sampling_v = is_periodic_sampling<T>::value;
 namespace concepts {
 
 template <class T>
-concept periodic_sampling = is_periodic_sampling_v<T>;
+concept periodic_sampling = discrete_dimension<T> && is_periodic_sampling_v<T>;
 
 }
 

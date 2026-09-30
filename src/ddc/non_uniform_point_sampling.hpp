@@ -206,7 +206,7 @@ constexpr bool is_non_uniform_point_sampling_v = is_non_uniform_point_sampling<T
 namespace concepts {
 
 template <class T>
-concept non_uniform_point_sampling = is_non_uniform_point_sampling_v<T>;
+concept non_uniform_point_sampling = discrete_dimension<T> && is_non_uniform_point_sampling_v<T>;
 
 }
 

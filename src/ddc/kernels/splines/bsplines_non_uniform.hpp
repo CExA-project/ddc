@@ -412,7 +412,7 @@ constexpr bool is_non_uniform_bsplines_v = is_non_uniform_bsplines<T>::value;
 namespace concepts {
 
 template <class T>
-concept non_uniform_bsplines = is_non_uniform_bsplines_v<T>;
+concept non_uniform_bsplines = discrete_dimension<T> && is_non_uniform_bsplines_v<T>;
 
 }
 

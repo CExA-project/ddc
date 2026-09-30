@@ -232,7 +232,7 @@ constexpr bool is_uniform_point_sampling_v = is_uniform_point_sampling<T>::value
 namespace concepts {
 
 template <class T>
-concept uniform_point_sampling = is_uniform_point_sampling_v<T>;
+concept uniform_point_sampling = discrete_dimension<T> && is_uniform_point_sampling_v<T>;
 
 }
 

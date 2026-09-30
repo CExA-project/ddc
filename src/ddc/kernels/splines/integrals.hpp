@@ -12,6 +12,7 @@
 
 #include <Kokkos_Core.hpp>
 
+#include "bsplines.hpp"
 #include "bsplines_non_uniform.hpp"
 #include "bsplines_uniform.hpp"
 #include "math_tools.hpp"
@@ -32,7 +33,7 @@ void uniform_bsplines_integrals(
         ExecSpace const& execution_space,
         ddc::ChunkSpan<Real, ddc::DiscreteDomain<DDim>, Layout, MemorySpace> int_vals)
 {
-    static_assert(is_uniform_bsplines_v<DDim>);
+    static_assert(ddc::concepts::uniform_bsplines<DDim>);
     static_assert(
             Kokkos::SpaceAccessibility<ExecSpace, MemorySpace>::accessible,
             "MemorySpace has to be accessible for ExecutionSpace.");
@@ -112,7 +113,7 @@ void non_uniform_bsplines_integrals(
         ExecSpace const& execution_space,
         ddc::ChunkSpan<Real, ddc::DiscreteDomain<DDim>, Layout, MemorySpace> int_vals)
 {
-    static_assert(is_non_uniform_bsplines_v<DDim>);
+    static_assert(ddc::concepts::non_uniform_bsplines<DDim>);
     static_assert(
             Kokkos::SpaceAccessibility<ExecSpace, MemorySpace>::accessible,
             "MemorySpace has to be accessible for ExecutionSpace.");
@@ -162,12 +163,11 @@ void non_uniform_bsplines_integrals(
  * @param[out] int_vals The values of the integrals. It has to be a 1D Chunkspan of size (nbasis).
  * @return The values of the integrals.
  */
-template <class ExecSpace, class DDim, class Layout, class MemorySpace>
+template <class ExecSpace, concepts::bsplines DDim, class Layout, class MemorySpace>
 ddc::ChunkSpan<Real, ddc::DiscreteDomain<DDim>, Layout, MemorySpace> integrals(
         ExecSpace const& execution_space,
         ddc::ChunkSpan<Real, ddc::DiscreteDomain<DDim>, Layout, MemorySpace> int_vals)
 {
-    static_assert(is_uniform_bsplines_v<DDim> || is_non_uniform_bsplines_v<DDim>);
     if constexpr (is_uniform_bsplines_v<DDim>) {
         uniform_bsplines_integrals(execution_space, int_vals);
     } else if constexpr (is_non_uniform_bsplines_v<DDim>) {

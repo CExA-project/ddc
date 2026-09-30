@@ -217,3 +217,29 @@ TYPED_TEST(BSplinesFixture, RoundingUniform)
             = ddc::discrete_space<BSplinesX>().eval_basis(values, test_point_max);
     EXPECT_EQ(back_idx, bspl_full_domain.back() - BSplinesX::degree());
 }
+
+TEST(BSplines, Concepts)
+{
+    struct DimX;
+    struct UBSplinesX : ddc::UniformBSplines<DimX, 2, true>
+    {
+    };
+
+    EXPECT_TRUE(ddc::concepts::bsplines<UBSplinesX>);
+    EXPECT_TRUE(ddc::concepts::uniform_bsplines<UBSplinesX>);
+    EXPECT_FALSE(ddc::concepts::non_uniform_bsplines<UBSplinesX>);
+
+    struct NUBSplinesX : ddc::NonUniformBSplines<DimX, 5, false>
+    {
+    };
+    EXPECT_TRUE(ddc::concepts::bsplines<NUBSplinesX>);
+    EXPECT_FALSE(ddc::concepts::uniform_bsplines<NUBSplinesX>);
+    EXPECT_TRUE(ddc::concepts::non_uniform_bsplines<NUBSplinesX>);
+
+    struct DDim
+    {
+    };
+    EXPECT_FALSE(ddc::concepts::bsplines<DDim>);
+    EXPECT_FALSE(ddc::concepts::uniform_bsplines<DDim>);
+    EXPECT_FALSE(ddc::concepts::non_uniform_bsplines<DDim>);
+}

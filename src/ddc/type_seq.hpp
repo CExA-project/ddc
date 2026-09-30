@@ -34,9 +34,7 @@ namespace detail {
 
 #if DDC_BUILD_DEPRECATED_CODE()
 template <class... Tags>
-struct [[deprecated("Use `ddc::TypeSeq' instead")]] TypeSeq
-{
-};
+using TypeSeq [[deprecated("Use `ddc::TypeSeq' instead")]] = ::ddc::TypeSeq<Tags...>;
 #endif
 
 template <class Tag>

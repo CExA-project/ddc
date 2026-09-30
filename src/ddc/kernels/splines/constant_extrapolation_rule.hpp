@@ -20,43 +20,13 @@ namespace ddc {
  * To define the value of a function on B-splines out of the domain, we here use a constant
  * extrapolation on the edge.
  */
-#if DDC_BUILD_DEPRECATED_CODE()
-template <class DimI, class... DimNI>
-#else
 template <class DimI>
-#endif
 struct ConstantExtrapolationRule
 {
 private:
     ddc::Coordinate<DimI> m_eval_pos;
 
 public:
-#if DDC_BUILD_DEPRECATED_CODE()
-    /**
-     * @brief Instantiate a ConstantExtrapolationRule.
-     *
-     * The boundary value will be the same as at the coordinate given in a dimension given.
-     * The dimension of the input defines the dimension of the boundary condition.
-     * The second and the third parameters are needed in case of non-periodic splines on the
-     * dimension off-interest (the complementary dimension of the boundary condition),
-     * because the evaluator can receive coordinates outside the domain in both dimension.
-     *
-     * @param[in] eval_pos Coordinate in the dimension given inside the domain where we will evaluate each points outside the domain.
-     * @param[in] eval_pos_not_interest_min The minimum coordinate inside the domain on the complementary dimension of the boundary condition.
-     * @param[in] eval_pos_not_interest_max The maximum coordinate inside the domain on the complementary dimension of the boundary condition.
-     *
-     * @deprecated Use the single parameter constructor instead, the boundaries are now retrieved from the BSplines boundaries
-     */
-    [[deprecated("Use the single parameter constructor instead, the boundaries are now retrieved from the BSplines boundaries")]] explicit ConstantExtrapolationRule(
-            ddc::Coordinate<DimI> eval_pos,
-            [[maybe_unused]] ddc::Coordinate<DimNI...> eval_pos_not_interest_min,
-            [[maybe_unused]] ddc::Coordinate<DimNI...> eval_pos_not_interest_max)
-        requires(sizeof...(DimNI) == 1)
-        : m_eval_pos(eval_pos)
-    {
-    }
-#endif
-
     /**
      * @brief Instantiate a ConstantExtrapolationRule.
      *

@@ -31,15 +31,14 @@ ddc::SplineSolver const Backend = ddc::SplineSolver::LAPACK;
 
 struct X
 {
-    static constexpr bool PERIODIC = true;
 };
 
 template <bool IsNonUniform, std::size_t DegreeX>
 struct BSplinesX
     : std::conditional_t<
               IsNonUniform,
-              ddc::NonUniformBSplines<X, DegreeX>,
-              ddc::UniformBSplines<X, DegreeX>>
+              ddc::NonUniformBSplines<X, DegreeX, true>,
+              ddc::UniformBSplines<X, DegreeX, true>>
 {
 };
 

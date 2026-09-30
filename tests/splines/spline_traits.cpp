@@ -22,7 +22,6 @@ inline namespace anonymous_namespace_workaround_spline_traits_cpp {
 
 struct DimX
 {
-    static constexpr bool PERIODIC = true;
 };
 
 struct DDimX : ddc::NonUniformPointSampling<DimX>
@@ -31,7 +30,6 @@ struct DDimX : ddc::NonUniformPointSampling<DimX>
 
 struct DimY
 {
-    static constexpr bool PERIODIC = true;
 };
 
 struct DDimY : ddc::NonUniformPointSampling<DimY>
@@ -57,15 +55,15 @@ struct BSplinesTraits<std::tuple<
     static constexpr std::size_t m_spline_degree1 = D1;
     static constexpr std::size_t m_spline_degree2 = D2;
 
-    struct BSplinesX1 : ddc::UniformBSplines<DimX, D1>
+    struct BSplinesX1 : ddc::UniformBSplines<DimX, D1, true>
     {
     };
 
-    struct BSplinesX2 : ddc::UniformBSplines<DimX, D2>
+    struct BSplinesX2 : ddc::UniformBSplines<DimX, D2, true>
     {
     };
 
-    struct BSplinesY : ddc::UniformBSplines<DimY, D1>
+    struct BSplinesY : ddc::UniformBSplines<DimY, D1, true>
     {
     };
 

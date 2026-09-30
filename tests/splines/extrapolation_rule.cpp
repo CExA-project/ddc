@@ -23,23 +23,23 @@ inline namespace anonymous_namespace_workaround_extrapolation_rule_cpp {
 #if defined(BC_PERIODIC)
 struct DimX
 {
-    static constexpr bool PERIODIC = false;
+    static constexpr bool s_periodic_splines = false;
 };
 
 struct DimY
 {
-    static constexpr bool PERIODIC = true;
+    static constexpr bool s_periodic_splines = true;
 };
 #elif defined(BC_GREVILLE)
 
 struct DimX
 {
-    static constexpr bool PERIODIC = false;
+    static constexpr bool s_periodic_splines = false;
 };
 
 struct DimY
 {
-    static constexpr bool PERIODIC = false;
+    static constexpr bool s_periodic_splines = false;
 };
 #endif
 
@@ -65,12 +65,12 @@ using GrevillePoints2 = ddc::GrevilleInterpolationPoints<BSpX, s_sbcl2, s_sbcr2>
 
 #if defined(BSPLINES_TYPE_UNIFORM)
 template <typename X>
-struct BSplines : ddc::UniformBSplines<X, s_degree>
+struct BSplines : ddc::UniformBSplines<X, s_degree, X::s_periodic_splines>
 {
 };
 #elif defined(BSPLINES_TYPE_NON_UNIFORM)
 template <typename X>
-struct BSplines : ddc::NonUniformBSplines<X, s_degree>
+struct BSplines : ddc::NonUniformBSplines<X, s_degree, X::s_periodic_splines>
 {
 };
 #endif

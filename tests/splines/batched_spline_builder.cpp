@@ -21,18 +21,9 @@
 
 inline namespace anonymous_namespace_workaround_batched_spline_builder_cpp {
 
-#if defined(BC_PERIODIC)
 struct DimX
 {
-    static constexpr bool PERIODIC = true;
 };
-#else
-
-struct DimX
-{
-    static constexpr bool PERIODIC = false;
-};
-#endif
 
 struct DDimBatch1
 {
@@ -43,6 +34,12 @@ struct DDimBatch2
 };
 
 constexpr std::size_t s_degree = DEGREE;
+
+#if defined(BC_PERIODIC)
+constexpr bool splines_periodic = true;
+#else
+constexpr bool splines_periodic = false;
+#endif
 
 #if defined(BC_PERIODIC)
 constexpr ddc::SplineBuilderClosure s_sbcl = ddc::SplineBuilderClosure::PERIODIC;
@@ -63,12 +60,12 @@ using GrevillePoints = ddc::GrevilleInterpolationPoints<BSpX, s_sbcl, s_sbcr>;
 
 #if defined(BSPLINES_TYPE_UNIFORM)
 template <typename X>
-struct BSplines : ddc::UniformBSplines<X, s_degree>
+struct BSplines : ddc::UniformBSplines<X, s_degree, splines_periodic>
 {
 };
 #elif defined(BSPLINES_TYPE_NON_UNIFORM)
 template <typename X>
-struct BSplines : ddc::NonUniformBSplines<X, s_degree>
+struct BSplines : ddc::NonUniformBSplines<X, s_degree, splines_periodic>
 {
 };
 #endif

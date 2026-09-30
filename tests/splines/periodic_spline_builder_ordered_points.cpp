@@ -14,12 +14,11 @@
 
 struct DimX
 {
-    static constexpr bool PERIODIC = true;
 };
 
 static constexpr std::size_t s_degree = DEGREE;
 
-struct BSplinesX : ddc::NonUniformBSplines<DimX, s_degree>
+struct BSplinesX : ddc::NonUniformBSplines<DimX, s_degree, true>
 {
 };
 

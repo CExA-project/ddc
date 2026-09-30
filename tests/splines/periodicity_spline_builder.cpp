@@ -20,7 +20,6 @@ inline namespace anonymous_namespace_workaround_periodicity_spline_builder_cpp {
 
 struct DimX
 {
-    static constexpr bool PERIODIC = true;
 };
 
 constexpr std::size_t s_degree = DEGREE;
@@ -33,7 +32,7 @@ using GrevillePoints = ddc::GrevilleInterpolationPoints<
 
 #if defined(BSPLINES_TYPE_UNIFORM)
 template <typename X>
-struct BSplines : ddc::UniformBSplines<X, s_degree>
+struct BSplines : ddc::UniformBSplines<X, s_degree, true>
 {
 };
 
@@ -45,7 +44,7 @@ struct DDim : GrevillePoints<BSplines<X>>::interpolation_discrete_dimension_type
 
 #elif defined(BSPLINES_TYPE_NON_UNIFORM)
 template <typename X>
-struct BSplines : ddc::NonUniformBSplines<X, s_degree>
+struct BSplines : ddc::NonUniformBSplines<X, s_degree, true>
 {
 };
 

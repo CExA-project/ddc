@@ -1,5 +1,7 @@
 var NAVTREEINDEX7 =
 {
+"namespaceddc.html#a171c330e1c2f3ab203b2e1807ee5d256":[4,0,0,197],
+"namespaceddc.html#a17507ff514a63591f7e9e4822e1ebacc":[4,0,0,235],
 "namespaceddc.html#a17a57b6f04698647d4139d3372b40d1a":[4,0,0,132],
 "namespaceddc.html#a193866fcdafea30559a1e2513d6817f4":[4,0,0,270],
 "namespaceddc.html#a19c5fc81d81d5676bfcc0eededc0bd22":[4,0,0,246],
@@ -247,7 +249,5 @@ var NAVTREEINDEX7 =
 "structddc_1_1DiscreteDomainIterator.html#a36b52ce71b95d5eeeabf83c9dd60575a":[6,0,0,12,3],
 "structddc_1_1DiscreteDomainIterator.html#a3f73896fe3a5a2d691c6feb6392020a9":[6,0,0,12,12],
 "structddc_1_1DiscreteDomainIterator.html#a3f73896fe3a5a2d691c6feb6392020a9":[4,0,0,13,12],
-"structddc_1_1DiscreteDomainIterator.html#a4384a41a68c485bbb7628034b355734f":[4,0,0,13,8],
-"structddc_1_1DiscreteDomainIterator.html#a4384a41a68c485bbb7628034b355734f":[6,0,0,12,8],
-"structddc_1_1DiscreteDomainIterator.html#a4975cff20337ff9f45fe4d06109bc35f":[6,0,0,12,7]
+"structddc_1_1DiscreteDomainIterator.html#a4384a41a68c485bbb7628034b355734f":[4,0,0,13,8]
 };

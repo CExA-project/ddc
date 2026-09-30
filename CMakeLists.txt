@@ -210,6 +210,7 @@ if("${DDC_BUILD_KERNELS_SPLINES}")
                 BASE_DIRS src
                 FILES
                     src/ddc/kernels/splines.hpp
+                    src/ddc/kernels/splines/bsplines.hpp
                     src/ddc/kernels/splines/bsplines_non_uniform.hpp
                     src/ddc/kernels/splines/bsplines_uniform.hpp
                     src/ddc/kernels/splines/constant_extrapolation_rule.hpp

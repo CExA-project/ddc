@@ -149,155 +149,125 @@ $(document).ready(function(){initNavTree('constant__extrapolation__rule_8hpp_sou
 <div class="line"><span class="lineno">   20</span><span class="comment"> * To define the value of a function on B-splines out of the domain, we here use a constant</span></div>
 <div class="line"><span class="lineno">   21</span><span class="comment"> * extrapolation on the edge.</span></div>
 <div class="line"><span class="lineno">   22</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#</span><span class="preprocessor">if</span> <a class="code hl_define" href="config_8hpp.html#a2879eaed7b59bd160ab99a0a26d4bf71">DDC_BUILD_DEPRECATED_CODE</a><span class="preprocessor">(</span><span class="preprocessor">)</span></div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> DimI, <span class="keyword">class</span>... DimNI&gt;</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#</span><span class="preprocessor">else</span></div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> <a class="code hl_struct" href="structddc_1_1ConstantExtrapolationRule.html">DimI</a>&gt;</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#</span><span class="preprocessor">endif</span></div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="keyword">struct</span> <a class="code hl_struct" href="structddc_1_1ConstantExtrapolationRule.html">ConstantExtrapolationRule</a></div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>{</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;DimI&gt; m_eval_pos;</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="preprocessor">#</span><span class="preprocessor">if</span> <a class="code hl_define" href="config_8hpp.html#a2879eaed7b59bd160ab99a0a26d4bf71">DDC_BUILD_DEPRECATED_CODE</a><span class="preprocessor">(</span><span class="preprocessor">)</span></div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    <span class="comment">/**</span></div>
-<div class="line"><span class="lineno">   36</span><span class="comment">     * @brief Instantiate a ConstantExtrapolationRule.</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> DimI&gt;</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="keyword">struct</span> <a class="code hl_struct" href="structddc_1_1ConstantExtrapolationRule.html">ConstantExtrapolationRule</a></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>{</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;DimI&gt; m_eval_pos;</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    <span class="comment">/**</span></div>
+<div class="line"><span class="lineno">   31</span><span class="comment">     * @brief Instantiate a ConstantExtrapolationRule.</span></div>
+<div class="line"><span class="lineno">   32</span><span class="comment">     *</span></div>
+<div class="line"><span class="lineno">   33</span><span class="comment">     * The boundary value will be the same as at the coordinate given in a dimension given.</span></div>
+<div class="line"><span class="lineno">   34</span><span class="comment">     * The dimension of the input defines the dimension of the boundary condition.</span></div>
+<div class="line"><span class="lineno">   35</span><span class="comment">     * No second and third parameters are needed in case of periodic splines on the</span></div>
+<div class="line"><span class="lineno">   36</span><span class="comment">     * dimension off-interest (the complementary dimension of the boundary condition).</span></div>
 <div class="line"><span class="lineno">   37</span><span class="comment">     *</span></div>
-<div class="line"><span class="lineno">   38</span><span class="comment">     * The boundary value will be the same as at the coordinate given in a dimension given.</span></div>
-<div class="line"><span class="lineno">   39</span><span class="comment">     * The dimension of the input defines the dimension of the boundary condition.</span></div>
-<div class="line"><span class="lineno">   40</span><span class="comment">     * The second and the third parameters are needed in case of non-periodic splines on the</span></div>
-<div class="line"><span class="lineno">   41</span><span class="comment">     * dimension off-interest (the complementary dimension of the boundary condition),</span></div>
-<div class="line"><span class="lineno">   42</span><span class="comment">     * because the evaluator can receive coordinates outside the domain in both dimension.</span></div>
-<div class="line"><span class="lineno">   43</span><span class="comment">     *</span></div>
-<div class="line"><span class="lineno">   44</span><span class="comment">     * @param[in] eval_pos Coordinate in the dimension given inside the domain where we will evaluate each points outside the domain.</span></div>
-<div class="line"><span class="lineno">   45</span><span class="comment">     * @param[in] eval_pos_not_interest_min The minimum coordinate inside the domain on the complementary dimension of the boundary condition.</span></div>
-<div class="line"><span class="lineno">   46</span><span class="comment">     * @param[in] eval_pos_not_interest_max The maximum coordinate inside the domain on the complementary dimension of the boundary condition.</span></div>
-<div class="line"><span class="lineno">   47</span><span class="comment">     *</span></div>
-<div class="line"><span class="lineno">   48</span><span class="comment">     * @deprecated Use the single parameter constructor instead, the boundaries are now retrieved from the BSplines boundaries</span></div>
-<div class="line"><span class="lineno">   49</span><span class="comment">     */</span></div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    [[<a class="code hl_struct" href="structddc_1_1ConstantExtrapolationRule.html">deprecated</a>(<span class="stringliteral">&quot;Use the single parameter constructor instead, the boundaries are now retrieved from the BSplines boundaries&quot;</span>)]] <span class="keyword">explicit</span> ConstantExtrapolationRule(</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;DimI&gt; eval_pos,</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>            [[maybe_unused]] <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;DimNI...&gt; eval_pos_not_interest_min,</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>            [[maybe_unused]] <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;DimNI...&gt; eval_pos_not_interest_max)</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        <span class="keyword">requires</span>(<span class="keyword">sizeof</span>...(DimNI) == 1)</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        : m_eval_pos(eval_pos)</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    {</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    }</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="preprocessor">#</span><span class="preprocessor">endif</span></div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <span class="comment">/**</span></div>
-<div class="line"><span class="lineno">   61</span><span class="comment">     * @brief Instantiate a ConstantExtrapolationRule.</span></div>
-<div class="line"><span class="lineno">   62</span><span class="comment">     *</span></div>
-<div class="line"><span class="lineno">   63</span><span class="comment">     * The boundary value will be the same as at the coordinate given in a dimension given.</span></div>
-<div class="line"><span class="lineno">   64</span><span class="comment">     * The dimension of the input defines the dimension of the boundary condition.</span></div>
-<div class="line"><span class="lineno">   65</span><span class="comment">     * No second and third parameters are needed in case of periodic splines on the</span></div>
-<div class="line"><span class="lineno">   66</span><span class="comment">     * dimension off-interest (the complementary dimension of the boundary condition).</span></div>
-<div class="line"><span class="lineno">   67</span><span class="comment">     *</span></div>
-<div class="line"><span class="lineno">   68</span><span class="comment">     * @param[in] eval_pos Coordinate in the dimension given inside the domain where we will evaluate each points outside the domain.</span></div>
-<div class="line"><span class="lineno">   69</span><span class="comment">     */</span></div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    <span class="keyword">explicit</span> <a class="code hl_function" href="structddc_1_1ConstantExtrapolationRule.html#ac07df9edae807f3878c94a41d819d345">ConstantExtrapolationRule</a>(<a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;DimI&gt; eval_pos) : m_eval_pos(eval_pos) {}</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    <span class="comment">/**</span></div>
-<div class="line"><span class="lineno">   73</span><span class="comment">     * @brief Get the value of the function on B-splines at a coordinate outside the domain.</span></div>
-<div class="line"><span class="lineno">   74</span><span class="comment">     *</span></div>
-<div class="line"><span class="lineno">   75</span><span class="comment">     * In the dimension defined in the constructor Dim1 (or Dim2), it sets the coordinate pos_1 (or pos_2)</span></div>
-<div class="line"><span class="lineno">   76</span><span class="comment">     * given at the m_eval_pos coordinate if it is outside the domain.</span></div>
-<div class="line"><span class="lineno">   77</span><span class="comment">     * If the coordinate on the complementary dimension of the boundary condition dimension ddc::Coordinate&lt;DimNI&gt;(coord_extrap) is</span></div>
-<div class="line"><span class="lineno">   78</span><span class="comment">     * outside the domain, then it also sets the coordinate at eval_pos_not_interest_min</span></div>
-<div class="line"><span class="lineno">   79</span><span class="comment">     * (if ddc::Coordinate&lt;DimNI&gt;(coord_extrap) @f$ &lt; @f$ eval_pos_not_interest_min) or</span></div>
-<div class="line"><span class="lineno">   80</span><span class="comment">     * at eval_pos_not_interest_max (if ddc::Coordinate&lt;DimNI&gt;(coord_extrap) @f$ &gt; @f$ eval_pos_not_interest_max).</span></div>
-<div class="line"><span class="lineno">   81</span><span class="comment">     *</span></div>
-<div class="line"><span class="lineno">   82</span><span class="comment">     * @param[in] coord_extrap The coordinates where we want to evaluate the function on B-splines</span></div>
-<div class="line"><span class="lineno">   83</span><span class="comment">     * @param[in] spline_coef The coefficients of the function on B-splines.</span></div>
-<div class="line"><span class="lineno">   84</span><span class="comment">     *</span></div>
-<div class="line"><span class="lineno">   85</span><span class="comment">     *@return A Real with the value of the function on B-splines evaluated at the coordinate.</span></div>
-<div class="line"><span class="lineno">   86</span><span class="comment">     */</span></div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    <span class="keyword">template</span> &lt;<span class="keyword">class</span> CoordType, <span class="keyword">class</span>... BSplines, <span class="keyword">class</span> Layout, <span class="keyword">class</span> MemorySpace&gt;</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    KOKKOS_FUNCTION Real <a class="code hl_function" href="structddc_1_1ConstantExtrapolationRule.html#a175099d7993907dd10576ccd23d72691">operator</a>()(</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>            CoordType coord_extrap,</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1ChunkCommon.html#a0214c802aca8ce0770988bb2784f104a">ChunkSpan</a>&lt;Real <span class="keyword">const</span>, <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1DiscreteDomain.html#a5cdbd7cda4dd9c4369a8810c88cf3bed">DiscreteDomain</a>&lt;BSplines...&gt;, Layout, MemorySpace&gt; <span class="keyword">const</span></div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>                    spline_coef) <span class="keyword">const</span></div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    {</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>        <span class="keyword">static_assert</span>(in_tags_v&lt;DimI, to_type_seq_t&lt;CoordType&gt;&gt;);</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>        <span class="keyword">using</span> TypeSeqBSplines = <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_struct" href="namespaceddc.html#structddc_1_1TypeSeq">TypeSeq</a>&lt;BSplines...&gt;;</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span> </div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;DimI, <span class="keyword">typename</span> BSplines::continuous_dimension_type...&gt; <span class="keyword">const</span> coord_eval(</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>                get_eval_pos&lt;BSplines&gt;(<a class="code hl_namespace" href="namespaceddc.html">ddc</a>::select&lt;<span class="keyword">typename</span> BSplines::continuous_dimension_type&gt;(</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>                        coord_extrap))...);</div>
+<div class="line"><span class="lineno">   38</span><span class="comment">     * @param[in] eval_pos Coordinate in the dimension given inside the domain where we will evaluate each points outside the domain.</span></div>
+<div class="line"><span class="lineno">   39</span><span class="comment">     */</span></div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="keyword">explicit</span> <a class="code hl_function" href="structddc_1_1ConstantExtrapolationRule.html#ac07df9edae807f3878c94a41d819d345">ConstantExtrapolationRule</a>(<a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;DimI&gt; eval_pos) : m_eval_pos(eval_pos) {}</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <span class="comment">/**</span></div>
+<div class="line"><span class="lineno">   43</span><span class="comment">     * @brief Get the value of the function on B-splines at a coordinate outside the domain.</span></div>
+<div class="line"><span class="lineno">   44</span><span class="comment">     *</span></div>
+<div class="line"><span class="lineno">   45</span><span class="comment">     * In the dimension defined in the constructor Dim1 (or Dim2), it sets the coordinate pos_1 (or pos_2)</span></div>
+<div class="line"><span class="lineno">   46</span><span class="comment">     * given at the m_eval_pos coordinate if it is outside the domain.</span></div>
+<div class="line"><span class="lineno">   47</span><span class="comment">     * If the coordinate on the complementary dimension of the boundary condition dimension ddc::Coordinate&lt;DimNI&gt;(coord_extrap) is</span></div>
+<div class="line"><span class="lineno">   48</span><span class="comment">     * outside the domain, then it also sets the coordinate at eval_pos_not_interest_min</span></div>
+<div class="line"><span class="lineno">   49</span><span class="comment">     * (if ddc::Coordinate&lt;DimNI&gt;(coord_extrap) @f$ &lt; @f$ eval_pos_not_interest_min) or</span></div>
+<div class="line"><span class="lineno">   50</span><span class="comment">     * at eval_pos_not_interest_max (if ddc::Coordinate&lt;DimNI&gt;(coord_extrap) @f$ &gt; @f$ eval_pos_not_interest_max).</span></div>
+<div class="line"><span class="lineno">   51</span><span class="comment">     *</span></div>
+<div class="line"><span class="lineno">   52</span><span class="comment">     * @param[in] coord_extrap The coordinates where we want to evaluate the function on B-splines</span></div>
+<div class="line"><span class="lineno">   53</span><span class="comment">     * @param[in] spline_coef The coefficients of the function on B-splines.</span></div>
+<div class="line"><span class="lineno">   54</span><span class="comment">     *</span></div>
+<div class="line"><span class="lineno">   55</span><span class="comment">     *@return A Real with the value of the function on B-splines evaluated at the coordinate.</span></div>
+<div class="line"><span class="lineno">   56</span><span class="comment">     */</span></div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="keyword">template</span> &lt;<span class="keyword">class</span> CoordType, <span class="keyword">class</span>... BSplines, <span class="keyword">class</span> Layout, <span class="keyword">class</span> MemorySpace&gt;</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    KOKKOS_FUNCTION Real <a class="code hl_function" href="structddc_1_1ConstantExtrapolationRule.html#a175099d7993907dd10576ccd23d72691">operator</a>()(</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>            CoordType coord_extrap,</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1ChunkCommon.html#a0214c802aca8ce0770988bb2784f104a">ChunkSpan</a>&lt;Real <span class="keyword">const</span>, <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_friend" href="classddc_1_1DiscreteDomain.html#a5cdbd7cda4dd9c4369a8810c88cf3bed">DiscreteDomain</a>&lt;BSplines...&gt;, Layout, MemorySpace&gt; <span class="keyword">const</span></div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>                    spline_coef) <span class="keyword">const</span></div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    {</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>        <span class="keyword">static_assert</span>(in_tags_v&lt;DimI, to_type_seq_t&lt;CoordType&gt;&gt;);</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>        <span class="keyword">using</span> TypeSeqBSplines = <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::<a class="code hl_struct" href="namespaceddc.html#structddc_1_1TypeSeq">TypeSeq</a>&lt;BSplines...&gt;;</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;DimI, <span class="keyword">typename</span> BSplines::continuous_dimension_type...&gt; <span class="keyword">const</span> coord_eval(</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>                get_eval_pos&lt;BSplines&gt;(<a class="code hl_namespace" href="namespaceddc.html">ddc</a>::select&lt;<span class="keyword">typename</span> BSplines::continuous_dimension_type&gt;(</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>                        coord_extrap))...);</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>        <span class="keyword">auto</span> vals_ptr = cexa::make_tuple(std::array&lt;Real, BSplines::degree() + 1&gt; {}...);</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>        <span class="keyword">auto</span> <span class="keyword">const</span> vals = cexa::make_tuple(</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>                Kokkos::mdspan&lt;Real, Kokkos::extents&lt;std::size_t, BSplines::degree() + 1&gt;&gt;(</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>                        cexa::get&lt;<a class="code hl_namespace" href="namespaceddc.html">ddc</a>::type_seq_rank_v&lt;BSplines, TypeSeqBSplines&gt;&gt;(vals_ptr)</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>                                .data())...);</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span> </div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>        <span class="keyword">auto</span> <span class="keyword">const</span> jmin = cexa::make_tuple(</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>                <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;BSplines&gt;().eval_basis(</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>                        cexa::get&lt;<a class="code hl_namespace" href="namespaceddc.html">ddc</a>::type_seq_rank_v&lt;BSplines, TypeSeqBSplines&gt;&gt;(vals),</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>                        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;<span class="keyword">typename</span> BSplines::continuous_dimension_type&gt;(</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>                                coord_eval))...);</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span> </div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>        <span class="keyword">static</span> <span class="keyword">constexpr</span> std::size_t dimension = <span class="keyword">sizeof</span>...(BSplines);</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span> </div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>        Real y = 0.0;</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>        for_each(</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>                std::array&lt;std::size_t, dimension&gt; {(BSplines::degree() + 1)...},</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>                [&amp;](std::array&lt;std::size_t, dimension&gt; idx) {</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>                    y += spline_coef(</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>                                 <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::DiscreteElement&lt;BSplines...&gt;((</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>                                         cexa::get&lt;<a class="code hl_namespace" href="namespaceddc.html">ddc</a>::type_seq_rank_v&lt;BSplines, TypeSeqBSplines&gt;&gt;(</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>                                                 jmin)</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>                                         + idx[<a class="code hl_namespace" href="namespaceddc.html">ddc</a>::type_seq_rank_v&lt;</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>                                                 BSplines,</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>                                                 TypeSeqBSplines&gt;])...))</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>                         * (cexa::get&lt;ddc::type_seq_rank_v&lt;BSplines, TypeSeqBSplines&gt;&gt;(</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>                                    vals)[idx[ddc::type_seq_rank_v&lt;BSplines, TypeSeqBSplines&gt;]]</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>                            * ...);</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>                });</div>
 <div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span> </div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>        <span class="keyword">auto</span> vals_ptr = cexa::make_tuple(std::array&lt;Real, BSplines::degree() + 1&gt; {}...);</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>        <span class="keyword">auto</span> <span class="keyword">const</span> vals = cexa::make_tuple(</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>                Kokkos::mdspan&lt;Real, Kokkos::extents&lt;std::size_t, BSplines::degree() + 1&gt;&gt;(</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>                        cexa::get&lt;<a class="code hl_namespace" href="namespaceddc.html">ddc</a>::type_seq_rank_v&lt;BSplines, TypeSeqBSplines&gt;&gt;(vals_ptr)</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>                                .data())...);</div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span> </div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>        <span class="keyword">auto</span> <span class="keyword">const</span> jmin = cexa::make_tuple(</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>                <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;BSplines&gt;().eval_basis(</div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>                        cexa::get&lt;<a class="code hl_namespace" href="namespaceddc.html">ddc</a>::type_seq_rank_v&lt;BSplines, TypeSeqBSplines&gt;&gt;(vals),</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>                        <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;<span class="keyword">typename</span> BSplines::continuous_dimension_type&gt;(</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>                                coord_eval))...);</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span> </div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>        <span class="keyword">static</span> <span class="keyword">constexpr</span> std::size_t dimension = <span class="keyword">sizeof</span>...(BSplines);</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span> </div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>        Real y = 0.0;</div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>        for_each(</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>                std::array&lt;std::size_t, dimension&gt; {(BSplines::degree() + 1)...},</div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>                [&amp;](std::array&lt;std::size_t, dimension&gt; idx) {</div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>                    y += spline_coef(</div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>                                 <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::DiscreteElement&lt;BSplines...&gt;((</div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>                                         cexa::get&lt;<a class="code hl_namespace" href="namespaceddc.html">ddc</a>::type_seq_rank_v&lt;BSplines, TypeSeqBSplines&gt;&gt;(</div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>                                                 jmin)</div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>                                         + idx[<a class="code hl_namespace" href="namespaceddc.html">ddc</a>::type_seq_rank_v&lt;</div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>                                                 BSplines,</div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>                                                 TypeSeqBSplines&gt;])...))</div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>                         * (cexa::get&lt;ddc::type_seq_rank_v&lt;BSplines, TypeSeqBSplines&gt;&gt;(</div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>                                    vals)[idx[ddc::type_seq_rank_v&lt;BSplines, TypeSeqBSplines&gt;]]</div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>                            * ...);</div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>                });</div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span> </div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>        <span class="keywordflow">return</span> y;</div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>    }</div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span> </div>
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>    <span class="keyword">template</span> &lt;<span class="keyword">class</span> BSplinesNI&gt;</div>
-<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>    KOKKOS_FUNCTION <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;<span class="keyword">typename</span> BSplinesNI::continuous_dimension_type&gt; get_eval_pos(</div>
-<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;<span class="keyword">typename</span> BSplinesNI::continuous_dimension_type&gt; coord_extrap) <span class="keyword">const</span></div>
-<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>    {</div>
-<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (std::is_same_v&lt;<span class="keyword">typename</span> BSplinesNI::continuous_dimension_type, DimI&gt;) {</div>
-<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>            <span class="keywordflow">return</span> m_eval_pos;</div>
-<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>            <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (BSplinesNI::is_periodic()) {</div>
-<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>                <span class="keywordflow">return</span> <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;<span class="keyword">typename</span> BSplinesNI::continuous_dimension_type&gt;(</div>
-<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>                        coord_extrap);</div>
-<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>            } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>                <span class="keywordflow">return</span> Kokkos::</div>
-<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>                        clamp(<a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;<span class="keyword">typename</span> BSplinesNI::continuous_dimension_type&gt;(</div>
-<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>                                      coord_extrap),</div>
-<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>                              <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;BSplinesNI&gt;().rmin(),</div>
-<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>                              <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;BSplinesNI&gt;().rmax());</div>
-<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>            }</div>
-<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>        }</div>
-<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>    }</div>
-<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span> </div>
-<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>    <span class="keyword">template</span> &lt;std::size_t N, <span class="keyword">class</span> Functor, <span class="keyword">class</span>... Is&gt;</div>
-<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>    KOKKOS_FUNCTION <span class="keyword">static</span> <span class="keywordtype">void</span> for_each(</div>
-<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>            std::array&lt;std::size_t, N&gt; <span class="keyword">const</span>&amp; bounds,</div>
-<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>            Functor <span class="keyword">const</span>&amp; f,</div>
-<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>            Is... is)</div>
-<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>    {</div>
-<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>        <span class="keyword">static</span> <span class="keyword">constexpr</span> std::size_t I = <span class="keyword">sizeof</span>...(Is);</div>
-<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (I == N) {</div>
-<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>            f(std::array&lt;std::size_t, N&gt; {is...});</div>
-<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>            <span class="keywordflow">for</span> (std::size_t i = 0; i &lt; bounds[I]; ++i) {</div>
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>                for_each(bounds, f, is..., i);</div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>            }</div>
-<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>        }</div>
-<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>    }</div>
-<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>};</div>
-<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span> </div>
-<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>} <span class="comment">// namespace ddc</span></div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>        <span class="keywordflow">return</span> y;</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    }</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span> </div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    <span class="keyword">template</span> &lt;<span class="keyword">class</span> BSplinesNI&gt;</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    KOKKOS_FUNCTION <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;<span class="keyword">typename</span> BSplinesNI::continuous_dimension_type&gt; get_eval_pos(</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>            <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;<span class="keyword">typename</span> BSplinesNI::continuous_dimension_type&gt; coord_extrap) <span class="keyword">const</span></div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    {</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (std::is_same_v&lt;<span class="keyword">typename</span> BSplinesNI::continuous_dimension_type, DimI&gt;) {</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>            <span class="keywordflow">return</span> m_eval_pos;</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>            <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (BSplinesNI::is_periodic()) {</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>                <span class="keywordflow">return</span> <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;<span class="keyword">typename</span> BSplinesNI::continuous_dimension_type&gt;(</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>                        coord_extrap);</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>            } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>                <span class="keywordflow">return</span> Kokkos::</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>                        clamp(<a class="code hl_namespace" href="namespaceddc.html">ddc</a>::Coordinate&lt;<span class="keyword">typename</span> BSplinesNI::continuous_dimension_type&gt;(</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>                                      coord_extrap),</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>                              <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;BSplinesNI&gt;().rmin(),</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>                              <a class="code hl_namespace" href="namespaceddc.html">ddc</a>::discrete_space&lt;BSplinesNI&gt;().rmax());</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>            }</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>        }</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>    }</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span> </div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>    <span class="keyword">template</span> &lt;std::size_t N, <span class="keyword">class</span> Functor, <span class="keyword">class</span>... Is&gt;</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>    KOKKOS_FUNCTION <span class="keyword">static</span> <span class="keywordtype">void</span> for_each(</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>            std::array&lt;std::size_t, N&gt; <span class="keyword">const</span>&amp; bounds,</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>            Functor <span class="keyword">const</span>&amp; f,</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>            Is... is)</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>    {</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>        <span class="keyword">static</span> <span class="keyword">constexpr</span> std::size_t I = <span class="keyword">sizeof</span>...(Is);</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (I == N) {</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>            f(std::array&lt;std::size_t, N&gt; {is...});</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>            <span class="keywordflow">for</span> (std::size_t i = 0; i &lt; bounds[I]; ++i) {</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>                for_each(bounds, f, is..., i);</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>            }</div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>        }</div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>    }</div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>};</div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span> </div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>} <span class="comment">// namespace ddc</span></div>
 <div class="ttc" id="aclassddc_1_1ChunkCommon_html_a0214c802aca8ce0770988bb2784f104a"><div class="ttname"><a href="classddc_1_1ChunkCommon.html#a0214c802aca8ce0770988bb2784f104a">ddc::ChunkCommon::ChunkSpan</a></div><div class="ttdeci">friend class ChunkSpan</div><div class="ttdef"><b>Definition</b> <a href="chunk__common_8hpp_source.html#l00075">chunk_common.hpp:75</a></div></div>
 <div class="ttc" id="aclassddc_1_1DiscreteDomain_html_a5cdbd7cda4dd9c4369a8810c88cf3bed"><div class="ttname"><a href="classddc_1_1DiscreteDomain.html#a5cdbd7cda4dd9c4369a8810c88cf3bed">ddc::DiscreteDomain::DiscreteDomain</a></div><div class="ttdeci">friend class DiscreteDomain</div><div class="ttdef"><b>Definition</b> <a href="discrete__domain_8hpp_source.html#l00068">discrete_domain.hpp:68</a></div></div>
 <div class="ttc" id="aclassddc_1_1DiscreteVector_html_a62e896bfa78045521042a0eab87c0acb"><div class="ttname"><a href="classddc_1_1DiscreteVector.html#a62e896bfa78045521042a0eab87c0acb">ddc::DiscreteVector::operator!=</a></div><div class="ttdeci">KOKKOS_FUNCTION constexpr bool operator!=(DiscreteVector&lt; OTags... &gt; const &amp;rhs) const noexcept</div><div class="ttdef"><b>Definition</b> <a href="discrete__vector_8hpp_source.html#l00341">discrete_vector.hpp:341</a></div></div>
@@ -358,15 +328,14 @@ $(document).ready(function(){initNavTree('constant__extrapolation__rule_8hpp_sou
 <div class="ttc" id="aclassddc_1_1UniformBSplines_html_ac7c69da1e13f6ce82c7cdb2d915a84ca"><div class="ttname"><a href="classddc_1_1UniformBSplines.html#ac7c69da1e13f6ce82c7cdb2d915a84ca">ddc::UniformBSplines::degree</a></div><div class="ttdeci">static constexpr std::size_t degree() noexcept</div><div class="ttdoc">The degree of B-splines.</div><div class="ttdef"><b>Definition</b> <a href="bsplines__uniform_8hpp_source.html#l00065">bsplines_uniform.hpp:65</a></div></div>
 <div class="ttc" id="aclassddc_1_1UniformBSplines_html_ac8f3f57ec4f7cfaa3b457155a5baf1b9"><div class="ttname"><a href="classddc_1_1UniformBSplines.html#ac8f3f57ec4f7cfaa3b457155a5baf1b9">ddc::UniformBSplines::is_periodic</a></div><div class="ttdeci">static constexpr bool is_periodic() noexcept</div><div class="ttdoc">Indicates if the B-splines are periodic or not.</div><div class="ttdef"><b>Definition</b> <a href="bsplines__uniform_8hpp_source.html#l00074">bsplines_uniform.hpp:74</a></div></div>
 <div class="ttc" id="aclassddc_1_1UniformPointSampling_html"><div class="ttname"><a href="classddc_1_1UniformPointSampling.html">ddc::UniformPointSampling</a></div><div class="ttdoc">UniformPointSampling models a uniform discretization of the provided continuous dimension.</div><div class="ttdef"><b>Definition</b> <a href="uniform__point__sampling_8hpp_source.html#l00037">uniform_point_sampling.hpp:38</a></div></div>
-<div class="ttc" id="aconfig_8hpp_html_a2879eaed7b59bd160ab99a0a26d4bf71"><div class="ttname"><a href="config_8hpp.html#a2879eaed7b59bd160ab99a0a26d4bf71">DDC_BUILD_DEPRECATED_CODE</a></div><div class="ttdeci">#define DDC_BUILD_DEPRECATED_CODE</div><div class="ttdef"><b>Definition</b> <a href="config_8hpp_source.html#l00007">config.hpp:7</a></div></div>
 <div class="ttc" id="anamespaceddc_1_1concepts_html"><div class="ttname"><a href="namespaceddc_1_1concepts.html">ddc::concepts</a></div><div class="ttdef"><b>Definition</b> <a href="chunk__traits_8hpp_source.html#l00027">chunk_traits.hpp:27</a></div></div>
 <div class="ttc" id="anamespaceddc_html"><div class="ttname"><a href="namespaceddc.html">ddc</a></div><div class="ttdoc">The top-level namespace of DDC.</div><div class="ttdef"><b>Definition</b> <a href="aligned__allocator_8hpp_source.html#l00011">aligned_allocator.hpp:11</a></div></div>
 <div class="ttc" id="anamespaceddc_html_a20d13e258d90b019d44b38be91885f35"><div class="ttname"><a href="namespaceddc.html#a20d13e258d90b019d44b38be91885f35">ddc::is_uniform_bsplines_v</a></div><div class="ttdeci">constexpr bool is_uniform_bsplines_v</div><div class="ttdoc">Indicates if a tag corresponds to uniform B-splines or not.</div><div class="ttdef"><b>Definition</b> <a href="bsplines__uniform_8hpp_source.html#l00388">bsplines_uniform.hpp:388</a></div></div>
 <div class="ttc" id="anamespaceddc_html_ada3d7043e906da448cc6a8ae965014b3"><div class="ttname"><a href="namespaceddc.html#ada3d7043e906da448cc6a8ae965014b3">ddc::is_non_uniform_bsplines_v</a></div><div class="ttdeci">constexpr bool is_non_uniform_bsplines_v</div><div class="ttdoc">Indicates if a tag corresponds to non-uniform B-splines or not.</div><div class="ttdef"><b>Definition</b> <a href="bsplines__non__uniform_8hpp_source.html#l00408">bsplines_non_uniform.hpp:408</a></div></div>
 <div class="ttc" id="anamespaceddc_html_structddc_1_1TypeSeq"><div class="ttname"><a href="namespaceddc.html#structddc_1_1TypeSeq">ddc::TypeSeq</a></div><div class="ttdoc">A compile-time sequence of types.</div><div class="ttdef"><b>Definition</b> <a href="type__seq_8hpp_source.html#l00029">type_seq.hpp:30</a></div></div>
-<div class="ttc" id="astructddc_1_1ConstantExtrapolationRule_html"><div class="ttname"><a href="structddc_1_1ConstantExtrapolationRule.html">ddc::ConstantExtrapolationRule</a></div><div class="ttdoc">A functor for describing a spline boundary value by a constant extrapolation for 2D evaluator.</div><div class="ttdef"><b>Definition</b> <a href="constant__extrapolation__rule_8hpp_source.html#l00028">constant_extrapolation_rule.hpp:29</a></div></div>
-<div class="ttc" id="astructddc_1_1ConstantExtrapolationRule_html_a175099d7993907dd10576ccd23d72691"><div class="ttname"><a href="structddc_1_1ConstantExtrapolationRule.html#a175099d7993907dd10576ccd23d72691">ddc::ConstantExtrapolationRule::operator()</a></div><div class="ttdeci">KOKKOS_FUNCTION Real operator()(CoordType coord_extrap, ddc::ChunkSpan&lt; Real const, ddc::DiscreteDomain&lt; BSplines... &gt;, Layout, MemorySpace &gt; const spline_coef) const</div><div class="ttdoc">Get the value of the function on B-splines at a coordinate outside the domain.</div><div class="ttdef"><b>Definition</b> <a href="constant__extrapolation__rule_8hpp_source.html#l00088">constant_extrapolation_rule.hpp:88</a></div></div>
-<div class="ttc" id="astructddc_1_1ConstantExtrapolationRule_html_ac07df9edae807f3878c94a41d819d345"><div class="ttname"><a href="structddc_1_1ConstantExtrapolationRule.html#ac07df9edae807f3878c94a41d819d345">ddc::ConstantExtrapolationRule::ConstantExtrapolationRule</a></div><div class="ttdeci">ConstantExtrapolationRule(ddc::Coordinate&lt; DimI &gt; eval_pos)</div><div class="ttdoc">Instantiate a ConstantExtrapolationRule.</div><div class="ttdef"><b>Definition</b> <a href="constant__extrapolation__rule_8hpp_source.html#l00070">constant_extrapolation_rule.hpp:70</a></div></div>
+<div class="ttc" id="astructddc_1_1ConstantExtrapolationRule_html"><div class="ttname"><a href="structddc_1_1ConstantExtrapolationRule.html">ddc::ConstantExtrapolationRule</a></div><div class="ttdoc">A functor for describing a spline boundary value by a constant extrapolation for 2D evaluator.</div><div class="ttdef"><b>Definition</b> <a href="constant__extrapolation__rule_8hpp_source.html#l00024">constant_extrapolation_rule.hpp:25</a></div></div>
+<div class="ttc" id="astructddc_1_1ConstantExtrapolationRule_html_a175099d7993907dd10576ccd23d72691"><div class="ttname"><a href="structddc_1_1ConstantExtrapolationRule.html#a175099d7993907dd10576ccd23d72691">ddc::ConstantExtrapolationRule::operator()</a></div><div class="ttdeci">KOKKOS_FUNCTION Real operator()(CoordType coord_extrap, ddc::ChunkSpan&lt; Real const, ddc::DiscreteDomain&lt; BSplines... &gt;, Layout, MemorySpace &gt; const spline_coef) const</div><div class="ttdoc">Get the value of the function on B-splines at a coordinate outside the domain.</div><div class="ttdef"><b>Definition</b> <a href="constant__extrapolation__rule_8hpp_source.html#l00058">constant_extrapolation_rule.hpp:58</a></div></div>
+<div class="ttc" id="astructddc_1_1ConstantExtrapolationRule_html_ac07df9edae807f3878c94a41d819d345"><div class="ttname"><a href="structddc_1_1ConstantExtrapolationRule.html#ac07df9edae807f3878c94a41d819d345">ddc::ConstantExtrapolationRule::ConstantExtrapolationRule</a></div><div class="ttdeci">ConstantExtrapolationRule(ddc::Coordinate&lt; DimI &gt; eval_pos)</div><div class="ttdoc">Instantiate a ConstantExtrapolationRule.</div><div class="ttdef"><b>Definition</b> <a href="constant__extrapolation__rule_8hpp_source.html#l00040">constant_extrapolation_rule.hpp:40</a></div></div>
 <div class="ttc" id="astructddc_1_1NonUniformBsplinesKnots_html"><div class="ttname"><a href="structddc_1_1NonUniformBsplinesKnots.html">ddc::NonUniformBsplinesKnots</a></div><div class="ttdef"><b>Definition</b> <a href="bsplines__non__uniform_8hpp_source.html#l00032">bsplines_non_uniform.hpp:33</a></div></div>
 <div class="ttc" id="astructddc_1_1UniformBsplinesKnots_html"><div class="ttname"><a href="structddc_1_1UniformBsplinesKnots.html">ddc::UniformBsplinesKnots</a></div><div class="ttdef"><b>Definition</b> <a href="bsplines__uniform_8hpp_source.html#l00036">bsplines_uniform.hpp:37</a></div></div>
 <div class="ttc" id="astructddc_1_1is__non__uniform__bsplines_html"><div class="ttname"><a href="structddc_1_1is__non__uniform__bsplines.html">ddc::is_non_uniform_bsplines</a></div><div class="ttdef"><b>Definition</b> <a href="bsplines__non__uniform_8hpp_source.html#l00398">bsplines_non_uniform.hpp:399</a></div></div>

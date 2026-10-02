@@ -13,11 +13,14 @@ var searchData=
   ['is_5fperiodic_5fsampling_5fv_10',['is_periodic_sampling_v',['../namespaceddc.html#ab228bb1534b98a4a4faceff92b4f16d0',1,'ddc']]],
   ['is_5fsparse_5fdiscrete_5fdomain_5fv_11',['is_sparse_discrete_domain_v',['../namespaceddc.html#accc36ee54aaab4f4aa937e9c73b8ad4d',1,'ddc']]],
   ['is_5fspline_5fbuilder2d_5fv_12',['is_spline_builder2d_v',['../namespaceddc.html#a86a703820d7b47b0e532916ecfc279aa',1,'ddc']]],
-  ['is_5fspline_5fbuilder_5fv_13',['is_spline_builder_v',['../namespaceddc.html#a193866fcdafea30559a1e2513d6817f4',1,'ddc']]],
-  ['is_5fspline_5fevaluator2d_5fv_14',['is_spline_evaluator2d_v',['../namespaceddc.html#a2db59311963fb6f45c8bf2547ddb9f08',1,'ddc']]],
-  ['is_5fspline_5fevaluator_5fv_15',['is_spline_evaluator_v',['../namespaceddc.html#aa0d63e8c9074f856664e3bfd10640859',1,'ddc']]],
-  ['is_5fstrided_5fdiscrete_5fdomain_5fv_16',['is_strided_discrete_domain_v',['../namespaceddc.html#a9e7351728b259a0f934c1309d571185c',1,'ddc']]],
-  ['is_5funiform_5fbsplines_5fv_17',['is_uniform_bsplines_v',['../namespaceddc.html#a20d13e258d90b019d44b38be91885f35',1,'ddc']]],
-  ['is_5funiform_5fpoint_5fsampling_5fv_18',['is_uniform_point_sampling_v',['../namespaceddc.html#a5d92fe6350fd1f8ecc31403595d976a8',1,'ddc']]],
-  ['is_5fwritable_5fchunk_5fv_19',['is_writable_chunk_v',['../namespaceddc.html#a6b0404afeb25a439cafc10e9bd7cbec6',1,'ddc']]]
+  ['is_5fspline_5fbuilder3d_5fv_13',['is_spline_builder3d_v',['../namespaceddc.html#a1cbbf8196f736d184bc6854d9cfdf4d5',1,'ddc']]],
+  ['is_5fspline_5fbuilder_5fv_14',['is_spline_builder_v',['../namespaceddc.html#a193866fcdafea30559a1e2513d6817f4',1,'ddc']]],
+  ['is_5fspline_5fevaluator2d_5fv_15',['is_spline_evaluator2d_v',['../namespaceddc.html#a2db59311963fb6f45c8bf2547ddb9f08',1,'ddc']]],
+  ['is_5fspline_5fevaluator3d_5fv_16',['is_spline_evaluator3d_v',['../namespaceddc.html#af62f00b38ac68946eb82f380ea2e3e8c',1,'ddc']]],
+  ['is_5fspline_5fevaluator_5fv_17',['is_spline_evaluator_v',['../namespaceddc.html#aa0d63e8c9074f856664e3bfd10640859',1,'ddc']]],
+  ['is_5fspline_5fevaluatornd_5fv_18',['is_spline_evaluatornd_v',['../namespaceddc.html#adaef4c5180bf24d33d48e903dcf98e78',1,'ddc']]],
+  ['is_5fstrided_5fdiscrete_5fdomain_5fv_19',['is_strided_discrete_domain_v',['../namespaceddc.html#a9e7351728b259a0f934c1309d571185c',1,'ddc']]],
+  ['is_5funiform_5fbsplines_5fv_20',['is_uniform_bsplines_v',['../namespaceddc.html#a20d13e258d90b019d44b38be91885f35',1,'ddc']]],
+  ['is_5funiform_5fpoint_5fsampling_5fv_21',['is_uniform_point_sampling_v',['../namespaceddc.html#a5d92fe6350fd1f8ecc31403595d976a8',1,'ddc']]],
+  ['is_5fwritable_5fchunk_5fv_22',['is_writable_chunk_v',['../namespaceddc.html#a6b0404afeb25a439cafc10e9bd7cbec6',1,'ddc']]]
 ];

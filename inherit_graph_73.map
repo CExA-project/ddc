@@ -1,23 +1,29 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" title=" " alt="" coords="5,255,124,280"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,332,124,357"/>
 <area shape="rect" id="Node000001" href="$structddc_1_1is__discrete__domain.html" title=" " alt="" coords="180,5,397,31"/>
-<area shape="poly" id="edge17_Node000000_Node000001" title=" " alt="" coords="68,240,79,196,98,141,128,86,148,61,170,40,189,29,192,33,174,44,151,65,132,89,103,144,84,197,73,241"/>
+<area shape="poly" id="edge17_Node000000_Node000001" title=" " alt="" coords="64,318,70,260,87,185,100,145,118,107,141,71,170,40,187,29,190,33,174,44,146,74,123,109,105,147,92,186,76,261,70,319"/>
 <area shape="rect" id="Node000002" href="$structddc_1_1is__discrete__element.html" title=" " alt="" coords="177,55,400,80"/>
-<area shape="poly" id="edge18_Node000000_Node000002" title=" " alt="" coords="72,241,85,206,106,165,134,123,170,89,191,78,194,82,174,93,138,127,110,167,90,208,77,242"/>
+<area shape="poly" id="edge18_Node000000_Node000002" title=" " alt="" coords="66,318,76,269,94,206,124,143,145,114,170,89,188,78,191,82,174,93,149,118,129,146,99,208,81,270,72,319"/>
 <area shape="rect" id="Node000003" href="$structddc_1_1is__discrete__vector.html" title=" " alt="" coords="184,104,393,129"/>
-<area shape="poly" id="edge19_Node000000_Node000003" title=" " alt="" coords="78,241,115,189,141,162,171,140,199,127,201,132,173,144,144,166,119,193,82,244"/>
+<area shape="poly" id="edge19_Node000000_Node000003" title=" " alt="" coords="69,318,82,278,102,230,131,181,149,159,170,140,193,127,195,132,174,144,153,163,135,184,106,232,87,280,75,320"/>
 <area shape="rect" id="Node000004" href="$structddc_1_1is__evaluator__admissible.html" title=" " alt="" coords="183,154,394,194"/>
-<area shape="poly" id="edge20_Node000000_Node000004" title=" " alt="" coords="95,245,130,224,171,204,204,192,206,197,173,208,133,228,97,250"/>
+<area shape="poly" id="edge20_Node000000_Node000004" title=" " alt="" coords="76,318,113,261,140,230,170,204,192,192,195,197,174,208,143,234,117,264,81,321"/>
 <area shape="rect" id="Node000005" href="$structddc_1_1is__sparse__discrete__domain.html" title=" " alt="" coords="202,218,375,258"/>
-<area shape="poly" id="edge21_Node000000_Node000005" title=" " alt="" coords="138,255,201,247,202,252,138,260"/>
+<area shape="poly" id="edge21_Node000000_Node000005" title=" " alt="" coords="90,321,127,293,171,268,201,256,203,261,173,272,130,298,93,325"/>
 <area shape="rect" id="Node000006" href="$structddc_1_1is__spline__builder.html" title=" " alt="" coords="189,283,389,308"/>
-<area shape="poly" id="edge22_Node000000_Node000006" title=" " alt="" coords="138,274,189,280,188,285,137,279"/>
+<area shape="poly" id="edge22_Node000000_Node000006" title=" " alt="" coords="130,326,171,317,224,305,225,311,173,322,132,331"/>
 <area shape="rect" id="Node000007" href="$structddc_1_1is__spline__builder2d.html" title=" " alt="" coords="181,332,397,357"/>
-<area shape="poly" id="edge23_Node000000_Node000007" title=" " alt="" coords="101,284,173,317,217,329,216,334,171,322,99,289"/>
-<area shape="rect" id="Node000008" href="$structddc_1_1is__spline__evaluator.html" title=" " alt="" coords="180,381,397,407"/>
-<area shape="poly" id="edge24_Node000000_Node000008" title=" " alt="" coords="86,289,124,330,147,350,173,366,204,379,202,384,171,371,144,354,120,333,82,293"/>
-<area shape="rect" id="Node000009" href="$structddc_1_1is__spline__evaluator2d.html" title=" " alt="" coords="172,431,405,456"/>
-<area shape="poly" id="edge25_Node000000_Node000009" title=" " alt="" coords="79,291,115,355,141,388,173,416,198,428,196,433,171,420,138,392,110,358,74,294"/>
-<area shape="rect" id="Node000010" href="$structddc_1_1is__strided__discrete__domain.html" title=" " alt="" coords="201,481,376,521"/>
-<area shape="poly" id="edge26_Node000000_Node000010" title=" " alt="" coords="75,293,88,331,108,378,136,425,174,465,202,482,200,486,170,469,132,428,103,380,83,333,70,294"/>
+<area shape="poly" id="edge23_Node000000_Node000007" title=" " alt="" coords="138,342,180,342,180,347,138,347"/>
+<area shape="rect" id="Node000008" href="$structddc_1_1is__spline__builder3d.html" title=" " alt="" coords="181,381,397,407"/>
+<area shape="poly" id="edge24_Node000000_Node000008" title=" " alt="" coords="136,358,173,366,230,379,229,384,171,371,135,363"/>
+<area shape="rect" id="Node000009" href="$structddc_1_1is__spline__evaluator.html" title=" " alt="" coords="180,431,397,456"/>
+<area shape="poly" id="edge25_Node000000_Node000009" title=" " alt="" coords="92,364,129,391,173,416,211,428,209,433,171,420,126,395,89,368"/>
+<area shape="rect" id="Node000010" href="$structddc_1_1is__spline__evaluator2d.html" title=" " alt="" coords="172,480,405,505"/>
+<area shape="poly" id="edge26_Node000000_Node000010" title=" " alt="" coords="82,367,119,418,145,444,173,465,201,477,199,482,171,470,141,448,115,421,78,371"/>
+<area shape="rect" id="Node000011" href="$structddc_1_1is__spline__evaluator3d.html" title=" " alt="" coords="172,529,405,555"/>
+<area shape="poly" id="edge27_Node000000_Node000011" title=" " alt="" coords="77,369,91,403,111,443,139,482,174,514,197,527,194,532,170,519,135,485,107,445,86,405,72,371"/>
+<area shape="rect" id="Node000012" href="$structddc_1_1is__spline__evaluatornd.html" title=" " alt="" coords="172,579,405,604"/>
+<area shape="poly" id="edge28_Node000000_Node000012" title=" " alt="" coords="73,370,84,413,104,466,133,519,152,543,174,564,195,576,192,581,170,568,148,547,129,522,99,468,79,415,68,372"/>
+<area shape="rect" id="Node000013" href="$structddc_1_1is__strided__discrete__domain.html" title=" " alt="" coords="201,629,376,669"/>
+<area shape="poly" id="edge29_Node000000_Node000013" title=" " alt="" coords="71,371,80,422,98,488,128,555,149,586,174,613,202,631,199,636,170,617,145,590,124,558,93,489,75,423,66,372"/>
 </map>

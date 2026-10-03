@@ -22,6 +22,9 @@
 
 namespace ddc {
 
+template <class CDim>
+class UniformPointSampling;
+
 namespace detail {
 
 struct UniformPointSamplingBase
@@ -29,6 +32,93 @@ struct UniformPointSamplingBase
 };
 
 void print_uniform_point_sampling(std::ostream& os, CoordinateElement origin, Real step);
+
+template <ddc::concepts::discrete_dimension DDim, class MemorySpace>
+class UniformPointSamplingData
+{
+    template <ddc::concepts::discrete_dimension ODDim, class OMemorySpace>
+    friend class UniformPointSamplingData;
+
+    using CDim = DDim::continuous_dimension_type;
+
+private:
+    Coordinate<CDim> m_origin;
+
+    Real m_step;
+
+    DiscreteElement<DDim> m_reference;
+
+public:
+    using discrete_dimension_type = DDim::discrete_dimension_type;
+
+    using discrete_domain_type = DiscreteDomain<DDim>;
+
+    using discrete_element_type = DiscreteElement<DDim>;
+
+    using discrete_vector_type = DiscreteVector<DDim>;
+
+    UniformPointSamplingData() noexcept
+        : m_origin(0)
+        , m_step(1)
+        , m_reference(create_reference_discrete_element<DDim>())
+    {
+    }
+
+    UniformPointSamplingData(UniformPointSamplingData const&) = delete;
+
+    template <class OriginMemorySpace>
+    explicit UniformPointSamplingData(UniformPointSamplingData<DDim, OriginMemorySpace> const& impl)
+        : m_origin(impl.m_origin)
+        , m_step(impl.m_step)
+        , m_reference(impl.m_reference)
+    {
+    }
+
+    UniformPointSamplingData(UniformPointSamplingData&&) = default;
+
+    /** @brief Construct a `Impl` from a point and a spacing step.
+     *
+     * @param origin the real coordinate of mesh coordinate 0
+     * @param step   the real distance between two points of mesh distance 1
+     */
+    UniformPointSamplingData(Coordinate<CDim> origin, Real step)
+        : m_origin(origin)
+        , m_step(step)
+        , m_reference(create_reference_discrete_element<DDim>())
+    {
+        assert(step > 0);
+    }
+
+    ~UniformPointSamplingData() = default;
+
+    UniformPointSamplingData& operator=(UniformPointSamplingData const& x) = delete;
+
+    UniformPointSamplingData& operator=(UniformPointSamplingData&& x) = default;
+
+    /// @brief Lower bound index of the mesh
+    KOKKOS_FUNCTION Coordinate<CDim> origin() const noexcept
+    {
+        return m_origin;
+    }
+
+    /// @brief Lower bound index of the mesh
+    KOKKOS_FUNCTION discrete_element_type front() const noexcept
+    {
+        return m_reference;
+    }
+
+    /// @brief Spacing step of the mesh
+    KOKKOS_FUNCTION Real step() const
+    {
+        return m_step;
+    }
+
+    /// @brief Convert a mesh index into a position in `CDim`
+    KOKKOS_FUNCTION Coordinate<CDim> coordinate(discrete_element_type const& icoord) const noexcept
+    {
+        return m_origin + Coordinate<CDim>((icoord - front()) * m_step);
+    }
+};
 
 } // namespace detail
 
@@ -46,90 +136,7 @@ public:
 
 public:
     template <class DDim, class MemorySpace>
-    class Impl
-    {
-        template <class ODDim, class OMemorySpace>
-        friend class Impl;
-
-    private:
-        Coordinate<CDim> m_origin;
-
-        Real m_step;
-
-        DiscreteElement<DDim> m_reference;
-
-    public:
-        using discrete_dimension_type = UniformPointSampling;
-
-        using discrete_domain_type = DiscreteDomain<DDim>;
-
-        using discrete_element_type = DiscreteElement<DDim>;
-
-        using discrete_vector_type = DiscreteVector<DDim>;
-
-        Impl() noexcept
-            : m_origin(0)
-            , m_step(1)
-            , m_reference(create_reference_discrete_element<DDim>())
-        {
-        }
-
-        Impl(Impl const&) = delete;
-
-        template <class OriginMemorySpace>
-        explicit Impl(Impl<DDim, OriginMemorySpace> const& impl)
-            : m_origin(impl.m_origin)
-            , m_step(impl.m_step)
-            , m_reference(impl.m_reference)
-        {
-        }
-
-        Impl(Impl&&) = default;
-
-        /** @brief Construct a `Impl` from a point and a spacing step.
-         *
-         * @param origin the real coordinate of mesh coordinate 0
-         * @param step   the real distance between two points of mesh distance 1
-         */
-        Impl(Coordinate<CDim> origin, Real step)
-            : m_origin(origin)
-            , m_step(step)
-            , m_reference(create_reference_discrete_element<DDim>())
-        {
-            assert(step > 0);
-        }
-
-        ~Impl() = default;
-
-        Impl& operator=(Impl const& x) = delete;
-
-        Impl& operator=(Impl&& x) = default;
-
-        /// @brief Lower bound index of the mesh
-        KOKKOS_FUNCTION Coordinate<CDim> origin() const noexcept
-        {
-            return m_origin;
-        }
-
-        /// @brief Lower bound index of the mesh
-        KOKKOS_FUNCTION discrete_element_type front() const noexcept
-        {
-            return m_reference;
-        }
-
-        /// @brief Spacing step of the mesh
-        KOKKOS_FUNCTION Real step() const
-        {
-            return m_step;
-        }
-
-        /// @brief Convert a mesh index into a position in `CDim`
-        KOKKOS_FUNCTION Coordinate<CDim> coordinate(
-                discrete_element_type const& icoord) const noexcept
-        {
-            return m_origin + Coordinate<CDim>((icoord - front()) * m_step);
-        }
-    };
+    using Impl = detail::UniformPointSamplingData<DDim, MemorySpace>;
 
     /** Construct a Impl<Kokkos::HostSpace> and associated discrete_domain_type from a segment
      *  \f$[a, b] \subset [a, +\infty[\f$ and a number of points `n`.
@@ -141,12 +148,13 @@ public:
      * @param n number of points to map on the segment \f$[a, b]\f$ including a & b
      */
     template <concepts::discrete_dimension DDim>
-    static std::tuple<typename DDim::template Impl<DDim, Kokkos::HostSpace>, DiscreteDomain<DDim>>
-    init(Coordinate<CDim> a, Coordinate<CDim> b, DiscreteVector<DDim> n)
+    static std::
+            tuple<detail::UniformPointSamplingData<DDim, Kokkos::HostSpace>, DiscreteDomain<DDim>>
+            init(Coordinate<CDim> a, Coordinate<CDim> b, DiscreteVector<DDim> n)
     {
         assert(a < b);
         assert(n > 1);
-        typename DDim::template Impl<DDim, Kokkos::HostSpace>
+        detail::UniformPointSamplingData<DDim, Kokkos::HostSpace>
                 disc(a, Coordinate<CDim>((b - a) / (n - 1)));
         DiscreteDomain<DDim> domain(disc.front(), n);
         return std::make_tuple(std::move(disc), std::move(domain));
@@ -165,7 +173,7 @@ public:
      */
     template <concepts::discrete_dimension DDim>
     static std::tuple<
-            typename DDim::template Impl<DDim, Kokkos::HostSpace>,
+            detail::UniformPointSamplingData<DDim, Kokkos::HostSpace>,
             DiscreteDomain<DDim>,
             DiscreteDomain<DDim>,
             DiscreteDomain<DDim>,
@@ -180,7 +188,7 @@ public:
         assert(a < b);
         assert(n > 1);
         Real const discretization_step = (b - a) / (n - 1);
-        typename DDim::template Impl<DDim, Kokkos::HostSpace>
+        detail::UniformPointSamplingData<DDim, Kokkos::HostSpace>
                 disc(a - n_ghosts_before.value() * discretization_step, discretization_step);
         DiscreteDomain<DDim> ghosted_domain(disc.front(), n + n_ghosts_before + n_ghosts_after);
         DiscreteDomain<DDim> pre_ghost = ghosted_domain.take_first(n_ghosts_before);
@@ -206,7 +214,7 @@ public:
      */
     template <concepts::discrete_dimension DDim>
     static std::tuple<
-            typename DDim::template Impl<DDim, Kokkos::HostSpace>,
+            detail::UniformPointSamplingData<DDim, Kokkos::HostSpace>,
             DiscreteDomain<DDim>,
             DiscreteDomain<DDim>,
             DiscreteDomain<DDim>,
@@ -236,9 +244,10 @@ concept uniform_point_sampling = discrete_dimension<T> && is_uniform_point_sampl
 
 }
 
-template <class DDimImpl>
-std::ostream& operator<<(std::ostream& os, DDimImpl const& mesh)
-    requires(concepts::uniform_point_sampling<typename DDimImpl::discrete_dimension_type>)
+template <concepts::uniform_point_sampling DDim, class MemorySpace>
+std::ostream& operator<<(
+        std::ostream& os,
+        detail::UniformPointSamplingData<DDim, MemorySpace> const& mesh)
 {
     print_uniform_point_sampling(os, mesh.origin(), mesh.step());
     return os;

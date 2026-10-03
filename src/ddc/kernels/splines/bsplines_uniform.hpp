@@ -95,8 +95,7 @@ public:
     template <class DDim, class MemorySpace>
     class Impl
     {
-        template <class ODDim, class OMemorySpace>
-        friend class Impl;
+        friend class Impl<DDim, Kokkos::HostSpace>;
 
         template <class ExecSpace, class ODDim, class Layout, class OMemorySpace>
         friend void detail::uniform_bsplines_integrals(
@@ -154,8 +153,8 @@ public:
          *
          * @param impl A reference to the other Impl.
          */
-        template <class OriginMemorySpace>
-        explicit Impl(Impl<DDim, OriginMemorySpace> const& impl)
+        explicit Impl(Impl<DDim, Kokkos::HostSpace> const& impl)
+            requires(!std::is_same_v<MemorySpace, Kokkos::HostSpace>)
             : m_knot_domain(impl.m_knot_domain)
             , m_break_point_domain(impl.m_break_point_domain)
             , m_reference(impl.m_reference)

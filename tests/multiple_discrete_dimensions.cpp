@@ -19,8 +19,7 @@ public:
     template <class DDim, class MemorySpace>
     class Impl
     {
-        template <class ODDim, class OMemorySpace>
-        friend class Impl;
+        friend class Impl<DDim, Kokkos::HostSpace>;
 
     private:
         int m_value;
@@ -30,12 +29,13 @@ public:
 
         Impl() = default;
 
-        template <class OriginMemorySpace>
-        explicit Impl(Impl<DDim, OriginMemorySpace> const& impl) : m_value(impl.m_value)
+        explicit Impl(int value) : m_value(value) {}
+
+        explicit Impl(Impl<DDim, Kokkos::HostSpace> const& impl)
+            requires(!std::is_same_v<MemorySpace, Kokkos::HostSpace>)
+            : m_value(impl.m_value)
         {
         }
-
-        explicit Impl(int value) : m_value(value) {}
 
         Impl(Impl const&) = delete;
 

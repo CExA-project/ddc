@@ -48,8 +48,7 @@ public:
     template <class DDim, class MemorySpace>
     class Impl
     {
-        template <class ODDim, class OMemorySpace>
-        friend class Impl;
+        friend class Impl<DDim, Kokkos::HostSpace>;
 
     private:
         Coordinate<CDim> m_origin;
@@ -76,8 +75,8 @@ public:
 
         Impl(Impl const&) = delete;
 
-        template <class OriginMemorySpace>
-        explicit Impl(Impl<DDim, OriginMemorySpace> const& impl)
+        explicit Impl(Impl<DDim, Kokkos::HostSpace> const& impl)
+            requires(!std::is_same_v<MemorySpace, Kokkos::HostSpace>)
             : m_origin(impl.m_origin)
             , m_step(impl.m_step)
             , m_reference(impl.m_reference)

@@ -146,7 +146,7 @@ install(
 
 if("${DDC_BUILD_KERNELS_FFT}")
     find_package(KokkosFFT REQUIRED)
-    if((KokkosFFT_VERSION VERSION_LESS 0.3) OR (KokkosFFT_VERSION VERSION_GREATER_EQUAL 2))
+    if((KokkosFFT_VERSION VERSION_LESS 0.3) OR (KokkosFFT_VERSION VERSION_GREATER_EQUAL 3))
         message(FATAL_ERROR "Could not find a supported configuration for KokkosFFT")
     endif()
 

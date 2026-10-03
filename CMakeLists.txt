@@ -95,6 +95,7 @@ target_sources(
                 src/ddc/create_mirror.hpp
                 src/ddc/ddc.hpp
                 src/ddc/ddc_to_kokkos_execution_policy.hpp
+                src/ddc/discrete_dimension.hpp
                 src/ddc/discrete_domain.hpp
                 src/ddc/discrete_element.hpp
                 src/ddc/discrete_space.hpp

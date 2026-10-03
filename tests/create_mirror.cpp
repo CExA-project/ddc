@@ -13,7 +13,7 @@
 
 inline namespace anonymous_namespace_workaround_create_mirror_cpp {
 
-struct DDimX
+struct DDimX : ddc::DiscreteDimension
 {
 };
 using DElemX = ddc::DiscreteElement<DDimX>;

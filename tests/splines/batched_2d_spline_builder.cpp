@@ -34,7 +34,7 @@ struct DimY
 {
 };
 
-struct DDimBatch
+struct DDimBatch : ddc::DiscreteDimension
 {
 };
 

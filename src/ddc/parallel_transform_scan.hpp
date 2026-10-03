@@ -19,7 +19,7 @@
 
 namespace ddc::experimental {
 
-template <class... Tags>
+template <concepts::discrete_dimension... Tags>
 struct Dims
 {
 };
@@ -107,7 +107,7 @@ public:
 template <
         class ExecSpace,
         detail::ScanType ScanValue,
-        class DDim,
+        concepts::discrete_dimension DDim,
         concepts::borrowed_chunk ChunkDst,
         class BinaryReductionOp,
         class UnaryTransformOp>
@@ -147,7 +147,7 @@ void parallel_transform_scan(
 
 template <
         class ExecSpace,
-        class DDim,
+        concepts::discrete_dimension DDim,
         concepts::borrowed_chunk ChunkDst,
         class BinaryReductionOp,
         class UnaryTransformOp>
@@ -171,7 +171,7 @@ void parallel_transform_inclusive_scan(
 
 template <
         class ExecSpace,
-        class DDim,
+        concepts::discrete_dimension DDim,
         concepts::borrowed_chunk ChunkDst,
         class BinaryReductionOp,
         class UnaryTransformOp>

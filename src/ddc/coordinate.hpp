@@ -10,6 +10,7 @@
 
 #include "detail/tagged_vector.hpp"
 
+#include "discrete_dimension.hpp"
 #include "discrete_element.hpp"
 #include "real_type.hpp"
 
@@ -28,7 +29,7 @@ using CoordinateElement = Real;
 template <class... CDims>
 using Coordinate = detail::TaggedVector<CoordinateElement, CDims...>;
 
-template <class... DDims>
+template <concepts::discrete_dimension... DDims>
 KOKKOS_FUNCTION Coordinate<typename DDims::continuous_dimension_type...> coordinate(
         DiscreteElement<DDims...> const& c)
     requires(sizeof...(DDims) > 1)

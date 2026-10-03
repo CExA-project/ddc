@@ -10,7 +10,7 @@
 
 inline namespace anonymous_namespace_workaround_multiple_discrete_dimensions_cpp {
 
-class SingleValueDiscreteDimension
+class SingleValueDiscreteDimension : ddc::DiscreteDimension
 {
 public:
     using discrete_dimension_type = SingleValueDiscreteDimension;

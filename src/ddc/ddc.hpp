@@ -59,6 +59,7 @@ namespace ddc {
 
 // Discretizations
 #include "coordinate.hpp"
+#include "discrete_dimension.hpp"
 #include "discrete_domain.hpp"
 #include "discrete_element.hpp"
 #include "discrete_space.hpp"

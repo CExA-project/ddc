@@ -15,6 +15,7 @@
 #include "chunk_common.hpp"
 #include "chunk_span.hpp"
 #include "chunk_traits.hpp"
+#include "discrete_dimension.hpp"
 #include "discrete_domain.hpp"
 #include "discrete_element.hpp"
 #include "discrete_vector.hpp"
@@ -151,35 +152,35 @@ public:
     }
 
     /// Slice out some dimensions
-    template <class... QueryDDims>
+    template <concepts::discrete_dimension... QueryDDims>
     auto operator[](DiscreteVector<QueryDDims...> const& slice_spec) const
     {
         return view_type(*this)[slice_spec];
     }
 
     /// Slice out some dimensions
-    template <class... QueryDDims>
+    template <concepts::discrete_dimension... QueryDDims>
     auto operator[](DiscreteVector<QueryDDims...> const& slice_spec)
     {
         return span_view()[slice_spec];
     }
 
     /// Slice out some dimensions
-    template <class... QueryDDims>
+    template <concepts::discrete_dimension... QueryDDims>
     auto operator[](DiscreteElement<QueryDDims...> const& slice_spec) const
     {
         return view_type(*this)[slice_spec];
     }
 
     /// Slice out some dimensions
-    template <class... QueryDDims>
+    template <concepts::discrete_dimension... QueryDDims>
     auto operator[](DiscreteElement<QueryDDims...> const& slice_spec)
     {
         return span_view()[slice_spec];
     }
 
     /// Slice out some dimensions
-    template <class... QueryDDims>
+    template <concepts::discrete_dimension... QueryDDims>
     auto operator[](DiscreteDomain<QueryDDims...> const& odomain) const
         requires(is_discrete_domain_v<SupportType>)
     {
@@ -187,7 +188,7 @@ public:
     }
 
     /// Slice out some dimensions
-    template <class... QueryDDims>
+    template <concepts::discrete_dimension... QueryDDims>
     auto operator[](DiscreteDomain<QueryDDims...> const& odomain)
         requires(is_discrete_domain_v<SupportType>)
     {

@@ -12,15 +12,15 @@
 
 inline namespace anonymous_namespace_workaround_tagged_type_traits_cpp {
 
-struct DDimX
+struct DDimX : ddc::DiscreteDimension
 {
 };
 
-struct DDimY
+struct DDimY : ddc::DiscreteDimension
 {
 };
 
-struct DDimZ
+struct DDimZ : ddc::DiscreteDimension
 {
 };
 

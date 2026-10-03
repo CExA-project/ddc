@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <ddc/ddc.hpp>
+
 namespace ddc {
 
 /**
@@ -11,7 +13,7 @@ namespace ddc {
  * the derivatives of a function along a continuous dimension CDim.
  */
 template <class CDim>
-struct Deriv
+struct Deriv : ddc::DiscreteDimension
 {
 };
 

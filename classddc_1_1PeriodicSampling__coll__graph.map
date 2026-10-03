@@ -1,5 +1,7 @@
 <map id="ddc::PeriodicSampling&lt; CDim &gt;" name="ddc::PeriodicSampling&lt; CDim &gt;">
-<area shape="rect" id="Node000001" title="PeriodicSampling models a periodic discretization of the provided continuous dimension." alt="" coords="43,119,202,239"/>
+<area shape="rect" id="Node000001" title="PeriodicSampling models a periodic discretization of the provided continuous dimension." alt="" coords="157,119,315,239"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="5,5,240,71"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="125,85,125,118,120,118,120,85"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="159,80,189,116,185,120,155,83"/>
+<area shape="rect" id="Node000003" href="$structddc_1_1DiscreteDimension.html" title=" " alt="" coords="265,5,434,71"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="317,83,287,120,283,116,313,80"/>
 </map>

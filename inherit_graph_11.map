@@ -1,7 +1,41 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" title=" " alt="" coords="5,37,203,77"/>
-<area shape="rect" id="Node000001" href="$classddc_1_1DiscreteVector.html" title=" " alt="" coords="251,5,399,45"/>
-<area shape="poly" id="edge4_Node000000_Node000001" title=" " alt="" coords="216,38,250,33,250,39,217,44"/>
-<area shape="rect" id="Node000002" href="$classddc_1_1DiscreteVector.html" title=" " alt="" coords="251,69,399,109"/>
-<area shape="poly" id="edge5_Node000000_Node000002" title=" " alt="" coords="217,71,250,76,250,81,216,76"/>
+<area shape="rect" id="Node000000" href="$structddc_1_1DiscreteDimension.html" title=" " alt="" coords="49,269,227,294"/>
+<area shape="rect" id="Node000001" href="$classddc_1_1NonUniformPointSampling.html" title=" " alt="" coords="319,5,621,45"/>
+<area shape="poly" id="edge6_Node000000_Node000001" title=" " alt="" coords="157,256,268,120,289,85,300,70,317,55,340,43,343,48,320,60,304,73,294,87,273,123,161,260"/>
+<area shape="rect" id="Node000003" href="$classddc_1_1NonUniformPointSampling.html" title=" " alt="" coords="345,69,595,109"/>
+<area shape="poly" id="edge7_Node000000_Node000003" title=" " alt="" coords="156,256,222,188,267,150,317,119,347,107,349,112,320,124,271,155,226,191,160,260"/>
+<area shape="rect" id="Node000006" href="$classddc_1_1UniformPointSampling.html" title=" " alt="" coords="370,247,570,302"/>
+<area shape="poly" id="edge9_Node000000_Node000006" title=" " alt="" coords="240,277,370,274,370,279,240,282"/>
+<area shape="rect" id="Node000008" href="$classddc_1_1UniformPointSampling.html" title=" " alt="" coords="345,327,595,367"/>
+<area shape="poly" id="edge10_Node000000_Node000008" title=" " alt="" coords="217,294,368,324,367,329,216,299"/>
+<area shape="rect" id="Node000011" href="$structddc_1_1Deriv.html" title="A templated struct representing a discrete dimension storing the derivatives of a function along a co..." alt="" coords="393,198,547,223"/>
+<area shape="poly" id="edge12_Node000000_Node000011" title=" " alt="" coords="196,262,318,232,392,219,393,224,319,237,197,268"/>
+<area shape="rect" id="Node000012" href="$classddc_1_1NonUniformBSplines.html" title="The type of a non&#45;uniform 1D spline basis (B&#45;spline)." alt="" coords="376,455,564,495"/>
+<area shape="poly" id="edge13_Node000000_Node000012" title=" " alt="" coords="241,293,272,313,286,329,293,346,297,379,301,411,307,426,320,441,347,457,377,467,375,472,344,462,317,445,303,429,296,412,292,379,288,347,282,332,269,317,238,298"/>
+<area shape="rect" id="Node000005" href="$classddc_1_1NonUniformPointSampling.html" title="NonUniformPointSampling models a non&#45;uniform discretization of the CDim segment ." alt="" coords="357,133,583,173"/>
+<area shape="poly" id="edge14_Node000000_Node000005" title=" " alt="" coords="169,259,236,220,318,183,357,171,358,176,320,188,238,225,172,263"/>
+<area shape="rect" id="Node000014" href="$classddc_1_1PeriodicSampling.html" title="PeriodicSampling models a periodic discretization of the provided continuous dimension." alt="" coords="387,519,553,559"/>
+<area shape="poly" id="edge15_Node000000_Node000014" title=" " alt="" coords="241,292,273,313,290,337,298,362,299,387,297,411,295,436,296,459,303,482,320,505,351,525,387,535,386,540,349,529,317,509,299,485,291,460,289,435,292,411,294,387,293,363,286,340,269,317,238,297"/>
+<area shape="rect" id="Node000016" href="$classddc_1_1UniformBSplines.html" title="The type of a uniform 1D spline basis (B&#45;spline)." alt="" coords="387,583,553,623"/>
+<area shape="poly" id="edge16_Node000000_Node000016" title=" " alt="" coords="240,291,258,300,273,313,295,345,303,378,302,411,297,444,292,476,291,507,299,538,321,569,351,589,387,600,386,605,349,594,317,573,294,540,286,508,286,475,291,443,297,411,298,379,290,348,269,316,255,305,238,296"/>
+<area shape="rect" id="Node000010" href="$classddc_1_1UniformPointSampling.html" title="UniformPointSampling models a uniform discretization of the provided continuous dimension." alt="" coords="370,391,570,431"/>
+<area shape="poly" id="edge17_Node000000_Node000010" title=" " alt="" coords="239,296,272,312,289,329,297,346,305,362,320,376,344,389,371,398,369,403,342,394,317,381,301,365,292,348,284,332,269,317,236,301"/>
+<area shape="rect" id="Node000004" href="$structddc_1_1NonUniformBsplinesKnots.html" title=" " alt="" coords="669,77,932,102"/>
+<area shape="poly" id="edge8_Node000003_Node000004" title=" " alt="" coords="609,87,669,87,669,92,609,92"/>
+<area shape="rect" id="Node000009" href="$structddc_1_1UniformBsplinesKnots.html" title=" " alt="" coords="683,334,919,359"/>
+<area shape="poly" id="edge11_Node000008_Node000009" title=" " alt="" coords="608,344,682,344,682,349,608,349"/>
+<area shape="rect" id="Node000013" title=" " alt="" coords="5,462,271,487"/>
+<area shape="poly" id="edge18_Node000013_Node000012" title=" " alt="" coords="285,472,376,472,376,477,285,477"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="33,69,243,109"/>
+<area shape="poly" id="edge19_Node000002_Node000001" title=" " alt="" coords="256,64,365,43,366,48,257,69"/>
+<area shape="poly" id="edge20_Node000002_Node000003" title=" " alt="" coords="257,87,345,87,345,92,257,92"/>
+<area shape="poly" id="edge21_Node000002_Node000005" title=" " alt="" coords="257,109,366,131,365,136,256,115"/>
+<area shape="rect" id="Node000015" title=" " alt="" coords="17,526,259,551"/>
+<area shape="poly" id="edge22_Node000015_Node000014" title=" " alt="" coords="273,536,386,536,386,541,273,541"/>
+<area shape="rect" id="Node000017" title=" " alt="" coords="19,590,257,615"/>
+<area shape="poly" id="edge23_Node000017_Node000016" title=" " alt="" coords="271,600,386,600,386,605,271,605"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="46,327,230,367"/>
+<area shape="poly" id="edge24_Node000007_Node000006" title=" " alt="" coords="243,321,369,294,370,299,244,326"/>
+<area shape="poly" id="edge25_Node000007_Node000008" title=" " alt="" coords="244,344,345,344,345,349,244,349"/>
+<area shape="poly" id="edge26_Node000007_Node000010" title=" " alt="" coords="244,364,370,389,369,394,243,370"/>
 </map>

@@ -1,6 +1,7 @@
 var namespaceddc_1_1concepts =
 [
     [ "borrowed_chunk", "conceptddc_1_1concepts_1_1borrowed__chunk.html", null ],
+    [ "discrete_dimension", "conceptddc_1_1concepts_1_1discrete__dimension.html", null ],
     [ "discrete_domain", "conceptddc_1_1concepts_1_1discrete__domain.html", null ],
     [ "discrete_element", "conceptddc_1_1concepts_1_1discrete__element.html", null ],
     [ "discrete_vector", "conceptddc_1_1concepts_1_1discrete__vector.html", null ],

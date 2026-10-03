@@ -13,8 +13,23 @@ var hierarchy =
     ] ],
     [ "ddc::ConstantExtrapolationRule< DimI >", "structddc_1_1ConstantExtrapolationRule.html", null ],
     [ "ddc::coordinate_of< T >", "namespaceddc.html#structddc_1_1coordinate__of", null ],
-    [ "ddc::Deriv< CDim >", "namespaceddc.html#structddc_1_1Deriv", null ],
     [ "ddc::experimental::Dims< Tags >", "namespaceddc_1_1experimental.html#structddc_1_1experimental_1_1Dims", null ],
+    [ "ddc::DiscreteDimension", "structddc_1_1DiscreteDimension.html", [
+      [ "ddc::NonUniformPointSampling< Sampling::continuous_dimension_type >", "classddc_1_1NonUniformPointSampling.html", null ],
+      [ "ddc::NonUniformPointSampling< T::continuous_dimension_type >", "classddc_1_1NonUniformPointSampling.html", [
+        [ "ddc::NonUniformBsplinesKnots< T >", "structddc_1_1NonUniformBsplinesKnots.html", null ]
+      ] ],
+      [ "ddc::UniformPointSampling< Sampling::continuous_dimension_type >", "classddc_1_1UniformPointSampling.html", null ],
+      [ "ddc::UniformPointSampling< T::continuous_dimension_type >", "classddc_1_1UniformPointSampling.html", [
+        [ "ddc::UniformBsplinesKnots< T >", "structddc_1_1UniformBsplinesKnots.html", null ]
+      ] ],
+      [ "ddc::Deriv< CDim >", "structddc_1_1Deriv.html", null ],
+      [ "ddc::NonUniformBSplines< CDim, D, Periodic >", "classddc_1_1NonUniformBSplines.html", null ],
+      [ "ddc::NonUniformPointSampling< CDim >", "classddc_1_1NonUniformPointSampling.html", null ],
+      [ "ddc::PeriodicSampling< CDim >", "classddc_1_1PeriodicSampling.html", null ],
+      [ "ddc::UniformBSplines< CDim, D, Periodic >", "classddc_1_1UniformBSplines.html", null ],
+      [ "ddc::UniformPointSampling< CDim >", "classddc_1_1UniformPointSampling.html", null ]
+    ] ],
     [ "ddc::DiscreteDomain< DDims >", "classddc_1_1DiscreteDomain.html", null ],
     [ "ddc::DiscreteDomain< ddc::NonUniformBsplinesKnots >", "classddc_1_1DiscreteDomain.html", null ],
     [ "ddc::DiscreteDomain< ddc::UniformBsplinesKnots >", "classddc_1_1DiscreteDomain.html", null ],
@@ -67,9 +82,7 @@ var hierarchy =
     ] ],
     [ "ddc::detail::NonUniformPointSamplingBase", null, [
       [ "ddc::NonUniformPointSampling< Sampling::continuous_dimension_type >", "classddc_1_1NonUniformPointSampling.html", null ],
-      [ "ddc::NonUniformPointSampling< T::continuous_dimension_type >", "classddc_1_1NonUniformPointSampling.html", [
-        [ "ddc::NonUniformBsplinesKnots< T >", "structddc_1_1NonUniformBsplinesKnots.html", null ]
-      ] ],
+      [ "ddc::NonUniformPointSampling< T::continuous_dimension_type >", "classddc_1_1NonUniformPointSampling.html", null ],
       [ "ddc::NonUniformPointSampling< CDim >", "classddc_1_1NonUniformPointSampling.html", null ]
     ] ],
     [ "ddc::NullExtrapolationRule", "structddc_1_1NullExtrapolationRule.html", null ],
@@ -92,9 +105,9 @@ var hierarchy =
     [ "ddc::SplineBuilder2D< ExecSpace, MemorySpace, BSpline2, BSpline3, DDimI2, DDimI3, SBCLower2, SBCUpper2, SBCLower3, SBCUpper3, Solver >", "classddc_1_1SplineBuilder2D.html", null ],
     [ "ddc::SplineBuilder3D< ExecSpace, MemorySpace, BSpline1, BSpline2, BSpline3, DDimI1, DDimI2, DDimI3, SBCLower1, SBCUpper1, SBCLower2, SBCUpper2, SBCLower3, SBCUpper3, Solver >", "classddc_1_1SplineBuilder3D.html", null ],
     [ "ddc::SplineBuilder< ExecSpace, MemorySpace, BSpline1, DDimI1, SBCLower1, SBCUpper1, Solver >", "classddc_1_1SplineBuilder.html", null ],
-    [ "ddc::SplineBuilder< ExecSpace, MemorySpace, BSpline2, DDimI2, SBCLower1, SBCUpper1, Solver >", "classddc_1_1SplineBuilder.html", null ],
+    [ "ddc::SplineBuilder< ExecSpace, MemorySpace, BSpline2, DDimI1, SBCLower1, SBCUpper1, Solver >", "classddc_1_1SplineBuilder.html", null ],
     [ "ddc::SplineBuilder< ExecSpace, MemorySpace, BSpline2, DDimI2, SBCLower2, SBCUpper2, Solver >", "classddc_1_1SplineBuilder.html", null ],
-    [ "ddc::SplineBuilder< ExecSpace, MemorySpace, BSpline3, DDimI3, SBCLower2, SBCUpper2, Solver >", "classddc_1_1SplineBuilder.html", null ],
+    [ "ddc::SplineBuilder< ExecSpace, MemorySpace, BSpline3, DDimI2, SBCLower2, SBCUpper2, Solver >", "classddc_1_1SplineBuilder.html", null ],
     [ "ddc::SplineEvaluator< ExecSpace, MemorySpace, BSplines, EvaluationDDim, LowerExtrapolationRule, UpperExtrapolationRule >", "classddc_1_1SplineEvaluator.html", null ],
     [ "ddc::SplineEvaluator2D< ExecSpace, MemorySpace, BSplines1, BSplines2, EvaluationDDim1, EvaluationDDim2, LowerExtrapolationRule1, UpperExtrapolationRule1, LowerExtrapolationRule2, UpperExtrapolationRule2 >", "classddc_1_1SplineEvaluator2D.html", null ],
     [ "ddc::SplineEvaluator3D< ExecSpace, MemorySpace, BSplines1, BSplines2, BSplines3, EvaluationDDim1, EvaluationDDim2, EvaluationDDim3, LowerExtrapolationRule1, UpperExtrapolationRule1, LowerExtrapolationRule2, UpperExtrapolationRule2, LowerExtrapolationRule3, UpperExtrapolationRule3 >", "classddc_1_1SplineEvaluator3D.html", null ],
@@ -128,19 +141,19 @@ var hierarchy =
       [ "ddc::is_strided_discrete_domain< StridedDiscreteDomain< Tags... > >", "structddc_1_1is__strided__discrete__domain_3_01StridedDiscreteDomain_3_01Tags_8_8_8_01_4_01_4.html", null ]
     ] ],
     [ "std::is_base_of::type", null, [
-      [ "ddc::is_non_uniform_bsplines< DDim >", "structddc_1_1is__non__uniform__bsplines.html", null ]
+      [ "ddc::is_non_uniform_bsplines< T >", "structddc_1_1is__non__uniform__bsplines.html", null ]
     ] ],
     [ "std::is_base_of::type", null, [
-      [ "ddc::is_non_uniform_point_sampling< DDim >", "structddc_1_1is__non__uniform__point__sampling.html", null ]
+      [ "ddc::is_non_uniform_point_sampling< T >", "structddc_1_1is__non__uniform__point__sampling.html", null ]
     ] ],
     [ "std::is_base_of::type", null, [
-      [ "ddc::is_periodic_sampling< DDim >", "structddc_1_1is__periodic__sampling.html", null ]
+      [ "ddc::is_periodic_sampling< T >", "structddc_1_1is__periodic__sampling.html", null ]
     ] ],
     [ "std::is_base_of::type", null, [
-      [ "ddc::is_uniform_bsplines< DDim >", "structddc_1_1is__uniform__bsplines.html", null ]
+      [ "ddc::is_uniform_bsplines< T >", "structddc_1_1is__uniform__bsplines.html", null ]
     ] ],
     [ "std::is_base_of::type", null, [
-      [ "ddc::is_uniform_point_sampling< DDim >", "structddc_1_1is__uniform__point__sampling.html", null ]
+      [ "ddc::is_uniform_point_sampling< T >", "structddc_1_1is__uniform__point__sampling.html", null ]
     ] ],
     [ "ddc::TypeSeq< Tags >", "namespaceddc.html#structddc_1_1TypeSeq", null ],
     [ "ddc::detail::UniformBSplinesBase", null, [
@@ -148,9 +161,7 @@ var hierarchy =
     ] ],
     [ "ddc::detail::UniformPointSamplingBase", null, [
       [ "ddc::UniformPointSampling< Sampling::continuous_dimension_type >", "classddc_1_1UniformPointSampling.html", null ],
-      [ "ddc::UniformPointSampling< T::continuous_dimension_type >", "classddc_1_1UniformPointSampling.html", [
-        [ "ddc::UniformBsplinesKnots< T >", "structddc_1_1UniformBsplinesKnots.html", null ]
-      ] ],
+      [ "ddc::UniformPointSampling< T::continuous_dimension_type >", "classddc_1_1UniformPointSampling.html", null ],
       [ "ddc::UniformPointSampling< CDim >", "classddc_1_1UniformPointSampling.html", null ]
     ] ]
 ];

@@ -1,5 +1,7 @@
 <map id="ddc::UniformBSplines&lt; CDim, D, Periodic &gt;" name="ddc::UniformBSplines&lt; CDim, D, Periodic &gt;">
-<area shape="rect" id="Node000001" title="The type of a uniform 1D spline basis (B&#45;spline)." alt="" coords="41,119,200,239"/>
+<area shape="rect" id="Node000001" title="The type of a uniform 1D spline basis (B&#45;spline)." alt="" coords="153,119,312,239"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="5,5,236,71"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="123,85,123,118,118,118,118,85"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="157,80,187,116,183,120,153,83"/>
+<area shape="rect" id="Node000003" href="$structddc_1_1DiscreteDimension.html" title=" " alt="" coords="260,5,429,71"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="312,83,283,120,279,116,308,80"/>
 </map>

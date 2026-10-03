@@ -1,0 +1,27 @@
+<map id="ddc::DiscreteDimension" name="ddc::DiscreteDimension">
+<area shape="rect" id="Node000001" title=" " alt="" coords="1155,5,1324,71"/>
+<area shape="rect" id="Node000002" href="$classddc_1_1NonUniformPointSampling.html" title=" " alt="" coords="5,136,300,236"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1141,47,707,74,478,95,384,108,312,121,258,139,256,133,311,116,383,102,477,90,707,68,1141,41"/>
+<area shape="rect" id="Node000003" href="$classddc_1_1NonUniformPointSampling.html" title=" " alt="" coords="324,136,565,236"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="1141,43,1025,49,883,62,730,85,653,101,579,121,534,138,532,133,577,116,652,96,729,80,883,57,1025,44,1141,38"/>
+<area shape="rect" id="Node000005" href="$classddc_1_1UniformPointSampling.html" title=" " alt="" coords="590,119,782,253"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="1141,49,1064,58,977,73,885,93,796,121,783,127,781,122,794,116,884,88,976,67,1063,53,1140,44"/>
+<area shape="rect" id="Node000006" href="$classddc_1_1UniformPointSampling.html" title=" " alt="" coords="807,126,1048,246"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="1155,79,1062,121,1046,128,1044,124,1060,116,1153,74"/>
+<area shape="rect" id="Node000008" href="$structddc_1_1Deriv.html" title="A templated struct representing a discrete dimension storing the derivatives of a function along a co..." alt="" coords="1073,153,1219,219"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="1214,84,1168,155,1164,152,1210,81"/>
+<area shape="rect" id="Node000009" href="$classddc_1_1NonUniformBSplines.html" title="The type of a non&#45;uniform 1D spline basis (B&#45;spline)." alt="" coords="1244,126,1424,246"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="1270,81,1298,124,1293,127,1265,84"/>
+<area shape="rect" id="Node000010" href="$classddc_1_1NonUniformPointSampling.html" title="NonUniformPointSampling models a non&#45;uniform discretization of the CDim segment ." alt="" coords="1449,136,1667,236"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="1337,73,1438,116,1472,133,1470,138,1436,121,1335,78"/>
+<area shape="rect" id="Node000011" href="$classddc_1_1PeriodicSampling.html" title="PeriodicSampling models a periodic discretization of the provided continuous dimension." alt="" coords="1692,126,1851,246"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="1338,42,1415,50,1502,64,1593,86,1680,116,1696,124,1693,128,1678,121,1591,91,1501,70,1414,56,1338,47"/>
+<area shape="rect" id="Node000012" href="$classddc_1_1UniformBSplines.html" title="The type of a uniform 1D spline basis (B&#45;spline)." alt="" coords="1875,126,2033,246"/>
+<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="1338,43,1471,54,1622,70,1764,91,1821,103,1864,116,1880,124,1878,128,1862,121,1819,108,1763,96,1622,75,1470,59,1337,49"/>
+<area shape="rect" id="Node000013" href="$classddc_1_1UniformPointSampling.html" title="UniformPointSampling models a uniform discretization of the provided continuous dimension." alt="" coords="2058,126,2250,246"/>
+<area shape="poly" id="edge12_Node000001_Node000013" title=" " alt="" coords="1338,41,1509,50,1713,66,1907,87,1987,101,2047,116,2065,123,2063,128,2045,121,1986,106,1907,93,1713,71,1508,56,1337,46"/>
+<area shape="rect" id="Node000004" href="$structddc_1_1NonUniformBsplinesKnots.html" title=" " alt="" coords="317,301,572,367"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="447,250,447,301,442,301,442,250"/>
+<area shape="rect" id="Node000007" href="$structddc_1_1UniformBsplinesKnots.html" title=" " alt="" coords="813,301,1041,367"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="930,259,930,301,925,301,925,259"/>
+</map>

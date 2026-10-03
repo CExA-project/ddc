@@ -18,7 +18,7 @@ var classddc_1_1DiscreteDomain_3_4 =
     [ "remove_last", "classddc_1_1DiscreteDomain_3_4.html#a4f158db7698c397cbe4c542df5bac759", null ],
     [ "remove", "classddc_1_1DiscreteDomain_3_4.html#a3b7feebd8ddccabff2824b61e1efdc19", null ],
     [ "operator()", "classddc_1_1DiscreteDomain_3_4.html#aed6800b268865b6525d14d9302646608", null ],
-    [ "restrict_with", "classddc_1_1DiscreteDomain_3_4.html#aeba346ace0740c62900ab64b8447c1de", null ],
+    [ "restrict_with", "classddc_1_1DiscreteDomain_3_4.html#a87442f63c4faaa5cc8eef20237ef3da5", null ],
     [ "operator bool", "classddc_1_1DiscreteDomain_3_4.html#a6c35d71dd28805fa4b1c99d9db306297", null ],
     [ "DiscreteDomain", "classddc_1_1DiscreteDomain_3_4.html#a5cdbd7cda4dd9c4369a8810c88cf3bed", null ]
 ];

@@ -1,5 +1,7 @@
 <map id="ddc::NonUniformBSplines&lt; CDim, D, Periodic &gt;" name="ddc::NonUniformBSplines&lt; CDim, D, Periodic &gt;">
-<area shape="rect" id="Node000001" title="The type of a non&#45;uniform 1D spline basis (B&#45;spline)." alt="" coords="44,119,224,239"/>
+<area shape="rect" id="Node000001" title="The type of a non&#45;uniform 1D spline basis (B&#45;spline)." alt="" coords="163,119,343,239"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="5,5,263,71"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="137,85,137,118,131,118,131,85"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="172,80,204,116,200,120,168,83"/>
+<area shape="rect" id="Node000003" href="$structddc_1_1DiscreteDimension.html" title=" " alt="" coords="287,5,456,71"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="337,83,306,120,302,116,333,80"/>
 </map>

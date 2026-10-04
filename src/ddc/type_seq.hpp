@@ -238,6 +238,9 @@ struct Rebind
 {
 };
 
+template <class T, class TagSeq>
+using rebind_t = Rebind<T, TagSeq>::type;
+
 } // namespace detail
 
 template <class TypeSeq>

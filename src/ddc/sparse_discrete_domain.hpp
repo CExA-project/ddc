@@ -501,7 +501,7 @@ KOKKOS_FUNCTION constexpr SparseDiscreteDomain<QueryDDims...> select(
 
 namespace detail {
 
-template <class T>
+template <ddc::concepts::type_seq T>
 struct ConvertTypeSeqToSparseDiscreteDomain
 {
 };
@@ -512,7 +512,7 @@ struct ConvertTypeSeqToSparseDiscreteDomain<ddc::TypeSeq<DDims...>>
     using type = SparseDiscreteDomain<DDims...>;
 };
 
-template <class T>
+template <ddc::concepts::type_seq T>
 using convert_type_seq_to_sparse_discrete_domain_t = ConvertTypeSeqToSparseDiscreteDomain<T>::type;
 
 } // namespace detail

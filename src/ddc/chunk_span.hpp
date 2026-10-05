@@ -290,7 +290,7 @@ public:
         using extents_type = decltype(subview)::extents_type;
         using OutTypeSeqDDims
                 = type_seq_remove_t<to_type_seq_t<SupportType>, TypeSeq<QueryDDims...>>;
-        using OutDDom = detail::Rebind<SupportType, OutTypeSeqDDims>::type;
+        using OutDDom = detail::rebind_t<SupportType, OutTypeSeqDDims>;
         if constexpr (
                 std::is_same_v<layout_type, Kokkos::layout_left>
                 || std::is_same_v<layout_type, Kokkos::layout_right>
@@ -319,7 +319,7 @@ public:
     KOKKOS_FUNCTION constexpr auto operator[](
             DiscreteElement<QueryDDims...> const& slice_spec) const
     {
-        using QueryDDom = detail::Rebind<SupportType, TypeSeq<QueryDDims...>>::type;
+        using QueryDDom = detail::rebind_t<SupportType, TypeSeq<QueryDDims...>>;
         KOKKOS_ASSERT(QueryDDom(this->m_domain).contains(slice_spec))
         return (*this)[QueryDDom(this->m_domain).distance_from_front(slice_spec)];
     }

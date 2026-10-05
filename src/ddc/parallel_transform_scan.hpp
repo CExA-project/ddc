@@ -121,7 +121,7 @@ void parallel_transform_scan(
         UnaryTransformOp const& transform) noexcept
 {
     using DDomOut = std::remove_cvref_t<ChunkDst>::discrete_domain_type;
-    using DDomScan = ::ddc::detail::Rebind<DDomOut, ::ddc::TypeSeq<DDim>>::type;
+    using DDomScan = ::ddc::detail::rebind_t<DDomOut, ::ddc::TypeSeq<DDim>>;
 
     DDomOut const ddom_out = out.domain();
     DDomScan const ddom_scan(ddom_out);

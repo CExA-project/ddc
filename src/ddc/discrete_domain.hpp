@@ -219,7 +219,7 @@ public:
                         (select_or<DDims>(oextents, DiscreteVector<DDims>(myextents)))...));
     }
 
-    template <class... DElems>
+    template <concepts::discrete_element... DElems>
     KOKKOS_FUNCTION bool contains(DElems const&... delems) const noexcept
     {
         static_assert(
@@ -236,7 +236,7 @@ public:
         return true;
     }
 
-    template <class... DElems>
+    template <concepts::discrete_element... DElems>
     KOKKOS_FUNCTION DiscreteVector<DDims...> distance_from_front(
             DElems const&... delems) const noexcept
     {
@@ -455,7 +455,7 @@ KOKKOS_FUNCTION constexpr DiscreteDomain<QueryDDims...> select(
 
 namespace detail {
 
-template <class T>
+template <ddc::concepts::type_seq T>
 struct ConvertTypeSeqToDiscreteDomain
 {
 };
@@ -466,7 +466,7 @@ struct ConvertTypeSeqToDiscreteDomain<ddc::TypeSeq<DDims...>>
     using type = DiscreteDomain<DDims...>;
 };
 
-template <class T>
+template <ddc::concepts::type_seq T>
 using convert_type_seq_to_discrete_domain_t = ConvertTypeSeqToDiscreteDomain<T>::type;
 
 } // namespace detail
@@ -557,7 +557,7 @@ KOKKOS_FUNCTION constexpr auto replace_dim_of(
 template <typename DDom, concepts::discrete_dimension DDim1, concepts::discrete_dimension DDim2>
 using replace_dim_of_t = decltype(replace_dim_of<DDim1, DDim2>(
         std::declval<DDom>(),
-        std::declval<typename detail::Rebind<DDom, TypeSeq<DDim2>>::type>()));
+        std::declval<detail::rebind_t<DDom, TypeSeq<DDim2>>>()));
 
 
 template <concepts::discrete_dimension... QueryDDims, concepts::discrete_dimension... DDims>

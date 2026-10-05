@@ -32,6 +32,23 @@ struct TypeSeq
 
 namespace detail {
 
+template <class T>
+inline constexpr bool is_type_seq_v = false;
+
+template <class... Tags>
+inline constexpr bool is_type_seq_v<TypeSeq<Tags...>> = true;
+
+} // namespace detail
+
+namespace concepts {
+
+template <class T>
+concept type_seq = detail::is_type_seq_v<T>;
+
+} // namespace concepts
+
+namespace detail {
+
 #if DDC_BUILD_DEPRECATED_CODE()
 template <class... Tags>
 using TypeSeq [[deprecated("Use `ddc::TypeSeq' instead")]] = ::ddc::TypeSeq<Tags...>;
@@ -233,34 +250,38 @@ struct ToTypeSeq
 {
 };
 
-template <class T, class TagSeq>
+template <class T, concepts::type_seq TagSeq>
 struct Rebind
 {
 };
 
+template <class T, concepts::type_seq TagSeq>
+using rebind_t = Rebind<T, TagSeq>::type;
+
 } // namespace detail
 
-template <class TypeSeq>
+template <concepts::type_seq TypeSeq>
 constexpr std::size_t type_seq_size_v = std::numeric_limits<std::size_t>::max();
 
 /// Returns the number of types in a @ref TypeSeq.
 template <class... Tags>
 constexpr std::size_t type_seq_size_v<TypeSeq<Tags...>> = sizeof...(Tags);
 
-template <class QueryTag, class TypeSeq>
+template <class QueryTag, concepts::type_seq TypeSeq>
 constexpr std::size_t type_seq_rank_v = std::numeric_limits<std::size_t>::max();
 
-template <class QueryTag, class OTypeSeq>
+template <class QueryTag, concepts::type_seq OTypeSeq>
 constexpr bool in_tags_v = false;
 
-template <class TypeSeq, class OTypeSeq>
+template <concepts::type_seq TypeSeq, concepts::type_seq OTypeSeq>
 constexpr bool type_seq_contains_v = false;
 
-template <class TypeSeq>
+template <concepts::type_seq TypeSeq>
 constexpr bool type_seq_is_unique_v = false;
 
-template <class TypeSeq, class B>
-constexpr bool type_seq_same_v = type_seq_contains_v<TypeSeq, B> && type_seq_contains_v<B, TypeSeq>;
+template <concepts::type_seq TypeSeq, concepts::type_seq OTypeSeq>
+constexpr bool type_seq_same_v
+        = type_seq_contains_v<TypeSeq, OTypeSeq> && type_seq_contains_v<OTypeSeq, TypeSeq>;
 
 template <class QueryTag, class... Tags>
 constexpr bool in_tags_v<QueryTag, TypeSeq<Tags...>>
@@ -274,19 +295,19 @@ template <class QueryTag, class... Tags>
 constexpr std::size_t type_seq_rank_v<QueryTag, TypeSeq<Tags...>>
         = detail::TypeSeqRank<detail::SingleType<QueryTag>, TypeSeq<Tags...>>::val;
 
-template <std::size_t I, class TagSeq>
+template <std::size_t I, concepts::type_seq TagSeq>
 using type_seq_element_t = detail::TypeSeqElement<I, TagSeq>::type;
 
-template <class TagSeqA, class TagSeqB>
+template <concepts::type_seq TagSeqA, concepts::type_seq TagSeqB>
 using type_seq_remove_t = detail::TypeSeqRemove<TagSeqA, TagSeqB, TypeSeq<>>::type;
 
-template <class TagSeqA, class TagSeqB>
+template <concepts::type_seq TagSeqA, concepts::type_seq TagSeqB>
 using type_seq_merge_t = detail::TypeSeqMerge<TagSeqA, TagSeqB, TagSeqA>::type;
 
-template <class TagSeqA, class TagSeqB>
+template <concepts::type_seq TagSeqA, concepts::type_seq TagSeqB>
 using type_seq_cat_t = detail::TypeSeqCat<TagSeqA, TagSeqB>::type;
 
-template <class TagSeqA, class TagSeqB, class TagSeqC>
+template <concepts::type_seq TagSeqA, concepts::type_seq TagSeqB, concepts::type_seq TagSeqC>
 using type_seq_replace_t = detail::TypeSeqReplace<TagSeqA, TagSeqB, TagSeqC, TypeSeq<>>::type;
 
 template <class... Tags>

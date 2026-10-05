@@ -468,7 +468,7 @@ KOKKOS_FUNCTION constexpr StridedDiscreteDomain<QueryDDims...> select(
 
 namespace detail {
 
-template <class T>
+template <ddc::concepts::type_seq T>
 struct ConvertTypeSeqToStridedDiscreteDomain
 {
 };
@@ -479,7 +479,7 @@ struct ConvertTypeSeqToStridedDiscreteDomain<ddc::TypeSeq<DDims...>>
     using type = StridedDiscreteDomain<DDims...>;
 };
 
-template <class T>
+template <ddc::concepts::type_seq T>
 using convert_type_seq_to_strided_discrete_domain_t
         = ConvertTypeSeqToStridedDiscreteDomain<T>::type;
 

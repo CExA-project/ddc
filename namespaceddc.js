@@ -96,7 +96,7 @@ var namespaceddc =
     [ "Coordinate", "namespaceddc.html#ac18286f7d289865ee020284651f29bb1", null ],
     [ "coordinate_of_t", "namespaceddc.html#a1301052312925a8f39c8e9ae726544df", null ],
     [ "remove_dims_of_t", "namespaceddc.html#a46e92a9cb87ee7573d46fa56d333a09b", null ],
-    [ "replace_dim_of_t", "namespaceddc.html#a9c0b74b9ea39de8418605285b0001d98", null ],
+    [ "replace_dim_of_t", "namespaceddc.html#ae0e613fb967d1e2f0921b17d3624289f", null ],
     [ "DiscreteElementType", "namespaceddc.html#a4c7a2930d12432d53c1fcfbb1a1ecda9", null ],
     [ "DiscreteVectorElement", "namespaceddc.html#ad6cf37f23e5e0fc7893bf8cb37bc1a7a", null ],
     [ "DeviceAllocator", "namespaceddc.html#a7e1a2cf32bc6b8aae8f98163fc2a2843", null ],

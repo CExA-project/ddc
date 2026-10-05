@@ -11,6 +11,7 @@ var searchData=
   ['ddc_3a_3aconcepts_3a_3aperiodic_5fsampling_8',['periodic_sampling',['../conceptddc_1_1concepts_1_1periodic__sampling.html',1,'ddc::concepts']]],
   ['ddc_3a_3aconcepts_3a_3asparse_5fdiscrete_5fdomain_9',['sparse_discrete_domain',['../conceptddc_1_1concepts_1_1sparse__discrete__domain.html',1,'ddc::concepts']]],
   ['ddc_3a_3aconcepts_3a_3astrided_5fdiscrete_5fdomain_10',['strided_discrete_domain',['../conceptddc_1_1concepts_1_1strided__discrete__domain.html',1,'ddc::concepts']]],
-  ['ddc_3a_3aconcepts_3a_3auniform_5fbsplines_11',['uniform_bsplines',['../conceptddc_1_1concepts_1_1uniform__bsplines.html',1,'ddc::concepts']]],
-  ['ddc_3a_3aconcepts_3a_3auniform_5fpoint_5fsampling_12',['uniform_point_sampling',['../conceptddc_1_1concepts_1_1uniform__point__sampling.html',1,'ddc::concepts']]]
+  ['ddc_3a_3aconcepts_3a_3atype_5fseq_11',['type_seq',['../conceptddc_1_1concepts_1_1type__seq.html',1,'ddc::concepts']]],
+  ['ddc_3a_3aconcepts_3a_3auniform_5fbsplines_12',['uniform_bsplines',['../conceptddc_1_1concepts_1_1uniform__bsplines.html',1,'ddc::concepts']]],
+  ['ddc_3a_3aconcepts_3a_3auniform_5fpoint_5fsampling_13',['uniform_point_sampling',['../conceptddc_1_1concepts_1_1uniform__point__sampling.html',1,'ddc::concepts']]]
 ];

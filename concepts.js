@@ -11,6 +11,7 @@ var concepts =
         [ "periodic_sampling", "conceptddc_1_1concepts_1_1periodic__sampling.html", null ],
         [ "sparse_discrete_domain", "conceptddc_1_1concepts_1_1sparse__discrete__domain.html", null ],
         [ "strided_discrete_domain", "conceptddc_1_1concepts_1_1strided__discrete__domain.html", null ],
+        [ "type_seq", "conceptddc_1_1concepts_1_1type__seq.html", null ],
         [ "uniform_point_sampling", "conceptddc_1_1concepts_1_1uniform__point__sampling.html", null ],
         [ "bsplines", "conceptddc_1_1concepts_1_1bsplines.html", null ],
         [ "non_uniform_bsplines", "conceptddc_1_1concepts_1_1non__uniform__bsplines.html", null ],

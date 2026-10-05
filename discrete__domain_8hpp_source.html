@@ -348,7 +348,7 @@ $(document).ready(function(){initNavTree('discrete__domain_8hpp_source.html','')
 <div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>                        (select_or&lt;DDims&gt;(oextents, <a class="code hl_function" href="classddc_1_1DiscreteVector.html#a62e896bfa78045521042a0eab87c0acb">DiscreteVector</a>&lt;DDims&gt;(myextents)))...));</div>
 <div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>    }</div>
 <div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span> </div>
-<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>    <span class="keyword">template</span> &lt;<span class="keyword">class</span>... DElems&gt;</div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>    <span class="keyword">template</span> &lt;<a class="code hl_function" href="classddc_1_1DiscreteDomain.html#a0c1b15cc295c042b4323d6276096dc57">concepts</a>::discrete_element... DElems&gt;</div>
 <div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>    KOKKOS_FUNCTION <span class="keywordtype">bool</span> <a class="code hl_function" href="classddc_1_1DiscreteDomain.html#a0c1b15cc295c042b4323d6276096dc57">contains</a>(DElems <span class="keyword">const</span>&amp;... delems) <span class="keyword">const</span> <span class="keyword">noexcept</span></div>
 <div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>    {</div>
 <div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>        <span class="keyword">static_assert</span>(</div>
@@ -365,7 +365,7 @@ $(document).ready(function(){initNavTree('discrete__domain_8hpp_source.html','')
 <div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
 <div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>    }</div>
 <div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span> </div>
-<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>    <span class="keyword">template</span> &lt;<span class="keyword">class</span>... DElems&gt;</div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>    <span class="keyword">template</span> &lt;<a class="code hl_function" href="classddc_1_1DiscreteDomain.html#abb21d4cd11a95ff7cf91c062c50b7470">concepts</a>::discrete_element... DElems&gt;</div>
 <div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>    KOKKOS_FUNCTION <a class="code hl_function" href="classddc_1_1DiscreteVector.html#a62e896bfa78045521042a0eab87c0acb">DiscreteVector</a>&lt;DDims...&gt; <a class="code hl_function" href="classddc_1_1DiscreteDomain.html#abb21d4cd11a95ff7cf91c062c50b7470">distance_from_front</a>(</div>
 <div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>            DElems <span class="keyword">const</span>&amp;... delems) <span class="keyword">const</span> <span class="keyword">noexcept</span></div>
 <div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>    {</div>
@@ -584,7 +584,7 @@ $(document).ready(function(){initNavTree('discrete__domain_8hpp_source.html','')
 <div class="line"><a id="l00455" name="l00455"></a><span class="lineno">  455</span> </div>
 <div class="line"><a id="l00456" name="l00456"></a><span class="lineno">  456</span><span class="keyword">namespace</span> detail {</div>
 <div class="line"><a id="l00457" name="l00457"></a><span class="lineno">  457</span> </div>
-<div class="line"><a id="l00458" name="l00458"></a><span class="lineno">  458</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;</div>
+<div class="line"><a id="l00458" name="l00458"></a><span class="lineno">  458</span><span class="keyword">template</span> &lt;ddc::concepts::type_seq T&gt;</div>
 <div class="line"><a id="l00459" name="l00459"></a><span class="lineno">  459</span><span class="keyword">struct</span> ConvertTypeSeqToDiscreteDomain</div>
 <div class="line"><a id="l00460" name="l00460"></a><span class="lineno">  460</span>{</div>
 <div class="line"><a id="l00461" name="l00461"></a><span class="lineno">  461</span>};</div>
@@ -595,7 +595,7 @@ $(document).ready(function(){initNavTree('discrete__domain_8hpp_source.html','')
 <div class="line"><a id="l00466" name="l00466"></a><span class="lineno">  466</span>    <span class="keyword">using</span> type = <a class="code hl_friend" href="classddc_1_1DiscreteDomain.html#a5cdbd7cda4dd9c4369a8810c88cf3bed">DiscreteDomain</a>&lt;DDims...&gt;;</div>
 <div class="line"><a id="l00467" name="l00467"></a><span class="lineno">  467</span>};</div>
 <div class="line"><a id="l00468" name="l00468"></a><span class="lineno">  468</span> </div>
-<div class="line"><a id="l00469" name="l00469"></a><span class="lineno">  469</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;</div>
+<div class="line"><a id="l00469" name="l00469"></a><span class="lineno">  469</span><span class="keyword">template</span> &lt;ddc::concepts::type_seq T&gt;</div>
 <div class="line"><a id="l00470" name="l00470"></a><span class="lineno">  470</span><span class="keyword">using</span> convert_type_seq_to_discrete_domain_t = ConvertTypeSeqToDiscreteDomain&lt;T&gt;::type;</div>
 <div class="line"><a id="l00471" name="l00471"></a><span class="lineno">  471</span> </div>
 <div class="line"><a id="l00472" name="l00472"></a><span class="lineno">  472</span>} <span class="comment">// namespace detail</span></div>
@@ -686,7 +686,7 @@ $(document).ready(function(){initNavTree('discrete__domain_8hpp_source.html','')
 <div class="line"><a id="l00557" name="l00557"></a><span class="lineno">  557</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> DDom, concepts::discrete_dimension DDim1, concepts::discrete_dimension DDim2&gt;</div>
 <div class="line"><a id="l00558" name="l00558"></a><span class="lineno">  558</span><span class="keyword">using</span> replace_dim_of_t = <span class="keyword">decltype</span>(replace_dim_of&lt;DDim1, DDim2&gt;(</div>
 <div class="line"><a id="l00559" name="l00559"></a><span class="lineno">  559</span>        std::declval&lt;DDom&gt;(),</div>
-<div class="line"><a id="l00560" name="l00560"></a><span class="lineno">  560</span>        std::declval&lt;<span class="keyword">typename</span> detail::Rebind&lt;DDom, <a class="code hl_struct" href="namespaceddc.html#structddc_1_1TypeSeq">TypeSeq</a>&lt;DDim2&gt;&gt;::type&gt;()));</div>
+<div class="line"><a id="l00560" name="l00560"></a><span class="lineno">  560</span>        std::declval&lt;detail::rebind_t&lt;DDom, <a class="code hl_struct" href="namespaceddc.html#structddc_1_1TypeSeq">TypeSeq</a>&lt;DDim2&gt;&gt;&gt;()));</div>
 <div class="line"><a id="l00561" name="l00561"></a><span class="lineno">  561</span> </div>
 <div class="line"><a id="l00562" name="l00562"></a><span class="lineno">  562</span> </div>
 <div class="line"><a id="l00563" name="l00563"></a><span class="lineno">  563</span><span class="keyword">template</span> &lt;<a class="code hl_function" href="namespaceddc.html#a824d715f606cabc059607f3218923473">concepts</a>::discrete_dimension... QueryDDims, <a class="code hl_function" href="namespaceddc.html#a824d715f606cabc059607f3218923473">concepts</a>::discrete_dimension... DDims&gt;</div>

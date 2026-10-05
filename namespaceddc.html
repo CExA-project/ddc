@@ -360,7 +360,7 @@ Typedefs</h2></td></tr>
 <tr class="memitem:ac18286f7d289865ee020284651f29bb1"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#ac18286f7d289865ee020284651f29bb1">Coordinate</a> = detail::TaggedVector&lt; <a class="el" href="namespaceddc.html#a287fd69405cf97cad795bf3d70139928">CoordinateElement</a>, CDims... &gt;</td></tr>
 <tr class="memdesc:ac18286f7d289865ee020284651f29bb1"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Coordinate represents a coordinate in the continuous space.  <br /></td></tr>
 <tr class="separator:ac18286f7d289865ee020284651f29bb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1301052312925a8f39c8e9ae726544df" id="r_a1301052312925a8f39c8e9ae726544df"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> T &gt; </td></tr>
+<tr class="memitem:a1301052312925a8f39c8e9ae726544df" id="r_a1301052312925a8f39c8e9ae726544df"><td class="memTemplParams" colspan="2">template&lt;concepts::discrete_element T&gt; </td></tr>
 <tr class="memitem:a1301052312925a8f39c8e9ae726544df"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a1301052312925a8f39c8e9ae726544df">coordinate_of_t</a> = <a class="el" href="namespaceddc.html#structddc_1_1coordinate__of">coordinate_of</a>&lt; T &gt;::type</td></tr>
 <tr class="memdesc:a1301052312925a8f39c8e9ae726544df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper type of <a class="el" href="namespaceddc.html#structddc_1_1coordinate__of">ddc::coordinate_of</a>.  <br /></td></tr>
 <tr class="separator:a1301052312925a8f39c8e9ae726544df"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -368,9 +368,9 @@ Typedefs</h2></td></tr>
 <tr class="memitem:a46e92a9cb87ee7573d46fa56d333a09b"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a46e92a9cb87ee7573d46fa56d333a09b">remove_dims_of_t</a> = <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">decltype</a>(<a class="el" href="namespaceddc.html#a33f7211707aa798fa665779d9a39a741">remove_dims_of</a>&lt; DDims... &gt;(std::declval&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDom</a> &gt;()))</td></tr>
 <tr class="memdesc:a46e92a9cb87ee7573d46fa56d333a09b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type alias for the discrete domain obtained by removing dimensions DDims from DDom.  <br /></td></tr>
 <tr class="separator:a46e92a9cb87ee7573d46fa56d333a09b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9c0b74b9ea39de8418605285b0001d98" id="r_a9c0b74b9ea39de8418605285b0001d98"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDom</a> , concepts::discrete_dimension DDim1, concepts::discrete_dimension DDim2&gt; </td></tr>
-<tr class="memitem:a9c0b74b9ea39de8418605285b0001d98"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a9c0b74b9ea39de8418605285b0001d98">replace_dim_of_t</a> = <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">decltype</a>(<a class="el" href="namespaceddc.html#a8fff0be52157fd76f788f49870669444">replace_dim_of</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim1</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim2</a> &gt;(std::declval&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDom</a> &gt;(), std::declval&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> detail::Rebind&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDom</a>, <a class="el" href="namespaceddc.html#structddc_1_1TypeSeq">TypeSeq</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim2</a> &gt; &gt;::type &gt;()))</td></tr>
-<tr class="separator:a9c0b74b9ea39de8418605285b0001d98"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae0e613fb967d1e2f0921b17d3624289f" id="r_ae0e613fb967d1e2f0921b17d3624289f"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDom</a> , concepts::discrete_dimension DDim1, concepts::discrete_dimension DDim2&gt; </td></tr>
+<tr class="memitem:ae0e613fb967d1e2f0921b17d3624289f"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#ae0e613fb967d1e2f0921b17d3624289f">replace_dim_of_t</a> = <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">decltype</a>(<a class="el" href="namespaceddc.html#a8fff0be52157fd76f788f49870669444">replace_dim_of</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim1</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim2</a> &gt;(std::declval&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDom</a> &gt;(), std::declval&lt; detail::rebind_t&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDom</a>, <a class="el" href="namespaceddc.html#structddc_1_1TypeSeq">TypeSeq</a>&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim2</a> &gt; &gt; &gt;()))</td></tr>
+<tr class="separator:ae0e613fb967d1e2f0921b17d3624289f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4c7a2930d12432d53c1fcfbb1a1ecda9" id="r_a4c7a2930d12432d53c1fcfbb1a1ecda9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a4c7a2930d12432d53c1fcfbb1a1ecda9">DiscreteElementType</a> = std::size_t</td></tr>
 <tr class="memdesc:a4c7a2930d12432d53c1fcfbb1a1ecda9"><td class="mdescLeft">&#160;</td><td class="mdescRight">A DiscreteCoordElement is a scalar that identifies an element of the discrete dimension.  <br /></td></tr>
 <tr class="separator:a4c7a2930d12432d53c1fcfbb1a1ecda9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -389,19 +389,19 @@ Typedefs</h2></td></tr>
 <tr class="memitem:a6e034c20a0f989ef686b42053d2413f0"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a6e034c20a0f989ef686b42053d2413f0">combine_t</a> = detail::Combine&lt; TaggedTypes... &gt;::type</td></tr>
 <tr class="memdesc:a6e034c20a0f989ef686b42053d2413f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">A helper structure to determine the type when combining tags across containers.  <br /></td></tr>
 <tr class="separator:a6e034c20a0f989ef686b42053d2413f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aac872925bbf84b8fb31ee552b8c644e2" id="r_aac872925bbf84b8fb31ee552b8c644e2"><td class="memTemplParams" colspan="2">template&lt;std::size_t I, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">TagSeq</a> &gt; </td></tr>
+<tr class="memitem:aac872925bbf84b8fb31ee552b8c644e2" id="r_aac872925bbf84b8fb31ee552b8c644e2"><td class="memTemplParams" colspan="2">template&lt;std::size_t I, concepts::type_seq TagSeq&gt; </td></tr>
 <tr class="memitem:aac872925bbf84b8fb31ee552b8c644e2"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#aac872925bbf84b8fb31ee552b8c644e2">type_seq_element_t</a> = detail::TypeSeqElement&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">I</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">TagSeq</a> &gt;::type</td></tr>
 <tr class="separator:aac872925bbf84b8fb31ee552b8c644e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aca728c9bd94b0bcce557f7536672f4d6" id="r_aca728c9bd94b0bcce557f7536672f4d6"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">TagSeqA</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">TagSeqB</a> &gt; </td></tr>
+<tr class="memitem:aca728c9bd94b0bcce557f7536672f4d6" id="r_aca728c9bd94b0bcce557f7536672f4d6"><td class="memTemplParams" colspan="2">template&lt;concepts::type_seq TagSeqA, concepts::type_seq TagSeqB&gt; </td></tr>
 <tr class="memitem:aca728c9bd94b0bcce557f7536672f4d6"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#aca728c9bd94b0bcce557f7536672f4d6">type_seq_remove_t</a> = detail::TypeSeqRemove&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">TagSeqA</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">TagSeqB</a>, <a class="el" href="namespaceddc.html#structddc_1_1TypeSeq">TypeSeq</a>&lt;&gt; &gt;::type</td></tr>
 <tr class="separator:aca728c9bd94b0bcce557f7536672f4d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a968f4044c92e81863e7465b4bb8ea199" id="r_a968f4044c92e81863e7465b4bb8ea199"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">TagSeqA</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">TagSeqB</a> &gt; </td></tr>
+<tr class="memitem:a968f4044c92e81863e7465b4bb8ea199" id="r_a968f4044c92e81863e7465b4bb8ea199"><td class="memTemplParams" colspan="2">template&lt;concepts::type_seq TagSeqA, concepts::type_seq TagSeqB&gt; </td></tr>
 <tr class="memitem:a968f4044c92e81863e7465b4bb8ea199"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a968f4044c92e81863e7465b4bb8ea199">type_seq_merge_t</a> = detail::TypeSeqMerge&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">TagSeqA</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">TagSeqB</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">TagSeqA</a> &gt;::type</td></tr>
 <tr class="separator:a968f4044c92e81863e7465b4bb8ea199"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0d55e6f247b8d54423ac9a7acccdf7d4" id="r_a0d55e6f247b8d54423ac9a7acccdf7d4"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">TagSeqA</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">TagSeqB</a> &gt; </td></tr>
+<tr class="memitem:a0d55e6f247b8d54423ac9a7acccdf7d4" id="r_a0d55e6f247b8d54423ac9a7acccdf7d4"><td class="memTemplParams" colspan="2">template&lt;concepts::type_seq TagSeqA, concepts::type_seq TagSeqB&gt; </td></tr>
 <tr class="memitem:a0d55e6f247b8d54423ac9a7acccdf7d4"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a0d55e6f247b8d54423ac9a7acccdf7d4">type_seq_cat_t</a> = detail::TypeSeqCat&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">TagSeqA</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">TagSeqB</a> &gt;::type</td></tr>
 <tr class="separator:a0d55e6f247b8d54423ac9a7acccdf7d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab9f619a4c2f9b3553be8287bcaab4266" id="r_ab9f619a4c2f9b3553be8287bcaab4266"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">TagSeqA</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">TagSeqB</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">TagSeqC</a> &gt; </td></tr>
+<tr class="memitem:ab9f619a4c2f9b3553be8287bcaab4266" id="r_ab9f619a4c2f9b3553be8287bcaab4266"><td class="memTemplParams" colspan="2">template&lt;concepts::type_seq TagSeqA, concepts::type_seq TagSeqB, concepts::type_seq TagSeqC&gt; </td></tr>
 <tr class="memitem:ab9f619a4c2f9b3553be8287bcaab4266"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#ab9f619a4c2f9b3553be8287bcaab4266">type_seq_replace_t</a> = detail::TypeSeqReplace&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">TagSeqA</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">TagSeqB</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">TagSeqC</a>, <a class="el" href="namespaceddc.html#structddc_1_1TypeSeq">TypeSeq</a>&lt;&gt; &gt;::type</td></tr>
 <tr class="separator:ab9f619a4c2f9b3553be8287bcaab4266"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a19d7cba53243dc1ced419a15a7da6ccc" id="r_a19d7cba53243dc1ced419a15a7da6ccc"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> T &gt; </td></tr>
@@ -994,27 +994,27 @@ Variables</h2></td></tr>
 <tr class="memitem:a9e7351728b259a0f934c1309d571185c" id="r_a9e7351728b259a0f934c1309d571185c"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> T &gt; </td></tr>
 <tr class="memitem:a9e7351728b259a0f934c1309d571185c"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">bool</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a9e7351728b259a0f934c1309d571185c">is_strided_discrete_domain_v</a> = <a class="el" href="structddc_1_1is__strided__discrete__domain.html">is_strided_discrete_domain</a>&lt;T&gt;::value</td></tr>
 <tr class="separator:a9e7351728b259a0f934c1309d571185c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a07225ddfc8c2b9f43e44512dd870c11a" id="r_a07225ddfc8c2b9f43e44512dd870c11a"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#structddc_1_1TypeSeq">TypeSeq</a> &gt; </td></tr>
+<tr class="memitem:a07225ddfc8c2b9f43e44512dd870c11a" id="r_a07225ddfc8c2b9f43e44512dd870c11a"><td class="memTemplParams" colspan="2">template&lt;concepts::type_seq TypeSeq&gt; </td></tr>
 <tr class="memitem:a07225ddfc8c2b9f43e44512dd870c11a"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> std::size_t&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a07225ddfc8c2b9f43e44512dd870c11a">type_seq_size_v</a> = std::numeric_limits&lt;std::size_t&gt;::max()</td></tr>
 <tr class="separator:a07225ddfc8c2b9f43e44512dd870c11a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a03c02270c38788aac1e33ccbcceb7045" id="r_a03c02270c38788aac1e33ccbcceb7045"><td class="memTemplParams" colspan="2">template&lt;class... Tags&gt; </td></tr>
 <tr class="memitem:a03c02270c38788aac1e33ccbcceb7045"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> std::size_t&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a03c02270c38788aac1e33ccbcceb7045">type_seq_size_v&lt; TypeSeq&lt; Tags... &gt; &gt;</a> = sizeof...(<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Tags</a>)</td></tr>
 <tr class="memdesc:a03c02270c38788aac1e33ccbcceb7045"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the number of types in a <a class="el" href="namespaceddc.html">TypeSeq</a>.  <br /></td></tr>
 <tr class="separator:a03c02270c38788aac1e33ccbcceb7045"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeca301c39c686c866ba941fa0fc18087" id="r_aeca301c39c686c866ba941fa0fc18087"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">QueryTag</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#structddc_1_1TypeSeq">TypeSeq</a> &gt; </td></tr>
+<tr class="memitem:aeca301c39c686c866ba941fa0fc18087" id="r_aeca301c39c686c866ba941fa0fc18087"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">QueryTag</a> , concepts::type_seq TypeSeq&gt; </td></tr>
 <tr class="memitem:aeca301c39c686c866ba941fa0fc18087"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> std::size_t&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#aeca301c39c686c866ba941fa0fc18087">type_seq_rank_v</a> = std::numeric_limits&lt;std::size_t&gt;::max()</td></tr>
 <tr class="separator:aeca301c39c686c866ba941fa0fc18087"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9cbbe24794e257e1ad5d4271254830f4" id="r_a9cbbe24794e257e1ad5d4271254830f4"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">QueryTag</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">OTypeSeq</a> &gt; </td></tr>
+<tr class="memitem:a9cbbe24794e257e1ad5d4271254830f4" id="r_a9cbbe24794e257e1ad5d4271254830f4"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">QueryTag</a> , concepts::type_seq OTypeSeq&gt; </td></tr>
 <tr class="memitem:a9cbbe24794e257e1ad5d4271254830f4"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">bool</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a9cbbe24794e257e1ad5d4271254830f4">in_tags_v</a> = <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">false</a></td></tr>
 <tr class="separator:a9cbbe24794e257e1ad5d4271254830f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a01ce9c84e558f4ceb6405b30561ef63c" id="r_a01ce9c84e558f4ceb6405b30561ef63c"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#structddc_1_1TypeSeq">TypeSeq</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">OTypeSeq</a> &gt; </td></tr>
+<tr class="memitem:a01ce9c84e558f4ceb6405b30561ef63c" id="r_a01ce9c84e558f4ceb6405b30561ef63c"><td class="memTemplParams" colspan="2">template&lt;concepts::type_seq TypeSeq, concepts::type_seq OTypeSeq&gt; </td></tr>
 <tr class="memitem:a01ce9c84e558f4ceb6405b30561ef63c"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">bool</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a01ce9c84e558f4ceb6405b30561ef63c">type_seq_contains_v</a> = <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">false</a></td></tr>
 <tr class="separator:a01ce9c84e558f4ceb6405b30561ef63c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a06050f268b7171c8381560e34bdff98f" id="r_a06050f268b7171c8381560e34bdff98f"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#structddc_1_1TypeSeq">TypeSeq</a> &gt; </td></tr>
+<tr class="memitem:a06050f268b7171c8381560e34bdff98f" id="r_a06050f268b7171c8381560e34bdff98f"><td class="memTemplParams" colspan="2">template&lt;concepts::type_seq TypeSeq&gt; </td></tr>
 <tr class="memitem:a06050f268b7171c8381560e34bdff98f"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">bool</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a06050f268b7171c8381560e34bdff98f">type_seq_is_unique_v</a> = <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">false</a></td></tr>
 <tr class="separator:a06050f268b7171c8381560e34bdff98f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeaf49959e4d14d94551a7bafcb3b67a8" id="r_aeaf49959e4d14d94551a7bafcb3b67a8"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#structddc_1_1TypeSeq">TypeSeq</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">B</a> &gt; </td></tr>
-<tr class="memitem:aeaf49959e4d14d94551a7bafcb3b67a8"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">bool</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#aeaf49959e4d14d94551a7bafcb3b67a8">type_seq_same_v</a> = <a class="el" href="namespaceddc.html#a01ce9c84e558f4ceb6405b30561ef63c">type_seq_contains_v</a>&lt;<a class="el" href="namespaceddc.html#structddc_1_1TypeSeq">TypeSeq</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">B</a>&gt; &amp;&amp; <a class="el" href="namespaceddc.html#a01ce9c84e558f4ceb6405b30561ef63c">type_seq_contains_v</a>&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">B</a>, <a class="el" href="namespaceddc.html#structddc_1_1TypeSeq">TypeSeq</a>&gt;</td></tr>
+<tr class="memitem:aeaf49959e4d14d94551a7bafcb3b67a8" id="r_aeaf49959e4d14d94551a7bafcb3b67a8"><td class="memTemplParams" colspan="2">template&lt;concepts::type_seq TypeSeq, concepts::type_seq OTypeSeq&gt; </td></tr>
+<tr class="memitem:aeaf49959e4d14d94551a7bafcb3b67a8"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">bool</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#aeaf49959e4d14d94551a7bafcb3b67a8">type_seq_same_v</a> = <a class="el" href="namespaceddc.html#a01ce9c84e558f4ceb6405b30561ef63c">type_seq_contains_v</a>&lt;<a class="el" href="namespaceddc.html#structddc_1_1TypeSeq">TypeSeq</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">OTypeSeq</a>&gt; &amp;&amp; <a class="el" href="namespaceddc.html#a01ce9c84e558f4ceb6405b30561ef63c">type_seq_contains_v</a>&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">OTypeSeq</a>, <a class="el" href="namespaceddc.html#structddc_1_1TypeSeq">TypeSeq</a>&gt;</td></tr>
 <tr class="separator:aeaf49959e4d14d94551a7bafcb3b67a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a25a93f03da9cf19bfbeea449083b587c" id="r_a25a93f03da9cf19bfbeea449083b587c"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">QueryTag</a> , class... Tags&gt; </td></tr>
 <tr class="memitem:a25a93f03da9cf19bfbeea449083b587c"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">bool</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a25a93f03da9cf19bfbeea449083b587c">in_tags_v&lt; QueryTag, TypeSeq&lt; Tags... &gt; &gt;</a> = detail::TypeSeqRank&lt;detail::SingleType&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">QueryTag</a>&gt;, <a class="el" href="namespaceddc.html#structddc_1_1TypeSeq">TypeSeq</a>&lt;Tags...&gt;&gt;::present</td></tr>
@@ -1133,7 +1133,7 @@ reference_type</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<div class="textblock"><div class="compoundTemplParams">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> T&gt;<br />
+<div class="textblock"><div class="compoundTemplParams">template&lt;concepts::discrete_element T&gt;<br />
 struct ddc::coordinate_of&lt; T &gt;</div>
 <p class="definition">Definition at line <a class="el" href="coordinate_8hpp_source.html#l00044">44</a> of file <a class="el" href="coordinate_8hpp_source.html">coordinate.hpp</a>.</p>
 </div><div class="dynheader">
@@ -1450,7 +1450,7 @@ template&lt;class... CDims&gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> T &gt; </div>
+template&lt;concepts::discrete_element T&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a> <a class="el" href="namespaceddc.html#a1301052312925a8f39c8e9ae726544df">ddc::coordinate_of_t</a> = <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typedef</a> <a class="el" href="namespaceddc.html#structddc_1_1coordinate__of">coordinate_of</a>&lt;T&gt;::type</td>
@@ -1460,7 +1460,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 
 <p>Helper type of <a class="el" href="namespaceddc.html#structddc_1_1coordinate__of">ddc::coordinate_of</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="coordinate_8hpp_source.html#l00052">52</a> of file <a class="el" href="coordinate_8hpp_source.html">coordinate.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="coordinate_8hpp_source.html#l00051">51</a> of file <a class="el" href="coordinate_8hpp_source.html">coordinate.hpp</a>.</p>
 
 </div>
 </div>
@@ -1492,8 +1492,8 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 
 </div>
 </div>
-<a id="a9c0b74b9ea39de8418605285b0001d98" name="a9c0b74b9ea39de8418605285b0001d98"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9c0b74b9ea39de8418605285b0001d98">&#9670;&#160;</a></span>replace_dim_of_t</h2>
+<a id="ae0e613fb967d1e2f0921b17d3624289f" name="ae0e613fb967d1e2f0921b17d3624289f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae0e613fb967d1e2f0921b17d3624289f">&#9670;&#160;</a></span>replace_dim_of_t</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1501,7 +1501,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDom</a> , concepts::discrete_dimension DDim1, concepts::discrete_dimension DDim2&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a> <a class="el" href="namespaceddc.html#a9c0b74b9ea39de8418605285b0001d98">ddc::replace_dim_of_t</a> = <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typedef</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">decltype</a>(<a class="el" href="namespaceddc.html#a8fff0be52157fd76f788f49870669444">replace_dim_of</a>&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim1</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim2</a>&gt;( std::declval&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDom</a>&gt;(), std::declval&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typename</a> detail::Rebind&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDom</a>, <a class="el" href="namespaceddc.html#structddc_1_1TypeSeq">TypeSeq</a>&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim2</a>&gt; &gt;::type&gt;()))</td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a> <a class="el" href="namespaceddc.html#ae0e613fb967d1e2f0921b17d3624289f">ddc::replace_dim_of_t</a> = <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typedef</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">decltype</a>(<a class="el" href="namespaceddc.html#a8fff0be52157fd76f788f49870669444">replace_dim_of</a>&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim1</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim2</a>&gt;( std::declval&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDom</a>&gt;(), std::declval&lt;detail::rebind_t&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDom</a>, <a class="el" href="namespaceddc.html#structddc_1_1TypeSeq">TypeSeq</a>&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">DDim2</a>&gt; &gt;&gt;()))</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1631,7 +1631,7 @@ template&lt;class... TaggedTypes&gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;std::size_t I, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">TagSeq</a> &gt; </div>
+template&lt;std::size_t I, concepts::type_seq TagSeq&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a> <a class="el" href="namespaceddc.html#aac872925bbf84b8fb31ee552b8c644e2">ddc::type_seq_element_t</a> = <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typedef</a> detail::TypeSeqElement&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">I</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">TagSeq</a>&gt;::type</td>
@@ -1639,7 +1639,7 @@ template&lt;std::size_t I, <a class="el" href="namespaceddc.html#a70f12a43ed0afb
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="type__seq_8hpp_source.html#l00278">278</a> of file <a class="el" href="type__seq_8hpp_source.html">type_seq.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="type__seq_8hpp_source.html#l00299">299</a> of file <a class="el" href="type__seq_8hpp_source.html">type_seq.hpp</a>.</p>
 
 </div>
 </div>
@@ -1649,7 +1649,7 @@ template&lt;std::size_t I, <a class="el" href="namespaceddc.html#a70f12a43ed0afb
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">TagSeqA</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">TagSeqB</a> &gt; </div>
+template&lt;concepts::type_seq TagSeqA, concepts::type_seq TagSeqB&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a> <a class="el" href="namespaceddc.html#aca728c9bd94b0bcce557f7536672f4d6">ddc::type_seq_remove_t</a> = <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typedef</a> detail::TypeSeqRemove&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">TagSeqA</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">TagSeqB</a>, <a class="el" href="namespaceddc.html#structddc_1_1TypeSeq">TypeSeq</a>&lt;&gt; &gt;::type</td>
@@ -1657,7 +1657,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="type__seq_8hpp_source.html#l00281">281</a> of file <a class="el" href="type__seq_8hpp_source.html">type_seq.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="type__seq_8hpp_source.html#l00302">302</a> of file <a class="el" href="type__seq_8hpp_source.html">type_seq.hpp</a>.</p>
 
 </div>
 </div>
@@ -1667,7 +1667,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">TagSeqA</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">TagSeqB</a> &gt; </div>
+template&lt;concepts::type_seq TagSeqA, concepts::type_seq TagSeqB&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a> <a class="el" href="namespaceddc.html#a968f4044c92e81863e7465b4bb8ea199">ddc::type_seq_merge_t</a> = <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typedef</a> detail::TypeSeqMerge&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">TagSeqA</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">TagSeqB</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">TagSeqA</a>&gt;::type</td>
@@ -1675,7 +1675,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="type__seq_8hpp_source.html#l00284">284</a> of file <a class="el" href="type__seq_8hpp_source.html">type_seq.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="type__seq_8hpp_source.html#l00305">305</a> of file <a class="el" href="type__seq_8hpp_source.html">type_seq.hpp</a>.</p>
 
 </div>
 </div>
@@ -1685,7 +1685,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">TagSeqA</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">TagSeqB</a> &gt; </div>
+template&lt;concepts::type_seq TagSeqA, concepts::type_seq TagSeqB&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a> <a class="el" href="namespaceddc.html#a0d55e6f247b8d54423ac9a7acccdf7d4">ddc::type_seq_cat_t</a> = <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typedef</a> detail::TypeSeqCat&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">TagSeqA</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">TagSeqB</a>&gt;::type</td>
@@ -1693,7 +1693,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="type__seq_8hpp_source.html#l00287">287</a> of file <a class="el" href="type__seq_8hpp_source.html">type_seq.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="type__seq_8hpp_source.html#l00308">308</a> of file <a class="el" href="type__seq_8hpp_source.html">type_seq.hpp</a>.</p>
 
 </div>
 </div>
@@ -1703,7 +1703,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">TagSeqA</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">TagSeqB</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">TagSeqC</a> &gt; </div>
+template&lt;concepts::type_seq TagSeqA, concepts::type_seq TagSeqB, concepts::type_seq TagSeqC&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a> <a class="el" href="namespaceddc.html#ab9f619a4c2f9b3553be8287bcaab4266">ddc::type_seq_replace_t</a> = <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typedef</a> detail::TypeSeqReplace&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">TagSeqA</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">TagSeqB</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">TagSeqC</a>, <a class="el" href="namespaceddc.html#structddc_1_1TypeSeq">TypeSeq</a>&lt;&gt; &gt;::type</td>
@@ -1711,7 +1711,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="type__seq_8hpp_source.html#l00290">290</a> of file <a class="el" href="type__seq_8hpp_source.html">type_seq.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="type__seq_8hpp_source.html#l00311">311</a> of file <a class="el" href="type__seq_8hpp_source.html">type_seq.hpp</a>.</p>
 
 </div>
 </div>
@@ -1729,7 +1729,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="type__seq_8hpp_source.html#l00299">299</a> of file <a class="el" href="type__seq_8hpp_source.html">type_seq.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="type__seq_8hpp_source.html#l00320">320</a> of file <a class="el" href="type__seq_8hpp_source.html">type_seq.hpp</a>.</p>
 
 </div>
 </div>
@@ -7675,7 +7675,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#structddc_1_1TypeSeq">TypeSeq</a> &gt; </div>
+template&lt;concepts::type_seq TypeSeq&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -7691,7 +7691,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="type__seq_8hpp_source.html#l00244">244</a> of file <a class="el" href="type__seq_8hpp_source.html">type_seq.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="type__seq_8hpp_source.html#l00264">264</a> of file <a class="el" href="type__seq_8hpp_source.html">type_seq.hpp</a>.</p>
 
 </div>
 </div>
@@ -7719,7 +7719,7 @@ template&lt;class... Tags&gt; </div>
 
 <p>Returns the number of types in a <a class="el" href="namespaceddc.html">TypeSeq</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="type__seq_8hpp_source.html#l00248">248</a> of file <a class="el" href="type__seq_8hpp_source.html">type_seq.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="type__seq_8hpp_source.html#l00268">268</a> of file <a class="el" href="type__seq_8hpp_source.html">type_seq.hpp</a>.</p>
 
 </div>
 </div>
@@ -7729,7 +7729,7 @@ template&lt;class... Tags&gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">QueryTag</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#structddc_1_1TypeSeq">TypeSeq</a> &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">QueryTag</a> , concepts::type_seq TypeSeq&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -7745,7 +7745,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="type__seq_8hpp_source.html#l00251">251</a> of file <a class="el" href="type__seq_8hpp_source.html">type_seq.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="type__seq_8hpp_source.html#l00271">271</a> of file <a class="el" href="type__seq_8hpp_source.html">type_seq.hpp</a>.</p>
 
 </div>
 </div>
@@ -7755,7 +7755,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">QueryTag</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">OTypeSeq</a> &gt; </div>
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">QueryTag</a> , concepts::type_seq OTypeSeq&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -7771,7 +7771,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="type__seq_8hpp_source.html#l00254">254</a> of file <a class="el" href="type__seq_8hpp_source.html">type_seq.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="type__seq_8hpp_source.html#l00274">274</a> of file <a class="el" href="type__seq_8hpp_source.html">type_seq.hpp</a>.</p>
 
 </div>
 </div>
@@ -7781,7 +7781,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#structddc_1_1TypeSeq">TypeSeq</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">OTypeSeq</a> &gt; </div>
+template&lt;concepts::type_seq TypeSeq, concepts::type_seq OTypeSeq&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -7797,7 +7797,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="type__seq_8hpp_source.html#l00257">257</a> of file <a class="el" href="type__seq_8hpp_source.html">type_seq.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="type__seq_8hpp_source.html#l00277">277</a> of file <a class="el" href="type__seq_8hpp_source.html">type_seq.hpp</a>.</p>
 
 </div>
 </div>
@@ -7807,7 +7807,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#structddc_1_1TypeSeq">TypeSeq</a> &gt; </div>
+template&lt;concepts::type_seq TypeSeq&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -7823,7 +7823,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="type__seq_8hpp_source.html#l00260">260</a> of file <a class="el" href="type__seq_8hpp_source.html">type_seq.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="type__seq_8hpp_source.html#l00280">280</a> of file <a class="el" href="type__seq_8hpp_source.html">type_seq.hpp</a>.</p>
 
 </div>
 </div>
@@ -7833,13 +7833,13 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#structddc_1_1TypeSeq">TypeSeq</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">B</a> &gt; </div>
+template&lt;concepts::type_seq TypeSeq, concepts::type_seq OTypeSeq&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">bool</a> ddc::type_seq_same_v = <a class="el" href="namespaceddc.html#a01ce9c84e558f4ceb6405b30561ef63c">type_seq_contains_v</a>&lt;<a class="el" href="namespaceddc.html#structddc_1_1TypeSeq">TypeSeq</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">B</a>&gt; &amp;&amp; <a class="el" href="namespaceddc.html#a01ce9c84e558f4ceb6405b30561ef63c">type_seq_contains_v</a>&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">B</a>, <a class="el" href="namespaceddc.html#structddc_1_1TypeSeq">TypeSeq</a>&gt;</td>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">constexpr</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">bool</a> ddc::type_seq_same_v = <a class="el" href="namespaceddc.html#a01ce9c84e558f4ceb6405b30561ef63c">type_seq_contains_v</a>&lt;<a class="el" href="namespaceddc.html#structddc_1_1TypeSeq">TypeSeq</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">OTypeSeq</a>&gt; &amp;&amp; <a class="el" href="namespaceddc.html#a01ce9c84e558f4ceb6405b30561ef63c">type_seq_contains_v</a>&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">OTypeSeq</a>, <a class="el" href="namespaceddc.html#structddc_1_1TypeSeq">TypeSeq</a>&gt;</td>
         </tr>
       </table>
   </td>
@@ -7849,7 +7849,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="type__seq_8hpp_source.html#l00263">263</a> of file <a class="el" href="type__seq_8hpp_source.html">type_seq.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="type__seq_8hpp_source.html#l00283">283</a> of file <a class="el" href="type__seq_8hpp_source.html">type_seq.hpp</a>.</p>
 
 </div>
 </div>
@@ -7875,7 +7875,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="type__seq_8hpp_source.html#l00266">266</a> of file <a class="el" href="type__seq_8hpp_source.html">type_seq.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="type__seq_8hpp_source.html#l00287">287</a> of file <a class="el" href="type__seq_8hpp_source.html">type_seq.hpp</a>.</p>
 
 </div>
 </div>
@@ -7901,7 +7901,7 @@ template&lt;class... Tags, <a class="el" href="namespaceddc.html#a70f12a43ed0afb
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="type__seq_8hpp_source.html#l00270">270</a> of file <a class="el" href="type__seq_8hpp_source.html">type_seq.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="type__seq_8hpp_source.html#l00291">291</a> of file <a class="el" href="type__seq_8hpp_source.html">type_seq.hpp</a>.</p>
 
 </div>
 </div>
@@ -7927,7 +7927,7 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="type__seq_8hpp_source.html#l00274">274</a> of file <a class="el" href="type__seq_8hpp_source.html">type_seq.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="type__seq_8hpp_source.html#l00295">295</a> of file <a class="el" href="type__seq_8hpp_source.html">type_seq.hpp</a>.</p>
 
 </div>
 </div>
@@ -7955,10 +7955,10 @@ template&lt;class... Tags&gt; </div>
 <b>Initial value:</b><div class="fragment"><div class="line">= ((<a class="code hl_variable" href="namespaceddc.html#a07225ddfc8c2b9f43e44512dd870c11a">type_seq_size_v</a>&lt;<a class="code hl_typedef" href="namespaceddc.html#aca728c9bd94b0bcce557f7536672f4d6">type_seq_remove_t</a>&lt;TypeSeq&lt;Tags...&gt;, TypeSeq&lt;Tags&gt;&gt;&gt;</div>
 <div class="line">            == <span class="keyword">sizeof</span>...(Tags) - 1)</div>
 <div class="line">           &amp;&amp; ...)</div>
-<div class="ttc" id="anamespaceddc_html_a07225ddfc8c2b9f43e44512dd870c11a"><div class="ttname"><a href="namespaceddc.html#a07225ddfc8c2b9f43e44512dd870c11a">ddc::type_seq_size_v</a></div><div class="ttdeci">constexpr std::size_t type_seq_size_v</div><div class="ttdef"><b>Definition</b> <a href="type__seq_8hpp_source.html#l00244">type_seq.hpp:244</a></div></div>
-<div class="ttc" id="anamespaceddc_html_aca728c9bd94b0bcce557f7536672f4d6"><div class="ttname"><a href="namespaceddc.html#aca728c9bd94b0bcce557f7536672f4d6">ddc::type_seq_remove_t</a></div><div class="ttdeci">detail::TypeSeqRemove&lt; TagSeqA, TagSeqB, TypeSeq&lt;&gt; &gt;::type type_seq_remove_t</div><div class="ttdef"><b>Definition</b> <a href="type__seq_8hpp_source.html#l00281">type_seq.hpp:281</a></div></div>
+<div class="ttc" id="anamespaceddc_html_a07225ddfc8c2b9f43e44512dd870c11a"><div class="ttname"><a href="namespaceddc.html#a07225ddfc8c2b9f43e44512dd870c11a">ddc::type_seq_size_v</a></div><div class="ttdeci">constexpr std::size_t type_seq_size_v</div><div class="ttdef"><b>Definition</b> <a href="type__seq_8hpp_source.html#l00264">type_seq.hpp:264</a></div></div>
+<div class="ttc" id="anamespaceddc_html_aca728c9bd94b0bcce557f7536672f4d6"><div class="ttname"><a href="namespaceddc.html#aca728c9bd94b0bcce557f7536672f4d6">ddc::type_seq_remove_t</a></div><div class="ttdeci">detail::TypeSeqRemove&lt; TagSeqA, TagSeqB, TypeSeq&lt;&gt; &gt;::type type_seq_remove_t</div><div class="ttdef"><b>Definition</b> <a href="type__seq_8hpp_source.html#l00302">type_seq.hpp:302</a></div></div>
 </div><!-- fragment -->
-<p class="definition">Definition at line <a class="el" href="type__seq_8hpp_source.html#l00293">293</a> of file <a class="el" href="type__seq_8hpp_source.html">type_seq.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="type__seq_8hpp_source.html#l00314">314</a> of file <a class="el" href="type__seq_8hpp_source.html">type_seq.hpp</a>.</p>
 
 </div>
 </div>

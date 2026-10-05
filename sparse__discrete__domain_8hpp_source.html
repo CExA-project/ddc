@@ -630,7 +630,7 @@ $(document).ready(function(){initNavTree('sparse__discrete__domain_8hpp_source.h
 <div class="line"><a id="l00501" name="l00501"></a><span class="lineno">  501</span> </div>
 <div class="line"><a id="l00502" name="l00502"></a><span class="lineno">  502</span><span class="keyword">namespace</span> detail {</div>
 <div class="line"><a id="l00503" name="l00503"></a><span class="lineno">  503</span> </div>
-<div class="line"><a id="l00504" name="l00504"></a><span class="lineno">  504</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;</div>
+<div class="line"><a id="l00504" name="l00504"></a><span class="lineno">  504</span><span class="keyword">template</span> &lt;ddc::concepts::type_seq T&gt;</div>
 <div class="line"><a id="l00505" name="l00505"></a><span class="lineno">  505</span><span class="keyword">struct</span> ConvertTypeSeqToSparseDiscreteDomain</div>
 <div class="line"><a id="l00506" name="l00506"></a><span class="lineno">  506</span>{</div>
 <div class="line"><a id="l00507" name="l00507"></a><span class="lineno">  507</span>};</div>
@@ -641,7 +641,7 @@ $(document).ready(function(){initNavTree('sparse__discrete__domain_8hpp_source.h
 <div class="line"><a id="l00512" name="l00512"></a><span class="lineno">  512</span>    <span class="keyword">using</span> type = <a class="code hl_friend" href="classddc_1_1SparseDiscreteDomain.html#adbf20e7b332f93bded029800e16d1743">SparseDiscreteDomain</a>&lt;DDims...&gt;;</div>
 <div class="line"><a id="l00513" name="l00513"></a><span class="lineno">  513</span>};</div>
 <div class="line"><a id="l00514" name="l00514"></a><span class="lineno">  514</span> </div>
-<div class="line"><a id="l00515" name="l00515"></a><span class="lineno">  515</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;</div>
+<div class="line"><a id="l00515" name="l00515"></a><span class="lineno">  515</span><span class="keyword">template</span> &lt;ddc::concepts::type_seq T&gt;</div>
 <div class="line"><a id="l00516" name="l00516"></a><span class="lineno">  516</span><span class="keyword">using</span> convert_type_seq_to_sparse_discrete_domain_t = ConvertTypeSeqToSparseDiscreteDomain&lt;T&gt;::type;</div>
 <div class="line"><a id="l00517" name="l00517"></a><span class="lineno">  517</span> </div>
 <div class="line"><a id="l00518" name="l00518"></a><span class="lineno">  518</span>} <span class="comment">// namespace detail</span></div>

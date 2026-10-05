@@ -119,8 +119,9 @@ var NAVTREEINDEX =
 "classddc_1_1SplineBuilder3D.html#a17b762611d4bad12a4153e613e010015",
 "classddc_1_1SplineEvaluator3D.html#a34acac0c85a62f94564e20bcd503c5a9",
 "classddc_1_1UniformBSplines_1_1Impl.html#a2dc314e17556001ffa98149ff99dbb73",
-"namespaceddc.html#a1679e10cfa3a064f0ea8119daa1499c7",
-"structddc_1_1DiscreteDomainIterator.html#a14bd183eec71df99a556a4a202444f84"
+"namespaceddc.html#a1528598edbaa0edd02bd0efe0e583338",
+"structddc_1_1DiscreteDomainIterator.html#a0fa1c5d0601a71295339733b0fff5342",
+"uniform_heat_equation.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

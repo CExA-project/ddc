@@ -169,18 +169,17 @@ $(document).ready(function(){initNavTree('coordinate_8hpp_source.html',''); init
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="comment">// Gives access to the type of the coordinates of a discrete element</span></div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="comment">// Example usage : &quot;using Coords = coordinate_of_t&lt;DElem&gt;;&quot;</span></div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="keyword">template</span> &lt;<a class="code hl_struct" href="namespaceddc.html#structddc_1_1coordinate__of">concepts</a>::discrete_element T&gt;</div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="keyword">struct</span> <a class="code hl_struct" href="namespaceddc.html#structddc_1_1coordinate__of">coordinate_of</a></div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>{</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="keyword">static_assert</span>(is_discrete_element_v&lt;T&gt;, <span class="stringliteral">&quot;Parameter T must be of type DiscreteElement&quot;</span>);</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="keyword">using</span> type = <span class="keyword">decltype</span>(coordinate(std::declval&lt;T&gt;()));</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>};</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span><span class="comment">/// Helper type of \ref ddc::coordinate_of</span></div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span><span class="keyword">using</span> coordinate_of_t = <a class="code hl_struct" href="namespaceddc.html#structddc_1_1coordinate__of">coordinate_of</a>&lt;T&gt;::type;</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>} <span class="comment">// namespace ddc</span></div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="keyword">using</span> type = <span class="keyword">decltype</span>(coordinate(std::declval&lt;T&gt;()));</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>};</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="comment">/// Helper type of \ref ddc::coordinate_of</span></div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span><span class="keyword">template</span> &lt;concepts::discrete_element T&gt;</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span><span class="keyword">using</span> coordinate_of_t = <a class="code hl_struct" href="namespaceddc.html#structddc_1_1coordinate__of">coordinate_of</a>&lt;T&gt;::type;</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>} <span class="comment">// namespace ddc</span></div>
 <div class="ttc" id="anamespaceddc_html"><div class="ttname"><a href="namespaceddc.html">ddc</a></div><div class="ttdoc">The top-level namespace of DDC.</div><div class="ttdef"><b>Definition</b> <a href="aligned__allocator_8hpp_source.html#l00011">aligned_allocator.hpp:11</a></div></div>
 <div class="ttc" id="anamespaceddc_html_a60164fcb7d2f9ff5349e45f923ad4034"><div class="ttname"><a href="namespaceddc.html#a60164fcb7d2f9ff5349e45f923ad4034">ddc::coordinate</a></div><div class="ttdeci">KOKKOS_FUNCTION Coordinate&lt; typename DDims::continuous_dimension_type... &gt; coordinate(DiscreteElement&lt; DDims... &gt; const &amp;c)</div><div class="ttdef"><b>Definition</b> <a href="coordinate_8hpp_source.html#l00033">coordinate.hpp:33</a></div></div>
 <div class="ttc" id="anamespaceddc_html_structddc_1_1coordinate__of"><div class="ttname"><a href="namespaceddc.html#structddc_1_1coordinate__of">ddc::coordinate_of</a></div><div class="ttdef"><b>Definition</b> <a href="coordinate_8hpp_source.html#l00044">coordinate.hpp:45</a></div></div>

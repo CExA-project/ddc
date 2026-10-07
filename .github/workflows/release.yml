@@ -3,9 +3,9 @@ name: Tag and release new version
 on:
   push:
     branches:
-    - 'main'
+      - 'main'
     paths:
-    - 'CMakeLists.txt'
+      - 'CMakeLists.txt'
 
 jobs:
   deployVersion:
@@ -16,7 +16,7 @@ jobs:
 
       - name: Check for version change
         id: tag_name
-        run:
+        run: |
           VERSION_LINE=$(grep -n "project(DDC VERSION" CMakeLists.txt  | cut -d: -f1)
           CURRENT_VERSION=$(sed -n ${VERSION_LINE}p CMakeLists.txt | grep -E "VERSION [0-9]+\.[0-9]+\.[0-9]+" -o | cut -d " " -f2)
           if git tag | grep -qw "v${CURRENT_VERSION}"
@@ -85,4 +85,3 @@ jobs:
           tag_name: ${{ steps.tag_name.outputs.TAG_NAME }}
           version: ${{ steps.tag_name.outputs.VERSION }}
           GH_TOKEN: ${{ github.token }}
-

@@ -1,0 +1,93 @@
+# Copyright (C) The DDC development team, see COPYRIGHT.md file
+#
+# SPDX-License-Identifier: MIT
+
+---
+name: Tag and release new version
+
+# yamllint disable-line rule:truthy
+on:
+  push:
+    branches:
+      - 'main'
+    paths:
+      - 'CMakeLists.txt'
+
+jobs:
+  deployVersion:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Check for version change
+        id: tag_name
+        run: |
+          VERSION_LINE=$(grep -n "project(DDC VERSION" CMakeLists.txt  | cut -d: -f1)
+          CURRENT_VERSION=$(sed -n ${VERSION_LINE}p CMakeLists.txt | grep -E "VERSION [0-9]+\.[0-9]+\.[0-9]+" -o | cut -d " " -f2)
+          if git tag | grep -qw "v${CURRENT_VERSION}"
+          then
+            echo "VERSION=EXISTING" > $GITHUB_OUTPUT
+          else
+            echo "VERSION=${CURRENT_VERSION}" > $GITHUB_OUTPUT
+            echo "TAG_NAME=v${CURRENT_VERSION}" > $GITHUB_OUTPUT
+          fi
+        shell: bash
+
+      - name: "Get release notes"
+        if: steps.tag_name.outputs.VERSION != 'EXISTING'
+        id: release_notes
+        run: |
+          START_LINE=$(grep "^## " CHANGELOG.md -n | head -1 | cut -d: -f -1)
+          END_LINE=$(grep "^## " CHANGELOG.md -n | head -2 | tail -1 | cut -d: -f -1)
+          START_LINE=$((${START_LINE}+1))
+          END_LINE=$((${END_LINE}-1))
+          echo "## What's Changed" > release_notes.md
+          sed -n ${START_LINE},${END_LINE}p CHANGELOG.md >> release_notes.md
+        shell: bash
+
+      - name: "Get full changelog"
+        if: steps.tag_name.outputs.VERSION != 'EXISTING'
+        run: |
+          PREVIOUS_TAG=$(git tag --sort=creatordate | tail -1)
+          echo "" >> release_notes.md
+          echo "**Full Changelog**: [${PREVIOUS_TAG}..${tag_name}](https://github.com/gyselax/gyselalibxx/compare/${PREVIOUS_TAG}..${tag_name})" >> release_notes.md
+        shell: bash
+        env:
+          tag_name: ${{ steps.tag_name.outputs.TAG_NAME }}
+
+      - name: "Get tag message"
+        id: tag_description
+        if: steps.tag_name.outputs.VERSION != 'EXISTING'
+        run: |
+          # Find the PR which created the release
+          CURRENT_RELEASE_COMMIT=$(git log -1 --pretty=%H)
+          PR_ID=$(gh api -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" /search/issues?q="${CURRENT_RELEASE_COMMIT}" | jq '.["items"][0]["number"]')
+
+          echo "TAG_DESCRIPTION=\"Release version ${version} (#{PR_ID})\""
+        shell: bash
+        env:
+          version: ${{ steps.tag_name.outputs.VERSION }}
+          GH_TOKEN: ${{ github.token }}
+
+      - name: "Update repo tags"
+        if: steps.tag_name.outputs.VERSION != 'EXISTING'
+        uses: EndBug/latest-tag@latest
+        with:
+          ref: ${{ steps.tag_name.outputs.TAG_NAME }}
+          description: ${{ steps.tag_description.outputs.TAG_DESCRIPTION }}
+
+      - name: "Update releases"
+        if: steps.tag_name.outputs.VERSION != 'EXISTING'
+        run: |
+          gh api \
+            --method POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            /repos/gyselax/gyselalibxx/releases \
+             -f "tag_name=${tag_name}" -f "name=${tag_name}" -F "body=@release_notes.md" -F "draft=false" -F "prerelease=false" -F "generate_release_notes=false"
+        shell: bash
+        env:
+          tag_name: ${{ steps.tag_name.outputs.TAG_NAME }}
+          version: ${{ steps.tag_name.outputs.VERSION }}
+          GH_TOKEN: ${{ github.token }}

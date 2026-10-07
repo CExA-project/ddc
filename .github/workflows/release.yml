@@ -62,6 +62,7 @@ jobs:
         shell: bash
         env:
           version: ${{ steps.tag_name.outputs.VERSION }}
+          GH_TOKEN: ${{ github.token }}
 
       - name: "Update repo tags"
         if: steps.tag_name.outputs.VERSION != 'EXISTING'

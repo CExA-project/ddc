@@ -45,7 +45,7 @@ jobs:
         run: |
           PREVIOUS_TAG=$(git tag --sort=creatordate | tail -1)
           echo "" >> release_notes.md
-          echo "**Full list of changes**: [${PREVIOUS_TAG}..${tag_name}](https://github.com/gyselax/gyselalibxx/compare/${PREVIOUS_TAG}..${tag_name})" >> release_notes.md
+          echo "**Full Changelog**: [${PREVIOUS_TAG}..${tag_name}](https://github.com/gyselax/gyselalibxx/compare/${PREVIOUS_TAG}..${tag_name})" >> release_notes.md
         shell: bash
         env:
           tag_name: ${{ steps.tag_name.outputs.TAG_NAME }}
@@ -78,7 +78,7 @@ jobs:
             -H "Accept: application/vnd.github+json" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
             /repos/gyselax/gyselalibxx/releases \
-             -f "tag_name=${tag_name}" -f "name=Version ${version}" -F "body=@release_notes.md" -F "draft=false" -F "prerelease=false" -F "generate_release_notes=false"
+             -f "tag_name=${tag_name}" -f "name=${tag_name}" -F "body=@release_notes.md" -F "draft=false" -F "prerelease=false" -F "generate_release_notes=false"
         shell: bash
         env:
           tag_name: ${{ steps.tag_name.outputs.TAG_NAME }}

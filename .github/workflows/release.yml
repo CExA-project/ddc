@@ -16,14 +16,17 @@ jobs:
 
       - name: Check for version change
         id: tag_name
-        CURRENT_VERSION=$(sed -n 7p CMakeLists.txt | grep -E "VERSION [0-9]+\.[0-9]+\.[0-9]+" -o | cut -d " " -f2)
-        if ! [ git tag | grep "v${CURRENT_VERSION}" ]
-        then
-          echo "VERSION=${CURRENT_VERSION}" > $GITHUB_OUTPUT
-          echo "TAG_NAME=v${CURRENT_VERSION}" > $GITHUB_OUTPUT
-        else
-          echo "VERSION=EXISTING" > $GITHUB_OUTPUT
-        fi
+        run:
+          VERSION_LINE=$(grep -n "project(DDC VERSION" CMakeLists.txt  | cut -d: -f1)
+          CURRENT_VERSION=$(sed -n ${VERSION_LINE}p CMakeLists.txt | grep -E "VERSION [0-9]+\.[0-9]+\.[0-9]+" -o | cut -d " " -f2)
+          if git tag | grep -qw "v${CURRENT_VERSION}"
+          then
+            echo "VERSION=EXISTING" > $GITHUB_OUTPUT
+          else
+            echo "VERSION=${CURRENT_VERSION}" > $GITHUB_OUTPUT
+            echo "TAG_NAME=v${CURRENT_VERSION}" > $GITHUB_OUTPUT
+          fi
+        shell: bash
 
       - name: "Get release notes"
         if: steps.tag_name.outputs.VERSION != 'EXISTING'
@@ -35,6 +38,7 @@ jobs:
           END_LINE=$((${END_LINE}-1))
           echo "## What's Changed" > release_notes.md
           sed -n ${START_LINE},${END_LINE}p CHANGELOG.md >> release_notes.md
+        shell: bash
 
       - name: "Get full changelog"
         if: steps.tag_name.outputs.VERSION != 'EXISTING'

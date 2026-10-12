@@ -51,7 +51,7 @@ jobs:
         run: |
           PREVIOUS_TAG=$(git tag --sort=creatordate | tail -1)
           echo "" >> release_notes.md
-          echo "**Full Changelog**: [${PREVIOUS_TAG}..${tag_name}](https://github.com/gyselax/gyselalibxx/compare/${PREVIOUS_TAG}..${tag_name})" >> release_notes.md
+          echo "**Full Changelog**: [${PREVIOUS_TAG}..${tag_name}](https://github.com/CExA-project/ddc/compare/${PREVIOUS_TAG}..${tag_name})" >> release_notes.md
         shell: bash
         env:
           tag_name: ${{steps.tag_name.outputs.TAG_NAME}}

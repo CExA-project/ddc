@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
 
       - name: Check for version change
         id: tag_name
@@ -72,7 +72,7 @@ jobs:
 
       - name: "Update repo tags"
         if: steps.tag_name.outputs.VERSION != 'EXISTING'
-        uses: EndBug/latest-tag@latest
+        uses: EndBug/latest-tag@8fcae8848c1e23fd8212258f69a9619bc62cad67  # v1.6.3
         with:
           ref: ${{ steps.tag_name.outputs.TAG_NAME }}
           description: ${{ steps.tag_description.outputs.TAG_DESCRIPTION }}

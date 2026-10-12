@@ -14,7 +14,7 @@ on:
       - 'CMakeLists.txt'
 
 jobs:
-  deployVersion:
+  deploy-version:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository

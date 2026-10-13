@@ -37,16 +37,16 @@ spack:
       require: 'openblas@0.3'
   repos:
     builtin:
-      tag: v2026.06.0
+      tag: v2026.10.0
   specs:
     - 'apple-clang@17'
     - 'benchmark@1.9 ~performance_counters'
-    - 'cmake@4.2'
+    - 'cmake@4.4'
     - 'ginkgo@1.11'
-    - 'googletest@1.17 +gmock'
-    - 'kokkos@5.1'
-    - 'kokkos-fft@1.1 host_backend=fftw-serial'
-    - 'kokkos-kernels@5.1'
+    - 'googletest@1.18 +gmock'
+    - 'kokkos@5.2'
+    - 'kokkos-fft@2.0 host_backend=fftw-serial'
+    - 'kokkos-kernels@5.2'
     - 'lapack'
     - 'paraconf@1.0'
     - 'pdi@1.11'

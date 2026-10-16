@@ -6,7 +6,7 @@
 
 #include <array>
 #include <cstddef>
-#include <limits>
+#include <span>
 #include <string>
 #include <utility>
 
@@ -28,6 +28,8 @@ template <class ExecSpace>
 using TeamHandle = Kokkos::TeamPolicy<ExecSpace>::member_type;
 
 namespace detail {
+
+int team_league_size(std::span<DiscreteVectorElement const> extents);
 
 /// Converts the rank of a team into the index of the element of the support it is assigned to.
 /// The last dimension is the fastest varying one, which is consistent with the iteration pattern
@@ -75,23 +77,6 @@ public:
     }
 };
 
-template <class Support>
-int team_league_size(Support const& domain)
-{
-    // `array` returns a reference to its argument: the extents must outlive the loop.
-    typename Support::discrete_vector_type const extents = domain.extents();
-    DiscreteVectorElement league_size = 1;
-    for (DiscreteVectorElement const extent : array(extents)) {
-        league_size *= extent;
-    }
-    // The league size of a Kokkos::TeamPolicy is an int.
-    if (league_size > std::numeric_limits<int>::max()) {
-        Kokkos::abort(
-                "ddc::parallel_for_each_team: the domain is too large for a Kokkos team policy");
-    }
-    return static_cast<int>(league_size);
-}
-
 template <class ExecSpace, class Support, class Functor, class... TeamSizes>
 void for_each_team_kokkos(
         std::string const& label,
@@ -101,7 +86,7 @@ void for_each_team_kokkos(
         TeamSizes... team_sizes) noexcept
 {
     Kokkos::TeamPolicy<ExecSpace> const
-    policy(execution_space, team_league_size(domain), team_sizes...);
+    policy(execution_space, team_league_size(array(domain.extents())), team_sizes...);
     Kokkos::parallel_for(
             label,
             policy,

@@ -2,7 +2,6 @@
 //
 // SPDX-License-Identifier: MIT
 
-#include <cstddef>
 #include <utility>
 
 #include <ddc/ddc.hpp>
@@ -80,7 +79,7 @@ public:
 
     KOKKOS_FUNCTION void operator()(
             ddc::TeamHandle<ExecSpace> const& team,
-            typename ChunkSpanType::discrete_element_type const& delem) const noexcept
+            ChunkSpanType::discrete_element_type const& delem) const noexcept
     {
         Kokkos::single(Kokkos::PerTeam(team), [&]() { m_chunk_span(delem) = team.league_rank(); });
     }
@@ -104,7 +103,7 @@ public:
 
     KOKKOS_FUNCTION void operator()(
             ddc::TeamHandle<ExecSpace> const& team,
-            typename ChunkSpanType::discrete_element_type const& delem) const noexcept
+            ChunkSpanType::discrete_element_type const& delem) const noexcept
     {
         int sum = 0;
         Kokkos::parallel_reduce(

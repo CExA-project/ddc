@@ -38,11 +38,13 @@ KOKKOS_FUNCTION Support::discrete_vector_type delinearize_team_rank(
         DiscreteVectorElement league_rank,
         std::index_sequence<Idx...> /*unused*/) noexcept
 {
-    std::array<DiscreteVectorElement, sizeof...(Idx)> const extents = array(support.extents());
     std::array<DiscreteVectorElement, sizeof...(Idx)> ids {};
-    for (std::size_t i = sizeof...(Idx); i > 0; --i) {
-        ids[i - 1] = league_rank % extents[i - 1];
-        league_rank /= extents[i - 1];
+    if constexpr (sizeof...(Idx) > 0) {
+        std::array const extents = array(support.extents());
+        for (std::size_t i = sizeof...(Idx); i > 0; --i) {
+            ids[i - 1] = league_rank % extents[i - 1];
+            league_rank /= extents[i - 1];
+        }
     }
     return typename Support::discrete_vector_type(ids[Idx]...);
 }

@@ -34,21 +34,22 @@ int team_league_size(std::span<DiscreteVectorElement const> extents);
 /// Converts the rank of a team into the index of the element of the support it is assigned to.
 /// The last dimension is the fastest varying one, which is consistent with the iteration pattern
 /// used by `ddc::parallel_for_each`.
-template <class Support, std::size_t... Idx>
+template <class Support>
 KOKKOS_FUNCTION Support::discrete_vector_type delinearize_team_rank(
         Support const& support,
-        DiscreteVectorElement league_rank,
-        std::index_sequence<Idx...> /*unused*/) noexcept
+        DiscreteVectorElement league_rank) noexcept
 {
-    std::array<DiscreteVectorElement, sizeof...(Idx)> ids {};
-    if constexpr (sizeof...(Idx) > 0) {
+    if constexpr (Support::rank() > 0) {
+        std::array<DiscreteVectorElement, Support::rank()> ids {};
         std::array const extents = array(support.extents());
-        for (std::size_t i = sizeof...(Idx); i > 0; --i) {
+        for (std::size_t i = Support::rank(); i > 0; --i) {
             ids[i - 1] = league_rank % extents[i - 1];
             league_rank /= extents[i - 1];
         }
+        return typename Support::discrete_vector_type(ids);
+    } else {
+        return ddc::DiscreteVector<> {};
     }
-    return typename Support::discrete_vector_type(ids[Idx]...);
 }
 
 template <class ExecSpace, class F, class Support>
@@ -72,8 +73,7 @@ public:
         m_f(team,
             m_support(delinearize_team_rank(
                     m_support,
-                    static_cast<DiscreteVectorElement>(team.league_rank()),
-                    std::make_index_sequence<Support::rank()>())));
+                    static_cast<DiscreteVectorElement>(team.league_rank()))));
     }
 };
 

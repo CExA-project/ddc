@@ -108,6 +108,7 @@ target_sources(
                 src/ddc/parallel_deepcopy.hpp
                 src/ddc/parallel_fill.hpp
                 src/ddc/parallel_for_each.hpp
+                src/ddc/parallel_for_each_team.hpp
                 src/ddc/parallel_transform.hpp
                 src/ddc/parallel_transform_reduce.hpp
                 src/ddc/parallel_transform_scan.hpp

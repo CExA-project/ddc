@@ -25,7 +25,7 @@ namespace ddc {
  * @tparam ExecSpace a Kokkos execution space
  */
 template <class ExecSpace>
-using TeamHandle = typename Kokkos::TeamPolicy<ExecSpace>::member_type;
+using TeamHandle = Kokkos::TeamPolicy<ExecSpace>::member_type;
 
 namespace detail {
 
@@ -33,7 +33,7 @@ namespace detail {
 /// The last dimension is the fastest varying one, which is consistent with the iteration pattern
 /// used by `ddc::parallel_for_each`.
 template <class Support, std::size_t... Idx>
-KOKKOS_FUNCTION typename Support::discrete_vector_type delinearize_team_rank(
+KOKKOS_FUNCTION Support::discrete_vector_type delinearize_team_rank(
         Support const& support,
         DiscreteVectorElement league_rank,
         std::index_sequence<Idx...> /*unused*/) noexcept

@@ -37,6 +37,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Dependency requirements
 
+* Support Kokkos-FFT v2.0.0 in <https://github.com/CExA-project/ddc/pull/1207>
+
 ## [v0.16.0] - 2026-09-22
 
 ### Added

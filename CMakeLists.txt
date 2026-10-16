@@ -56,6 +56,7 @@ target_sources(
         src/ddc/discrete_space.cpp
         src/ddc/discrete_vector.cpp
         src/ddc/for_each_block.cpp
+        src/ddc/parallel_for_each_team.cpp
         src/ddc/non_uniform_point_sampling.cpp
         src/ddc/periodic_sampling.cpp
         src/ddc/print.cpp

@@ -2,6 +2,8 @@
 //
 // SPDX-License-Identifier: MIT
 
+#include <limits>
+#include <stdexcept>
 #include <utility>
 
 #include <ddc/ddc.hpp>
@@ -133,6 +135,19 @@ auto nested_reduce(ChunkSpanType const& chunk_span, int n)
 }
 
 } // namespace anonymous_namespace_workaround_parallel_for_each_team_cpp
+
+TEST(ParallelForEachTeam, TeamLeagueSize)
+{
+    EXPECT_EQ(ddc::detail::team_league_size(std::array<ddc::DiscreteVectorElement, 0> {}), 1);
+    EXPECT_EQ(ddc::detail::team_league_size(std::array<ddc::DiscreteVectorElement, 1> {2}), 2);
+    EXPECT_EQ(ddc::detail::team_league_size(std::array<ddc::DiscreteVectorElement, 2> {2, 3}), 6);
+    EXPECT_THROW(
+            ddc::detail::team_league_size(
+                    std::array<
+                            ddc::DiscreteVectorElement,
+                            2> {std::numeric_limits<int>::max(), 10}),
+            std::runtime_error);
+}
 
 TEST(ParallelForEachTeamHost, ZeroDimension)
 {

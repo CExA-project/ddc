@@ -38,6 +38,7 @@ add_executable(
     parallel_deepcopy.cpp
     parallel_fill.cpp
     parallel_for_each.cpp
+    parallel_for_each_team.cpp
     parallel_transform.cpp
     parallel_transform_reduce.cpp
     parallel_transform_scan.cpp

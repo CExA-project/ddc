@@ -79,6 +79,7 @@ namespace ddc {
 #include "parallel_deepcopy.hpp"
 #include "parallel_fill.hpp"
 #include "parallel_for_each.hpp"
+#include "parallel_for_each_team.hpp"
 #include "parallel_transform.hpp"
 #include "parallel_transform_reduce.hpp"
 #include "parallel_transform_scan.hpp"

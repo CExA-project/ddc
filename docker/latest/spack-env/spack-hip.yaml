@@ -108,16 +108,16 @@ spack:
           spec: roctracer-dev@6.4.3
   repos:
     builtin:
-      tag: v2026.06.0
+      tag: v2026.10.0
   specs:
     - 'gcc@13'
     - 'benchmark@1.9 ~performance_counters'
-    - 'cmake@4.2'
+    - 'cmake@4.4'
     - 'ginkgo@1.11 +rocm amdgpu_target=gfx90a'
-    - 'googletest@1.17 +gmock'
-    - 'kokkos@5.1 +hip_relocatable_device_code +rocm amdgpu_target=gfx90a'
-    - 'kokkos-fft@1.1 host_backend=fftw-serial device_backend=hipfft'
-    - 'kokkos-kernels@5.1'
+    - 'googletest@1.18 +gmock'
+    - 'kokkos@5.2 +hip_relocatable_device_code +rocm amdgpu_target=gfx90a'
+    - 'kokkos-fft@2.0 host_backend=fftw-serial device_backend=hipfft'
+    - 'kokkos-kernels@5.2'
     - 'lapack'
     - 'paraconf@1.0'
     - 'pdi@1.11'

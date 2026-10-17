@@ -220,7 +220,9 @@ TYPED_TEST(BSplinesFixture, RoundingUniform)
 
 TEST(BSplines, Concepts)
 {
-    struct DimX;
+    struct DimX
+    {
+    };
     struct UBSplinesX : ddc::UniformBSplines<DimX, 2, true>
     {
     };

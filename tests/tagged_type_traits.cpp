@@ -8,8 +8,6 @@
 
 #include <gtest/gtest.h>
 
-#include <Kokkos_Core.hpp>
-
 inline namespace anonymous_namespace_workaround_tagged_type_traits_cpp {
 
 struct DDimX : ddc::DiscreteDimension

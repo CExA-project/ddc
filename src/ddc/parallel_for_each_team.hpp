@@ -34,22 +34,19 @@ int team_league_size(std::span<DiscreteVectorElement const> extents);
 /// Converts the rank of a team into the index of the element of the support it is assigned to.
 /// The last dimension is the fastest varying one, which is consistent with the iteration pattern
 /// used by `ddc::parallel_for_each`.
-template <class Support>
-KOKKOS_FUNCTION Support::discrete_vector_type delinearize_team_rank(
-        Support const& support,
+template <std::size_t N>
+KOKKOS_FUNCTION std::array<DiscreteVectorElement, N> delinearize_team_rank(
+        std::array<DiscreteVectorElement, N> const& extents,
         DiscreteVectorElement league_rank) noexcept
 {
-    if constexpr (Support::rank() > 0) {
-        std::array<DiscreteVectorElement, Support::rank()> ids {};
-        std::array const extents = array(support.extents());
-        for (std::size_t i = Support::rank(); i > 0; --i) {
+    std::array<DiscreteVectorElement, N> ids {};
+    if constexpr (N > 0) {
+        for (std::size_t i = N; i > 0; --i) {
             ids[i - 1] = league_rank % extents[i - 1];
             league_rank /= extents[i - 1];
         }
-        return typename Support::discrete_vector_type(ids);
-    } else {
-        return ddc::DiscreteVector<> {};
     }
+    return ids;
 }
 
 template <class ExecSpace, class F, class Support>
@@ -59,9 +56,11 @@ class ForEachTeamKokkosLambdaAdapter
 
     Support m_support;
 
-public:
+    using discrete_vector_type = Support::discrete_vector_type;
+
     using team_handle_type = TeamHandle<ExecSpace>;
 
+public:
     explicit ForEachTeamKokkosLambdaAdapter(F const& f, Support const& support)
         : m_f(f)
         , m_support(support)
@@ -71,9 +70,9 @@ public:
     KOKKOS_FUNCTION void operator()(team_handle_type const& team) const
     {
         m_f(team,
-            m_support(delinearize_team_rank(
-                    m_support,
-                    static_cast<DiscreteVectorElement>(team.league_rank()))));
+            m_support(discrete_vector_type(delinearize_team_rank(
+                    array(m_support.extents()),
+                    static_cast<DiscreteVectorElement>(team.league_rank())))));
     }
 };
 

@@ -60,7 +60,7 @@ public:
     }
 
     KOKKOS_FUNCTION void operator()(
-            ddc::TeamHandle<ExecSpace> const& team,
+            ddc::TeamPolicyMember<ExecSpace> const& team,
             ChunkSpanType::discrete_element_type const& delem) const noexcept
     {
         Kokkos::single(Kokkos::PerTeam(team), [&]() { m_chunk_span(delem) += 1; });
@@ -80,7 +80,7 @@ public:
     }
 
     KOKKOS_FUNCTION void operator()(
-            ddc::TeamHandle<ExecSpace> const& team,
+            ddc::TeamPolicyMember<ExecSpace> const& team,
             ChunkSpanType::discrete_element_type const& delem) const noexcept
     {
         Kokkos::single(Kokkos::PerTeam(team), [&]() { m_chunk_span(delem) = team.league_rank(); });
@@ -104,7 +104,7 @@ public:
     }
 
     KOKKOS_FUNCTION void operator()(
-            ddc::TeamHandle<ExecSpace> const& team,
+            ddc::TeamPolicyMember<ExecSpace> const& team,
             ChunkSpanType::discrete_element_type const& delem) const noexcept
     {
         int sum = 0;

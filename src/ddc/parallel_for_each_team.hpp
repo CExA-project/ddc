@@ -25,7 +25,8 @@ namespace ddc {
  * @tparam ExecSpace a Kokkos execution space
  */
 template <class ExecSpace>
-using TeamHandle = Kokkos::TeamPolicy<ExecSpace>::member_type;
+using TeamPolicyMember
+        = Kokkos::TeamPolicy<ExecSpace, Kokkos::IndexType<DiscreteVectorElement>>::member_type;
 
 namespace detail {
 
@@ -58,7 +59,7 @@ class ForEachTeamKokkosLambdaAdapter
 
     using discrete_vector_type = Support::discrete_vector_type;
 
-    using team_handle_type = TeamHandle<ExecSpace>;
+    using team_policy_member_type = TeamPolicyMember<ExecSpace>;
 
 public:
     explicit ForEachTeamKokkosLambdaAdapter(F const& f, Support const& support)
@@ -67,7 +68,7 @@ public:
     {
     }
 
-    KOKKOS_FUNCTION void operator()(team_handle_type const& team) const
+    KOKKOS_FUNCTION void operator()(team_policy_member_type const& team) const
     {
         m_f(team,
             m_support(discrete_vector_type(delinearize_team_rank(
@@ -84,7 +85,7 @@ void for_each_team_kokkos(
         Functor const& f,
         TeamSizes... team_sizes) noexcept
 {
-    Kokkos::TeamPolicy<ExecSpace> const
+    Kokkos::TeamPolicy<ExecSpace, Kokkos::IndexType<DiscreteVectorElement>> const
     policy(execution_space, team_league_size(array(domain.extents())), team_sizes...);
     Kokkos::parallel_for(
             label,

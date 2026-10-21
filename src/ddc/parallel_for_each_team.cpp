@@ -13,19 +13,19 @@
 
 namespace ddc::detail {
 
-int team_league_size(std::span<DiscreteVectorElement const> extents)
+int team_league_size(std::span<DiscreteVectorElement const> const extents)
 {
     DiscreteVectorElement league_size = 1;
     for (DiscreteVectorElement const extent : extents) {
         league_size *= extent;
     }
 
-    if (std::in_range<int>(league_size)) {
-        return static_cast<int>(league_size);
+    if (!std::in_range<int>(league_size)) {
+        throw std::runtime_error(
+                "ddc::detail::team_league_size: the domain is too large for a Kokkos team policy");
     }
 
-    throw std::runtime_error(
-            "ddc::detail::team_league_size: the domain is too large for a Kokkos team policy");
+    return static_cast<int>(league_size);
 }
 
 } // namespace ddc::detail

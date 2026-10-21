@@ -12,6 +12,8 @@
 
 #include <Kokkos_Core.hpp>
 
+#include "ddc/parallel_for_each_team.hpp"
+
 #include "helper_count.hpp"
 
 inline namespace anonymous_namespace_workaround_parallel_for_each_team_cpp {
@@ -147,6 +149,31 @@ TEST(ParallelForEachTeam, TeamLeagueSize)
                             ddc::DiscreteVectorElement,
                             2> {std::numeric_limits<int>::max(), 10}),
             std::runtime_error);
+}
+
+TEST(ParallelForEachTeam, DelinearizeTeamRank)
+{
+    EXPECT_EQ(
+            ddc::detail::delinearize_team_rank(std::array<ddc::DiscreteVectorElement, 0> {}, 0),
+            (std::array<ddc::DiscreteVectorElement, 0> {}));
+    EXPECT_EQ(
+            ddc::detail::delinearize_team_rank(std::array<ddc::DiscreteVectorElement, 1> {2}, 0),
+            (std::array<ddc::DiscreteVectorElement, 1> {0}));
+    EXPECT_EQ(
+            ddc::detail::delinearize_team_rank(std::array<ddc::DiscreteVectorElement, 1> {2}, 1),
+            (std::array<ddc::DiscreteVectorElement, 1> {1}));
+    EXPECT_EQ(
+            ddc::detail::delinearize_team_rank(std::array<ddc::DiscreteVectorElement, 2> {2, 3}, 0),
+            (std::array<ddc::DiscreteVectorElement, 2> {0, 0}));
+    EXPECT_EQ(
+            ddc::detail::delinearize_team_rank(std::array<ddc::DiscreteVectorElement, 2> {2, 3}, 2),
+            (std::array<ddc::DiscreteVectorElement, 2> {0, 2}));
+    EXPECT_EQ(
+            ddc::detail::delinearize_team_rank(std::array<ddc::DiscreteVectorElement, 2> {2, 3}, 3),
+            (std::array<ddc::DiscreteVectorElement, 2> {1, 0}));
+    EXPECT_EQ(
+            ddc::detail::delinearize_team_rank(std::array<ddc::DiscreteVectorElement, 2> {2, 3}, 5),
+            (std::array<ddc::DiscreteVectorElement, 2> {1, 2}));
 }
 
 TEST(ParallelForEachTeamHost, ZeroDimension)

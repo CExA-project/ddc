@@ -383,6 +383,10 @@ Typedefs</h2></td></tr>
 <tr class="memitem:a1eb87e589bae955cef6cd18cdc7826f3" id="r_a1eb87e589bae955cef6cd18cdc7826f3"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> T &gt; </td></tr>
 <tr class="memitem:a1eb87e589bae955cef6cd18cdc7826f3"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a1eb87e589bae955cef6cd18cdc7826f3">HostAllocator</a> = <a class="el" href="classddc_1_1KokkosAllocator.html">KokkosAllocator</a>&lt; T, Kokkos::HostSpace &gt;</td></tr>
 <tr class="separator:a1eb87e589bae955cef6cd18cdc7826f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a66387ed4b0fc28c18c2d4bf48b89dfc3" id="r_a66387ed4b0fc28c18c2d4bf48b89dfc3"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ExecSpace</a> &gt; </td></tr>
+<tr class="memitem:a66387ed4b0fc28c18c2d4bf48b89dfc3"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a66387ed4b0fc28c18c2d4bf48b89dfc3">TeamPolicyMember</a> = Kokkos::TeamPolicy&lt; <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ExecSpace</a>, Kokkos::IndexType&lt; <a class="el" href="namespaceddc.html#ad6cf37f23e5e0fc7893bf8cb37bc1a7a">DiscreteVectorElement</a> &gt; &gt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">::member_type</a></td></tr>
+<tr class="memdesc:a66387ed4b0fc28c18c2d4bf48b89dfc3"><td class="mdescLeft">&#160;</td><td class="mdescRight">The type of the handle given to the functor of <code><a class="el" href="namespaceddc.html#a15cd1f1317954877bf38fffdf83dbddb" title="iterates over a nD domain using a given Kokkos execution space and a Kokkos team policy.">ddc::parallel_for_each_team</a></code>.  <br /></td></tr>
+<tr class="separator:a66387ed4b0fc28c18c2d4bf48b89dfc3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab25c16a5ce1c3230941216a27acb684f" id="r_ab25c16a5ce1c3230941216a27acb684f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceddc.html#ab25c16a5ce1c3230941216a27acb684f">Real</a> = <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">float</a></td></tr>
 <tr class="separator:ab25c16a5ce1c3230941216a27acb684f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6e034c20a0f989ef686b42053d2413f0" id="r_a6e034c20a0f989ef686b42053d2413f0"><td class="memTemplParams" colspan="2">template&lt;class... TaggedTypes&gt; </td></tr>
@@ -769,6 +773,27 @@ requires (Kokkos::is_execution_space_v&lt;<a class="el" href="namespaceddc.html#
 <tr class="memitem:a38c84b63c494b0e01a5fcf79e41f95cc"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">void</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a38c84b63c494b0e01a5fcf79e41f95cc">parallel_for_each</a> (<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Support</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;domain, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Functor</a> &amp;&amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">f</a>) <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">noexcept</a></td></tr>
 <tr class="memdesc:a38c84b63c494b0e01a5fcf79e41f95cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">iterates over a nD domain using the <code>Kokkos</code> default execution space  <br /></td></tr>
 <tr class="separator:a38c84b63c494b0e01a5fcf79e41f95cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a15cd1f1317954877bf38fffdf83dbddb" id="r_a15cd1f1317954877bf38fffdf83dbddb"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ExecSpace</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Support</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Functor</a> &gt; </td></tr>
+<tr class="memitem:a15cd1f1317954877bf38fffdf83dbddb"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">void</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a15cd1f1317954877bf38fffdf83dbddb">parallel_for_each_team</a> (std::string <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;label, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ExecSpace</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">execution_space</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Support</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;domain, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Functor</a> &amp;&amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">f</a>) <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">noexcept</a></td></tr>
+<tr class="memdesc:a15cd1f1317954877bf38fffdf83dbddb"><td class="mdescLeft">&#160;</td><td class="mdescRight">iterates over a nD domain using a given <code>Kokkos</code> execution space and a <code>Kokkos</code> team policy.  <br /></td></tr>
+<tr class="separator:a15cd1f1317954877bf38fffdf83dbddb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a92113bbd06025a725e6e525e47dbc3d2" id="r_a92113bbd06025a725e6e525e47dbc3d2"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ExecSpace</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Support</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Functor</a> &gt; </td></tr>
+<tr class="memitem:a92113bbd06025a725e6e525e47dbc3d2"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">void</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a92113bbd06025a725e6e525e47dbc3d2">parallel_for_each_team</a> (std::string <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;label, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ExecSpace</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">execution_space</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Support</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;domain, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">int</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">team_size</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">int</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">vector_length</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Functor</a> &amp;&amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">f</a>) <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">noexcept</a></td></tr>
+<tr class="memdesc:a92113bbd06025a725e6e525e47dbc3d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">iterates over a nD domain using a given <code>Kokkos</code> execution space and a <code>Kokkos</code> team policy.  <br /></td></tr>
+<tr class="separator:a92113bbd06025a725e6e525e47dbc3d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aacf5c3aabf45ddab55cc0b16378178c3" id="r_aacf5c3aabf45ddab55cc0b16378178c3"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ExecSpace</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Support</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Functor</a> &gt; <br />
+requires (Kokkos::is_execution_space_v&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ExecSpace</a>&gt;)</td></tr>
+<tr class="memitem:aacf5c3aabf45ddab55cc0b16378178c3"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">void</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#aacf5c3aabf45ddab55cc0b16378178c3">parallel_for_each_team</a> (<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ExecSpace</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">execution_space</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Support</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;domain, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Functor</a> &amp;&amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">f</a>) <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">noexcept</a></td></tr>
+<tr class="memdesc:aacf5c3aabf45ddab55cc0b16378178c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">iterates over a nD domain using a given <code>Kokkos</code> execution space and a <code>Kokkos</code> team policy.  <br /></td></tr>
+<tr class="separator:aacf5c3aabf45ddab55cc0b16378178c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aca0aae53bb72e2ed45213cec76d654a1" id="r_aca0aae53bb72e2ed45213cec76d654a1"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Support</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Functor</a> &gt; </td></tr>
+<tr class="memitem:aca0aae53bb72e2ed45213cec76d654a1"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">void</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#aca0aae53bb72e2ed45213cec76d654a1">parallel_for_each_team</a> (std::string <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;label, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Support</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;domain, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Functor</a> &amp;&amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">f</a>) <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">noexcept</a></td></tr>
+<tr class="memdesc:aca0aae53bb72e2ed45213cec76d654a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">iterates over a nD domain using the <code>Kokkos</code> default execution space and a <code>Kokkos</code> team policy.  <br /></td></tr>
+<tr class="separator:aca0aae53bb72e2ed45213cec76d654a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a88de7e294f2aac1a56e8f5f05d1ca427" id="r_a88de7e294f2aac1a56e8f5f05d1ca427"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Support</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Functor</a> &gt; </td></tr>
+<tr class="memitem:a88de7e294f2aac1a56e8f5f05d1ca427"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">void</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a88de7e294f2aac1a56e8f5f05d1ca427">parallel_for_each_team</a> (<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Support</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;domain, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Functor</a> &amp;&amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">f</a>) <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">noexcept</a></td></tr>
+<tr class="memdesc:a88de7e294f2aac1a56e8f5f05d1ca427"><td class="mdescLeft">&#160;</td><td class="mdescRight">iterates over a nD domain using the <code>Kokkos</code> default execution space and a <code>Kokkos</code> team policy.  <br /></td></tr>
+<tr class="separator:a88de7e294f2aac1a56e8f5f05d1ca427"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5bc2f92ddb9eeda3bcb12b1b8f72f151" id="r_a5bc2f92ddb9eeda3bcb12b1b8f72f151"><td class="memTemplParams" colspan="2">template&lt;concepts::borrowed_chunk ChunkDst, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">UnaryTransformOp</a> &gt; </td></tr>
 <tr class="memitem:a5bc2f92ddb9eeda3bcb12b1b8f72f151"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceddc.html#a5bc2f92ddb9eeda3bcb12b1b8f72f151">parallel_transform</a> (std::string <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;label, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ChunkDst</a> &amp;&amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">dst</a>, <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">UnaryTransformOp</a> &amp;&amp;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">transform</a>)</td></tr>
 <tr class="memdesc:a5bc2f92ddb9eeda3bcb12b1b8f72f151"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transform a borrowed chunk with a given transform functor.  <br /></td></tr>
@@ -1579,6 +1604,33 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="kokkos__allocator_8hpp_source.html#l00093">93</a> of file <a class="el" href="kokkos__allocator_8hpp_source.html">kokkos_allocator.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a66387ed4b0fc28c18c2d4bf48b89dfc3" name="a66387ed4b0fc28c18c2d4bf48b89dfc3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a66387ed4b0fc28c18c2d4bf48b89dfc3">&#9670;&#160;</a></span>TeamPolicyMember</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ExecSpace</a> &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">using</a> <a class="el" href="namespaceddc.html#a66387ed4b0fc28c18c2d4bf48b89dfc3">ddc::TeamPolicyMember</a> = <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">typedef</a> Kokkos::TeamPolicy&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ExecSpace</a>, Kokkos::IndexType&lt;<a class="el" href="namespaceddc.html#ad6cf37f23e5e0fc7893bf8cb37bc1a7a">DiscreteVectorElement</a>&gt; &gt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">::member_type</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The type of the handle given to the functor of <code><a class="el" href="namespaceddc.html#a15cd1f1317954877bf38fffdf83dbddb" title="iterates over a nD domain using a given Kokkos execution space and a Kokkos team policy.">ddc::parallel_for_each_team</a></code>. </p>
+<p>It is the <code>member_type</code> of the <code>Kokkos::TeamPolicy</code> used for the given execution space, and it can be used with all the hierarchical parallelism facilities of Kokkos (<code>Kokkos::TeamThreadRange</code>, <code>Kokkos::ThreadVectorRange</code>, <code>Kokkos::single</code>, <code>team.team_barrier()</code>, scratch memory, ...).</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">ExecSpace</td><td>a Kokkos execution space </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="parallel__for__each__team_8hpp_source.html#l00028">28</a> of file <a class="el" href="parallel__for__each__team_8hpp_source.html">parallel_for_each_team.hpp</a>.</p>
 
 </div>
 </div>
@@ -5260,6 +5312,317 @@ template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024d
 </dl>
 
 <p class="definition">Definition at line <a class="el" href="parallel__for__each_8hpp_source.html#l00125">125</a> of file <a class="el" href="parallel__for__each_8hpp_source.html">parallel_for_each.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a15cd1f1317954877bf38fffdf83dbddb" name="a15cd1f1317954877bf38fffdf83dbddb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a15cd1f1317954877bf38fffdf83dbddb">&#9670;&#160;</a></span>parallel_for_each_team() <span class="overload">[1/5]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ExecSpace</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Support</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Functor</a> &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">void</a> ddc::parallel_for_each_team </td>
+          <td>(</td>
+          <td class="paramtype">std::string <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
+          <td class="paramname"><em>label</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ExecSpace</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
+          <td class="paramname"><em>execution_space</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Support</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
+          <td class="paramname"><em>domain</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Functor</a> &amp;&amp;&#160;</td>
+          <td class="paramname"><em>f</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>iterates over a nD domain using a given <code>Kokkos</code> execution space and a <code>Kokkos</code> team policy. </p>
+<p>A team is created for each element of the domain. The functor is called by every thread of the team (as with a <code>Kokkos::TeamPolicy</code>) with the handle of the team and the element of the domain assigned to this team.</p>
+<p>The team size is chosen by Kokkos (<code>Kokkos::AUTO</code>).</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">label</td><td>name for easy identification of the parallel_for_each_team algorithm </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">execution_space</td><td>a Kokkos execution space where the loop will be executed on </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">domain</td><td>the domain over which to iterate </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">f</td><td>a functor taking as parameters a <code><a class="el" href="namespaceddc.html#a66387ed4b0fc28c18c2d4bf48b89dfc3" title="The type of the handle given to the functor of ddc::parallel_for_each_team.">ddc::TeamPolicyMember</a>&lt;ExecSpace&gt;</code> and an index </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="parallel__for__each__team_8hpp_source.html#l00112">112</a> of file <a class="el" href="parallel__for__each__team_8hpp_source.html">parallel_for_each_team.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a92113bbd06025a725e6e525e47dbc3d2" name="a92113bbd06025a725e6e525e47dbc3d2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a92113bbd06025a725e6e525e47dbc3d2">&#9670;&#160;</a></span>parallel_for_each_team() <span class="overload">[2/5]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ExecSpace</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Support</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Functor</a> &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">void</a> ddc::parallel_for_each_team </td>
+          <td>(</td>
+          <td class="paramtype">std::string <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
+          <td class="paramname"><em>label</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ExecSpace</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
+          <td class="paramname"><em>execution_space</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Support</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
+          <td class="paramname"><em>domain</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">int</a>&#160;</td>
+          <td class="paramname"><em>team_size</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">int</a>&#160;</td>
+          <td class="paramname"><em>vector_length</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Functor</a> &amp;&amp;&#160;</td>
+          <td class="paramname"><em>f</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>iterates over a nD domain using a given <code>Kokkos</code> execution space and a <code>Kokkos</code> team policy. </p>
+<p>A team is created for each element of the domain. The functor is called by every thread of the team (as with a <code>Kokkos::TeamPolicy</code>) with the handle of the team and the element of the domain assigned to this team.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">label</td><td>name for easy identification of the parallel_for_each_team algorithm </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">execution_space</td><td>a Kokkos execution space where the loop will be executed on </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">domain</td><td>the domain over which to iterate </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">team_size</td><td>the number of threads per team </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">vector_length</td><td>the vector length of each thread of the team </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">f</td><td>a functor taking as parameters a <code><a class="el" href="namespaceddc.html#a66387ed4b0fc28c18c2d4bf48b89dfc3" title="The type of the handle given to the functor of ddc::parallel_for_each_team.">ddc::TeamPolicyMember</a>&lt;ExecSpace&gt;</code> and an index </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="parallel__for__each__team_8hpp_source.html#l00140">140</a> of file <a class="el" href="parallel__for__each__team_8hpp_source.html">parallel_for_each_team.hpp</a>.</p>
+
+</div>
+</div>
+<a id="aacf5c3aabf45ddab55cc0b16378178c3" name="aacf5c3aabf45ddab55cc0b16378178c3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aacf5c3aabf45ddab55cc0b16378178c3">&#9670;&#160;</a></span>parallel_for_each_team() <span class="overload">[3/5]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ExecSpace</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Support</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Functor</a> &gt; <br />
+requires (Kokkos::is_execution_space_v&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ExecSpace</a>&gt;)</div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">void</a> ddc::parallel_for_each_team </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">ExecSpace</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
+          <td class="paramname"><em>execution_space</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Support</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
+          <td class="paramname"><em>domain</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Functor</a> &amp;&amp;&#160;</td>
+          <td class="paramname"><em>f</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>iterates over a nD domain using a given <code>Kokkos</code> execution space and a <code>Kokkos</code> team policy. </p>
+<p>A team is created for each element of the domain. The functor is called by every thread of the team (as with a <code>Kokkos::TeamPolicy</code>) with the handle of the team and the element of the domain assigned to this team.</p>
+<p>The team size is chosen by Kokkos (<code>Kokkos::AUTO</code>).</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">execution_space</td><td>a Kokkos execution space where the loop will be executed on </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">domain</td><td>the domain over which to iterate </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">f</td><td>a functor taking as parameters a <code><a class="el" href="namespaceddc.html#a66387ed4b0fc28c18c2d4bf48b89dfc3" title="The type of the handle given to the functor of ddc::parallel_for_each_team.">ddc::TeamPolicyMember</a>&lt;ExecSpace&gt;</code> and an index </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="parallel__for__each__team_8hpp_source.html#l00170">170</a> of file <a class="el" href="parallel__for__each__team_8hpp_source.html">parallel_for_each_team.hpp</a>.</p>
+
+</div>
+</div>
+<a id="aca0aae53bb72e2ed45213cec76d654a1" name="aca0aae53bb72e2ed45213cec76d654a1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aca0aae53bb72e2ed45213cec76d654a1">&#9670;&#160;</a></span>parallel_for_each_team() <span class="overload">[4/5]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Support</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Functor</a> &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">void</a> ddc::parallel_for_each_team </td>
+          <td>(</td>
+          <td class="paramtype">std::string <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
+          <td class="paramname"><em>label</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Support</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
+          <td class="paramname"><em>domain</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Functor</a> &amp;&amp;&#160;</td>
+          <td class="paramname"><em>f</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>iterates over a nD domain using the <code>Kokkos</code> default execution space and a <code>Kokkos</code> team policy. </p>
+<p>A team is created for each element of the domain. The functor is called by every thread of the team (as with a <code>Kokkos::TeamPolicy</code>) with the handle of the team and the element of the domain assigned to this team.</p>
+<p>The team size is chosen by Kokkos (<code>Kokkos::AUTO</code>).</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">label</td><td>name for easy identification of the parallel_for_each_team algorithm </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">domain</td><td>the domain over which to iterate </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">f</td><td>a functor taking as parameters a <code><a class="el" href="namespaceddc.html#a66387ed4b0fc28c18c2d4bf48b89dfc3" title="The type of the handle given to the functor of ddc::parallel_for_each_team.">ddc::TeamPolicyMember</a>&lt;Kokkos::DefaultExecutionSpace&gt;</code> and an index </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="parallel__for__each__team_8hpp_source.html#l00198">198</a> of file <a class="el" href="parallel__for__each__team_8hpp_source.html">parallel_for_each_team.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a88de7e294f2aac1a56e8f5f05d1ca427" name="a88de7e294f2aac1a56e8f5f05d1ca427"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a88de7e294f2aac1a56e8f5f05d1ca427">&#9670;&#160;</a></span>parallel_for_each_team() <span class="overload">[5/5]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Support</a> , <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">class</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Functor</a> &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">void</a> ddc::parallel_for_each_team </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Support</a> <a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">const</a> &amp;&#160;</td>
+          <td class="paramname"><em>domain</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceddc.html#a70f12a43ed0afbc092f4e974b024db3d">Functor</a> &amp;&amp;&#160;</td>
+          <td class="paramname"><em>f</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>iterates over a nD domain using the <code>Kokkos</code> default execution space and a <code>Kokkos</code> team policy. </p>
+<p>A team is created for each element of the domain. The functor is called by every thread of the team (as with a <code>Kokkos::TeamPolicy</code>) with the handle of the team and the element of the domain assigned to this team.</p>
+<p>The team size is chosen by Kokkos (<code>Kokkos::AUTO</code>).</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">domain</td><td>the domain over which to iterate </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">f</td><td>a functor taking as parameters a <code><a class="el" href="namespaceddc.html#a66387ed4b0fc28c18c2d4bf48b89dfc3" title="The type of the handle given to the functor of ddc::parallel_for_each_team.">ddc::TeamPolicyMember</a>&lt;Kokkos::DefaultExecutionSpace&gt;</code> and an index </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="parallel__for__each__team_8hpp_source.html#l00220">220</a> of file <a class="el" href="parallel__for__each__team_8hpp_source.html">parallel_for_each_team.hpp</a>.</p>
 
 </div>
 </div>

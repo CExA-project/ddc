@@ -1,0 +1,229 @@
+// Copyright (C) The DDC development team, see COPYRIGHT.md file
+//
+// SPDX-License-Identifier: MIT
+
+#pragma once
+
+#include <array>
+#include <cstddef>
+#include <span>
+#include <string>
+#include <utility>
+
+#include <Kokkos_Core.hpp>
+
+#include "discrete_vector.hpp"
+
+namespace ddc {
+
+/** The type of the handle given to the functor of `ddc::parallel_for_each_team`.
+ *
+ * It is the `member_type` of the `Kokkos::TeamPolicy` used for the given execution space, and it
+ * can be used with all the hierarchical parallelism facilities of Kokkos (`Kokkos::TeamThreadRange`,
+ * `Kokkos::ThreadVectorRange`, `Kokkos::single`, `team.team_barrier()`, scratch memory, ...).
+ *
+ * @tparam ExecSpace a Kokkos execution space
+ */
+template <class ExecSpace>
+using TeamPolicyMember
+        = Kokkos::TeamPolicy<ExecSpace, Kokkos::IndexType<DiscreteVectorElement>>::member_type;
+
+namespace detail {
+
+int team_league_size(std::span<DiscreteVectorElement const> extents);
+
+/// Converts the rank of a team into the index of the element of the support it is assigned to.
+/// The last dimension is the fastest varying one, which is consistent with the iteration pattern
+/// used by `ddc::parallel_for_each`.
+template <std::size_t N>
+KOKKOS_FUNCTION std::array<DiscreteVectorElement, N> delinearize_team_rank(
+        std::array<DiscreteVectorElement, N> const& extents,
+        DiscreteVectorElement league_rank) noexcept
+{
+    std::array<DiscreteVectorElement, N> ids {};
+    if constexpr (N > 0) {
+        for (std::size_t i = N; i > 0; --i) {
+            ids[i - 1] = league_rank % extents[i - 1];
+            league_rank /= extents[i - 1];
+        }
+    }
+    return ids;
+}
+
+template <class ExecSpace, class F, class Support>
+class ForEachTeamKokkosLambdaAdapter
+{
+    F m_f;
+
+    Support m_support;
+
+    using discrete_vector_type = Support::discrete_vector_type;
+
+    using team_policy_member_type = TeamPolicyMember<ExecSpace>;
+
+public:
+    explicit ForEachTeamKokkosLambdaAdapter(F const& f, Support const& support)
+        : m_f(f)
+        , m_support(support)
+    {
+    }
+
+    KOKKOS_FUNCTION void operator()(team_policy_member_type const& team) const
+    {
+        m_f(team,
+            m_support(discrete_vector_type(delinearize_team_rank(
+                    array(m_support.extents()),
+                    static_cast<DiscreteVectorElement>(team.league_rank())))));
+    }
+};
+
+template <class ExecSpace, class Support, class Functor, class... TeamPolicyParams>
+void for_each_team_kokkos(
+        std::string const& label,
+        ExecSpace const& execution_space,
+        Support const& domain,
+        Functor const& f,
+        TeamPolicyParams... team_policy_params) noexcept
+{
+    Kokkos::TeamPolicy<ExecSpace, Kokkos::IndexType<DiscreteVectorElement>> const
+    policy(execution_space, team_league_size(array(domain.extents())), team_policy_params...);
+    Kokkos::parallel_for(
+            label,
+            policy,
+            ForEachTeamKokkosLambdaAdapter<ExecSpace, Functor, Support>(f, domain));
+}
+
+} // namespace detail
+
+/** iterates over a nD domain using a given `Kokkos` execution space and a `Kokkos` team policy.
+ *
+ * A team is created for each element of the domain. The functor is called by every thread of the
+ * team (as with a `Kokkos::TeamPolicy`) with the handle of the team and the element of the domain
+ * assigned to this team.
+ *
+ * The team size is chosen by Kokkos (`Kokkos::AUTO`).
+ *
+ * @param[in] label  name for easy identification of the parallel_for_each_team algorithm
+ * @param[in] execution_space a Kokkos execution space where the loop will be executed on
+ * @param[in] domain the domain over which to iterate
+ * @param[in] f      a functor taking as parameters a `ddc::TeamPolicyMember<ExecSpace>` and an index
+ */
+template <class ExecSpace, class Support, class Functor>
+void parallel_for_each_team(
+        std::string const& label,
+        ExecSpace const& execution_space,
+        Support const& domain,
+        Functor&& f) noexcept
+{
+    detail::for_each_team_kokkos(
+            label,
+            execution_space,
+            domain,
+            std::forward<Functor>(f),
+            Kokkos::AUTO);
+}
+
+/** iterates over a nD domain using a given `Kokkos` execution space and a `Kokkos` team policy.
+ *
+ * A team is created for each element of the domain. The functor is called by every thread of the
+ * team (as with a `Kokkos::TeamPolicy`) with the handle of the team and the element of the domain
+ * assigned to this team.
+ *
+ * @param[in] label  name for easy identification of the parallel_for_each_team algorithm
+ * @param[in] execution_space a Kokkos execution space where the loop will be executed on
+ * @param[in] domain the domain over which to iterate
+ * @param[in] team_size the number of threads per team
+ * @param[in] vector_length the vector length of each thread of the team
+ * @param[in] f      a functor taking as parameters a `ddc::TeamPolicyMember<ExecSpace>` and an index
+ */
+template <class ExecSpace, class Support, class Functor>
+void parallel_for_each_team(
+        std::string const& label,
+        ExecSpace const& execution_space,
+        Support const& domain,
+        int team_size,
+        int vector_length,
+        Functor&& f) noexcept
+{
+    detail::for_each_team_kokkos(
+            label,
+            execution_space,
+            domain,
+            std::forward<Functor>(f),
+            team_size,
+            vector_length);
+}
+
+/** iterates over a nD domain using a given `Kokkos` execution space and a `Kokkos` team policy.
+ *
+ * A team is created for each element of the domain. The functor is called by every thread of the
+ * team (as with a `Kokkos::TeamPolicy`) with the handle of the team and the element of the domain
+ * assigned to this team.
+ *
+ * The team size is chosen by Kokkos (`Kokkos::AUTO`).
+ *
+ * @param[in] execution_space a Kokkos execution space where the loop will be executed on
+ * @param[in] domain the domain over which to iterate
+ * @param[in] f      a functor taking as parameters a `ddc::TeamPolicyMember<ExecSpace>` and an index
+ */
+template <class ExecSpace, class Support, class Functor>
+void parallel_for_each_team(
+        ExecSpace const& execution_space,
+        Support const& domain,
+        Functor&& f) noexcept
+    requires(Kokkos::is_execution_space_v<ExecSpace>)
+{
+    detail::for_each_team_kokkos(
+            "ddc_for_each_team_default",
+            execution_space,
+            domain,
+            std::forward<Functor>(f),
+            Kokkos::AUTO);
+}
+
+/** iterates over a nD domain using the `Kokkos` default execution space and a `Kokkos` team policy.
+ *
+ * A team is created for each element of the domain. The functor is called by every thread of the
+ * team (as with a `Kokkos::TeamPolicy`) with the handle of the team and the element of the domain
+ * assigned to this team.
+ *
+ * The team size is chosen by Kokkos (`Kokkos::AUTO`).
+ *
+ * @param[in] label  name for easy identification of the parallel_for_each_team algorithm
+ * @param[in] domain the domain over which to iterate
+ * @param[in] f      a functor taking as parameters a `ddc::TeamPolicyMember<Kokkos::DefaultExecutionSpace>`
+ *                   and an index
+ */
+template <class Support, class Functor>
+void parallel_for_each_team(std::string const& label, Support const& domain, Functor&& f) noexcept
+{
+    parallel_for_each_team(
+            label,
+            Kokkos::DefaultExecutionSpace(),
+            domain,
+            std::forward<Functor>(f));
+}
+
+/** iterates over a nD domain using the `Kokkos` default execution space and a `Kokkos` team policy.
+ *
+ * A team is created for each element of the domain. The functor is called by every thread of the
+ * team (as with a `Kokkos::TeamPolicy`) with the handle of the team and the element of the domain
+ * assigned to this team.
+ *
+ * The team size is chosen by Kokkos (`Kokkos::AUTO`).
+ *
+ * @param[in] domain the domain over which to iterate
+ * @param[in] f      a functor taking as parameters a `ddc::TeamPolicyMember<Kokkos::DefaultExecutionSpace>`
+ *                   and an index
+ */
+template <class Support, class Functor>
+void parallel_for_each_team(Support const& domain, Functor&& f) noexcept
+{
+    parallel_for_each_team(
+            "ddc_for_each_team_default",
+            Kokkos::DefaultExecutionSpace(),
+            domain,
+            std::forward<Functor>(f));
+}
+
+} // namespace ddc

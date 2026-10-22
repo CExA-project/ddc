@@ -17,7 +17,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-* Add `ddc::parallel_for_each_team` and `ddc::TeamHandle` to iterate over a domain with a Kokkos team policy, exposing the team handle and the element assigned to each team
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Dependency requirements
+
+## [v0.17.0] - 2026-10-22
+
+### Added
+
+* Add `ddc::parallel_for_each_team` and `ddc::TeamHandle` to iterate over a domain with a Kokkos team policy, exposing the team handle and the element assigned to each team in <https://github.com/CExA-project/ddc/pull/1267>
 * Add concept `ddc::concepts::bsplines` in <https://github.com/CExA-project/ddc/pull/1255>
 * Add concept `ddc::concepts::discrete dimension` in <https://github.com/CExA-project/ddc/pull/1246>
 * Add concept `ddc::concepts::type_seq` in <https://github.com/CExA-project/ddc/pull/1258>

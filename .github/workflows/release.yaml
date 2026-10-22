@@ -29,10 +29,10 @@ jobs:
           CURRENT_VERSION=$(sed -n ${VERSION_LINE}p CMakeLists.txt | grep -E "VERSION [0-9]+\.[0-9]+\.[0-9]+" -o | cut -d " " -f2)
           if git tag | grep -qw "v${CURRENT_VERSION}"
           then
-            echo "VERSION=EXISTING" > $GITHUB_OUTPUT
+            echo "VERSION=EXISTING" >> $GITHUB_OUTPUT
           else
-            echo "VERSION=${CURRENT_VERSION}" > $GITHUB_OUTPUT
-            echo "TAG_NAME=v${CURRENT_VERSION}" > $GITHUB_OUTPUT
+            echo "VERSION=${CURRENT_VERSION}" >> $GITHUB_OUTPUT
+            echo "TAG_NAME=v${CURRENT_VERSION}" >> $GITHUB_OUTPUT
           fi
         shell: bash
 

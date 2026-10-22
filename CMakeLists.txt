@@ -8,19 +8,19 @@ project(DDC VERSION 0.17.0 LANGUAGES CXX)
 
 # List of options
 
-option(DDC_BUILD_BENCHMARKS "Build DDC benchmarks" OFF)
-option(DDC_BUILD_DEPRECATED_CODE "Build DDC deprecated code" ON)
-option(DDC_BUILD_DOCUMENTATION "Build DDC documentation/website" OFF)
+option(DDC_BUILD_BENCHMARKS "Build DDC benchmarks." OFF)
+option(DDC_BUILD_DEPRECATED_CODE "Build DDC deprecated code." ON)
+option(DDC_BUILD_DOCUMENTATION "Build DDC documentation/website." OFF)
 option(
     DDC_BUILD_DOUBLE_PRECISION
-    "Build DDC with double precision support, float is used otherwise"
+    "Build DDC with double precision support, float is used otherwise."
     ON
 )
-option(DDC_BUILD_EXAMPLES "Build DDC examples" ON)
-option(DDC_BUILD_KERNELS_FFT "Build DDC kernels for FFT" ON)
-option(DDC_BUILD_KERNELS_SPLINES "Build DDC kernels for splines" ON)
-option(DDC_BUILD_PDI_WRAPPER "Build DDC PDI wrapper" ON)
-option(DDC_BUILD_TESTS "Build DDC tests if BUILD_TESTING is enabled" ON)
+option(DDC_BUILD_EXAMPLES "Build DDC examples." ON)
+option(DDC_BUILD_KERNELS_FFT "Build DDC kernels for FFT." ON)
+option(DDC_BUILD_KERNELS_SPLINES "Build DDC kernels for splines." ON)
+option(DDC_BUILD_PDI_WRAPPER "Build DDC PDI wrapper." ON)
+option(DDC_BUILD_TESTS "Build DDC tests if BUILD_TESTING is enabled." ON)
 
 ## CMake modules
 

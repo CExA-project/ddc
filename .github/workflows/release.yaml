@@ -40,8 +40,8 @@ jobs:
         if: steps.tag_name.outputs.VERSION != 'EXISTING'
         id: release_notes
         run: |
-          START_LINE=$(grep "^## " CHANGELOG.md -n | head -1 | cut -d: -f -1)
-          END_LINE=$(grep "^## " CHANGELOG.md -n | head -2 | tail -1 | cut -d: -f -1)
+          START_LINE=$(grep "^## " CHANGELOG.md -n | head -2 | tail -1 | cut -d: -f -1)
+          END_LINE=$(grep "^## " CHANGELOG.md -n | head -3 | tail -1 | cut -d: -f -1)
           START_LINE=$((${START_LINE}+1))
           END_LINE=$((${END_LINE}-1))
           echo "## What's Changed" > release_notes.md

@@ -19,11 +19,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+* `ddc::SplineBuilder2D` and `ddc::SplineBuilder3D` only allocate the temporary derivative buffers required by the Hermite boundary conditions if they are needed.
+
 ### Deprecated
 
 ### Removed
 
 ### Fixed
+
+* Fix `ddc::SplineBuilder3D` requiring cross-derivatives when Hermite boundary conditions are used in fewer than 3 dimensions, see <https://github.com/CExA-project/ddc/issues/1280>
 
 ### Dependency requirements
 

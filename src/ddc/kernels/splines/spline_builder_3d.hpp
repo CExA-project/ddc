@@ -1109,7 +1109,7 @@ operator()(
 
     m_spline_builder_2_3(
             spline,
-            spline1.span_cview(),
+            spline1_alloc.span_cview(),
             spline_derivs_min2_opt,
             spline_derivs_max2_opt,
             spline_derivs_min3_opt,

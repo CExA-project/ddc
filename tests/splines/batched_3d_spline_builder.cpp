@@ -81,21 +81,35 @@ constexpr ddc::SplineBuilderClosure s_sbcl_3 = ddc::SplineBuilderClosure::GREVIL
 constexpr ddc::SplineBuilderClosure s_sbcr_3 = ddc::SplineBuilderClosure::GREVILLE;
 #endif
 
-// Boundary conditions in the continuous dimension X
 template <typename X>
-constexpr ddc::SplineBuilderClosure s_sbcl = std::is_same_v<X, DimX>   ? s_sbcl_1
-                                             : std::is_same_v<X, DimY> ? s_sbcl_2
-                                                                       : s_sbcl_3;
+consteval ddc::SplineBuilderClosure get_sbcl()
+{
+    if constexpr (std::is_same_v<X, DimX>) {
+        return s_sbcl_1;
+    } else if constexpr (std::is_same_v<X, DimY>) {
+        return s_sbcl_2;
+    } else {
+        return s_sbcl_3;
+    }
+}
+
 template <typename X>
-constexpr ddc::SplineBuilderClosure s_sbcr = std::is_same_v<X, DimX>   ? s_sbcr_1
-                                             : std::is_same_v<X, DimY> ? s_sbcr_2
-                                                                       : s_sbcr_3;
+consteval ddc::SplineBuilderClosure get_sbcr()
+{
+    if constexpr (std::is_same_v<X, DimX>) {
+        return s_sbcr_1;
+    } else if constexpr (std::is_same_v<X, DimY>) {
+        return s_sbcr_2;
+    } else {
+        return s_sbcr_3;
+    }
+}
 
 template <typename BSpX>
 using GrevillePoints = ddc::GrevilleInterpolationPoints<
         BSpX,
-        s_sbcl<typename BSpX::continuous_dimension_type>,
-        s_sbcr<typename BSpX::continuous_dimension_type>>;
+        get_sbcl<typename BSpX::continuous_dimension_type>(),
+        get_sbcr<typename BSpX::continuous_dimension_type>()>;
 
 #if defined(BSPLINES_TYPE_UNIFORM)
 template <typename X>

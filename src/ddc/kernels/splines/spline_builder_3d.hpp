@@ -1037,7 +1037,7 @@ operator()(
     auto spline_derivs_min2_min3_opt = std::optional(spline_derivs_min2_min3.span_cview());
     if constexpr (
             SBCLower2 == ddc::SplineBuilderClosure::HERMITE
-            || SBCLower3 == ddc::SplineBuilderClosure::HERMITE) {
+            && SBCLower3 == ddc::SplineBuilderClosure::HERMITE) {
         m_spline_builder1(
                 spline_derivs_min2_min3,
                 *mixed_derivs_min2_min3,
@@ -1055,7 +1055,7 @@ operator()(
     auto spline_derivs_min2_max3_opt = std::optional(spline_derivs_min2_max3.span_cview());
     if constexpr (
             SBCLower2 == ddc::SplineBuilderClosure::HERMITE
-            || SBCUpper3 == ddc::SplineBuilderClosure::HERMITE) {
+            && SBCUpper3 == ddc::SplineBuilderClosure::HERMITE) {
         m_spline_builder1(
                 spline_derivs_min2_max3,
                 *mixed_derivs_min2_max3,
@@ -1073,7 +1073,7 @@ operator()(
     auto spline_derivs_max2_min3_opt = std::optional(spline_derivs_max2_min3.span_cview());
     if constexpr (
             SBCUpper2 == ddc::SplineBuilderClosure::HERMITE
-            || SBCLower3 == ddc::SplineBuilderClosure::HERMITE) {
+            && SBCLower3 == ddc::SplineBuilderClosure::HERMITE) {
         m_spline_builder1(
                 spline_derivs_max2_min3,
                 *mixed_derivs_max2_min3,
@@ -1091,7 +1091,7 @@ operator()(
     auto spline_derivs_max2_max3_opt = std::optional(spline_derivs_max2_max3.span_cview());
     if constexpr (
             SBCUpper2 == ddc::SplineBuilderClosure::HERMITE
-            || SBCUpper3 == ddc::SplineBuilderClosure::HERMITE) {
+            && SBCUpper3 == ddc::SplineBuilderClosure::HERMITE) {
         m_spline_builder1(
                 spline_derivs_max2_max3,
                 *mixed_derivs_max2_max3,

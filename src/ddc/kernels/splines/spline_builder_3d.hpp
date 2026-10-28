@@ -1021,8 +1021,6 @@ operator()(
                 mixed_derivs_min1_max3,
                 mixed_derivs_max1_max3);
         spline_derivs_max3_opt = spline_derivs_max3_alloc.span_cview();
-    } else {
-        spline_derivs_max3_opt = std::nullopt;
     }
 
     // Build the cross derivatives along the second and third dimensions

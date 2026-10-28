@@ -231,11 +231,11 @@ void TestBatched3dSpline()
     std::size_t const nderivs3 = s_sbcl_3 == ddc::SplineBuilderClosure::HERMITE ? s_degree / 2 : 0;
     // Create the derivs domain
     ddc::DiscreteDomain<ddc::Deriv<I1>> const
-            derivs_domain1(DElem<ddc::Deriv<I1>>{shift}, DVect<ddc::Deriv<I1>>{nderivs1});
+            derivs_domain1(DElem<ddc::Deriv<I1>> {shift}, DVect<ddc::Deriv<I1>> {nderivs1});
     ddc::DiscreteDomain<ddc::Deriv<I2>> const
-            derivs_domain2(DElem<ddc::Deriv<I2>>{shift}, DVect<ddc::Deriv<I2>>{nderivs2});
+            derivs_domain2(DElem<ddc::Deriv<I2>> {shift}, DVect<ddc::Deriv<I2>> {nderivs2});
     ddc::DiscreteDomain<ddc::Deriv<I3>> const
-            derivs_domain3(DElem<ddc::Deriv<I3>>{shift}, DVect<ddc::Deriv<I3>>{nderivs3});
+            derivs_domain3(DElem<ddc::Deriv<I3>> {shift}, DVect<ddc::Deriv<I3>> {nderivs3});
     ddc::DiscreteDomain<ddc::Deriv<I1>, ddc::Deriv<I2>, DDimI3> const
             derivs_domain12(derivs_domain1, derivs_domain2, interpolation_domain3);
     ddc::DiscreteDomain<DDimI1, ddc::Deriv<I2>, ddc::Deriv<I3>> const

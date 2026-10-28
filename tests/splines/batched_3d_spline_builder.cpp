@@ -4,9 +4,10 @@
 
 #include <algorithm>
 #include <cstddef>
-#if defined(BC_HERMITE)
+#if defined(BC_HERMITE) || defined(BC_MIXED)
 #    include <optional>
 #endif
+#include <type_traits>
 #include <vector>
 
 #include <ddc/ddc.hpp>
@@ -51,18 +52,50 @@ constexpr bool splines_periodic = false;
 #endif
 
 #if defined(BC_PERIODIC)
-constexpr ddc::SplineBuilderClosure s_sbcl = ddc::SplineBuilderClosure::PERIODIC;
-constexpr ddc::SplineBuilderClosure s_sbcr = ddc::SplineBuilderClosure::PERIODIC;
+constexpr ddc::SplineBuilderClosure s_sbcl_1 = ddc::SplineBuilderClosure::PERIODIC;
+constexpr ddc::SplineBuilderClosure s_sbcr_1 = ddc::SplineBuilderClosure::PERIODIC;
+constexpr ddc::SplineBuilderClosure s_sbcl_2 = ddc::SplineBuilderClosure::PERIODIC;
+constexpr ddc::SplineBuilderClosure s_sbcr_2 = ddc::SplineBuilderClosure::PERIODIC;
+constexpr ddc::SplineBuilderClosure s_sbcl_3 = ddc::SplineBuilderClosure::PERIODIC;
+constexpr ddc::SplineBuilderClosure s_sbcr_3 = ddc::SplineBuilderClosure::PERIODIC;
 #elif defined(BC_GREVILLE)
-constexpr ddc::SplineBuilderClosure s_sbcl = ddc::SplineBuilderClosure::GREVILLE;
-constexpr ddc::SplineBuilderClosure s_sbcr = ddc::SplineBuilderClosure::GREVILLE;
+constexpr ddc::SplineBuilderClosure s_sbcl_1 = ddc::SplineBuilderClosure::GREVILLE;
+constexpr ddc::SplineBuilderClosure s_sbcr_1 = ddc::SplineBuilderClosure::GREVILLE;
+constexpr ddc::SplineBuilderClosure s_sbcl_2 = ddc::SplineBuilderClosure::GREVILLE;
+constexpr ddc::SplineBuilderClosure s_sbcr_2 = ddc::SplineBuilderClosure::GREVILLE;
+constexpr ddc::SplineBuilderClosure s_sbcl_3 = ddc::SplineBuilderClosure::GREVILLE;
+constexpr ddc::SplineBuilderClosure s_sbcr_3 = ddc::SplineBuilderClosure::GREVILLE;
 #elif defined(BC_HERMITE)
-constexpr ddc::SplineBuilderClosure s_sbcl = ddc::SplineBuilderClosure::HERMITE;
-constexpr ddc::SplineBuilderClosure s_sbcr = ddc::SplineBuilderClosure::HERMITE;
+constexpr ddc::SplineBuilderClosure s_sbcl_1 = ddc::SplineBuilderClosure::HERMITE;
+constexpr ddc::SplineBuilderClosure s_sbcr_1 = ddc::SplineBuilderClosure::HERMITE;
+constexpr ddc::SplineBuilderClosure s_sbcl_2 = ddc::SplineBuilderClosure::HERMITE;
+constexpr ddc::SplineBuilderClosure s_sbcr_2 = ddc::SplineBuilderClosure::HERMITE;
+constexpr ddc::SplineBuilderClosure s_sbcl_3 = ddc::SplineBuilderClosure::HERMITE;
+constexpr ddc::SplineBuilderClosure s_sbcr_3 = ddc::SplineBuilderClosure::HERMITE;
+#elif defined(BC_MIXED)
+constexpr ddc::SplineBuilderClosure s_sbcl_1 = ddc::SplineBuilderClosure::GREVILLE;
+constexpr ddc::SplineBuilderClosure s_sbcr_1 = ddc::SplineBuilderClosure::GREVILLE;
+constexpr ddc::SplineBuilderClosure s_sbcl_2 = ddc::SplineBuilderClosure::HERMITE;
+constexpr ddc::SplineBuilderClosure s_sbcr_2 = ddc::SplineBuilderClosure::HERMITE;
+constexpr ddc::SplineBuilderClosure s_sbcl_3 = ddc::SplineBuilderClosure::GREVILLE;
+constexpr ddc::SplineBuilderClosure s_sbcr_3 = ddc::SplineBuilderClosure::GREVILLE;
 #endif
 
+// Boundary conditions in the continuous dimension X
+template <typename X>
+constexpr ddc::SplineBuilderClosure s_sbcl = std::is_same_v<X, DimX>   ? s_sbcl_1
+                                             : std::is_same_v<X, DimY> ? s_sbcl_2
+                                                                       : s_sbcl_3;
+template <typename X>
+constexpr ddc::SplineBuilderClosure s_sbcr = std::is_same_v<X, DimX>   ? s_sbcr_1
+                                             : std::is_same_v<X, DimY> ? s_sbcr_2
+                                                                       : s_sbcr_3;
+
 template <typename BSpX>
-using GrevillePoints = ddc::GrevilleInterpolationPoints<BSpX, s_sbcl, s_sbcr>;
+using GrevillePoints = ddc::GrevilleInterpolationPoints<
+        BSpX,
+        s_sbcl<typename BSpX::continuous_dimension_type>,
+        s_sbcr<typename BSpX::continuous_dimension_type>>;
 
 #if defined(BSPLINES_TYPE_UNIFORM)
 template <typename X>
@@ -190,15 +223,19 @@ void TestBatched3dSpline()
             interpolation_domain2,
             interpolation_domain3);
 
-#if defined(BC_HERMITE)
+#if defined(BC_HERMITE) || defined(BC_MIXED)
     int const shift = s_degree % 2; // shift = 0 for even order, 1 for odd order
+    // Number of derivatives provided in each dimension (none if not Hermite)
+    std::size_t const nderivs1 = s_sbcl_1 == ddc::SplineBuilderClosure::HERMITE ? s_degree / 2 : 0;
+    std::size_t const nderivs2 = s_sbcl_2 == ddc::SplineBuilderClosure::HERMITE ? s_degree / 2 : 0;
+    std::size_t const nderivs3 = s_sbcl_3 == ddc::SplineBuilderClosure::HERMITE ? s_degree / 2 : 0;
     // Create the derivs domain
     ddc::DiscreteDomain<ddc::Deriv<I1>> const
-            derivs_domain1(DElem<ddc::Deriv<I1>>(shift), DVect<ddc::Deriv<I1>>(s_degree / 2));
+            derivs_domain1(DElem<ddc::Deriv<I1>>{shift}, DVect<ddc::Deriv<I1>>{nderivs1});
     ddc::DiscreteDomain<ddc::Deriv<I2>> const
-            derivs_domain2(DElem<ddc::Deriv<I2>>(shift), DVect<ddc::Deriv<I2>>(s_degree / 2));
+            derivs_domain2(DElem<ddc::Deriv<I2>>{shift}, DVect<ddc::Deriv<I2>>{nderivs2});
     ddc::DiscreteDomain<ddc::Deriv<I3>> const
-            derivs_domain3(DElem<ddc::Deriv<I3>>(shift), DVect<ddc::Deriv<I3>>(s_degree / 2));
+            derivs_domain3(DElem<ddc::Deriv<I3>>{shift}, DVect<ddc::Deriv<I3>>{nderivs3});
     ddc::DiscreteDomain<ddc::Deriv<I1>, ddc::Deriv<I2>, DDimI3> const
             derivs_domain12(derivs_domain1, derivs_domain2, interpolation_domain3);
     ddc::DiscreteDomain<DDimI1, ddc::Deriv<I2>, ddc::Deriv<I3>> const
@@ -231,12 +268,12 @@ void TestBatched3dSpline()
             DDimI1,
             DDimI2,
             DDimI3,
-            s_sbcl,
-            s_sbcr,
-            s_sbcl,
-            s_sbcr,
-            s_sbcl,
-            s_sbcr,
+            s_sbcl_1,
+            s_sbcr_1,
+            s_sbcl_2,
+            s_sbcr_2,
+            s_sbcl_3,
+            s_sbcr_3,
             ddc::SplineSolver::GINKGO> const spline_builder(interpolation_domain);
 
     // Compute useful domains (dom_interpolation, dom_batch, dom_bsplines and dom_spline)
@@ -261,12 +298,12 @@ void TestBatched3dSpline()
                 vals(e) = vals_1d(DElem<DDimI1, DDimI2, DDimI3>(e));
             });
 
-#if defined(BC_HERMITE)
+#if defined(BC_HERMITE) || defined(BC_MIXED)
     // Allocate and fill a chunk containing derivs to be passed as input to spline_builder.
 
     ddc::Chunk derivs1_lhs_view_alloc(dom_derivs1, ddc::KokkosAllocator<ddc::Real, MemorySpace>());
     ddc::ChunkSpan const derivs1_lhs_view = derivs1_lhs_view_alloc.span_view();
-    if (s_sbcl == ddc::SplineBuilderClosure::HERMITE) {
+    if (s_sbcl_1 == ddc::SplineBuilderClosure::HERMITE) {
         ddc::Chunk derivs1_lhs_host_alloc(
                 ddc::DiscreteDomain<
                         ddc::Deriv<I1>,
@@ -295,7 +332,7 @@ void TestBatched3dSpline()
 
     ddc::Chunk derivs1_rhs_view_alloc(dom_derivs1, ddc::KokkosAllocator<ddc::Real, MemorySpace>());
     ddc::ChunkSpan const derivs1_rhs_view = derivs1_rhs_view_alloc.span_view();
-    if (s_sbcr == ddc::SplineBuilderClosure::HERMITE) {
+    if (s_sbcr_1 == ddc::SplineBuilderClosure::HERMITE) {
         ddc::Chunk derivs1_rhs_host_alloc(
                 ddc::DiscreteDomain<
                         ddc::Deriv<I1>,
@@ -324,7 +361,7 @@ void TestBatched3dSpline()
 
     ddc::Chunk derivs2_lhs_view_alloc(dom_derivs2, ddc::KokkosAllocator<ddc::Real, MemorySpace>());
     ddc::ChunkSpan const derivs2_lhs_view = derivs2_lhs_view_alloc.span_view();
-    if (s_sbcl == ddc::SplineBuilderClosure::HERMITE) {
+    if (s_sbcl_2 == ddc::SplineBuilderClosure::HERMITE) {
         ddc::Chunk derivs2_lhs_host_alloc(
                 ddc::DiscreteDomain<
                         DDimI1,
@@ -354,7 +391,7 @@ void TestBatched3dSpline()
 
     ddc::Chunk derivs2_rhs_view_alloc(dom_derivs2, ddc::KokkosAllocator<ddc::Real, MemorySpace>());
     ddc::ChunkSpan const derivs2_rhs_view = derivs2_rhs_view_alloc.span_view();
-    if (s_sbcr == ddc::SplineBuilderClosure::HERMITE) {
+    if (s_sbcr_2 == ddc::SplineBuilderClosure::HERMITE) {
         ddc::Chunk derivs2_rhs_host_alloc(
                 ddc::DiscreteDomain<
                         DDimI1,
@@ -384,7 +421,7 @@ void TestBatched3dSpline()
 
     ddc::Chunk derivs3_lhs_view_alloc(dom_derivs3, ddc::KokkosAllocator<ddc::Real, MemorySpace>());
     ddc::ChunkSpan const derivs3_lhs_view = derivs3_lhs_view_alloc.span_view();
-    if (s_sbcl == ddc::SplineBuilderClosure::HERMITE) {
+    if (s_sbcl_3 == ddc::SplineBuilderClosure::HERMITE) {
         ddc::Chunk derivs3_lhs_host_alloc(
                 ddc::DiscreteDomain<
                         DDimI1,
@@ -415,7 +452,7 @@ void TestBatched3dSpline()
 
     ddc::Chunk derivs3_rhs_view_alloc(dom_derivs3, ddc::KokkosAllocator<ddc::Real, MemorySpace>());
     ddc::ChunkSpan const derivs3_rhs_view = derivs3_rhs_view_alloc.span_view();
-    if (s_sbcr == ddc::SplineBuilderClosure::HERMITE) {
+    if (s_sbcr_3 == ddc::SplineBuilderClosure::HERMITE) {
         ddc::Chunk derivs3_rhs_host_alloc(
                 ddc::DiscreteDomain<
                         DDimI1,
@@ -465,7 +502,8 @@ void TestBatched3dSpline()
     ddc::ChunkSpan const derivs_mixed_rhs1_rhs2_view
             = derivs_mixed_rhs1_rhs2_view_alloc.span_view();
 
-    if (s_sbcl == ddc::SplineBuilderClosure::HERMITE) {
+    if (s_sbcl_1 == ddc::SplineBuilderClosure::HERMITE
+        && s_sbcl_2 == ddc::SplineBuilderClosure::HERMITE) {
         ddc::Chunk
                 derivs_mixed_lhs1_lhs2_host_alloc(derivs_domain12, ddc::HostAllocator<ddc::Real>());
         ddc::ChunkSpan const derivs_mixed_lhs1_lhs2_host
@@ -549,7 +587,8 @@ void TestBatched3dSpline()
     ddc::ChunkSpan const derivs_mixed_rhs2_rhs3_view
             = derivs_mixed_rhs2_rhs3_view_alloc.span_view();
 
-    if (s_sbcl == ddc::SplineBuilderClosure::HERMITE) {
+    if (s_sbcl_2 == ddc::SplineBuilderClosure::HERMITE
+        && s_sbcl_3 == ddc::SplineBuilderClosure::HERMITE) {
         ddc::Chunk
                 derivs_mixed_lhs2_lhs3_host_alloc(derivs_domain23, ddc::HostAllocator<ddc::Real>());
         ddc::ChunkSpan const derivs_mixed_lhs2_lhs3_host
@@ -633,7 +672,8 @@ void TestBatched3dSpline()
     ddc::ChunkSpan const derivs_mixed_rhs1_rhs3_view
             = derivs_mixed_rhs1_rhs3_view_alloc.span_view();
 
-    if (s_sbcl == ddc::SplineBuilderClosure::HERMITE) {
+    if (s_sbcl_1 == ddc::SplineBuilderClosure::HERMITE
+        && s_sbcl_3 == ddc::SplineBuilderClosure::HERMITE) {
         ddc::Chunk
                 derivs_mixed_lhs1_lhs3_host_alloc(derivs_domain13, ddc::HostAllocator<ddc::Real>());
         ddc::ChunkSpan const derivs_mixed_lhs1_lhs3_host
@@ -737,7 +777,9 @@ void TestBatched3dSpline()
     ddc::ChunkSpan const derivs_mixed_rhs1_rhs2_rhs3_view
             = derivs_mixed_rhs1_rhs2_rhs3_view_alloc.span_view();
 
-    if (s_sbcl == ddc::SplineBuilderClosure::HERMITE) {
+    if (s_sbcl_1 == ddc::SplineBuilderClosure::HERMITE
+        && s_sbcl_2 == ddc::SplineBuilderClosure::HERMITE
+        && s_sbcl_3 == ddc::SplineBuilderClosure::HERMITE) {
         ddc::Chunk derivs_mixed_lhs1_lhs2_lhs3_host_alloc(
                 derivs_domain_all,
                 ddc::HostAllocator<ddc::Real>());
@@ -866,7 +908,7 @@ void TestBatched3dSpline()
     ddc::ChunkSpan const coef = coef_alloc.span_view();
 
     // Finally compute the spline by filling `coef`
-#if defined(BC_HERMITE)
+#if defined(BC_HERMITE) || defined(BC_MIXED)
     spline_builder(
             coef,
             vals.span_cview(),
@@ -1205,6 +1247,10 @@ void TestBatched3dSpline()
 #    define SUFFIX_DEGREE(name, degree) name##Hermite##Uniform##Degree##degree
 #elif defined(BC_HERMITE) && defined(BSPLINES_TYPE_NON_UNIFORM)
 #    define SUFFIX_DEGREE(name, degree) name##Hermite##NonUniform##Degree##degree
+#elif defined(BC_MIXED) && defined(BSPLINES_TYPE_UNIFORM)
+#    define SUFFIX_DEGREE(name, degree) name##Mixed##Uniform##Degree##degree
+#elif defined(BC_MIXED) && defined(BSPLINES_TYPE_NON_UNIFORM)
+#    define SUFFIX_DEGREE(name, degree) name##Mixed##NonUniform##Degree##degree
 #endif
 #define SUFFIX_DEGREE_MACRO_EXP(name, degree) SUFFIX_DEGREE(name, degree)
 #define SUFFIX(name) SUFFIX_DEGREE_MACRO_EXP(name, DEGREE)

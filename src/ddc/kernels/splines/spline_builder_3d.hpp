@@ -949,36 +949,37 @@ operator()(
                             ddc::DiscreteElement<deriv_type2>(BSpline2::degree() % 2),
                             ddc::DiscreteVector<deriv_type2>(bsplines_type2::degree() / 2)));
 
-    ddc::Chunk spline_derivs_min2_alloc(
-            m_label + " > spline_derivs_min2 (ddc::SplineBuilder3D::operator())",
-            m_spline_builder1.batched_spline_domain(batched_interpolation_deriv_domain2),
-            ddc::KokkosAllocator<Real, MemorySpace>());
-    auto spline_derivs_min2 = spline_derivs_min2_alloc.span_view();
-    auto spline_derivs_min2_opt = std::optional(spline_derivs_min2.span_cview());
-    if constexpr (SBCLower2 == ddc::SplineBuilderClosure::HERMITE) {
+    using spline_derivs2_chunk_type = ddc::Chunk<
+            Real,
+            decltype(m_spline_builder1.batched_spline_domain(batched_interpolation_deriv_domain2)),
+            ddc::KokkosAllocator<Real, MemorySpace>>;
+
+    spline_derivs2_chunk_type spline_derivs_min2_alloc;
+    std::optional<typename spline_derivs2_chunk_type::view_type> spline_derivs_min2_opt;
+    if (SBCLower2 == ddc::SplineBuilderClosure::HERMITE) {
+        spline_derivs_min2_alloc = spline_derivs2_chunk_type(
+                m_label + " > spline_derivs_min2 (ddc::SplineBuilder3D::operator())",
+                m_spline_builder1.batched_spline_domain(batched_interpolation_deriv_domain2));
         m_spline_builder1(
-                spline_derivs_min2,
+                spline_derivs_min2_alloc.span_view(),
                 *derivs_min2,
                 mixed_derivs_min1_min2,
                 mixed_derivs_max1_min2);
-    } else {
-        spline_derivs_min2_opt = std::nullopt;
+        spline_derivs_min2_opt = spline_derivs_min2_alloc.span_cview();
     }
 
-    ddc::Chunk spline_derivs_max2_alloc(
-            m_label + " > spline_derivs_max2 (ddc::SplineBuilder3D::operator())",
-            m_spline_builder1.batched_spline_domain(batched_interpolation_deriv_domain2),
-            ddc::KokkosAllocator<Real, MemorySpace>());
-    auto spline_derivs_max2 = spline_derivs_max2_alloc.span_view();
-    auto spline_derivs_max2_opt = std::optional(spline_derivs_max2.span_cview());
-    if constexpr (SBCUpper2 == ddc::SplineBuilderClosure::HERMITE) {
+    spline_derivs2_chunk_type spline_derivs_max2_alloc;
+    std::optional<typename spline_derivs2_chunk_type::view_type> spline_derivs_max2_opt;
+    if (SBCUpper2 == ddc::SplineBuilderClosure::HERMITE) {
+        spline_derivs_max2_alloc = spline_derivs2_chunk_type(
+                m_label + " > spline_derivs_max2 (ddc::SplineBuilder3D::operator())",
+                m_spline_builder1.batched_spline_domain(batched_interpolation_deriv_domain2));
         m_spline_builder1(
-                spline_derivs_max2,
+                spline_derivs_max2_alloc.span_view(),
                 *derivs_max2,
                 mixed_derivs_min1_max2,
                 mixed_derivs_max1_max2);
-    } else {
-        spline_derivs_max2_opt = std::nullopt;
+        spline_derivs_max2_opt = spline_derivs_max2_alloc.span_cview();
     }
 
     // Build the derivatives along the third dimension
@@ -989,36 +990,37 @@ operator()(
                             ddc::DiscreteElement<deriv_type3>(BSpline3::degree() % 2),
                             ddc::DiscreteVector<deriv_type3>(bsplines_type3::degree() / 2)));
 
-    ddc::Chunk spline_derivs_min3_alloc(
-            m_label + " > spline_derivs_min3 (ddc::SplineBuilder3D::operator())",
-            m_spline_builder1.batched_spline_domain(batched_interpolation_deriv_domain3),
-            ddc::KokkosAllocator<Real, MemorySpace>());
-    auto spline_derivs_min3 = spline_derivs_min3_alloc.span_view();
-    auto spline_derivs_min3_opt = std::optional(spline_derivs_min3.span_cview());
-    if constexpr (SBCLower3 == ddc::SplineBuilderClosure::HERMITE) {
+    using spline_derivs3_chunk_type = ddc::Chunk<
+            Real,
+            decltype(m_spline_builder1.batched_spline_domain(batched_interpolation_deriv_domain3)),
+            ddc::KokkosAllocator<Real, MemorySpace>>;
+
+    spline_derivs3_chunk_type spline_derivs_min3_alloc;
+    std::optional<typename spline_derivs3_chunk_type::view_type> spline_derivs_min3_opt;
+    if (SBCLower3 == ddc::SplineBuilderClosure::HERMITE) {
+        spline_derivs_min3_alloc = spline_derivs3_chunk_type(
+                m_label + " > spline_derivs_min3 (ddc::SplineBuilder3D::operator())",
+                m_spline_builder1.batched_spline_domain(batched_interpolation_deriv_domain3));
         m_spline_builder1(
-                spline_derivs_min3,
+                spline_derivs_min3_alloc.span_view(),
                 *derivs_min3,
                 mixed_derivs_min1_min3,
                 mixed_derivs_max1_min3);
-    } else {
-        spline_derivs_min3_opt = std::nullopt;
+        spline_derivs_min3_opt = spline_derivs_min3_alloc.span_cview();
     }
 
-    ddc::Chunk spline_derivs_max3_alloc(
-            m_label + " > spline_derivs_max3 (ddc::SplineBuilder3D::operator())",
-            m_spline_builder1.batched_spline_domain(batched_interpolation_deriv_domain3),
-            ddc::KokkosAllocator<Real, MemorySpace>());
-    auto spline_derivs_max3 = spline_derivs_max3_alloc.span_view();
-    auto spline_derivs_max3_opt = std::optional(spline_derivs_max3.span_cview());
-    if constexpr (SBCUpper3 == ddc::SplineBuilderClosure::HERMITE) {
+    spline_derivs3_chunk_type spline_derivs_max3_alloc;
+    std::optional<typename spline_derivs3_chunk_type::view_type> spline_derivs_max3_opt;
+    if (SBCUpper3 == ddc::SplineBuilderClosure::HERMITE) {
+        spline_derivs_max3_alloc = spline_derivs3_chunk_type(
+                m_label + " > spline_derivs_max3 (ddc::SplineBuilder3D::operator())",
+                m_spline_builder1.batched_spline_domain(batched_interpolation_deriv_domain3));
         m_spline_builder1(
-                spline_derivs_max3,
+                spline_derivs_max3_alloc.span_view(),
                 *derivs_max3,
                 mixed_derivs_min1_max3,
                 mixed_derivs_max1_max3);
-    } else {
-        spline_derivs_max3_opt = std::nullopt;
+        spline_derivs_max3_opt = spline_derivs_max3_alloc.span_cview();
     }
 
     // Build the cross derivatives along the second and third dimensions
@@ -1029,76 +1031,70 @@ operator()(
                             ddc::DiscreteElement<deriv_type3>(BSpline3::degree() % 2),
                             ddc::DiscreteVector<deriv_type3>(bsplines_type3::degree() / 2)));
 
-    ddc::Chunk spline_derivs_min2_min3_alloc(
-            m_label + " > spline_derivs_min2_min3 (ddc::SplineBuilder3D::operator())",
-            m_spline_builder1.batched_spline_domain(batched_interpolation_deriv_domain2_3),
-            ddc::KokkosAllocator<Real, MemorySpace>());
-    auto spline_derivs_min2_min3 = spline_derivs_min2_min3_alloc.span_view();
-    auto spline_derivs_min2_min3_opt = std::optional(spline_derivs_min2_min3.span_cview());
-    if constexpr (
-            SBCLower2 == ddc::SplineBuilderClosure::HERMITE
-            || SBCLower3 == ddc::SplineBuilderClosure::HERMITE) {
+    using spline_derivs2_3_chunk_type = ddc::Chunk<
+            Real,
+            decltype(m_spline_builder1.batched_spline_domain(
+                    batched_interpolation_deriv_domain2_3)),
+            ddc::KokkosAllocator<Real, MemorySpace>>;
+
+    spline_derivs2_3_chunk_type spline_derivs_min2_min3_alloc;
+    std::optional<typename spline_derivs2_3_chunk_type::view_type> spline_derivs_min2_min3_opt;
+    if (SBCLower2 == ddc::SplineBuilderClosure::HERMITE
+        && SBCLower3 == ddc::SplineBuilderClosure::HERMITE) {
+        spline_derivs_min2_min3_alloc = spline_derivs2_3_chunk_type(
+                m_label + " > spline_derivs_min2_min3 (ddc::SplineBuilder3D::operator())",
+                m_spline_builder1.batched_spline_domain(batched_interpolation_deriv_domain2_3));
         m_spline_builder1(
-                spline_derivs_min2_min3,
+                spline_derivs_min2_min3_alloc.span_view(),
                 *mixed_derivs_min2_min3,
                 mixed_derivs_min1_min2_min3,
                 mixed_derivs_max1_min2_min3);
-    } else {
-        spline_derivs_min2_min3_opt = std::nullopt;
+        spline_derivs_min2_min3_opt = spline_derivs_min2_min3_alloc.span_cview();
     }
 
-    ddc::Chunk spline_derivs_min2_max3_alloc(
-            m_label + " > spline_derivs_min2_max3 (ddc::SplineBuilder3D::operator())",
-            m_spline_builder1.batched_spline_domain(batched_interpolation_deriv_domain2_3),
-            ddc::KokkosAllocator<Real, MemorySpace>());
-    auto spline_derivs_min2_max3 = spline_derivs_min2_max3_alloc.span_view();
-    auto spline_derivs_min2_max3_opt = std::optional(spline_derivs_min2_max3.span_cview());
-    if constexpr (
-            SBCLower2 == ddc::SplineBuilderClosure::HERMITE
-            || SBCUpper3 == ddc::SplineBuilderClosure::HERMITE) {
+    spline_derivs2_3_chunk_type spline_derivs_min2_max3_alloc;
+    std::optional<typename spline_derivs2_3_chunk_type::view_type> spline_derivs_min2_max3_opt;
+    if (SBCLower2 == ddc::SplineBuilderClosure::HERMITE
+        && SBCUpper3 == ddc::SplineBuilderClosure::HERMITE) {
+        spline_derivs_min2_max3_alloc = spline_derivs2_3_chunk_type(
+                m_label + " > spline_derivs_min2_max3 (ddc::SplineBuilder3D::operator())",
+                m_spline_builder1.batched_spline_domain(batched_interpolation_deriv_domain2_3));
         m_spline_builder1(
-                spline_derivs_min2_max3,
+                spline_derivs_min2_max3_alloc.span_view(),
                 *mixed_derivs_min2_max3,
                 mixed_derivs_min1_min2_max3,
                 mixed_derivs_max1_min2_max3);
-    } else {
-        spline_derivs_min2_max3_opt = std::nullopt;
+        spline_derivs_min2_max3_opt = spline_derivs_min2_max3_alloc.span_cview();
     }
 
-    ddc::Chunk spline_derivs_max2_min3_alloc(
-            m_label + " > spline_derivs_max2_min3 (ddc::SplineBuilder3D::operator())",
-            m_spline_builder1.batched_spline_domain(batched_interpolation_deriv_domain2_3),
-            ddc::KokkosAllocator<Real, MemorySpace>());
-    auto spline_derivs_max2_min3 = spline_derivs_max2_min3_alloc.span_view();
-    auto spline_derivs_max2_min3_opt = std::optional(spline_derivs_max2_min3.span_cview());
-    if constexpr (
-            SBCUpper2 == ddc::SplineBuilderClosure::HERMITE
-            || SBCLower3 == ddc::SplineBuilderClosure::HERMITE) {
+    spline_derivs2_3_chunk_type spline_derivs_max2_min3_alloc;
+    std::optional<typename spline_derivs2_3_chunk_type::view_type> spline_derivs_max2_min3_opt;
+    if (SBCUpper2 == ddc::SplineBuilderClosure::HERMITE
+        && SBCLower3 == ddc::SplineBuilderClosure::HERMITE) {
+        spline_derivs_max2_min3_alloc = spline_derivs2_3_chunk_type(
+                m_label + " > spline_derivs_max2_min3 (ddc::SplineBuilder3D::operator())",
+                m_spline_builder1.batched_spline_domain(batched_interpolation_deriv_domain2_3));
         m_spline_builder1(
-                spline_derivs_max2_min3,
+                spline_derivs_max2_min3_alloc.span_view(),
                 *mixed_derivs_max2_min3,
                 mixed_derivs_min1_max2_min3,
                 mixed_derivs_max1_max2_min3);
-    } else {
-        spline_derivs_max2_min3_opt = std::nullopt;
+        spline_derivs_max2_min3_opt = spline_derivs_max2_min3_alloc.span_cview();
     }
 
-    ddc::Chunk spline_derivs_max2_max3_alloc(
-            m_label + " > spline_derivs_max2_max3 (ddc::SplineBuilder3D::operator())",
-            m_spline_builder1.batched_spline_domain(batched_interpolation_deriv_domain2_3),
-            ddc::KokkosAllocator<Real, MemorySpace>());
-    auto spline_derivs_max2_max3 = spline_derivs_max2_max3_alloc.span_view();
-    auto spline_derivs_max2_max3_opt = std::optional(spline_derivs_max2_max3.span_cview());
-    if constexpr (
-            SBCUpper2 == ddc::SplineBuilderClosure::HERMITE
-            || SBCUpper3 == ddc::SplineBuilderClosure::HERMITE) {
+    spline_derivs2_3_chunk_type spline_derivs_max2_max3_alloc;
+    std::optional<typename spline_derivs2_3_chunk_type::view_type> spline_derivs_max2_max3_opt;
+    if (SBCUpper2 == ddc::SplineBuilderClosure::HERMITE
+        && SBCUpper3 == ddc::SplineBuilderClosure::HERMITE) {
+        spline_derivs_max2_max3_alloc = spline_derivs2_3_chunk_type(
+                m_label + " > spline_derivs_max2_max3 (ddc::SplineBuilder3D::operator())",
+                m_spline_builder1.batched_spline_domain(batched_interpolation_deriv_domain2_3));
         m_spline_builder1(
-                spline_derivs_max2_max3,
+                spline_derivs_max2_max3_alloc.span_view(),
                 *mixed_derivs_max2_max3,
                 mixed_derivs_min1_max2_max3,
                 mixed_derivs_max1_max2_max3);
-    } else {
-        spline_derivs_max2_max3_opt = std::nullopt;
+        spline_derivs_max2_max3_opt = spline_derivs_max2_max3_alloc.span_cview();
     }
 
     // Spline1-approximate vals (to spline1)
@@ -1106,13 +1102,12 @@ operator()(
             m_label + " > spline1 (ddc::SplineBuilder3D::operator())",
             m_spline_builder1.batched_spline_domain(batched_interpolation_domain),
             ddc::KokkosAllocator<Real, MemorySpace>());
-    ddc::ChunkSpan const spline1 = spline1_alloc.span_view();
 
-    m_spline_builder1(spline1, vals, derivs_min1, derivs_max1);
+    m_spline_builder1(spline1_alloc.span_view(), vals, derivs_min1, derivs_max1);
 
     m_spline_builder_2_3(
             spline,
-            spline1.span_cview(),
+            spline1_alloc.span_cview(),
             spline_derivs_min2_opt,
             spline_derivs_max2_opt,
             spline_derivs_min3_opt,

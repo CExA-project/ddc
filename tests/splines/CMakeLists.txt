@@ -223,7 +223,7 @@ foreach(bc "periodic" "greville" "hermite")
     endforeach()
 endforeach()
 
-foreach(bc "periodic" "greville" "hermite")
+foreach(bc "periodic" "greville" "hermite" "mixed")
     foreach(evaluator "polynomial")
         foreach(degree RANGE "${DDC_SPLINES_TEST_DEGREE_MIN}" "${DDC_SPLINES_TEST_DEGREE_MAX}")
             foreach(bsplines_type "uniform" "non_uniform")

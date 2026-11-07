@@ -7,6 +7,7 @@
 #include <cstddef>
 #include <functional>
 #include <iterator>
+#include <ostream>
 #include <string>
 #include <tuple>
 #include <type_traits>
@@ -612,6 +613,66 @@ KOKKOS_FUNCTION constexpr DiscreteElement<QueryDDims...> back(
         SparseDiscreteDomain<DDims...> const& domain) noexcept
 {
     return DiscreteElement<QueryDDims...>(SparseDiscreteDomain<QueryDDims>(domain).back()...);
+}
+
+namespace detail {
+
+/// Print the ids of the elements of one dimension, eliding the middle ones if there are too many
+inline std::ostream& print_sparse_discrete_domain_dimension(
+        std::ostream& os,
+        Kokkos::View<DiscreteElementType*, Kokkos::SharedSpace> const& view)
+{
+    /// Number of elements displayed at each end of a dimension of a SparseDiscreteDomain
+    constexpr std::size_t sparse_discrete_domain_print_edge_items = 3;
+    constexpr std::size_t edge = sparse_discrete_domain_print_edge_items;
+    std::size_t const n = view.size();
+    os << '[';
+    if (n <= 2 * edge + 1) {
+        for (std::size_t i = 0; i < n; ++i) {
+            os << (i == 0 ? "" : ", ") << view(i);
+        }
+    } else {
+        for (std::size_t i = 0; i < edge; ++i) {
+            os << view(i) << ", ";
+        }
+        os << "...";
+        for (std::size_t i = n - edge; i < n; ++i) {
+            os << ", " << view(i);
+        }
+    }
+    return os << ']';
+}
+
+} // namespace detail
+
+/**
+ * Print a SparseDiscreteDomain. The extents are displayed, followed by a non-exhaustive
+ * list of the elements of each dimension: all of them for small dimensions, otherwise
+ * only the first and last ones.
+ *
+ * For example `SparseDiscreteDomain(extents=(2, 3), elements=[[1, 4], [3, 5, 9]])`,
+ * `SparseDiscreteDomain(extents=(100), elements=[[0, 2, 4, ..., 194, 196, 198]])`, or
+ * `SparseDiscreteDomain(empty)` if the domain contains no element.
+ */
+template <concepts::discrete_dimension... DDims>
+std::ostream& operator<<(std::ostream& os, SparseDiscreteDomain<DDims...> const& domain)
+{
+    os << "SparseDiscreteDomain(";
+    if (domain.empty()) {
+        os << "empty";
+    } else {
+        os << "extents=" << domain.extents() << ", elements=[";
+        if constexpr (sizeof...(DDims) > 0) {
+            auto const elements = domain.discrete_elements();
+            std::size_t i = 0;
+            (((i++ == 0 ? os : (os << ", ")),
+              detail::print_sparse_discrete_domain_dimension(os, get<DDims>(elements))),
+             ...);
+        }
+        os << ']';
+    }
+    os << ')';
+    return os;
 }
 
 } // namespace ddc

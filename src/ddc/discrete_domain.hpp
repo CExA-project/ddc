@@ -6,6 +6,7 @@
 
 #include <cstddef>
 #include <iterator>
+#include <ostream>
 #include <tuple>
 #include <type_traits>
 #include <utility>
@@ -731,5 +732,24 @@ public:
                                          : (xx.m_value - yy.m_value);
     }
 };
+
+/**
+ * Print a DiscreteDomain. Only the front and back elements are displayed.
+ *
+ * For example `DiscreteDomain(front=(0, 1), back=(9, 19))`, or
+ * `DiscreteDomain(empty)` if the domain contains no element.
+ */
+template <concepts::discrete_dimension... DDims>
+std::ostream& operator<<(std::ostream& os, DiscreteDomain<DDims...> const& domain)
+{
+    os << "DiscreteDomain(";
+    if (domain.empty()) {
+        os << "empty";
+    } else {
+        os << "front=" << domain.front() << ", back=" << domain.back();
+    }
+    os << ')';
+    return os;
+}
 
 } // namespace ddc

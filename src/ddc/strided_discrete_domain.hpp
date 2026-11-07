@@ -6,6 +6,7 @@
 
 #include <cstddef>
 #include <iterator>
+#include <ostream>
 #include <tuple>
 #include <type_traits>
 
@@ -729,5 +730,30 @@ public:
                                          : (xx.m_value - yy.m_value);
     }
 };
+
+/**
+ * Print a StridedDiscreteDomain. Only the front and back elements are displayed,
+ * together with the strides.
+ *
+ * For example `StridedDiscreteDomain(front=(0, 1), back=(8, 19), strides=(2, 3))`, or
+ * `StridedDiscreteDomain(empty)` if the domain contains no element.
+ */
+template <concepts::discrete_dimension... DDims>
+std::ostream& operator<<(std::ostream& os, StridedDiscreteDomain<DDims...> const& domain)
+{
+    os << "StridedDiscreteDomain(";
+    if (domain.empty()) {
+        os << "empty";
+    } else {
+        os << "front=" << domain.front() << ", back=" << domain.back() << ", strides=";
+        if constexpr (sizeof...(DDims) == 0) {
+            os << "()";
+        } else {
+            os << domain.strides();
+        }
+    }
+    os << ')';
+    return os;
+}
 
 } // namespace ddc

@@ -2,6 +2,8 @@
 //
 // SPDX-License-Identifier: MIT
 
+#include <sstream>
+
 #include <ddc/ddc.hpp>
 
 #include <gtest/gtest.h>
@@ -406,4 +408,49 @@ TEST(DeviceTransformReduceStrided, TwoDimensions)
             Kokkos::layout_right,
             Kokkos::DefaultExecutionSpace::memory_space> const chunk(storage.data(), dom);
     EXPECT_EQ(TestDeviceTransformReduceStrided(chunk), dom.size());
+}
+
+TEST(StridedDiscreteDomainTest, Print)
+{
+    {
+        std::stringstream ss;
+        ss << ddc::StridedDiscreteDomain<>();
+        EXPECT_EQ(ss.str(), "StridedDiscreteDomain(front=(), back=(), strides=())");
+    }
+    {
+        std::stringstream ss;
+        ss << DDomX(lbound_x, nelems_x, strides_x);
+        EXPECT_EQ(ss.str(), "StridedDiscreteDomain(front=(0), back=(20), strides=(10))");
+    }
+    {
+        std::stringstream ss;
+        ss << DDomXY(lbound_x_y, nelems_x_y, strides_x_y);
+        EXPECT_EQ(
+                ss.str(),
+                "StridedDiscreteDomain(front=(0, 0), back=(20, 110), strides=(10, 10))");
+    }
+}
+
+TEST(StridedDiscreteDomainTest, PrintFrontAndBackOnly)
+{
+    // Even for a large domain, only the front and back elements are printed
+    DDomXY const dom_x_y(lbound_x_y + DVectXY(1, 2), DVectXY(1000, 2000), DVectXY(2, 3));
+    std::stringstream ss;
+    ss << dom_x_y;
+    EXPECT_EQ(ss.str(), "StridedDiscreteDomain(front=(1, 2), back=(1999, 5999), strides=(2, 3))");
+}
+
+TEST(StridedDiscreteDomainTest, PrintDimensionOrder)
+{
+    DDomXY const dom_x_y(lbound_x_y + DVectXY(1, 2), DVectXY(3, 4), DVectXY(2, 3));
+    std::stringstream ss;
+    ss << DDomYX(dom_x_y);
+    EXPECT_EQ(ss.str(), "StridedDiscreteDomain(front=(2, 1), back=(11, 5), strides=(3, 2))");
+}
+
+TEST(StridedDiscreteDomainTest, PrintEmpty)
+{
+    std::stringstream ss;
+    ss << DDomX(lbound_x, DVectX(0), DVectX(0));
+    EXPECT_EQ(ss.str(), "StridedDiscreteDomain(empty)");
 }

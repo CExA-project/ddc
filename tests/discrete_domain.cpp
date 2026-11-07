@@ -2,6 +2,8 @@
 //
 // SPDX-License-Identifier: MIT
 
+#include <sstream>
+
 #include <ddc/ddc.hpp>
 
 #include <gtest/gtest.h>
@@ -326,4 +328,47 @@ TEST(DiscreteDomainTest, Select)
     DDomXY const dom_x_y(dom_x, dom_y);
     EXPECT_EQ(ddc::select<DDimX>(dom_x_y), dom_x);
     EXPECT_EQ(ddc::select<DDimY>(dom_x_y), dom_y);
+}
+
+TEST(DiscreteDomainTest, Print)
+{
+    {
+        std::stringstream ss;
+        ss << ddc::DiscreteDomain<>();
+        EXPECT_EQ(ss.str(), "DiscreteDomain(front=(), back=())");
+    }
+    {
+        std::stringstream ss;
+        ss << DDomX(lbound_x, nelems_x);
+        EXPECT_EQ(ss.str(), "DiscreteDomain(front=(0), back=(2))");
+    }
+    {
+        std::stringstream ss;
+        ss << DDomXY(lbound_x_y, nelems_x_y);
+        EXPECT_EQ(ss.str(), "DiscreteDomain(front=(0, 0), back=(2, 11))");
+    }
+}
+
+TEST(DiscreteDomainTest, PrintFrontAndBackOnly)
+{
+    // Even for a large domain, only the front and back elements are printed
+    DDomXY const dom_x_y(lbound_x_y + DVectXY(1, 2), DVectXY(1000, 2000));
+    std::stringstream ss;
+    ss << dom_x_y;
+    EXPECT_EQ(ss.str(), "DiscreteDomain(front=(1, 2), back=(1000, 2001))");
+}
+
+TEST(DiscreteDomainTest, PrintDimensionOrder)
+{
+    DDomXY const dom_x_y(lbound_x_y + DVectXY(1, 2), DVectXY(3, 4));
+    std::stringstream ss;
+    ss << DDomYX(dom_x_y);
+    EXPECT_EQ(ss.str(), "DiscreteDomain(front=(2, 1), back=(5, 3))");
+}
+
+TEST(DiscreteDomainTest, PrintEmpty)
+{
+    std::stringstream ss;
+    ss << DDomX(lbound_x, DVectX(0));
+    EXPECT_EQ(ss.str(), "DiscreteDomain(empty)");
 }

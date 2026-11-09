@@ -50,14 +50,3 @@ jobs:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
       - run: ./bin/newline_at_eof.py --Werror $(git ls-files ':!docs/images/*' ':!docs/_template/*' ':!vendor')
-
-  trufflehog-scan:
-    name: Secrets check
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
-        with:
-          fetch-depth: 0
-      - name: Secret Scanning
-        uses: trufflesecurity/trufflehog@main

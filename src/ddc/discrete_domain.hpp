@@ -5,8 +5,9 @@
 #pragma once
 
 #include <cstddef>
+#include <iosfwd>
 #include <iterator>
-#include <ostream>
+#include <span>
 #include <tuple>
 #include <type_traits>
 #include <utility>
@@ -733,6 +734,16 @@ public:
     }
 };
 
+namespace detail {
+
+void print_discrete_domain(
+        std::ostream& os,
+        bool empty,
+        std::span<DiscreteElementType const> front,
+        std::span<DiscreteElementType const> back);
+
+} // namespace detail
+
 /**
  * Print a DiscreteDomain. Only the front and back elements are displayed.
  *
@@ -742,13 +753,11 @@ public:
 template <concepts::discrete_dimension... DDims>
 std::ostream& operator<<(std::ostream& os, DiscreteDomain<DDims...> const& domain)
 {
-    os << "DiscreteDomain(";
-    if (domain.empty()) {
-        os << "empty";
-    } else {
-        os << "front=" << domain.front() << ", back=" << domain.back();
-    }
-    os << ')';
+    detail::print_discrete_domain(
+            os,
+            domain.empty(),
+            detail::array(domain.front()),
+            detail::array(domain.back()));
     return os;
 }
 

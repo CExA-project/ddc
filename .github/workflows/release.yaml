@@ -13,6 +13,9 @@ on:
     paths:
       - 'CMakeLists.txt'
 
+permissions:
+  contents: write
+
 jobs:
   deploy-version:
     runs-on: ubuntu-latest

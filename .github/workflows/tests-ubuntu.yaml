@@ -296,8 +296,8 @@ jobs:
               -D DDC_BUILD_KERNELS_SPLINES=ON \
               -D DDC_BUILD_PDI_WRAPPER=ON \
               -D DDC_BUILD_EXAMPLES=ON \
-              -D DDC_SPLINES_TEST_DEGREE_MIN=${{env.DDC_SPLINES_TEST_DEGREE_MIN}} \
-              -D DDC_SPLINES_TEST_DEGREE_MAX=${{env.DDC_SPLINES_TEST_DEGREE_MAX}} \
+              -D DDC_SPLINES_TEST_DEGREE_MIN=${DDC_SPLINES_TEST_DEGREE_MIN} \
+              -D DDC_SPLINES_TEST_DEGREE_MAX=${DDC_SPLINES_TEST_DEGREE_MAX} \
               -B build \
               -S /src
             cmake --build build
@@ -318,6 +318,8 @@ jobs:
           docker run \
             --cidfile='docker.cid' \
             --volume ${PWD}:/src:ro \
+            --env DDC_SPLINES_TEST_DEGREE_MIN \
+            --env DDC_SPLINES_TEST_DEGREE_MAX \
             ghcr.io/cexa-project/ddc/${{matrix.image}}_${{matrix.backend.name}}:${GITHUB_SHA:0:7} \
             bash /src/run.sh
           if docker cp "$(cat docker.cid)":/data/tests.xml ${{github.workspace}}/tests.xml

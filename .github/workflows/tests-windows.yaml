@@ -62,11 +62,14 @@ jobs:
     steps:
       - name: Checkout built branch
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
         with:
           repository: google/googletest
           ref: v1.17.0
           path: googletest
+          persist-credentials: false
       - name: Install Google test
         shell: bash
         run: |
@@ -83,6 +86,7 @@ jobs:
           repository: kokkos/kokkos
           ref: 5.0.2
           path: kokkos
+          persist-credentials: false
       - name: Install Kokkos
         shell: bash
         run: |

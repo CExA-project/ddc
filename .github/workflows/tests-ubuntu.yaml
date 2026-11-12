@@ -46,6 +46,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
       - uses: jidicula/clang-format-action@654a770daa28443dd111d133e4083e21c1075674  # v4.18.0
         with:
           clang-format-version: '21'
@@ -83,6 +85,8 @@ jobs:
           large-packages: false
       - name: Checkout built branch
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
       - name: Login to GitHub Container Registry
         uses: docker/login-action@8aa5831fb8d48d8f76594c7ddde61ae58019f550  # v4.8.0
         with:
@@ -139,6 +143,8 @@ jobs:
           large-packages: false
       - name: Checkout built branch
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
       - name: Collect image artifact
         if: needs.id_repo.outputs.in_base_repo == 'false'
         uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333  # v8.0.2
@@ -244,6 +250,8 @@ jobs:
           tool-cache: true
       - name: Checkout built branch
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
       - name: Collect image artifact
         if: needs.id_repo.outputs.in_base_repo == 'false'
         uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333  # v8.0.2
@@ -356,6 +364,8 @@ jobs:
           large-packages: false
       - name: Checkout built branch
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
       - name: Collect image artifact
         if: needs.id_repo.outputs.in_base_repo == 'false'
         uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333  # v8.0.2
@@ -448,6 +458,8 @@ jobs:
           large-packages: false
       - name: Checkout built branch
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
       - name: Collect image artifact
         if: needs.id_repo.outputs.in_base_repo == 'false'
         uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333  # v8.0.2

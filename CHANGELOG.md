@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+* Add `operator<<` for `ddc::DiscreteDomain` (front and back elements), `ddc::StridedDiscreteDomain` (front and back elements and strides) and `ddc::SparseDiscreteDomain` (extents and a non-exhaustive list of the elements of each dimension).
+
 ### Changed
 
 * `ddc::SplineBuilder2D` and `ddc::SplineBuilder3D` only allocate the temporary derivative buffers required by the Hermite boundary conditions if they are needed.

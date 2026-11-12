@@ -5,7 +5,9 @@
 #pragma once
 
 #include <cstddef>
+#include <iosfwd>
 #include <iterator>
+#include <span>
 #include <tuple>
 #include <type_traits>
 #include <utility>
@@ -731,5 +733,32 @@ public:
                                          : (xx.m_value - yy.m_value);
     }
 };
+
+namespace detail {
+
+void print_discrete_domain(
+        std::ostream& os,
+        bool empty,
+        std::span<DiscreteElementType const> front,
+        std::span<DiscreteElementType const> back);
+
+} // namespace detail
+
+/**
+ * Print a DiscreteDomain. Only the front and back elements are displayed.
+ *
+ * For example `DiscreteDomain(front=(0, 1), back=(9, 19))`, or
+ * `DiscreteDomain(empty)` if the domain contains no element.
+ */
+template <concepts::discrete_dimension... DDims>
+std::ostream& operator<<(std::ostream& os, DiscreteDomain<DDims...> const& domain)
+{
+    detail::print_discrete_domain(
+            os,
+            domain.empty(),
+            detail::array(domain.front()),
+            detail::array(domain.back()));
+    return os;
+}
 
 } // namespace ddc

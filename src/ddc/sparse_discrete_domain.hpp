@@ -6,7 +6,9 @@
 
 #include <cstddef>
 #include <functional>
+#include <iosfwd>
 #include <iterator>
+#include <span>
 #include <string>
 #include <tuple>
 #include <type_traits>
@@ -418,6 +420,13 @@ public:
         return {};
     }
 
+    static KOKKOS_FUNCTION detail::TaggedVector<
+            Kokkos::View<DiscreteElementType*, Kokkos::SharedSpace>>
+    discrete_elements() noexcept
+    {
+        return {};
+    }
+
     static KOKKOS_FUNCTION constexpr discrete_element_type front() noexcept
     {
         return {};
@@ -612,6 +621,36 @@ KOKKOS_FUNCTION constexpr DiscreteElement<QueryDDims...> back(
         SparseDiscreteDomain<DDims...> const& domain) noexcept
 {
     return DiscreteElement<QueryDDims...>(SparseDiscreteDomain<QueryDDims>(domain).back()...);
+}
+
+namespace detail {
+
+void print_sparse_discrete_domain(
+        std::ostream& os,
+        bool empty,
+        std::span<DiscreteVectorElement const> extents,
+        std::span<Kokkos::View<DiscreteElementType*, Kokkos::SharedSpace> const> elements);
+
+} // namespace detail
+
+/**
+ * Print a SparseDiscreteDomain. The extents are displayed, followed by a non-exhaustive
+ * list of the elements of each dimension: all of them for small dimensions, otherwise
+ * only the first and last ones.
+ *
+ * For example `SparseDiscreteDomain(extents=(2, 3), elements=[[1, 4], [3, 5, 9]])`,
+ * `SparseDiscreteDomain(extents=(100), elements=[[0, 2, 4, ..., 194, 196, 198]])`, or
+ * `SparseDiscreteDomain(empty)` if the domain contains no element.
+ */
+template <concepts::discrete_dimension... DDims>
+std::ostream& operator<<(std::ostream& os, SparseDiscreteDomain<DDims...> const& domain)
+{
+    detail::print_sparse_discrete_domain(
+            os,
+            domain.empty(),
+            detail::array(domain.extents()),
+            domain.discrete_elements().array());
+    return os;
 }
 
 } // namespace ddc

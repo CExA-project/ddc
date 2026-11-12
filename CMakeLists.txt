@@ -52,6 +52,7 @@ target_link_libraries(ddc_core PUBLIC Kokkos::kokkos)
 target_sources(
     ddc_core
     PRIVATE
+        src/ddc/discrete_domain.cpp
         src/ddc/discrete_element.cpp
         src/ddc/discrete_space.cpp
         src/ddc/discrete_vector.cpp
@@ -62,6 +63,8 @@ target_sources(
         src/ddc/print.cpp
         src/ddc/save_npy.cpp
         src/ddc/scope_guard.cpp
+        src/ddc/sparse_discrete_domain.cpp
+        src/ddc/strided_discrete_domain.cpp
         src/ddc/uniform_point_sampling.cpp
     PUBLIC
         FILE_SET core_public

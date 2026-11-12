@@ -5,7 +5,9 @@
 #pragma once
 
 #include <cstddef>
+#include <iosfwd>
 #include <iterator>
+#include <span>
 #include <tuple>
 #include <type_traits>
 
@@ -385,6 +387,11 @@ public:
         return {};
     }
 
+    static KOKKOS_FUNCTION constexpr discrete_vector_type strides() noexcept
+    {
+        return {};
+    }
+
     static KOKKOS_FUNCTION constexpr discrete_element_type front() noexcept
     {
         return {};
@@ -729,5 +736,35 @@ public:
                                          : (xx.m_value - yy.m_value);
     }
 };
+
+namespace detail {
+
+void print_strided_discrete_domain(
+        std::ostream& os,
+        bool empty,
+        std::span<DiscreteElementType const> front,
+        std::span<DiscreteElementType const> back,
+        std::span<DiscreteVectorElement const> strides);
+
+} // namespace detail
+
+/**
+ * Print a StridedDiscreteDomain. Only the front and back elements are displayed,
+ * together with the strides.
+ *
+ * For example `StridedDiscreteDomain(front=(0, 1), back=(8, 19), strides=(2, 3))`, or
+ * `StridedDiscreteDomain(empty)` if the domain contains no element.
+ */
+template <concepts::discrete_dimension... DDims>
+std::ostream& operator<<(std::ostream& os, StridedDiscreteDomain<DDims...> const& domain)
+{
+    detail::print_strided_discrete_domain(
+            os,
+            domain.empty(),
+            detail::array(domain.front()),
+            detail::array(domain.back()),
+            detail::array(domain.strides()));
+    return os;
+}
 
 } // namespace ddc

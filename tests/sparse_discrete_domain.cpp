@@ -2,6 +2,8 @@
 //
 // SPDX-License-Identifier: MIT
 
+#include <sstream>
+
 #include <ddc/ddc.hpp>
 
 #include <gtest/gtest.h>
@@ -236,4 +238,102 @@ TEST(DeviceTransformReduceSparse, TwoDimensions)
             Kokkos::layout_right,
             Kokkos::DefaultExecutionSpace::memory_space> const chunk(storage.data(), dom);
     EXPECT_EQ(TestDeviceTransformReduceSparse(chunk), dom.size());
+}
+
+TEST(SparseDiscreteDomainTest, Print)
+{
+    {
+        std::stringstream ss;
+        ss << ddc::SparseDiscreteDomain<>();
+        EXPECT_EQ(ss.str(), "SparseDiscreteDomain(extents=(), elements=[])");
+    }
+
+    Kokkos::View<DElemX*, Kokkos::SharedSpace> const view_x("view_x", 2);
+    view_x(0) = lbound_x + 1;
+    view_x(1) = lbound_x + 4;
+    Kokkos::View<DElemY*, Kokkos::SharedSpace> const view_y("view_y", 3);
+    view_y(0) = lbound_y + 3;
+    view_y(1) = lbound_y + 5;
+    view_y(2) = lbound_y + 9;
+    {
+        std::stringstream ss;
+        ss << DDomX(view_x);
+        EXPECT_EQ(ss.str(), "SparseDiscreteDomain(extents=(2), elements=[[1, 4]])");
+    }
+    {
+        std::stringstream ss;
+        ss << DDomXY(view_x, view_y);
+        EXPECT_EQ(ss.str(), "SparseDiscreteDomain(extents=(2, 3), elements=[[1, 4], [3, 5, 9]])");
+    }
+}
+
+TEST(SparseDiscreteDomainTest, PrintElisionThreshold)
+{
+    // Up to 7 elements are printed in full, from 8 elements the middle ones are elided
+    Kokkos::View<DElemX*, Kokkos::SharedSpace> const view_7("view_7", 7);
+    Kokkos::View<DElemX*, Kokkos::SharedSpace> const view_8("view_8", 8);
+    for (std::size_t i = 0; i < view_7.size(); ++i) {
+        view_7(i) = lbound_x + 10 * i;
+    }
+    for (std::size_t i = 0; i < view_8.size(); ++i) {
+        view_8(i) = lbound_x + 10 * i;
+    }
+    {
+        std::stringstream ss;
+        ss << DDomX(view_7);
+        EXPECT_EQ(
+                ss.str(),
+                "SparseDiscreteDomain(extents=(7), elements=[[0, 10, 20, 30, 40, 50, 60]])");
+    }
+    {
+        std::stringstream ss;
+        ss << DDomX(view_8);
+        EXPECT_EQ(
+                ss.str(),
+                "SparseDiscreteDomain(extents=(8), elements=[[0, 10, 20, ..., 50, 60, 70]])");
+    }
+}
+
+TEST(SparseDiscreteDomainTest, PrintFrontAndBackOnly)
+{
+    // Even for a large domain, only the front and back elements are printed
+    Kokkos::View<DElemX*, Kokkos::SharedSpace> const view_x("view_x", 10);
+    Kokkos::View<DElemY*, Kokkos::SharedSpace> const view_y("view_y", 20);
+    for (std::size_t i = 0; i < view_x.size(); ++i) {
+        view_x(i) = lbound_x + 2 * i + 1;
+    }
+    for (std::size_t i = 0; i < view_y.size(); ++i) {
+        view_y(i) = lbound_y + 3 * i + 2;
+    }
+    std::stringstream ss;
+    ss << DDomXY(view_x, view_y);
+    EXPECT_EQ(
+            ss.str(),
+            "SparseDiscreteDomain(extents=(10, 20), "
+            "elements=[[1, 3, 5, ..., 15, 17, 19], [2, 5, 8, ..., 53, 56, 59]])");
+}
+
+TEST(SparseDiscreteDomainTest, PrintDimensionOrder)
+{
+    Kokkos::View<DElemX*, Kokkos::SharedSpace> const view_x("view_x", 2);
+    view_x(0) = lbound_x + 1;
+    view_x(1) = lbound_x + 4;
+    Kokkos::View<DElemY*, Kokkos::SharedSpace> const view_y("view_y", 3);
+    view_y(0) = lbound_y + 3;
+    view_y(1) = lbound_y + 5;
+    view_y(2) = lbound_y + 9;
+    std::stringstream ss;
+    ss << DDomYX(DDomXY(view_x, view_y));
+    EXPECT_EQ(ss.str(), "SparseDiscreteDomain(extents=(3, 2), elements=[[3, 5, 9], [1, 4]])");
+}
+
+TEST(SparseDiscreteDomainTest, PrintEmpty)
+{
+    Kokkos::View<DElemY*, Kokkos::SharedSpace> const view_y("view_y", 3);
+    view_y(0) = lbound_y + 3;
+    view_y(1) = lbound_y + 5;
+    view_y(2) = lbound_y + 9;
+    std::stringstream ss;
+    ss << DDomXY(Kokkos::View<DElemX*, Kokkos::SharedSpace>("", 0), view_y);
+    EXPECT_EQ(ss.str(), "SparseDiscreteDomain(empty)");
 }

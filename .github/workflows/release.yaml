@@ -14,11 +14,13 @@ on:
       - 'CMakeLists.txt'
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   deploy-version:
     runs-on: ubuntu-latest
+    permissions:
+      packages: write  # Required to push tags
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1

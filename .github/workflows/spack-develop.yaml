@@ -22,6 +22,8 @@ jobs:
     steps:
       - name: Checkout built branch
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
       - name: Set up Spack
         uses: spack/setup-spack@16b756799ede8b28951287f89bcd3fdb32ec1ca3  # v3.0.0
         with:

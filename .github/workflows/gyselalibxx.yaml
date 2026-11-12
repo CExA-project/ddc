@@ -24,10 +24,12 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
         with:
           repository: gyselax/gyselalibxx
+          persist-credentials: false
       - name: Checkout ddc
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
         with:
           path: vendor/ddc
+          persist-credentials: false
       - run: sed -i -E 's/find_package\(DDC [0-9]+(\.[0-9]+)* REQUIRED COMPONENTS fft pdi splines\)/find_package(DDC REQUIRED COMPONENTS fft pdi splines)/g' CMakeLists.txt
       - name: Build
         run: |

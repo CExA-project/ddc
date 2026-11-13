@@ -1,0 +1,115 @@
+# Copyright (C) The DDC development team, see COPYRIGHT.md file
+#
+# SPDX-License-Identifier: MIT
+
+---
+name: GPU simulator
+
+# Optional, non-required check. The hosted runners have no GPU, so this builds
+# Kokkos, kokkos-fft and DDC with the HIP backend for gfx942 and runs the core
+# and FFT tests on a simulated AMD Instinct MI300X
+# (https://github.com/pantheongpu/pantheonsim). The hip rows of
+# tests-ubuntu.yaml build the tests but do not run them. A simulator cannot
+# reproduce hardware-specific behavior or timing, so it complements real-GPU
+# testing and does not replace it.
+
+# yamllint disable-line rule:truthy
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - '.github/workflows/gpu-sim.yaml'
+      - '**.cpp'
+      - '**.hpp'
+      - '**.hpp.in'
+      - 'CMakeLists.txt'
+      - '**/CMakeLists.txt'
+      - '**.cmake'
+      - '**.cmake.in'
+
+concurrency:
+  group: ${{github.workflow}}-${{github.event.pull_request.number || github.ref}}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Tests (ROCm 7.1 and simulated MI300X)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - name: Checkout built branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up the simulated GPU and ROCm
+        uses: pantheongpu/setup-pantheonsim@ab71a07326835be678918901c340d53a83358067  # v0.1.6
+        with:
+          gpu: amd/mi300x
+          cuda-toolkit: none
+          rocm: '7.1'
+
+      # The action installs only the compiler side of ROCm. Kokkos' HIP backend
+      # uses rocThrust and rocPRIM, kokkos-fft uses hipFFT. numpy and pytest
+      # enable the save_npy tests.
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y comgr hsa-rocr rocprim-dev rocthrust-dev \
+            libgtest-dev libgmock-dev python3-numpy python3-pytest \
+            hipfft-dev rocfft-dev
+
+      # Same Kokkos release as the docker images (kokkos@5.2), with gfx942
+      # instead of gfx90a. DDC requires relocatable device code.
+      - name: Build Kokkos
+        run: |
+          git clone --depth 1 --branch 5.2.2 https://github.com/kokkos/kokkos.git kokkos-src
+          cmake \
+            -D CMAKE_BUILD_TYPE=Release \
+            -D CMAKE_CXX_COMPILER=hipcc \
+            -D CMAKE_CXX_STANDARD=20 \
+            -D CMAKE_INSTALL_PREFIX="$HOME/kokkos" \
+            -D Kokkos_ENABLE_HIP=ON \
+            -D Kokkos_ENABLE_HIP_RELOCATABLE_DEVICE_CODE=ON \
+            -D Kokkos_ARCH_AMD_GFX942=ON \
+            -B kokkos-build \
+            -S kokkos-src
+          cmake --build kokkos-build --parallel 3
+          cmake --install kokkos-build
+
+      # Same kokkos-fft release as the docker images (kokkos-fft@2.0).
+      - name: Build kokkos-fft
+        run: |
+          git clone --depth 1 --branch v2.0.0 https://github.com/kokkos/kokkos-fft.git kokkos-fft-src
+          cmake \
+            -D CMAKE_BUILD_TYPE=Release \
+            -D CMAKE_CXX_COMPILER=hipcc \
+            -D CMAKE_CXX_STANDARD=20 \
+            -D CMAKE_PREFIX_PATH="$HOME/kokkos" \
+            -D CMAKE_INSTALL_PREFIX="$HOME/kokkos-fft" \
+            -D KokkosFFT_ENABLE_HIPFFT=ON \
+            -B kokkos-fft-build \
+            -S kokkos-fft-src
+          cmake --build kokkos-fft-build --parallel 3
+          cmake --install kokkos-fft-build
+
+      - name: Build DDC
+        run: |
+          cmake \
+            -D CMAKE_BUILD_TYPE=Release \
+            -D CMAKE_CXX_COMPILER=hipcc \
+            -D CMAKE_CXX_STANDARD=20 \
+            -D CMAKE_PREFIX_PATH="$HOME/kokkos;$HOME/kokkos-fft" \
+            -D DDC_BUILD_BENCHMARKS=OFF \
+            -D DDC_BUILD_EXAMPLES=OFF \
+            -D DDC_BUILD_KERNELS_FFT=ON \
+            -D DDC_BUILD_KERNELS_SPLINES=OFF \
+            -D DDC_BUILD_PDI_WRAPPER=OFF \
+            -B build
+          cmake --build build --parallel 3
+
+      - name: Test
+        run: vgpu run ctest --test-dir build --output-on-failure --no-tests=error --timeout 300

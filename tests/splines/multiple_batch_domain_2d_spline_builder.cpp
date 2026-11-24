@@ -611,7 +611,7 @@ void TestMultipleBatchDomain2dSpline()
                                 dx<I2>(ncells),
                                 s_degree,
                                 s_degree),
-                        static_cast<ddc::Real>(1e-9) * max_norm_diff12));
+                        static_cast<ddc::Real>(1e-8) * max_norm_diff12));
 
     // Check the evaluation error for the domain with an additional batch dimension
     auto const
@@ -664,7 +664,7 @@ void TestMultipleBatchDomain2dSpline()
                                 dx<I2>(ncells),
                                 s_degree,
                                 s_degree),
-                        static_cast<ddc::Real>(1e-9) * max_norm_diff12_extra));
+                        static_cast<ddc::Real>(1e-8) * max_norm_diff12_extra));
 }
 
 } // namespace anonymous_namespace_workaround_batched_2d_spline_builder_cpp

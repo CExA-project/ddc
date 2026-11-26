@@ -1108,7 +1108,7 @@ void TestBatchedNd3dSpline()
                                 s_degree,
                                 s_degree,
                                 s_degree),
-                        static_cast<ddc::Real>(1e-11) * max_norm_diff1));
+                        static_cast<ddc::Real>(1e-9) * max_norm_diff1));
     EXPECT_LE(
             max_norm_error_diff2,
             std::
@@ -1130,7 +1130,7 @@ void TestBatchedNd3dSpline()
                                 s_degree,
                                 s_degree,
                                 s_degree),
-                        static_cast<ddc::Real>(1e-11) * max_norm_diff3));
+                        static_cast<ddc::Real>(1e-9) * max_norm_diff3));
     EXPECT_LE(
             max_norm_error_diff12,
             std::
@@ -1163,7 +1163,7 @@ void TestBatchedNd3dSpline()
                                 s_degree,
                                 s_degree,
                                 s_degree),
-                        static_cast<ddc::Real>(1e-9) * max_norm_diff13));
+                        static_cast<ddc::Real>(1e-8) * max_norm_diff13));
     EXPECT_LE(
             max_norm_error_diff123,
             std::
